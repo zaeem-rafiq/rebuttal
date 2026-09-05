@@ -25,6 +25,15 @@ if sys.platform == "win32":
 # Load .env file
 load_dotenv()
 
+# Setup AWS profile default session if configured
+aws_profile = os.getenv("AWS_PROFILE")
+if aws_profile:
+    try:
+        import boto3
+        boto3.setup_default_session(profile_name=aws_profile)
+    except Exception:
+        pass
+
 def print_header(title: str):
     print(f"\n=== {title} ===", flush=True)
 
@@ -61,9 +70,11 @@ def main():
     print("\n[2/8] Checking AWS identity & region...", flush=True)
     region = os.getenv("AWS_REGION", "us-east-1")
     has_aws_creds = bool(os.getenv("AWS_ACCESS_KEY_ID") and os.getenv("AWS_SECRET_ACCESS_KEY"))
+    aws_creds_file = Path.home() / ".aws" / "credentials"
+    aws_config_file = Path.home() / ".aws" / "config"
     try:
-        if not has_aws_creds and not (Path.home() / ".aws" / "credentials").exists():
-            raise RuntimeError("AWS credentials (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY or ~/.aws/credentials) not configured.")
+        if not has_aws_creds and not aws_creds_file.exists() and not aws_config_file.exists():
+            raise RuntimeError("AWS credentials / config not found.")
         import boto3
         sts = boto3.client("sts", region_name=region)
         caller = sts.get_caller_identity()
