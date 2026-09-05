@@ -27,10 +27,11 @@ venv/
 ENV/
 
 # Environment variables
-.env
-.env.local
-.env.*.local
+.env*
 !.env.example
+
+# Local sessions
+.sessions/
 
 # Testing and Coverage
 .pytest_cache/
