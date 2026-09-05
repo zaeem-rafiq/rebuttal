@@ -55,3 +55,6 @@ Thumbs.db
 node_modules/
 .next/
 out/
+
+# Bedrock AgentCore build cache
+.bedrock_agentcore/

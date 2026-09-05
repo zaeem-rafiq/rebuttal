@@ -1,0 +1,62 @@
+default_agent: rebuttal
+agents:
+  rebuttal:
+    name: rebuttal
+    language: python
+    node_version: '20'
+    entrypoint: C:/Users/zaeem/Documents/Rebuttal/agent/app.py
+    deployment_type: container
+    runtime_type: null
+    platform: linux/arm64
+    container_runtime: none
+    source_path: C:\Users\zaeem\Documents\Rebuttal
+    aws:
+      execution_role: arn:aws:iam::292341338711:role/AmazonBedrockAgentCoreSDKRuntime-us-east-1-a0cecbead2
+      execution_role_auto_create: false
+      account: '292341338711'
+      region: us-east-1
+      ecr_repository: 292341338711.dkr.ecr.us-east-1.amazonaws.com/bedrock-agentcore-rebuttal
+      ecr_auto_create: false
+      s3_path: null
+      s3_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+        network_mode_config: null
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+      lifecycle_configuration:
+        idle_runtime_session_timeout: null
+        max_lifetime: null
+    bedrock_agentcore:
+      agent_id: rebuttal-pASUe6CVmu
+      agent_arn: arn:aws:bedrock-agentcore:us-east-1:292341338711:runtime/rebuttal-pASUe6CVmu
+      agent_session_id: rebuttal-dp_S1-3da43acc7a3b41089e7f39d86de5b524
+    codebuild:
+      project_name: bedrock-agentcore-rebuttal-builder
+      execution_role: arn:aws:iam::292341338711:role/AmazonBedrockAgentCoreSDKCodeBuild-us-east-1-a0cecbead2
+      source_bucket: bedrock-agentcore-codebuild-sources-292341338711-us-east-1
+    memory:
+      mode: STM_ONLY
+      memory_id: rebuttal_mem-Idf0xfCGuL
+      memory_arn: arn:aws:bedrock-agentcore:us-east-1:292341338711:memory/rebuttal_mem-Idf0xfCGuL
+      memory_name: rebuttal_mem
+      event_expiry_days: 30
+      first_invoke_memory_check_done: true
+      was_created_by_toolkit: true
+    identity:
+      credential_providers: []
+      workload: null
+    aws_jwt:
+      enabled: false
+      audiences: []
+      signing_algorithm: ES384
+      issuer_url: null
+      duration_seconds: 300
+    authorizer_configuration: null
+    request_header_configuration: null
+    oauth_configuration: null
+    api_key_env_var_name: null
+    api_key_credential_provider_name: null
+    is_generated_by_agentcore_create: false
