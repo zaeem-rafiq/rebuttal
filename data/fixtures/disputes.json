@@ -1,0 +1,53 @@
+[
+  {
+    "id": "dp_S1",
+    "order_id": "ORD-1001",
+    "payment_intent_id": null,
+    "charge_id": null,
+    "amount_cents": 4800,
+    "currency": "usd",
+    "reason": "product_not_received",
+    "status": "needs_response",
+    "evidence_due_by": "2026-09-20T00:00:00Z",
+    "metadata": {
+      "order_id": "ORD-1001",
+      "scenario": "S1"
+    },
+    "created_at": "2026-09-01T12:00:00Z",
+    "updated_at": "2026-09-01T12:00:00Z"
+  },
+  {
+    "id": "dp_S2",
+    "order_id": "ORD-1002",
+    "payment_intent_id": null,
+    "charge_id": null,
+    "amount_cents": 34000,
+    "currency": "usd",
+    "reason": "fraudulent",
+    "status": "needs_response",
+    "evidence_due_by": "2026-09-22T00:00:00Z",
+    "metadata": {
+      "order_id": "ORD-1002",
+      "scenario": "S2"
+    },
+    "created_at": "2026-09-02T10:00:00Z",
+    "updated_at": "2026-09-02T10:00:00Z"
+  },
+  {
+    "id": "dp_S3",
+    "order_id": "ORD-1003",
+    "payment_intent_id": null,
+    "charge_id": null,
+    "amount_cents": 12900,
+    "currency": "usd",
+    "reason": "subscription_canceled",
+    "status": "warning_needs_response",
+    "evidence_due_by": "2026-09-25T00:00:00Z",
+    "metadata": {
+      "order_id": "ORD-1003",
+      "scenario": "S3"
+    },
+    "created_at": "2026-09-03T15:00:00Z",
+    "updated_at": "2026-09-03T15:00:00Z"
+  }
+]

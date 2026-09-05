@@ -1,0 +1,112 @@
+[
+  {
+    "id": "MSG-001",
+    "customer_id": "CUST-001",
+    "order_id": "ORD-1001",
+    "direction": "inbound",
+    "channel": "email",
+    "subject": "When will it arrive?",
+    "body": "Hi, when should I expect order ORD-1001 to arrive? Thanks, Michael",
+    "has_shipping_change": false,
+    "created_at": "2026-08-26T16:00:00Z"
+  },
+  {
+    "id": "MSG-002",
+    "customer_id": "CUST-001",
+    "order_id": "ORD-1001",
+    "direction": "outbound",
+    "channel": "email",
+    "subject": "Re: When will it arrive?",
+    "body": "Hello Michael, your order has shipped via UPS tracking number 1Z9999999999999991 and is scheduled for delivery on August 28th.",
+    "has_shipping_change": false,
+    "created_at": "2026-08-26T16:45:00Z"
+  },
+  {
+    "id": "MSG-003",
+    "customer_id": "CUST-002",
+    "order_id": "ORD-1002",
+    "direction": "inbound",
+    "channel": "email",
+    "subject": "Address change for ORD-1002",
+    "body": "Hello, I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead? Thanks! Jessica Lee",
+    "has_shipping_change": true,
+    "created_at": "2026-08-25T14:10:00Z"
+  },
+  {
+    "id": "MSG-004",
+    "customer_id": "CUST-002",
+    "order_id": "ORD-1002",
+    "direction": "outbound",
+    "channel": "email",
+    "subject": "Re: Address change for ORD-1002",
+    "body": "Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!",
+    "has_shipping_change": true,
+    "created_at": "2026-08-25T15:00:00Z"
+  },
+  {
+    "id": "MSG-005",
+    "customer_id": "CUST-003",
+    "order_id": "ORD-1003",
+    "direction": "inbound",
+    "channel": "email",
+    "subject": "Cancel subscription ORD-1003",
+    "body": "Hi support, please cancel my coffee subscription ORD-1003 before the renewal charge. Thanks, Roberto",
+    "has_shipping_change": false,
+    "created_at": "2026-08-28T10:00:00Z"
+  },
+  {
+    "id": "MSG-006",
+    "customer_id": "CUST-003",
+    "order_id": "ORD-1003",
+    "direction": "inbound",
+    "channel": "email",
+    "subject": "Follow-up on cancellation",
+    "body": "I noticed a pending charge on my card for ORD-1003. Please refund this immediately.",
+    "has_shipping_change": false,
+    "created_at": "2026-08-29T12:00:00Z"
+  },
+  {
+    "id": "MSG-007",
+    "customer_id": "CUST-004",
+    "order_id": "ORD-1004",
+    "direction": "inbound",
+    "channel": "email",
+    "subject": "Gift wrapping question",
+    "body": "Can I add gift wrapping to ORD-1004?",
+    "has_shipping_change": false,
+    "created_at": "2026-08-10T15:00:00Z"
+  },
+  {
+    "id": "MSG-008",
+    "customer_id": "CUST-004",
+    "order_id": "ORD-1004",
+    "direction": "outbound",
+    "channel": "email",
+    "subject": "Re: Gift wrapping question",
+    "body": "Certainly! We have included our complimentary gift box and ribbon.",
+    "has_shipping_change": false,
+    "created_at": "2026-08-10T15:30:00Z"
+  },
+  {
+    "id": "MSG-009",
+    "customer_id": "CUST-008",
+    "order_id": "ORD-1008",
+    "direction": "inbound",
+    "channel": "email",
+    "subject": "VIP feedback",
+    "body": "Thanks for the expedited shipping on ORD-1008!",
+    "has_shipping_change": false,
+    "created_at": "2026-08-25T18:00:00Z"
+  },
+  {
+    "id": "MSG-010",
+    "customer_id": "CUST-008",
+    "order_id": "ORD-1008",
+    "direction": "outbound",
+    "channel": "email",
+    "subject": "Re: VIP feedback",
+    "body": "You are very welcome Emily! Thank you for being a valued VIP member.",
+    "has_shipping_change": false,
+    "created_at": "2026-08-25T18:30:00Z"
+  }
+]

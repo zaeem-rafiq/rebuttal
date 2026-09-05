@@ -37,6 +37,11 @@ ENV/
 .coverage
 htmlcov/
 
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
 # IDE and OS
 .idea/
 .vscode/
