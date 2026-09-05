@@ -15,6 +15,8 @@ Tools:
 """
 
 import os
+import json
+import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -53,6 +55,77 @@ def serialize_stripe_object(obj: Any) -> Any:
     return obj
 
 
+def text_to_pdf_bytes(text: str) -> bytes:
+    """Generate a minimal valid 1-page PDF containing text for Stripe Files API compatibility."""
+    lines = text.strip().split("\n")
+    stream = "BT /F1 10 Tf 14 TL 50 750 Td\n"
+    for l in lines:
+        cleaned = l.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)").encode("latin-1", errors="replace").decode("latin-1")
+        stream += f"({cleaned}) '\n"
+    stream += "ET\n"
+    stream_b = stream.encode("latin-1", errors="replace")
+    objs = [
+        b"1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n",
+        b"2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n",
+        b"3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj\n",
+        b"4 0 obj\n<< /Length " + str(len(stream_b)).encode("ascii") + b" >>\nstream\n" + stream_b + b"endstream\nendobj\n",
+        b"5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n",
+    ]
+    out = [b"%PDF-1.4\n"]
+    offsets = [0]
+    for obj in objs:
+        offsets.append(sum(len(x) for x in out))
+        out.append(obj)
+    xref_pos = sum(len(x) for x in out)
+    out.append(b"xref\n0 6\n0000000000 65535 f \n")
+    for off in offsets[1:]:
+        out.append(f"{off:010d} 00000 n \n".encode("ascii"))
+    out.append(b"trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n" + str(xref_pos).encode("ascii") + b"\n%%EOF\n")
+    return b"".join(out)
+
+
+def resolve_stripe_dispute_id(dispute_id: str) -> str:
+    """Resolve an internal dispute identifier or alias (e.g. 'dp_S1') to an active Stripe dispute ID."""
+    clean = dispute_id.strip()
+    # If already a valid live Stripe dispute ID (e.g. du_1... or dp_1...)
+    if clean.startswith("du_") or (clean.startswith("dp_") and len(clean) > 10 and clean[3].isalnum()):
+        return clean
+
+    db_path = Path(__file__).resolve().parent.parent.parent / "data" / "local_supabase.db"
+    if db_path.exists():
+        try:
+            import sqlite3
+            conn = sqlite3.connect(db_path)
+            conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
+            row = cur.execute(
+                "SELECT * FROM disputes WHERE id = ? OR order_id = ? OR instr(metadata, ?) > 0",
+                (clean, clean, clean),
+            ).fetchone()
+            if row:
+                meta_str = row["metadata"] or "{}"
+                try:
+                    meta = json.loads(meta_str) if isinstance(meta_str, str) else meta_str
+                    if meta.get("stripe_dispute_id"):
+                        return meta["stripe_dispute_id"]
+                except Exception:
+                    pass
+                if row["payment_intent_id"]:
+                    pi_id = row["payment_intent_id"]
+                    if not pi_id.startswith("pi_mock"):
+                        disps = stripe.Dispute.list(payment_intent=pi_id, limit=1)
+                        if disps.data:
+                            return disps.data[0].id
+        except Exception:
+            pass
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
+    return clean
+
+
 @tool
 def get_dispute(dispute_id: str) -> Dict[str, Any]:
     """Retrieve details of a dispute by its Stripe dispute ID.
@@ -65,7 +138,8 @@ def get_dispute(dispute_id: str) -> Dict[str, Any]:
         reason, status, evidence_due_by, charge, and payment_intent.
     """
     verify_live_key_guard()
-    dispute = stripe.Dispute.retrieve(dispute_id, expand=["charge", "payment_intent"])
+    target_id = resolve_stripe_dispute_id(dispute_id)
+    dispute = stripe.Dispute.retrieve(target_id, expand=["charge", "payment_intent"])
     return serialize_stripe_object(dispute)
 
 
@@ -207,8 +281,26 @@ def upload_evidence_file(file_path: str, purpose: str = "dispute_evidence") -> D
     if not path.exists():
         raise FileNotFoundError(f"Evidence file not found: {file_path}")
 
-    with open(path, "rb") as f:
-        file_obj = stripe.File.create(file=f, purpose=purpose)
+    # Stripe Files API for dispute_evidence only accepts PDF, JPG, PNG.
+    # Convert text files to a minimal valid PDF under the hood.
+    if path.suffix.lower() in [".txt", ".text", ".md", ".log"]:
+        with open(path, "r", encoding="utf-8", errors="replace") as tf:
+            text_content = tf.read()
+        pdf_bytes = text_to_pdf_bytes(text_content)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
+            tmp_pdf.write(pdf_bytes)
+            tmp_pdf_path = tmp_pdf.name
+        try:
+            with open(tmp_pdf_path, "rb") as f:
+                file_obj = stripe.File.create(file=f, purpose=purpose)
+        finally:
+            try:
+                os.unlink(tmp_pdf_path)
+            except Exception:
+                pass
+    else:
+        with open(path, "rb") as f:
+            file_obj = stripe.File.create(file=f, purpose=purpose)
     return serialize_stripe_object(file_obj)
 
 
@@ -217,7 +309,7 @@ def submit_evidence(dispute_id: str, evidence: Dict[str, Any], submit: bool = Fa
     """Update or officially submit evidence for a Stripe dispute.
 
     Parameters:
-        dispute_id: ID of the dispute.
+        dispute_id: ID of the dispute (e.g. dp_1... or alias dp_S1).
         evidence: Evidence dictionary (e.g. tracking_number, customer_communication, uncategorized_file).
         submit: If True, evidence is submitted to the card network and cannot be changed. Default False.
 
@@ -225,7 +317,8 @@ def submit_evidence(dispute_id: str, evidence: Dict[str, Any], submit: bool = Fa
         Dictionary of the updated dispute.
     """
     verify_live_key_guard()
-    updated = stripe.Dispute.modify(dispute_id, evidence=evidence, submit=submit)
+    target_id = resolve_stripe_dispute_id(dispute_id)
+    updated = stripe.Dispute.modify(target_id, evidence=evidence, submit=submit)
     return serialize_stripe_object(updated)
 
 
@@ -236,13 +329,14 @@ def concede_dispute(dispute_id: str) -> Dict[str, Any]:
     Calls Dispute.close under the hood.
 
     Parameters:
-        dispute_id: ID of the dispute to concede.
+        dispute_id: ID of the dispute to concede (e.g. dp_1... or alias dp_S2).
 
     Returns:
         Dictionary of the closed dispute.
     """
     verify_live_key_guard()
-    closed = stripe.Dispute.close(dispute_id)
+    target_id = resolve_stripe_dispute_id(dispute_id)
+    closed = stripe.Dispute.close(target_id)
     return serialize_stripe_object(closed)
 
 
@@ -264,11 +358,11 @@ def refund_inquiry(dispute_id_or_charge: str) -> Dict[str, Any]:
     """
     verify_live_key_guard()
 
-    target = dispute_id_or_charge.strip()
+    target = resolve_stripe_dispute_id(dispute_id_or_charge.strip())
     charge_id: Optional[str] = None
     dispute_status: Optional[str] = None
 
-    if target.startswith("dp_"):
+    if target.startswith("dp_") or target.startswith("du_"):
         dispute = stripe.Dispute.retrieve(target, expand=["charge"])
         dispute_status = getattr(dispute, "status", None)
         if dispute.charge:

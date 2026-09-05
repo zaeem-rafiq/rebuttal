@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""scripts/run_local.py - Local execution runner for Rebuttal Evidence Graph.
+"""scripts/run_local.py - Local execution runner for Rebuttal Evidence Graph and Executor.
 
 Usage:
+    # R-02 Dry-run execution
     python scripts/run_local.py --dispute <id> --dry-run
     python scripts/run_local.py --scenario S1|S2|S3 --dry-run [--record-proof]
+
+    # R-03 Live execution with Executor
+    python scripts/run_local.py --scenario S1 --execute [--record-proof]
+    python scripts/run_local.py --dispute dp_S1 --execute [--record-proof]
 """
 
 import os
@@ -13,7 +18,7 @@ import json
 import argparse
 import sqlite3
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Tuple
 
 # Ensure UTF-8 output on Windows consoles
 if sys.platform == "win32":
@@ -31,7 +36,8 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 LOCAL_DB_PATH = REPO_ROOT / "data" / "local_supabase.db"
-PROOF_FILE = REPO_ROOT / "docs" / "proofs" / "R-02.md"
+PROOF_FILE_R02 = REPO_ROOT / "docs" / "proofs" / "R-02.md"
+PROOF_FILE_R03 = REPO_ROOT / "docs" / "proofs" / "R-03.md"
 
 # Mutating Stripe call tracking counter
 MUTATING_CALLS_COUNT = 0
@@ -41,7 +47,7 @@ def track_mutating_call(tool_name: str):
     """Callback triggered if any mutating Stripe tool is invoked."""
     global MUTATING_CALLS_COUNT
     MUTATING_CALLS_COUNT += 1
-    print(f"  [MUTATION DETECTED] Tool called: {tool_name}", file=sys.stderr)
+    print(f"  [STRIPE MUTATION] Tool called: {tool_name}", file=sys.stderr)
 
 
 # Instrument mutating Stripe tools
@@ -51,17 +57,21 @@ _orig_submit = st.submit_evidence
 _orig_concede = st.concede_dispute
 _orig_refund = st.refund_inquiry
 
+
 def _guarded_submit(*args, **kwargs):
     track_mutating_call("submit_evidence")
     return _orig_submit(*args, **kwargs)
+
 
 def _guarded_concede(*args, **kwargs):
     track_mutating_call("concede_dispute")
     return _orig_concede(*args, **kwargs)
 
+
 def _guarded_refund(*args, **kwargs):
     track_mutating_call("refund_inquiry")
     return _orig_refund(*args, **kwargs)
+
 
 st.submit_evidence = _guarded_submit
 st.concede_dispute = _guarded_concede
@@ -69,6 +79,9 @@ st.refund_inquiry = _guarded_refund
 
 from agent.graph import run_evidence_pipeline
 from agent.models import DisputeStrategy, EvidencePacket
+from agent.tools.stripe_tools import get_dispute, verify_live_key_guard
+from agent.tools.case_tools import record_case
+from agent.executor import execute_strategy
 
 
 def resolve_scenario_context(scenario: str) -> Dict[str, Any]:
@@ -86,9 +99,13 @@ def resolve_scenario_context(scenario: str) -> Dict[str, Any]:
         order = cur.execute("SELECT * FROM orders WHERE id = ?", (order_id,)).fetchone()
         if not order:
             raise ValueError(f"Order not found for scenario {scenario} ({order_id})")
-        
+
         dispute = cur.execute("SELECT * FROM disputes WHERE order_id = ?", (order_id,)).fetchone()
-        reason = dispute["reason"] if dispute else ("product_not_received" if scenario.upper() == "S1" else "fraudulent")
+        reason = (
+            dispute["reason"]
+            if dispute
+            else ("product_not_received" if scenario.upper() == "S1" else "fraudulent")
+        )
         dispute_id = dispute["id"] if dispute else f"dp_sim_{scenario.lower()}_{order_id.lower()}"
 
         return {
@@ -104,18 +121,116 @@ def resolve_scenario_context(scenario: str) -> Dict[str, Any]:
         conn.close()
 
 
+def ensure_active_stripe_dispute(scenario: str) -> Tuple[str, str]:
+    """Ensure a live Stripe test dispute exists for the scenario and is linked in local database."""
+    import stripe
+
+    verify_live_key_guard()
+
+    scen = scenario.upper()
+    order_id = "ORD-1001" if scen == "S1" else ("ORD-1002" if scen == "S2" else "ORD-1003")
+    amount = 4800 if scen == "S1" else 34000
+    pm = "pm_card_createDisputeProductNotReceived" if scen == "S1" else "pm_card_createDispute"
+
+    conn = sqlite3.connect(LOCAL_DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    disp_row = cur.execute(
+        "SELECT * FROM disputes WHERE id = ? OR order_id = ?",
+        (f"dp_{scen}", order_id),
+    ).fetchone()
+
+    existing_stripe_id = None
+    if disp_row and disp_row["metadata"]:
+        try:
+            meta = (
+                json.loads(disp_row["metadata"])
+                if isinstance(disp_row["metadata"], str)
+                else disp_row["metadata"]
+            )
+            existing_stripe_id = meta.get("stripe_dispute_id")
+        except Exception:
+            pass
+
+    # If an existing Stripe dispute is already in 'needs_response', reuse it
+    if existing_stripe_id:
+        try:
+            d = stripe.Dispute.retrieve(existing_stripe_id)
+            if d.status in ["needs_response", "warning_needs_response"]:
+                conn.close()
+                return d.id, getattr(d, "payment_intent", "")
+        except Exception:
+            pass
+
+    print(f"  [STRIPE] Creating fresh test dispute for scenario {scen}...")
+    pi = stripe.PaymentIntent.create(
+        amount=amount,
+        currency="usd",
+        payment_method=pm,
+        confirm=True,
+        automatic_payment_methods={"enabled": True, "allow_redirects": "never"},
+        metadata={"order_id": order_id, "scenario": scen},
+    )
+
+    # Poll until dispute is created
+    dispute = None
+    charge_id = None
+    for _ in range(15):
+        time.sleep(1.5)
+        pi_refreshed = stripe.PaymentIntent.retrieve(pi.id, expand=["latest_charge.dispute"])
+        if (
+            pi_refreshed.latest_charge
+            and hasattr(pi_refreshed.latest_charge, "dispute")
+            and pi_refreshed.latest_charge.dispute
+        ):
+            dispute = pi_refreshed.latest_charge.dispute
+            charge_id = pi_refreshed.latest_charge.id
+            break
+        d_list = stripe.Dispute.list(payment_intent=pi.id, limit=1)
+        if d_list.data:
+            dispute = d_list.data[0]
+            break
+
+    if not dispute:
+        raise TimeoutError(f"Could not create dispute in Stripe test mode for PaymentIntent {pi.id}")
+
+    dispute_id = dispute.id
+    print(f"  [STRIPE] Live dispute active: {dispute_id} (status={dispute.status})")
+
+    # Update local database
+    meta_dict = {"order_id": order_id, "scenario": scen, "stripe_dispute_id": dispute_id}
+    cur.execute(
+        """UPDATE disputes 
+           SET payment_intent_id = ?, charge_id = ?, status = 'needs_response',
+               metadata = ?
+           WHERE id = ? OR order_id = ?""",
+        (pi.id, charge_id, json.dumps(meta_dict), f"dp_{scen}", order_id),
+    )
+    cur.execute(
+        """UPDATE orders 
+           SET payment_intent_id = ?, charge_id = COALESCE(?, charge_id)
+           WHERE id = ?""",
+        (pi.id, charge_id, order_id),
+    )
+    conn.commit()
+    conn.close()
+
+    return dispute_id, pi.id
+
+
 def run_local(
     dispute_identifier: str,
     scenario: Optional[str] = None,
     dry_run: bool = True,
     record_proof: bool = False,
 ) -> Dict[str, Any]:
-    """Execute the Evidence Graph for a dispute in local/dry-run mode."""
+    """Execute the Evidence Graph (and optionally Executor) for a dispute."""
     global MUTATING_CALLS_COUNT
     MUTATING_CALLS_COUNT = 0
 
+    mode_label = "Dry-Run (R-02)" if dry_run else "Live Execution (R-03)"
     print("\n" + "=" * 60)
-    print(f"Rebuttal Evidence Graph - Local Execution (R-02)")
+    print(f"Rebuttal Evidence Pipeline - {mode_label}")
     print(f"Target: {scenario or dispute_identifier} | Dry-Run: {dry_run}")
     print("=" * 60 + "\n")
 
@@ -140,9 +255,12 @@ def run_local(
             f"to discover the order and customer, gather evidence, and produce DisputeStrategy and EvidencePacket."
         )
 
+    # In live execution mode, ensure Stripe dispute is ready
+    if not dry_run and ctx.get("scenario") in ["S1", "S2", "S3"]:
+        ensure_active_stripe_dispute(ctx["scenario"])
+
     print(f"[Graph] Launching Strands multi-agent pipeline...")
     strategy, drafter, graph = run_evidence_pipeline(task)
-    wall_time = time.time() - start_time
 
     print("\n" + "-" * 60)
     print("STRATEGY RESULT (DisputeStrategy):")
@@ -156,11 +274,36 @@ def run_local(
     drafter_dict = drafter.model_dump() if drafter else {}
     print(json.dumps(drafter_dict, indent=2))
 
+    exec_result = None
+    if not dry_run:
+        print("\n" + "-" * 60)
+        print("EXECUTOR AGENT (R-03 Live Submission):")
+        print("-" * 60)
+        print("  [Gate] Approval auto-granted per R-03 specification.")
+        record_case(
+            dispute_id=ctx["dispute_id"],
+            action="grant_approval",
+            actor="human_gate",
+            details={"auto_approved": True, "rationale": strategy.rationale if strategy else ""},
+        )
+
+        print(f"  [Executor] Dispatching approved strategy '{strategy.action}' to Stripe...")
+        exec_result = execute_strategy(
+            dispute_id=ctx["dispute_id"],
+            strategy=strategy,
+            evidence_packet=drafter,
+            context=ctx,
+            is_demo_mode=True,
+        )
+        print(f"  [Executor] Execution completed: {exec_result}")
+
+    wall_time = time.time() - start_time
+
     print("\n" + "-" * 60)
     print("RUN METRICS & SAFEGUARDS:")
     print("-" * 60)
-    print(f"  Wall Time:              {wall_time:.2f}s (< 120s target)")
-    print(f"  Mutating Stripe Calls:  {MUTATING_CALLS_COUNT} (0 required in dry-run)")
+    print(f"  Wall Time:              {wall_time:.2f}s")
+    print(f"  Mutating Stripe Calls:  {MUTATING_CALLS_COUNT}")
     print(f"  Graph Nodes Completed:  {len(graph.state.completed_nodes)}")
 
     if dry_run:
@@ -170,6 +313,7 @@ def run_local(
         "context": ctx,
         "strategy": strategy,
         "evidence_packet": drafter,
+        "executor_result": exec_result,
         "wall_time": wall_time,
         "mutating_calls": MUTATING_CALLS_COUNT,
     }
@@ -179,61 +323,92 @@ def main():
     parser = argparse.ArgumentParser(description="Rebuttal Local Evidence Graph Runner")
     parser.add_argument("--dispute", type=str, help="Dispute ID or scenario (S1, S2, S3)")
     parser.add_argument("--scenario", type=str, choices=["S1", "S2", "S3", "s1", "s2", "s3"], help="Target scenario")
-    parser.add_argument("--dry-run", action="store_true", default=True, help="Enforce dry-run mode (default: True)")
-    parser.add_argument("--record-proof", action="store_true", help="Record proof lines to docs/proofs/R-02.md")
+    parser.add_argument("--dry-run", action="store_true", default=None, help="Enforce dry-run mode (default if not --execute)")
+    parser.add_argument("--execute", "--live", dest="execute", action="store_true", help="Execute live evidence submission with Executor (R-03)")
+    parser.add_argument("--record-proof", action="store_true", help="Record proof lines to docs/proofs/")
     args = parser.parse_args()
 
     if not args.dispute and not args.scenario:
         print("Error: Must provide either --dispute or --scenario", file=sys.stderr)
         sys.exit(1)
 
+    is_dry_run = not args.execute if args.dry_run is None else args.dry_run
+
     target = args.scenario.upper() if args.scenario else args.dispute
     result = run_local(
         dispute_identifier=target,
         scenario=args.scenario.upper() if args.scenario else None,
-        dry_run=args.dry_run,
+        dry_run=is_dry_run,
         record_proof=args.record_proof,
     )
 
     strategy: Optional[DisputeStrategy] = result["strategy"]
     drafter: Optional[EvidencePacket] = result["evidence_packet"]
+    exec_result: Optional[Dict[str, Any]] = result["executor_result"]
     wall_time = result["wall_time"]
     mutating_calls = result["mutating_calls"]
-
-    # Check proofs for scenario
     scen = result["context"].get("scenario")
-    if scen == "S1" and strategy and drafter:
-        action_pass = strategy.action == "fight"
-        prob_pass = strategy.win_probability >= 0.70
-        strength_pass = strategy.evidence_strength == "strong"
-        tracking_pass = bool(drafter.shipping_tracking_number)
-        s1_pass = action_pass and prob_pass and strength_pass and tracking_pass
-        proof_line = f"PROOF R-02: S1 action={strategy.action} win_probability>=0.70 evidence_strength={strategy.evidence_strength} shipping_tracking_number set = {'PASS' if s1_pass else 'FAIL'}"
-        print(f"\n{proof_line}")
-        if args.record_proof:
-            PROOF_FILE.parent.mkdir(parents=True, exist_ok=True)
-            with open(PROOF_FILE, "a", encoding="utf-8") as f:
-                f.write(f"{proof_line}\n")
 
-    elif scen == "S2" and strategy:
-        action_pass = strategy.action == "concede"
-        cust_val_pass = strategy.customer_value in ["repeat", "vip"]
-        s2_pass = action_pass and cust_val_pass
-        proof_line = f"PROOF R-02: S2 action={strategy.action} customer_value in {{repeat,vip}} = {'PASS' if s2_pass else 'FAIL'}"
-        print(f"\n{proof_line}")
-        if args.record_proof:
-            PROOF_FILE.parent.mkdir(parents=True, exist_ok=True)
-            with open(PROOF_FILE, "a", encoding="utf-8") as f:
-                f.write(f"{proof_line}\n")
+    if is_dry_run:
+        # R-02 Proofs
+        if scen == "S1" and strategy and drafter:
+            action_pass = strategy.action == "fight"
+            prob_pass = strategy.win_probability >= 0.70
+            strength_pass = strategy.evidence_strength == "strong"
+            tracking_pass = bool(drafter.shipping_tracking_number)
+            s1_pass = action_pass and prob_pass and strength_pass and tracking_pass
+            proof_line = f"PROOF R-02: S1 action={strategy.action} win_probability>=0.70 evidence_strength={strategy.evidence_strength} shipping_tracking_number set = {'PASS' if s1_pass else 'FAIL'}"
+            print(f"\n{proof_line}")
+            if args.record_proof:
+                PROOF_FILE_R02.parent.mkdir(parents=True, exist_ok=True)
+                with open(PROOF_FILE_R02, "a", encoding="utf-8") as f:
+                    f.write(f"{proof_line}\n")
 
-    # Dry-run proof
-    dry_run_pass = mutating_calls == 0 and wall_time < 120.0
-    proof_dry_run = f"PROOF R-02: dry-run made {mutating_calls} mutating Stripe calls, wall time <120s = {'PASS' if dry_run_pass else 'FAIL'}"
-    print(f"{proof_dry_run}")
-    if args.record_proof:
-        PROOF_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with open(PROOF_FILE, "a", encoding="utf-8") as f:
-            f.write(f"{proof_dry_run}\n")
+        elif scen == "S2" and strategy:
+            action_pass = strategy.action == "concede"
+            cust_val_pass = strategy.customer_value in ["repeat", "vip"]
+            s2_pass = action_pass and cust_val_pass
+            proof_line = f"PROOF R-02: S2 action={strategy.action} customer_value in {{repeat,vip}} = {'PASS' if s2_pass else 'FAIL'}"
+            print(f"\n{proof_line}")
+            if args.record_proof:
+                PROOF_FILE_R02.parent.mkdir(parents=True, exist_ok=True)
+                with open(PROOF_FILE_R02, "a", encoding="utf-8") as f:
+                    f.write(f"{proof_line}\n")
+
+        # Dry-run proof
+        dry_run_pass = mutating_calls == 0 and wall_time < 120.0
+        proof_dry_run = f"PROOF R-02: dry-run made {mutating_calls} mutating Stripe calls, wall time <120s = {'PASS' if dry_run_pass else 'FAIL'}"
+        print(f"{proof_dry_run}")
+        if args.record_proof:
+            PROOF_FILE_R02.parent.mkdir(parents=True, exist_ok=True)
+            with open(PROOF_FILE_R02, "a", encoding="utf-8") as f:
+                f.write(f"{proof_dry_run}\n")
+
+    else:
+        # R-03 Proofs
+        stripe_disp = get_dispute(result["context"]["dispute_id"])
+        stripe_status = stripe_disp.get("status", "unknown")
+        file_id = exec_result.get("uploaded_file_id") if exec_result else ""
+        audit_rows = exec_result.get("audit_rows_count", 0) if exec_result else 0
+
+        p1_pass = stripe_status == "won"
+        p2_pass = bool(file_id and file_id.startswith("file_"))
+        p3_pass = audit_rows >= 5
+
+        p1 = f"PROOF R-03: stripe disputes retrieve dp_S1 status={stripe_status} = {'PASS' if p1_pass else 'FAIL'}"
+        p2 = f"PROOF R-03: evidence file id {file_id} uploaded = {'PASS' if p2_pass else 'FAIL'}"
+        p3 = f"PROOF R-03: audit_log rows for dp_S1 >= 5 = {'PASS' if p3_pass else 'FAIL'}"
+
+        print(f"\n{p1}")
+        print(p2)
+        print(p3)
+
+        if args.record_proof:
+            PROOF_FILE_R03.parent.mkdir(parents=True, exist_ok=True)
+            with open(PROOF_FILE_R03, "a", encoding="utf-8") as f:
+                f.write(f"{p1}\n")
+                f.write(f"{p2}\n")
+                f.write(f"{p3}\n")
 
 
 if __name__ == "__main__":
