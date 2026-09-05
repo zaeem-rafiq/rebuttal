@@ -35,7 +35,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-LOCAL_DB_PATH = REPO_ROOT / "data" / "local_supabase.db"
+LOCAL_DB_PATH = Path("/tmp/local_supabase.db") if os.name != "nt" else REPO_ROOT / "data" / "local_supabase.db"
 PROOF_FILE_R04 = REPO_ROOT / "docs" / "proofs" / "R-04.md"
 
 from agent.tools.stripe_tools import (
@@ -64,7 +64,18 @@ def process_reply(
     now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     if not LOCAL_DB_PATH.exists():
-        raise FileNotFoundError(f"Database not found at {LOCAL_DB_PATH}")
+        if os.name != "nt":
+            orig = REPO_ROOT / "data" / "local_supabase.db"
+            if orig.exists():
+                import shutil
+                LOCAL_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(orig, LOCAL_DB_PATH)
+                try:
+                    os.chmod(LOCAL_DB_PATH, 0o666)
+                except Exception:
+                    pass
+        if not LOCAL_DB_PATH.exists():
+            raise FileNotFoundError(f"Database not found at {LOCAL_DB_PATH}")
 
     conn = sqlite3.connect(LOCAL_DB_PATH)
     conn.row_factory = sqlite3.Row

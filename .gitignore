@@ -58,3 +58,6 @@ out/
 
 # Bedrock AgentCore build cache
 .bedrock_agentcore/
+
+# AWS SAM CLI
+.aws-sam/

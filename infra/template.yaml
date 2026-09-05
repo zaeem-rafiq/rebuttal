@@ -1,0 +1,123 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Rebuttal - Webhooks & Scheduler Glue (Stripe, Twilio, EventBridge)
+
+Parameters:
+  AgentRuntimeArn:
+    Type: String
+    Default: arn:aws:bedrock-agentcore:us-east-1:292341338711:runtime/rebuttal-pASUe6CVmu
+    Description: ARN of the Bedrock AgentCore runtime for Rebuttal
+  StripeWebhookSecret:
+    Type: String
+    NoEcho: true
+    Default: ''
+    Description: Stripe webhook signing secret (whsec_...)
+  TwilioAuthToken:
+    Type: String
+    NoEcho: true
+    Default: ''
+    Description: Twilio Auth Token for webhook signature validation
+  SupabaseUrl:
+    Type: String
+    Default: 'https://ygcmdhmoqvafxrqyqnqv.supabase.co'
+    Description: Supabase REST URL
+  SupabaseServiceKey:
+    Type: String
+    NoEcho: true
+    Default: ''
+    Description: Supabase Service Role Key
+  OwnerPhone:
+    Type: String
+    Default: ''
+    Description: Owner phone number for inbound SMS matching
+
+Resources:
+  StripeWebhookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: rebuttal-stripe-webhook
+      CodeUri: lambdas/stripe_webhook/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Timeout: 30
+      MemorySize: 256
+      FunctionUrlConfig:
+        AuthType: NONE
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock-agentcore:InvokeAgentRuntime
+              Resource:
+                - !Sub '${AgentRuntimeArn}*'
+                - !Sub '${AgentRuntimeArn}/*'
+      Environment:
+        Variables:
+          AGENT_RUNTIME_ARN: !Ref AgentRuntimeArn
+          STRIPE_WEBHOOK_SECRET: !Ref StripeWebhookSecret
+          AWS_REGION_NAME: !Ref 'AWS::Region'
+
+  TwilioWebhookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: rebuttal-twilio-webhook
+      CodeUri: lambdas/twilio_webhook/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Timeout: 30
+      MemorySize: 256
+      FunctionUrlConfig:
+        AuthType: NONE
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock-agentcore:InvokeAgentRuntime
+              Resource:
+                - !Sub '${AgentRuntimeArn}*'
+                - !Sub '${AgentRuntimeArn}/*'
+      Environment:
+        Variables:
+          AGENT_RUNTIME_ARN: !Ref AgentRuntimeArn
+          TWILIO_AUTH_TOKEN: !Ref TwilioAuthToken
+          SUPABASE_URL: !Ref SupabaseUrl
+          SUPABASE_SERVICE_KEY: !Ref SupabaseServiceKey
+          OWNER_PHONE: !Ref OwnerPhone
+          AWS_REGION_NAME: !Ref 'AWS::Region'
+
+  SweepFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: rebuttal-sweep-scheduler
+      CodeUri: lambdas/sweep/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Timeout: 60
+      MemorySize: 256
+      Events:
+        SweepSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'rate(6 hours)'
+            Description: 'Trigger Rebuttal dispute sweep every 6 hours'
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock-agentcore:InvokeAgentRuntime
+              Resource:
+                - !Sub '${AgentRuntimeArn}*'
+                - !Sub '${AgentRuntimeArn}/*'
+      Environment:
+        Variables:
+          AGENT_RUNTIME_ARN: !Ref AgentRuntimeArn
+          AWS_REGION_NAME: !Ref 'AWS::Region'
+
+Outputs:
+  StripeWebhookUrl:
+    Description: Function URL for incoming Stripe webhooks
+    Value: !GetAtt StripeWebhookFunctionUrl.FunctionUrl
+
+  TwilioWebhookUrl:
+    Description: Function URL for incoming Twilio messaging webhooks
+    Value: !GetAtt TwilioWebhookFunctionUrl.FunctionUrl

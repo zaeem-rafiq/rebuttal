@@ -122,6 +122,10 @@ def ensure_db():
                 orig_db = REPO_ROOT / "data" / "local_supabase.db"
                 if orig_db.exists():
                     shutil.copyfile(orig_db, tmp_db)
+            try:
+                os.chmod(tmp_db, 0o666)
+            except Exception:
+                pass
             LOCAL_DB_PATH = tmp_db
 
             import agent.tools.case_tools
@@ -256,6 +260,7 @@ async def process_case_async(dispute_id: str, scenario: Optional[str] = None):
 def main(payload: Any, context: Optional[Any] = None) -> Dict[str, Any]:
     """AgentCore entrypoint dispatching payload['type']."""
     load_secrets()
+    ensure_db()
 
     if isinstance(payload, str):
         try:

@@ -236,6 +236,27 @@ class ApprovalGate(HookProvider):
             except Exception as e:
                 print(f"  [Gate Notice] Error inserting decision: {e}", file=sys.stderr)
 
+        # Replicate pending decision to Supabase Cloud
+        try:
+            from agent.tools.case_tools import _get_supabase_client
+            sb = _get_supabase_client()
+            if sb:
+                sb.table("decisions").insert({
+                    "id": decision_id,
+                    "dispute_id": dispute_id,
+                    "action": action,
+                    "win_probability": win_probability,
+                    "expected_value_cents": expected_val,
+                    "evidence_strength": ev_strength,
+                    "customer_value": cust_val,
+                    "rationale": rationale,
+                    "owner_summary": owner_summary,
+                    "status": "pending",
+                    "created_at": now_iso,
+                }).execute()
+        except Exception:
+            pass
+
         # Dispatch SMS via Twilio
         sms_body = f"{owner_summary}\n\nReply:\n1 Fight\n2 Concede\n3 Hold"
         sms_sid = send_owner_sms(sms_body)
