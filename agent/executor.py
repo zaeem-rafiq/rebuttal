@@ -87,17 +87,50 @@ def build_executor_agent(
     session_id: Optional[str] = None,
     storage_dir: str = ".sessions",
     hooks: Optional[list] = None,
+    session_manager: Optional[Any] = None,
+    merchant_id: str = "default",
+    memory_id: Optional[str] = None,
 ) -> Agent:
     """Build and return a Strands Agent instance configured for dispute execution."""
     if model is None:
         from agent.graph import get_bedrock_model
         model = get_bedrock_model()
 
-    session_manager = (
-        FileSessionManager(session_id=session_id, storage_dir=storage_dir)
-        if session_id
-        else None
-    )
+    if session_manager is not None:
+        active_session_manager = session_manager
+    elif session_id:
+        target_memory_id = memory_id or os.getenv("AGENTCORE_MEMORY_ID", "rebuttal_mem-Idf0xfCGuL")
+        use_agentcore_memory = os.getenv("USE_AGENTCORE_MEMORY_SESSION", "true").lower() == "true"
+        if use_agentcore_memory and target_memory_id:
+            try:
+                from bedrock_agentcore.memory.integrations.strands.session_manager import AgentCoreMemorySessionManager
+                from bedrock_agentcore.memory.integrations.strands.config import AgentCoreMemoryConfig
+                import boto3
+
+                region = os.getenv("AWS_REGION", "us-east-1")
+                is_cloud = bool(os.environ.get("DOCKER_CONTAINER") or not os.path.exists(os.path.expanduser("~/.aws/credentials")))
+                profile = None if is_cloud else os.getenv("AWS_PROFILE")
+                b_sess = boto3.Session(profile_name=profile, region_name=region) if profile else boto3.Session(region_name=region)
+
+                cfg = AgentCoreMemoryConfig(
+                    memory_id=target_memory_id,
+                    session_id=session_id,
+                    actor_id=merchant_id,
+                )
+                active_session_manager = AgentCoreMemorySessionManager(
+                    agentcore_memory_config=cfg,
+                    region_name=region,
+                    boto_session=b_sess,
+                )
+            except Exception as e:
+                import logging
+                logging.getLogger("rebuttal.executor").warning("Falling back to FileSessionManager: %s", e)
+                active_session_manager = FileSessionManager(session_id=session_id, storage_dir=storage_dir)
+        else:
+            active_session_manager = FileSessionManager(session_id=session_id, storage_dir=storage_dir)
+    else:
+        active_session_manager = None
+
     active_hooks = hooks if hooks is not None else [ApprovalGate(), AuditHook()]
 
     return Agent(
@@ -111,7 +144,7 @@ def build_executor_agent(
             send_customer_email,
         ],
         hooks=active_hooks,
-        session_manager=session_manager,
+        session_manager=active_session_manager,
         system_prompt=EXECUTOR_SYSTEM_PROMPT,
         name="executor",
     )

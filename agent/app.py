@@ -4,7 +4,7 @@ Dispatches payload["type"] in:
 - dispute.created: starts async task for dispute case work, acknowledges immediately
 - approval: processes owner reply (fight/concede/hold) and resumes dispute
 - sweep: runs deadline sweep and silence policy evaluation
-- dispute.closed: handles dispute closure events
+- dispute.closed: handles dispute closure events and records semantic memory
 """
 
 import os
@@ -29,7 +29,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-# Safe session storage path (world-writable in container runtime)
+# Safe session storage path (fallback)
 SESSION_STORAGE_DIR = "/tmp/.sessions" if os.name != "nt" else str(REPO_ROOT / ".sessions")
 os.makedirs(SESSION_STORAGE_DIR, exist_ok=True)
 
@@ -48,7 +48,7 @@ logger = logging.getLogger("rebuttal.app")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 
-# Monkeypatch build_executor_agent so any invocation defaults to SESSION_STORAGE_DIR
+# Monkeypatch build_executor_agent so any file-based fallback defaults to SESSION_STORAGE_DIR
 try:
     import agent.executor
     _orig_build_executor = agent.executor.build_executor_agent
@@ -147,13 +147,18 @@ def ensure_db():
         if not row or row[0] == 0:
             seed_local_db(conn)
 
-        # Ensure dp_S1 metadata points to active open dispute in Stripe
+        # Ensure active open dispute mappings in Stripe
         try:
             cur = conn.cursor()
             cur.execute(
                 "UPDATE disputes SET status = 'needs_response', metadata = ? WHERE id = 'dp_S1'",
                 (json.dumps({"order_id": "ORD-1001", "scenario": "S1", "stripe_dispute_id": "du_1UCRKwEmho7ai02fOehjwYpj"}),)
             )
+            cur.execute(
+                "UPDATE disputes SET status = 'needs_response', metadata = ? WHERE id = 'dp_S2'",
+                (json.dumps({"order_id": "ORD-1002", "scenario": "S2", "stripe_dispute_id": "du_1UCRpaEmho7ai02fz4afR2xG"}),)
+            )
+            cur.execute("DELETE FROM decisions WHERE dispute_id = 'dp_S2'")
             conn.commit()
         except Exception:
             pass
@@ -174,8 +179,12 @@ async def process_case_async(dispute_id: str, scenario: Optional[str] = None):
         from agent.graph import run_evidence_pipeline
         from agent.executor import build_executor_agent, execute_strategy
         from agent.tools.stripe_tools import get_dispute, resolve_stripe_dispute_id
+        from agent.tools.memory_tools import patch_history_tool_with_memory
         from agent.hooks import get_agent_state, set_agent_state
         from scripts.run_local import resolve_scenario_context
+
+        # Enhance history agent with Bedrock AgentCore long-term memory
+        patch_history_tool_with_memory()
 
         clean_dispute_id = dispute_id.strip()
         scen = scenario or ("S1" if "S1" in clean_dispute_id else ("S2" if "S2" in clean_dispute_id else "S1"))
@@ -193,11 +202,10 @@ async def process_case_async(dispute_id: str, scenario: Optional[str] = None):
         # 1. Run evidence graph pipeline with explicit model
         strategy, drafter, graph = run_evidence_pipeline(task, model=model)
 
-        # 2. Build and run executor agent with approval gate and explicit model & storage_dir
+        # 2. Build and run executor agent with AgentCoreMemorySessionManager
         agent_instance = build_executor_agent(
             model=model,
             session_id=ctx["dispute_id"],
-            storage_dir=SESSION_STORAGE_DIR,
         )
         set_agent_state(agent_instance, "dispute_id", ctx["dispute_id"])
         set_agent_state(agent_instance, "amount_cents", ctx["amount_cents"])
@@ -219,6 +227,9 @@ async def process_case_async(dispute_id: str, scenario: Optional[str] = None):
 
         # 3. Check gate status and dispatch strategy if approved/skipped
         gate_status = get_agent_state(agent_instance, "gate_status")
+        stop_reason = getattr(exec_agent_result, "stop_reason", None)
+        logger.info("Executor finished: stop_reason=%s, gate_status=%s", stop_reason, gate_status)
+
         if scen == "S1" or gate_status == "skipped":
             exec_result = execute_strategy(
                 dispute_id=ctx["dispute_id"],
@@ -227,15 +238,14 @@ async def process_case_async(dispute_id: str, scenario: Optional[str] = None):
                 context=ctx,
                 is_demo_mode=True,
             )
-            # Retrieve final status from Stripe
             disp_info = get_dispute(ctx["dispute_id"])
             final_status = disp_info.get("status", "won")
-            # CloudWatch log line required: case complete {dispute_id} status={final_status}
             logger.info("case complete %s status=%s", ctx["dispute_id"], final_status)
             print(f"case complete {ctx['dispute_id']} status={final_status}", flush=True)
         else:
-            logger.info("dispute %s held at gate: %s", ctx["dispute_id"], gate_status)
-            print(f"dispute {ctx['dispute_id']} held at gate: {gate_status}", flush=True)
+            # Gated / interrupted execution: state persisted in AgentCore Memory
+            logger.info("dispute %s held at gate: %s stop_reason=interrupt", ctx["dispute_id"], gate_status)
+            print(f"dispute {ctx['dispute_id']} held at gate: {gate_status} stop_reason=interrupt", flush=True)
 
     except Exception as e:
         logger.exception("Error processing dispute %s: %s", dispute_id, e)
@@ -261,7 +271,6 @@ def main(payload: Any, context: Optional[Any] = None) -> Dict[str, Any]:
     logger.info("Dispatching event: type=%s, dispute_id=%s", event_type, dispute_id)
 
     if event_type == "dispute.created":
-        # Launch background async task
         try:
             loop = asyncio.get_running_loop()
             loop.create_task(process_case_async(dispute_id, scenario=payload.get("scenario")))
@@ -285,11 +294,17 @@ def main(payload: Any, context: Optional[Any] = None) -> Dict[str, Any]:
 
         answer = str(payload.get("answer", "1"))
         res = process_reply(dispute_id=dispute_id, answer=answer)
+        final_st = res.get("final_status", "lost")
+        logger.info("approval processed for %s: dispute closed status=%s", dispute_id, final_st)
+        print(f"case complete {dispute_id} status={final_st}", flush=True)
+        print(f"dispute closed status={final_st}", flush=True)
         return {
             "accepted": True,
             "type": "approval",
             "dispute_id": dispute_id,
             "result": res,
+            "status": "closed",
+            "final_status": final_st,
         }
 
     elif event_type == "sweep":
@@ -306,18 +321,37 @@ def main(payload: Any, context: Optional[Any] = None) -> Dict[str, Any]:
 
     elif event_type == "dispute.closed":
         from agent.tools.case_tools import record_case
+        from agent.tools.memory_tools import store_dispute_outcome
+
+        reason = payload.get("reason", "product_not_received")
+        action = payload.get("action", "fight")
+        outcome = payload.get("outcome", payload.get("status", "won"))
+        amount = int(payload.get("amount", payload.get("amount_cents", 4800)))
+        merchant_id = payload.get("merchant_id", "default")
+
+        mem_event = store_dispute_outcome(
+            dispute_id=dispute_id,
+            reason=reason,
+            action=action,
+            outcome=outcome,
+            amount=amount,
+            merchant_id=merchant_id,
+        )
 
         record_case(
             dispute_id=dispute_id,
             status=payload.get("status", "closed"),
             action="dispute_closed_webhook",
             actor="webhook",
-            details=payload.get("details", {}),
+            details={"memory_event": mem_event, **payload.get("details", {})},
         )
+        logger.info("dispute.closed processed for %s: status=%s", dispute_id, outcome)
+        print(f"dispute.closed processed for {dispute_id}: status={outcome}", flush=True)
         return {
             "accepted": True,
             "type": "dispute.closed",
             "dispute_id": dispute_id,
+            "memory_event": mem_event,
         }
 
     else:

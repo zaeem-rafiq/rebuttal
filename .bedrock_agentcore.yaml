@@ -32,7 +32,7 @@ agents:
     bedrock_agentcore:
       agent_id: rebuttal-pASUe6CVmu
       agent_arn: arn:aws:bedrock-agentcore:us-east-1:292341338711:runtime/rebuttal-pASUe6CVmu
-      agent_session_id: rebuttal-dp_S1-3da43acc7a3b41089e7f39d86de5b524
+      agent_session_id: rebuttal-dp_S2-843e9bf4236345f28e9a0a837080fbc7
     codebuild:
       project_name: bedrock-agentcore-rebuttal-builder
       execution_role: arn:aws:iam::292341338711:role/AmazonBedrockAgentCoreSDKCodeBuild-us-east-1-a0cecbead2
