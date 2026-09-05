@@ -78,11 +78,27 @@ EXECUTOR_SYSTEM_PROMPT = (
 )
 
 
-def build_executor_agent(model: Optional[BedrockModel] = None) -> Agent:
+from strands.session import FileSessionManager
+from agent.hooks import ApprovalGate, AuditHook, send_owner_sms
+
+
+def build_executor_agent(
+    model: Optional[BedrockModel] = None,
+    session_id: Optional[str] = None,
+    storage_dir: str = ".sessions",
+    hooks: Optional[list] = None,
+) -> Agent:
     """Build and return a Strands Agent instance configured for dispute execution."""
     if model is None:
         from agent.graph import get_bedrock_model
         model = get_bedrock_model()
+
+    session_manager = (
+        FileSessionManager(session_id=session_id, storage_dir=storage_dir)
+        if session_id
+        else None
+    )
+    active_hooks = hooks if hooks is not None else [ApprovalGate(), AuditHook()]
 
     return Agent(
         model=model,
@@ -94,6 +110,8 @@ def build_executor_agent(model: Optional[BedrockModel] = None) -> Agent:
             record_case,
             send_customer_email,
         ],
+        hooks=active_hooks,
+        session_manager=session_manager,
         system_prompt=EXECUTOR_SYSTEM_PROMPT,
         name="executor",
     )
@@ -372,6 +390,11 @@ def execute_strategy(
         except Exception:
             pass
 
+    # Dispatch confirmation SMS per R-04 requirement
+    conf_sms_sid = send_owner_sms(
+        f"Rebuttal: Action '{action}' executed for dispute {clean_dispute_id}. Status: {final_status}."
+    )
+
     return {
         "dispute_id": clean_dispute_id,
         "stripe_dispute_id": target_stripe_id,
@@ -379,4 +402,5 @@ def execute_strategy(
         "final_status": final_status,
         "uploaded_file_id": uploaded_file_id,
         "audit_rows_count": audit_rows_count,
+        "confirmation_sms_sid": conf_sms_sid,
     }

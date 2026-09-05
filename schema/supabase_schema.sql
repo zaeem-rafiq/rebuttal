@@ -147,6 +147,7 @@ CREATE TABLE IF NOT EXISTS decisions (
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'executed', 'overridden')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     approved_at TIMESTAMPTZ,
+    answered_at TIMESTAMPTZ,
     executed_at TIMESTAMPTZ
 );
 

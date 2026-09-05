@@ -1,0 +1,6 @@
+merchant_name: "Acme Specialty Goods"
+approval_amount_cents: 20000
+min_win_probability_to_fight: 0.50
+always_concede_under_cents: 1500
+vip_concede_max_cents: 50000
+silence_action: "fight"

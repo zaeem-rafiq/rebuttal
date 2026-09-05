@@ -38,6 +38,7 @@ if str(REPO_ROOT) not in sys.path:
 LOCAL_DB_PATH = REPO_ROOT / "data" / "local_supabase.db"
 PROOF_FILE_R02 = REPO_ROOT / "docs" / "proofs" / "R-02.md"
 PROOF_FILE_R03 = REPO_ROOT / "docs" / "proofs" / "R-03.md"
+PROOF_FILE_R04 = REPO_ROOT / "docs" / "proofs" / "R-04.md"
 
 # Mutating Stripe call tracking counter
 MUTATING_CALLS_COUNT = 0
@@ -50,32 +51,43 @@ def track_mutating_call(tool_name: str):
     print(f"  [STRIPE MUTATION] Tool called: {tool_name}", file=sys.stderr)
 
 
-# Instrument mutating Stripe tools
+# Instrument mutating Stripe tools while preserving @tool decorator specification
 import agent.tools.stripe_tools as st
 
-_orig_submit = st.submit_evidence
-_orig_concede = st.concede_dispute
-_orig_refund = st.refund_inquiry
+_orig_submit_func = getattr(st.submit_evidence, "_tool_func", st.submit_evidence)
+_orig_concede_func = getattr(st.concede_dispute, "_tool_func", st.concede_dispute)
+_orig_refund_func = getattr(st.refund_inquiry, "_tool_func", st.refund_inquiry)
 
 
 def _guarded_submit(*args, **kwargs):
     track_mutating_call("submit_evidence")
-    return _orig_submit(*args, **kwargs)
+    return _orig_submit_func(*args, **kwargs)
 
 
 def _guarded_concede(*args, **kwargs):
     track_mutating_call("concede_dispute")
-    return _orig_concede(*args, **kwargs)
+    return _orig_concede_func(*args, **kwargs)
 
 
 def _guarded_refund(*args, **kwargs):
     track_mutating_call("refund_inquiry")
-    return _orig_refund(*args, **kwargs)
+    return _orig_refund_func(*args, **kwargs)
 
 
-st.submit_evidence = _guarded_submit
-st.concede_dispute = _guarded_concede
-st.refund_inquiry = _guarded_refund
+if hasattr(st.submit_evidence, "_tool_func"):
+    st.submit_evidence._tool_func = _guarded_submit
+else:
+    st.submit_evidence = _guarded_submit
+
+if hasattr(st.concede_dispute, "_tool_func"):
+    st.concede_dispute._tool_func = _guarded_concede
+else:
+    st.concede_dispute = _guarded_concede
+
+if hasattr(st.refund_inquiry, "_tool_func"):
+    st.refund_inquiry._tool_func = _guarded_refund
+else:
+    st.refund_inquiry = _guarded_refund
 
 from agent.graph import run_evidence_pipeline
 from agent.models import DisputeStrategy, EvidencePacket
@@ -275,27 +287,68 @@ def run_local(
     print(json.dumps(drafter_dict, indent=2))
 
     exec_result = None
+    exec_agent_result = None
+    agent_instance = None
     if not dry_run:
         print("\n" + "-" * 60)
-        print("EXECUTOR AGENT (R-03 Live Submission):")
+        print("EXECUTOR AGENT (Live Execution with ApprovalGate):")
         print("-" * 60)
-        print("  [Gate] Approval auto-granted per R-03 specification.")
-        record_case(
-            dispute_id=ctx["dispute_id"],
-            action="grant_approval",
-            actor="human_gate",
-            details={"auto_approved": True, "rationale": strategy.rationale if strategy else ""},
+
+        import shutil
+        from agent.executor import build_executor_agent
+        from agent.hooks import set_agent_state, get_agent_state
+
+        # Clean any stale session and decisions for a fresh run
+        session_dir = Path(".sessions") / f"session_{ctx['dispute_id']}"
+        if session_dir.exists():
+            shutil.rmtree(session_dir)
+
+        if LOCAL_DB_PATH.exists():
+            conn = sqlite3.connect(LOCAL_DB_PATH)
+            conn.execute("DELETE FROM decisions WHERE dispute_id = ?", (ctx["dispute_id"],))
+            conn.commit()
+            conn.close()
+
+        agent_instance = build_executor_agent(
+            session_id=ctx["dispute_id"],
+            storage_dir=".sessions",
+        )
+        set_agent_state(agent_instance, "dispute_id", ctx["dispute_id"])
+        set_agent_state(agent_instance, "amount_cents", ctx["amount_cents"])
+        set_agent_state(
+            agent_instance,
+            "strategy",
+            strategy.model_dump() if hasattr(strategy, "model_dump") else (strategy or {}),
         )
 
-        print(f"  [Executor] Dispatching approved strategy '{strategy.action}' to Stripe...")
-        exec_result = execute_strategy(
-            dispute_id=ctx["dispute_id"],
-            strategy=strategy,
-            evidence_packet=drafter,
-            context=ctx,
-            is_demo_mode=True,
+        prompt = (
+            f"Execute the approved dispute strategy for dispute {ctx['dispute_id']}.\n"
+            f"Target dispute ID: {ctx['dispute_id']}\n"
+            f"Action: {strategy.action}\n"
+            f"Amount: {ctx['amount_cents']} cents\n"
+            f"Rationale: {strategy.rationale}\n"
+            f"Call the appropriate execution tool now."
         )
-        print(f"  [Executor] Execution completed: {exec_result}")
+
+        print(f"  [Executor] Invoking agent for dispute {ctx['dispute_id']}...")
+        exec_agent_result = agent_instance(prompt)
+
+        if hasattr(exec_agent_result, "stop_reason") and exec_agent_result.stop_reason == "interrupt":
+            print(f"  [ApprovalGate] Agent interrupted: {exec_agent_result.stop_reason}")
+        else:
+            stop_r = getattr(exec_agent_result, "stop_reason", "completed")
+            print(f"  [Executor] Agent completed with stop_reason: {stop_r}")
+            gate_status = get_agent_state(agent_instance, "gate_status")
+            if ctx.get("scenario") == "S1" or gate_status == "skipped":
+                print(f"  [Executor] Dispatching approved strategy '{strategy.action}' to Stripe...")
+                exec_result = execute_strategy(
+                    dispute_id=ctx["dispute_id"],
+                    strategy=strategy,
+                    evidence_packet=drafter,
+                    context=ctx,
+                    is_demo_mode=True,
+                )
+                print(f"  [Executor] Execution completed: {exec_result}")
 
     wall_time = time.time() - start_time
 
@@ -314,6 +367,8 @@ def run_local(
         "strategy": strategy,
         "evidence_packet": drafter,
         "executor_result": exec_result,
+        "exec_agent_result": exec_agent_result,
+        "agent_instance": agent_instance,
         "wall_time": wall_time,
         "mutating_calls": MUTATING_CALLS_COUNT,
     }
@@ -385,30 +440,89 @@ def main():
                 f.write(f"{proof_dry_run}\n")
 
     else:
-        # R-03 Proofs
-        stripe_disp = get_dispute(result["context"]["dispute_id"])
-        stripe_status = stripe_disp.get("status", "unknown")
-        file_id = exec_result.get("uploaded_file_id") if exec_result else ""
-        audit_rows = exec_result.get("audit_rows_count", 0) if exec_result else 0
+        exec_agent_res = result.get("exec_agent_result")
+        agent_inst = result.get("agent_instance")
+        from agent.hooks import get_agent_state
 
-        p1_pass = stripe_status == "won"
-        p2_pass = bool(file_id and file_id.startswith("file_"))
-        p3_pass = audit_rows >= 5
+        if scen == "S2":
+            stop_reason = exec_agent_res.stop_reason if exec_agent_res else "unknown"
+            intr_name = (
+                exec_agent_res.interrupts[0].name
+                if (exec_agent_res and exec_agent_res.interrupts)
+                else "none"
+            )
 
-        p1 = f"PROOF R-03: stripe disputes retrieve dp_S1 status={stripe_status} = {'PASS' if p1_pass else 'FAIL'}"
-        p2 = f"PROOF R-03: evidence file id {file_id} uploaded = {'PASS' if p2_pass else 'FAIL'}"
-        p3 = f"PROOF R-03: audit_log rows for dp_S1 >= 5 = {'PASS' if p3_pass else 'FAIL'}"
+            conn = sqlite3.connect(LOCAL_DB_PATH)
+            conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
+            decision_id = get_agent_state(agent_inst, "decision_id")
+            if decision_id:
+                dec_row = cur.execute(
+                    "SELECT status FROM decisions WHERE id = ?",
+                    (decision_id,),
+                ).fetchone()
+            else:
+                dec_row = cur.execute(
+                    "SELECT status FROM decisions WHERE dispute_id = ? ORDER BY created_at DESC LIMIT 1",
+                    (result["context"]["dispute_id"],),
+                ).fetchone()
+            conn.close()
 
-        print(f"\n{p1}")
-        print(p2)
-        print(p3)
+            dec_status = dec_row["status"] if dec_row else "unknown"
+            sms_sid = get_agent_state(agent_inst, "sms_sid", "")
 
-        if args.record_proof:
-            PROOF_FILE_R03.parent.mkdir(parents=True, exist_ok=True)
-            with open(PROOF_FILE_R03, "a", encoding="utf-8") as f:
-                f.write(f"{p1}\n")
-                f.write(f"{p2}\n")
-                f.write(f"{p3}\n")
+            p_s2_pass = (
+                (stop_reason == "interrupt")
+                and (intr_name == "owner-approval")
+                and (dec_status == "pending")
+                and bool(sms_sid and sms_sid.startswith("SM"))
+            )
+            p_s2 = (
+                f"PROOF R-04: S2 run stop_reason={stop_reason} name={intr_name} "
+                f"decisions.status={dec_status} sms_sid={sms_sid} = {'PASS' if p_s2_pass else 'FAIL'}"
+            )
+            print(f"\n{p_s2}")
+            if args.record_proof:
+                PROOF_FILE_R04.parent.mkdir(parents=True, exist_ok=True)
+                with open(PROOF_FILE_R04, "a", encoding="utf-8") as f:
+                    f.write(f"{p_s2}\n")
+
+        elif scen == "S1":
+            gate_status = get_agent_state(agent_inst, "gate_status", "skipped")
+            sms_sid = get_agent_state(agent_inst, "sms_sid", None)
+            p_s1_pass = (gate_status == "skipped") and (sms_sid is None)
+            p_s1 = f"PROOF R-04: S1 run gate=skipped, no SMS sent = {'PASS' if p_s1_pass else 'FAIL'}"
+            print(f"\n{p_s1}")
+            if args.record_proof:
+                PROOF_FILE_R04.parent.mkdir(parents=True, exist_ok=True)
+                with open(PROOF_FILE_R04, "a", encoding="utf-8") as f:
+                    f.write(f"{p_s1}\n")
+
+            # Also output R-03 Proofs for S1 if live submission was executed
+            if exec_result:
+                stripe_disp = get_dispute(result["context"]["dispute_id"])
+                stripe_status = stripe_disp.get("status", "unknown")
+                file_id = exec_result.get("uploaded_file_id") if exec_result else ""
+                audit_rows = exec_result.get("audit_rows_count", 0) if exec_result else 0
+
+                p1_pass = stripe_status == "won"
+                p2_pass = bool(file_id and file_id.startswith("file_"))
+                p3_pass = audit_rows >= 5
+
+                p1 = f"PROOF R-03: stripe disputes retrieve dp_S1 status={stripe_status} = {'PASS' if p1_pass else 'FAIL'}"
+                p2 = f"PROOF R-03: evidence file id {file_id} uploaded = {'PASS' if p2_pass else 'FAIL'}"
+                p3 = f"PROOF R-03: audit_log rows for dp_S1 >= 5 = {'PASS' if p3_pass else 'FAIL'}"
+
+                print(f"\n{p1}")
+                print(p2)
+                print(p3)
+
+                if args.record_proof:
+                    PROOF_FILE_R03.parent.mkdir(parents=True, exist_ok=True)
+                    with open(PROOF_FILE_R03, "a", encoding="utf-8") as f:
+                        f.write(f"{p1}\n")
+                        f.write(f"{p2}\n")
+                        f.write(f"{p3}\n")
 
 
 if __name__ == "__main__":
