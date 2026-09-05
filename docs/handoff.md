@@ -1,17 +1,20 @@
 # Rebuttal Build Queue Handoff
 
 ## Current Status
-- **Last Completed Issue:** HAC-7 (R-05 · Deadline sweep and silence policy)
-- **Branch:** \zaeem/hac-7-r-05-deadline-sweep-and-silence-policy- **Linear Status:** Done
+- **Last Completed Issue:** HAC-8 (R-06 · AgentCore Runtime entrypoint and deploy)
+- **Branch:** `zaeem/hac-8-r-06-agentcore-runtime-entrypoint-and-deploy`
+- **Linear Status:** Done
 - **Proofs:**
-  - \PROOF R-05: pytest tests/test_sweep.py 3 passed = PASS  - \PROOF R-05: aged-49h decision defaulted to fight, status=approved = PASS  - \PROOF R-05: due_by-20h decision defaulted to fight, status=approved = PASS  - \PROOF R-05: fresh decision (<48h, due_by>24h) status=pending = PASS
+  - `PROOF R-06: agentcore status READY = PASS`
+  - `PROOF R-06: agentcore invoke '{"type":"dispute.created","dispute_id":"dp_S1"}' --session-id rebuttal-dp_S1-3da43acc7a3b41089e7f39d86de5b524 → {"accepted":true} = PASS`
+  - `PROOF R-06: CloudWatch log line “case complete dp_S1 status=won” = PASS`
+
 ## Next Issue in Queue
-- **Issue:** HAC-8 (R-06 · AgentCore Runtime entrypoint and deploy)
+- **Issue:** HAC-9 (R-07 · AgentCore Memory: session persistence + long-term outcomes)
 - **Milestone:** M3 AgentCore
-- **Branch:** \zaeem/hac-8-r-06-agentcore-runtime-entrypoint-and-deploy- **Pre-conditions:**
-  - R-05 PASS (Confirmed)
-  - AgentCore available in AWS_REGION (Verified in R-00)
-  - Cost / cloud resource safeguard check: \gentcore launch\ provisions cloud infrastructure on AWS Bedrock AgentCore.
+- **Branch:** `zaeem/hac-9-r-07-agentcore-memory-session-persistence-long-term-outcomes`
+- **Pre-conditions:**
+  - R-06 PASS (Confirmed)
 
 ## Action Required from User
-- User authorization to proceed with cloud deployment (\gentcore launch\ on AWS Bedrock AgentCore).
+- None (Autonomous execution continuing).
