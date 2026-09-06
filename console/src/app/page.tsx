@@ -87,7 +87,9 @@ export default function HomePage() {
   const pendingCount = disputes.filter(
     (d) => d.status === 'needs_response' || (d.decision && d.decision.status === 'pending')
   ).length;
-  const winRate = resolvedDisputes.length > 0 ? Math.round((wonCount / resolvedDisputes.length) * 100) : 100;
+  const winRateFormatted = resolvedDisputes.length > 0
+    ? `${Math.round((wonCount / resolvedDisputes.length) * 100)}%`
+    : '—%';
 
   return (
     <div className="space-y-6">
@@ -105,7 +107,7 @@ export default function HomePage() {
             <ShieldAlert className="h-4 w-4 text-indigo-400" />
           </div>
           <p className="text-2xl font-bold font-mono text-white mt-2">{totalCount}</p>
-          <span className="text-[10px] text-slate-500 mt-1">Synthetic & live Stripe events</span>
+          <span className="text-[11px] text-slate-400 mt-1">Synthetic & live Stripe events</span>
         </div>
 
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
@@ -113,8 +115,8 @@ export default function HomePage() {
             <span>Win Rate</span>
             <TrendingUp className="h-4 w-4 text-emerald-400" />
           </div>
-          <p className="text-2xl font-bold font-mono text-emerald-300 mt-2">{winRate}%</p>
-          <span className="text-[10px] text-slate-500 mt-1">
+          <p className="text-2xl font-bold font-mono text-emerald-300 mt-2">{winRateFormatted}</p>
+          <span className="text-[11px] text-slate-400 mt-1">
             {resolvedDisputes.length > 0
               ? `${wonCount} of ${resolvedDisputes.length} resolved cases`
               : 'Awaiting dispute resolutions'}
@@ -129,7 +131,7 @@ export default function HomePage() {
           <p className="text-2xl font-bold font-mono text-white mt-2">
             ${(wonVolume / 100).toFixed(2)}
           </p>
-          <span className="text-[10px] text-slate-500 mt-1">Recovered automatically</span>
+          <span className="text-[11px] text-slate-400 mt-1">Recovered automatically</span>
         </div>
 
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
@@ -138,7 +140,7 @@ export default function HomePage() {
             <Clock className="h-4 w-4 text-amber-400" />
           </div>
           <p className="text-2xl font-bold font-mono text-amber-300 mt-2">{pendingCount}</p>
-          <span className="text-[10px] text-slate-500 mt-1">Awaiting owner confirmation</span>
+          <span className="text-[11px] text-slate-400 mt-1">Awaiting owner confirmation</span>
         </div>
       </div>
 

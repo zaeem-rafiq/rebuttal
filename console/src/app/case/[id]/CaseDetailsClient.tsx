@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
@@ -22,9 +22,13 @@ export default function CaseDetailsPage() {
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [secondsRemaining, setSecondsRemaining] = useState<number>(5);
 
-  const fetchCaseDetails = async () => {
+  const fetchCaseDetails = useCallback(async () => {
     if (!disputeId) return;
+    setIsRefreshing(true);
 
     try {
       const { data: dData } = await supabase
@@ -68,18 +72,31 @@ export default function CaseDetailsPage() {
           if (oData) setOrder(oData as Order);
         }
       }
+      setLastUpdated(new Date());
     } catch (err) {
       console.error('Failed to load case details:', err);
     } finally {
+      setIsRefreshing(false);
       setLoading(false);
     }
-  };
+  }, [disputeId]);
 
   useEffect(() => {
     fetchCaseDetails();
-    const interval = setInterval(fetchCaseDetails, 5000);
-    return () => clearInterval(interval);
-  }, [disputeId]);
+  }, [fetchCaseDetails]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSecondsRemaining((prev) => {
+        if (prev <= 1) {
+          fetchCaseDetails();
+          return 5;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [fetchCaseDetails]);
 
   if (loading) {
     return (
@@ -94,7 +111,12 @@ export default function CaseDetailsPage() {
 
   return (
     <div className="space-y-6">
-      <Header />
+      <Header
+        lastUpdated={lastUpdated}
+        isRefreshing={isRefreshing}
+        onRefresh={fetchCaseDetails}
+        secondsRemaining={secondsRemaining}
+      />
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div className="space-y-1">
@@ -163,7 +185,7 @@ export default function CaseDetailsPage() {
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center space-x-2">
               <span>📱 4. Merchant Owner Mobile Interface</span>
             </h2>
-            <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex justify-center">
+            <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex justify-center min-h-[580px]">
               <SimulatedPhone
                 disputeId={disputeId}
                 amountFormatted={amountFormatted}
