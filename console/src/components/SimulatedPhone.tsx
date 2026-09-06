@@ -54,27 +54,17 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
     setFeedback(null);
 
     try {
-      let resp: Response;
-      try {
-        resp = await fetch('/api/reply', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ Body: bodyValue, dispute_id: disputeId }),
-        });
-      } catch {
-        const formData = new URLSearchParams();
-        formData.append('Body', bodyValue);
-        formData.append('From', '+18129551686');
-        resp = await fetch(TWILIO_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formData.toString(),
-        });
-      }
+      const formData = new URLSearchParams();
+      formData.append('Body', bodyValue);
+      formData.append('From', '+18129551686');
+      formData.append('dispute_id', disputeId);
 
-      if (!resp.ok) {
-        throw new Error(`Server returned HTTP ${resp.status}`);
-      }
+      await fetch(TWILIO_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString(),
+        mode: 'no-cors',
+      });
 
       setSentReplies((prev) => [
         ...prev,

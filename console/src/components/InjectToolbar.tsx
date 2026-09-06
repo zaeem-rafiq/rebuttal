@@ -46,28 +46,30 @@ export const InjectToolbar: React.FC<InjectToolbarProps> = ({ onInjectSuccess })
     setStatusMessage(null);
 
     try {
-      // First try via local API proxy, then direct Lambda Function URL
-      let resp: Response;
-      try {
-        resp = await fetch('/api/inject', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ scenario }),
-        });
-      } catch (proxyErr) {
-        resp = await fetch(INJECT_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Console-Key': CONSOLE_KEY,
-          },
-          body: JSON.stringify({ scenario }),
-        });
+      const resp = await fetch(INJECT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Console-Key': CONSOLE_KEY,
+        },
+        body: JSON.stringify({ scenario }),
+      });
+
+      const contentType = resp.headers.get('content-type') || '';
+      let data: any = {};
+      if (contentType.includes('application/json')) {
+        data = await resp.json();
+      } else {
+        const text = await resp.text();
+        throw new Error(`HTTP ${resp.status}: ${text.slice(0, 100)}`);
       }
 
-      const data = await resp.json();
-
       if (!resp.ok) {
+        if (resp.status === 429 && data.retry_after_seconds) {
+          const cooldownUntil = Date.now() + data.retry_after_seconds * 1000;
+          localStorage.setItem('rebuttal_inject_cooldown_until', cooldownUntil.toString());
+          setCooldown(data.retry_after_seconds);
+        }
         throw new Error(data.error || `HTTP ${resp.status}`);
       }
 

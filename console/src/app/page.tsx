@@ -6,6 +6,7 @@ import { Dispute } from '@/lib/types';
 import { Header } from '@/components/Header';
 import { InjectToolbar } from '@/components/InjectToolbar';
 import { CaseFeed } from '@/components/CaseFeed';
+import { TWILIO_WEBHOOK_URL } from '@/lib/config';
 import { ShieldAlert, TrendingUp, DollarSign, Clock, AlertCircle, CheckCircle2, RotateCcw, X } from 'lucide-react';
 
 export default function HomePage() {
@@ -73,16 +74,17 @@ export default function HomePage() {
     const actionLabel = replyCode === '1' ? 'Fight' : replyCode === '2' ? 'Concede' : 'Hold';
 
     try {
-      const res = await fetch('/api/reply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ Body: replyCode, dispute_id: disputeId }),
-      });
+      const formData = new URLSearchParams();
+      formData.append('Body', replyCode);
+      formData.append('From', '+18129551686');
+      formData.append('dispute_id', disputeId);
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || `HTTP status ${res.status}`);
-      }
+      await fetch(TWILIO_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString(),
+        mode: 'no-cors',
+      });
 
       setActionToast({
         type: 'success',
