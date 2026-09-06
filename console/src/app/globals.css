@@ -3,75 +3,106 @@
 @tailwind utilities;
 
 :root {
-  --background: #0A0D12;
-  --foreground: #F5F2EC;
+  --desk: #EDECE6;
+  --sheet: #FFFFFF;
+  --ink: #111418;
+  --ink-secondary: #5C6370;
+  --rule: #D4D4D8;
+  --rule-strong: #111418;
+  --highlighter: #FFE96B;
+  --decision-green: #14713A;
+  --decision-red: #B91C1C;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--ink);
+  background-color: var(--desk);
+  font-family: var(--font-sans), 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-shadow: none !important;
 }
 
+/* Tabular Numbers */
 .num-tabular,
 .tabular-nums {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
 }
 
-/* Global focus-visible styling for accessibility — Judicial Brass Ring */
+/* Links: Ink and underlined */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Strict Focus: 2px ink outline, 2px offset on every interactive element */
 *:focus-visible {
-  outline: 2px solid #D4A359;
-  outline-offset: 2px;
+  outline: 2px solid var(--ink) !important;
+  outline-offset: 2px !important;
 }
 
-/* Accessible touch targets on small screens */
-@media (max-width: 640px) {
-  button,
-  [role="button"],
-  input[type="text"] {
-    min-height: 44px;
-  }
+/* Text Selection: Highlighter yellow */
+::selection {
+  background-color: var(--highlighter);
+  color: var(--ink);
 }
 
+/* Scrollbar in monochrome desk/ink */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0D12;
+  background: var(--desk);
 }
 ::-webkit-scrollbar-thumb {
-  background: #232D3B;
-  border-radius: 2px;
+  background: var(--rule);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: var(--ink-secondary);
 }
 
-::selection {
-  background-color: rgba(212, 163, 89, 0.25);
-  color: #FFFFFF;
-}
-
-/* Skeleton shimmer */
-@keyframes shimmer {
-  0% { opacity: 0.4; }
-  50% { opacity: 0.75; }
-  100% { opacity: 0.4; }
+/* Skeleton Loading: Pure ruled monochrome shimmer */
+@keyframes skeleton-shimmer {
+  0% { opacity: 0.35; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.35; }
 }
 
 .animate-skeleton {
-  animation: shimmer 1.8s ease-in-out infinite;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
 }
 
+/* Stamp landing transition */
+@keyframes stamp-land {
+  0% {
+    transform: scale(1.15) rotate(-2deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(-2deg);
+    opacity: 1;
+  }
+}
+
+.animate-stamp {
+  animation: stamp-land 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Prefers-reduced-motion: Instant, no animations */
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,
   ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .animate-stamp {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: scale(1) rotate(-2deg) !important;
   }
 }
