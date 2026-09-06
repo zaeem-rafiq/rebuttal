@@ -304,18 +304,19 @@ def execute_strategy(
         )
 
         # Step 7: Send customer email notice
-        send_customer_email(
+        email_res = send_customer_email(
             customer_id=customer_id,
             order_id=order_id,
             subject=f"Update regarding dispute on order {order_id}",
             body=f"We have submitted fulfillment and tracking verification for order {order_id} to the payment processor.",
         )
-        record_case(
-            dispute_id=clean_dispute_id,
-            action="send_customer_email",
-            actor="executor",
-            details={"recipient": customer_id, "channel": "email"},
-        )
+        if email_res.get("status") != "already_sent":
+            record_case(
+                dispute_id=clean_dispute_id,
+                action="send_customer_email",
+                actor="executor",
+                details={"recipient": customer_id, "channel": "email"},
+            )
 
         # In DEMO_MODE with winning_evidence, poll Stripe briefly to confirm won status
         final_status = stripe_status

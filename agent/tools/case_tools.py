@@ -166,6 +166,22 @@ def send_customer_email(
     conn = _get_db_connection()
     try:
         cur = conn.cursor()
+        if clean_order_id:
+            cur.execute(
+                """SELECT id FROM customer_messages
+                   WHERE order_id = ? AND direction = 'outbound' AND subject = ?""",
+                (clean_order_id, subject),
+            )
+            existing = cur.fetchone()
+            if existing:
+                return {
+                    "status": "already_sent",
+                    "message_id": existing[0],
+                    "customer_id": clean_cust_id,
+                    "order_id": clean_order_id,
+                    "subject": subject,
+                }
+
         cur.execute(
             """INSERT INTO customer_messages (id, customer_id, order_id, direction, channel, subject, body, has_shipping_change, created_at)
                VALUES (?, ?, ?, 'outbound', 'email', ?, ?, 0, ?)""",
@@ -178,6 +194,26 @@ def send_customer_email(
     # Replicate to Supabase Cloud if available
     sb = _get_supabase_client()
     if sb:
+        if clean_order_id:
+            try:
+                existing_sb = (
+                    sb.table("customer_messages")
+                    .select("id")
+                    .eq("order_id", clean_order_id)
+                    .eq("direction", "outbound")
+                    .eq("subject", subject)
+                    .execute()
+                )
+                if existing_sb.data:
+                    return {
+                        "status": "already_sent",
+                        "message_id": existing_sb.data[0]["id"],
+                        "customer_id": clean_cust_id,
+                        "order_id": clean_order_id,
+                        "subject": subject,
+                    }
+            except Exception:
+                pass
         try:
             sb.table("customer_messages").insert({
                 "id": msg_id,

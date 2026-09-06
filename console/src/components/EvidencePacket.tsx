@@ -140,7 +140,7 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
               >
                 <div className="flex items-center justify-between text-[10px] text-slate-400 mb-1">
                   <span className="font-semibold uppercase">{msg.direction} ({msg.channel})</span>
-                  <span>{new Date(msg.created_at).toLocaleDateString()}</span>
+                  <span>{new Date(msg.created_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
                 {msg.subject && <p className="font-semibold text-white mb-1">{msg.subject}</p>}
                 <p>{msg.body}</p>
