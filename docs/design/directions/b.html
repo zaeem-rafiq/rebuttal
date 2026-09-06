@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>Direction B · The Shield Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0d0e11;
+      color: #f3f4f6;
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: 'IBM Plex Mono', monospace; font-feature-settings: "tnum" 1; }
+    .container { max-width: 1240px; margin: 0 auto; padding: 28px 24px 60px; }
+
+    /* Tactical Header */
+    .terminal-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #15181e;
+      border: 1px solid #232730;
+      border-radius: 4px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+    }
+    .nav-left { display: flex; align-items: center; gap: 16px; }
+    .nav-brand {
+      display: flex; align-items: center; gap: 8px; font-weight: 700;
+      font-size: 15px; color: #ffffff; letter-spacing: -0.01em;
+    }
+    .terminal-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      background: #232730;
+      color: #38bdf8;
+      padding: 2px 6px;
+      border-radius: 2px;
+      border-left: 2px solid #38bdf8;
+    }
+    .telemetry-strip {
+      display: flex; align-items: center; gap: 18px; font-size: 11px; color: #8b949e;
+    }
+    .telemetry-val { color: #f3f4f6; font-weight: 600; }
+    .status-live {
+      display: flex; align-items: center; gap: 6px; color: #10b981; font-weight: 600; font-size: 11px;
+    }
+    .live-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; }
+
+    /* Tactical Telemetry Headline Block */
+    .tactical-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1.2fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .tac-card {
+      background: #15181e;
+      border: 1px solid #232730;
+      border-radius: 4px;
+      padding: 16px;
+      position: relative;
+    }
+    .tac-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 3px; height: 100%;
+      background: #232730;
+    }
+    .tac-card.active-shield::before { background: #10b981; }
+    .tac-card.active-alert::before { background: #f59e0b; }
+    .tac-card.active-brand::before { background: #38bdf8; }
+
+    .tac-label { font-size: 10px; font-weight: 700; color: #8b949e; text-transform: uppercase; letter-spacing: 0.08em; }
+    .tac-metric { font-size: 28px; font-weight: 700; color: #ffffff; margin-top: 4px; line-height: 1.1; }
+    .tac-desc { font-size: 11px; color: #6e7681; margin-top: 6px; }
+
+    /* Pipeline Status Feed */
+    .pipeline-bar {
+      background: #121418;
+      border: 1px solid #232730;
+      border-radius: 4px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .pipe-step-group { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+    .pipe-step {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #1c1f26; border: 1px solid #2e3440;
+      padding: 3px 8px; border-radius: 2px; color: #c9d1d9;
+    }
+    .pipe-step.done { border-color: #10b981; color: #34d399; }
+    .pipe-step.active { border-color: #38bdf8; color: #7dd3fc; background: #0c2135; }
+    .pipe-step.hold { border-color: #f59e0b; color: #fcd34d; background: #2b1f0c; }
+    .pipe-arrow { color: #484f58; font-size: 11px; }
+
+    .tac-scenarios { display: flex; gap: 6px; }
+    .btn-tac-inj {
+      background: #181c23; border: 1px solid #2a313d; color: #cbd5e1;
+      padding: 5px 10px; border-radius: 3px; font-size: 11px; font-weight: 600; cursor: pointer;
+    }
+    .btn-tac-inj:hover { border-color: #38bdf8; color: #ffffff; }
+
+    /* Tactical Case Grid */
+    .case-console {
+      background: #15181e;
+      border: 1px solid #232730;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .console-filter-bar {
+      background: #111317;
+      border-bottom: 1px solid #232730;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .console-title { font-size: 12px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; }
+    .pill-tabs { display: flex; gap: 6px; }
+    .pill-tab {
+      background: transparent; border: none; color: #8b949e;
+      font-size: 11px; font-weight: 600; padding: 4px 8px; cursor: pointer;
+    }
+    .pill-tab.active { color: #38bdf8; background: #1c2330; border-radius: 3px; }
+
+    /* Console Row */
+    .case-row {
+      display: grid;
+      grid-template-columns: 240px 1fr 140px 110px 140px;
+      padding: 14px 16px;
+      align-items: center;
+      border-bottom: 1px solid #1f232b;
+      font-size: 12px;
+      transition: background 0.1s ease;
+    }
+    .case-row:hover { background: #1a1e26; }
+    .case-row.intercept { background: #1f1416; border-left: 3px solid #f43f5e; }
+
+    .cell-id-block .main-id { font-weight: 600; color: #f3f4f6; }
+    .cell-id-block .sub-id { font-size: 10px; color: #6e7681; }
+    .cell-reason-block .reason-name { font-weight: 600; color: #e5e7eb; }
+    .cell-reason-block .reason-proof { font-size: 11px; color: #8b949e; margin-top: 2px; }
+
+    .tag-shield {
+      display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 6px;
+      border-radius: 2px; text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .tag-review { background: #1c2536; color: #60a5fa; border: 1px solid #2563eb; }
+    .tag-action { background: #3d1217; color: #f87171; border: 1px solid #dc2626; }
+    .tag-inquiry { background: #2c200c; color: #fbbf24; border: 1px solid #d97706; }
+
+    .cell-amount { text-align: right; font-size: 14px; font-weight: 700; color: #ffffff; }
+    .cell-actions { display: flex; justify-content: flex-end; gap: 6px; }
+    .btn-action-primary {
+      background: #0284c7; border: 1px solid #38bdf8; color: #ffffff;
+      padding: 5px 10px; border-radius: 3px; font-size: 11px; font-weight: 600; cursor: pointer;
+    }
+    .btn-action-urgent {
+      background: #dc2626; border: 1px solid #f87171; color: #ffffff;
+      padding: 5px 10px; border-radius: 3px; font-size: 11px; font-weight: 600; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Tactical Navigation -->
+    <nav class="terminal-nav">
+      <div class="nav-left">
+        <div class="nav-brand">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>REBUTTAL</span>
+        </div>
+        <span class="terminal-tag">AUTONOMOUS COMMAND DECK</span>
+        <div class="status-live mono"><span class="live-dot"></span> AGENTCORE ONLINE</div>
+      </div>
+      <div class="telemetry-strip mono">
+        <div>ACTIVE CASES: <span class="telemetry-val">4</span></div>
+        <div>DEFENSE RATE: <span class="telemetry-val">100%</span></div>
+        <div>POLL: <span class="telemetry-val">2s</span></div>
+        <div>GATEWAY: <span class="telemetry-val">STRIPE TEST</span></div>
+      </div>
+    </nav>
+
+    <!-- Tactical Telemetry Metric Block -->
+    <div class="tactical-grid">
+      <div class="tac-card active-shield">
+        <div class="tac-label">Protected Capital Volume</div>
+        <div class="tac-metric mono text-emerald">$48.00</div>
+        <div class="tac-desc">Carrier POD verified & locked with acquirer</div>
+      </div>
+      <div class="tac-card active-alert">
+        <div class="tac-label">Human-in-the-Loop Intercepts</div>
+        <div class="tac-metric mono" style="color:#f59e0b;">1 Case</div>
+        <div class="tac-desc">Paused at ApprovalGate · $340 VIP dispute</div>
+      </div>
+      <div class="tac-card active-brand">
+        <div class="tac-label">Active Evidentiary Dossiers</div>
+        <div class="tac-metric mono">4 Total</div>
+        <div class="tac-desc">3 automated fight/inquiry · 1 VIP review</div>
+      </div>
+      <div class="tac-card">
+        <div class="tac-label">Autonomous Win Trajectory</div>
+        <div class="tac-metric mono">—%</div>
+        <div class="tac-desc">Awaiting 14-day bank arbitration windows</div>
+      </div>
+    </div>
+
+    <!-- Agent Pipeline Status Strip -->
+    <div class="pipeline-bar">
+      <div class="pipe-step-group">
+        <span style="font-weight:700; font-size:10px; color:#8b949e; letter-spacing:0.05em; text-transform:uppercase;">Agent Graph:</span>
+        <span class="pipe-step done mono">✓ Intake</span>
+        <span class="pipe-arrow">→</span>
+        <span class="pipe-step done mono">✓ Orders</span>
+        <span class="pipe-arrow">→</span>
+        <span class="pipe-step done mono">✓ Carrier Scan</span>
+        <span class="pipe-arrow">→</span>
+        <span class="pipe-step active mono">⚡ Strategy & Drafter</span>
+        <span class="pipe-arrow">→</span>
+        <span class="pipe-step hold mono">⏸ SMS Interrupt [S2]</span>
+      </div>
+      <div class="tac-scenarios">
+        <span style="font-size:11px; color:#6e7681; align-self:center; margin-right:4px;">Simulate:</span>
+        <button class="btn-tac-inj mono">S1 $48</button>
+        <button class="btn-tac-inj mono">S2 $340</button>
+        <button class="btn-tac-inj mono">S3 $129</button>
+      </div>
+    </div>
+
+    <!-- Tactical Case Table -->
+    <div class="case-console">
+      <div class="console-filter-bar">
+        <span class="console-title mono">Active Dispute Roster</span>
+        <div class="pill-tabs mono">
+          <button class="pill-tab active">ALL [4]</button>
+          <button class="pill-tab">ACTION REQ [1]</button>
+          <button class="pill-tab">DEFENDING [3]</button>
+          <button class="pill-tab">RESOLVED [0]</button>
+        </div>
+      </div>
+
+      <!-- Row 1: S2 Intercept -->
+      <div class="case-row intercept">
+        <div class="cell-id-block">
+          <div class="main-id mono" style="color:#fca5a5;">dp_S2</div>
+          <div class="sub-id mono">ORD-1002 · Jessica Lee (VIP)</div>
+        </div>
+        <div class="cell-reason-block">
+          <div class="reason-name">Fraudulent Charge · Intercept Triggered</div>
+          <div class="reason-proof">Strands interrupt: Win prob 22% vs $1,800 CLV. Suggest: Concede.</div>
+        </div>
+        <div>
+          <span class="tag-shield tag-action mono">APPROVAL GATE</span>
+        </div>
+        <div class="cell-amount mono" style="color:#fca5a5;">$340.00</div>
+        <div class="cell-actions">
+          <button class="btn-action-urgent mono">INTERCEPT [2]</button>
+        </div>
+      </div>
+
+      <!-- Row 2: du_1UCchu -->
+      <div class="case-row">
+        <div class="cell-id-block">
+          <div class="main-id mono">du_1UCchuEmho...</div>
+          <div class="sub-id mono">ORD-1001 · Michael Okafor</div>
+        </div>
+        <div class="cell-reason-block">
+          <div class="reason-name">Product Not Received</div>
+          <div class="reason-proof">Carrier signature OKAFOR captured · Austin, TX 8/28</div>
+        </div>
+        <div>
+          <span class="tag-shield tag-review mono">SUBMITTED</span>
+        </div>
+        <div class="cell-amount mono">$48.00</div>
+        <div class="cell-actions">
+          <button class="btn-action-primary mono">INSPECT</button>
+        </div>
+      </div>
+
+      <!-- Row 3: S3 Inquiry -->
+      <div class="case-row">
+        <div class="cell-id-block">
+          <div class="main-id mono">dp_S3</div>
+          <div class="sub-id mono">ORD-1003 · Active Subscriber</div>
+        </div>
+        <div class="cell-reason-block">
+          <div class="reason-name">Subscription Canceled Inquiry</div>
+          <div class="reason-proof">Pre-dispute inquiry window · Auto-refund avoids $15 fee</div>
+        </div>
+        <div>
+          <span class="tag-shield tag-inquiry mono">INQUIRY</span>
+        </div>
+        <div class="cell-amount mono">$129.00</div>
+        <div class="cell-actions">
+          <button class="btn-action-primary mono">INSPECT</button>
+        </div>
+      </div>
+
+      <!-- Row 4: S1 Delivery -->
+      <div class="case-row">
+        <div class="cell-id-block">
+          <div class="main-id mono">dp_S1</div>
+          <div class="sub-id mono">ORD-1001 · Michael Okafor</div>
+        </div>
+        <div class="cell-reason-block">
+          <div class="reason-name">Product Not Received</div>
+          <div class="reason-proof">Carrier signed receipt attached to evidence bundle</div>
+        </div>
+        <div>
+          <span class="tag-shield tag-review mono">DEFENDING</span>
+        </div>
+        <div class="cell-amount mono">$48.00</div>
+        <div class="cell-actions">
+          <button class="btn-action-primary mono">INSPECT</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

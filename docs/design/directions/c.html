@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>Direction C · The Merchant Vanguard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0c1017;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
+    .container { max-width: 1180px; margin: 0 auto; padding: 36px 24px 72px; }
+
+    /* Header */
+    .vanguard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .brand-wrap { display: flex; align-items: center; gap: 14px; }
+    .seal-badge {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: linear-gradient(135deg, #e5a93c 0%, #b45309 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: #1a1306; font-weight: 800; font-size: 18px;
+    }
+    .brand-h1 { font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: -0.02em; }
+    .brand-sub { font-size: 12px; color: #8e9cae; margin-top: 1px; }
+
+    .header-status {
+      display: flex; align-items: center; gap: 12px;
+      background: #141b26; border: 1px solid #243042;
+      padding: 6px 14px; border-radius: 9999px; font-size: 12px;
+    }
+    .pulse-amber { width: 8px; height: 8px; background: #e5a93c; border-radius: 50%; box-shadow: 0 0 10px #e5a93c; }
+
+    /* Vanguard Summary Hero */
+    .hero-summary {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .hero-box {
+      background: #141b26;
+      border: 1px solid #243042;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .hero-box.highlight {
+      border-color: #3b4e6b;
+      background: linear-gradient(180deg, #16202f 0%, #111722 100%);
+    }
+    .hero-kicker { font-size: 11px; font-weight: 700; color: #e5a93c; text-transform: uppercase; letter-spacing: 0.06em; }
+    .hero-num { font-size: 38px; font-weight: 800; color: #ffffff; margin: 4px 0; letter-spacing: -0.03em; }
+    .hero-meta { font-size: 12px; color: #8e9cae; }
+
+    .stats-trio { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .sub-stat {
+      background: #0f1520;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .sub-stat-num { font-size: 22px; font-weight: 700; color: #ffffff; margin-top: 2px; }
+    .sub-stat-lbl { font-size: 11px; color: #8e9cae; }
+
+    /* Scenario Bar */
+    .sim-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #101620;
+      border: 1px solid #202b3b;
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-bottom: 32px;
+    }
+    .sim-left { font-size: 12px; color: #8e9cae; }
+    .sim-left strong { color: #cbd5e1; }
+    .sim-chips { display: flex; gap: 8px; }
+    .sim-chip {
+      background: #192332; border: 1px solid #29384e; color: #e2e8f0;
+      padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;
+    }
+    .sim-chip:hover { border-color: #e5a93c; }
+
+    /* Triage Sections */
+    .triage-group { margin-bottom: 24px; }
+    .triage-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .heading-urgent { color: #f59e0b; }
+    .heading-normal { color: #64748b; }
+
+    /* Triage Cards */
+    .triage-card {
+      background: #141b26;
+      border: 1px solid #243042;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: 1fr 160px 140px;
+      align-items: center;
+      gap: 16px;
+    }
+    .triage-card.urgent {
+      border-color: #78350f;
+      background: #181615;
+      box-shadow: 0 4px 20px rgba(229, 169, 60, 0.06);
+    }
+    .triage-card.calm { border-color: #1e293b; }
+
+    .dossier-headline { font-size: 14px; font-weight: 700; color: #ffffff; }
+    .dossier-reason { font-size: 12px; color: #cbd5e1; margin-top: 2px; }
+    .dossier-explanation { font-size: 11px; color: #8e9cae; margin-top: 4px; }
+
+    .card-amount-col { text-align: right; }
+    .card-amount-val { font-size: 18px; font-weight: 700; color: #ffffff; }
+    .card-amount-sub { font-size: 10px; color: #8e9cae; }
+
+    .card-action-col { text-align: right; }
+    .btn-vanguard {
+      background: #e5a93c; color: #1c1404; font-size: 11px; font-weight: 700;
+      padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer;
+    }
+    .btn-vanguard:hover { background: #f59e0b; }
+    .btn-secondary {
+      background: transparent; color: #cbd5e1; border: 1px solid #334155;
+      font-size: 11px; font-weight: 600; padding: 7px 12px; border-radius: 6px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="vanguard-header">
+      <div class="brand-wrap">
+        <div class="seal-badge">R</div>
+        <div>
+          <h1 class="brand-h1">Rebuttal Vanguard</h1>
+          <div class="brand-sub">Independent Merchant Chargeback Defense & Margin Protection</div>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="pulse-amber"></span>
+        <span style="font-weight:600; color:#cbd5e1;">Agent Guard Active</span>
+        <span style="color:#64748b;">· 4 Monitored Disputes</span>
+      </div>
+    </header>
+
+    <!-- Vanguard Summary Hero -->
+    <div class="hero-summary">
+      <div class="hero-box highlight">
+        <div class="hero-kicker">Protected Merchant Revenue</div>
+        <div class="hero-num mono">$48.00</div>
+        <div class="hero-meta">1 dispute defended with carrier-verified proof of delivery. Acquirer submitted.</div>
+      </div>
+      <div class="stats-trio">
+        <div class="sub-stat">
+          <div class="sub-stat-lbl">Action Required</div>
+          <div class="sub-stat-num mono" style="color:#e5a93c;">1</div>
+          <div style="font-size:10px; color:#8e9cae; margin-top:2px;">VIP Relationship gate</div>
+        </div>
+        <div class="sub-stat">
+          <div class="sub-stat-lbl">Autonomous Rate</div>
+          <div class="sub-stat-num mono">75%</div>
+          <div style="font-size:10px; color:#8e9cae; margin-top:2px;">3 handled without toil</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scenario Simulator Bar -->
+    <div class="sim-bar">
+      <div class="sim-left">
+        <strong>Test Harness:</strong> Inject live test cases into Stripe test mode to observe multi-agent triage
+      </div>
+      <div class="sim-chips">
+        <button class="sim-chip mono">S1 $48 Delivery</button>
+        <button class="sim-chip mono">S2 $340 VIP Fraud</button>
+        <button class="sim-chip mono">S3 $129 Inquiry</button>
+      </div>
+    </div>
+
+    <!-- Triage Group 1: Immediate Attention Required -->
+    <div class="triage-group">
+      <div class="triage-heading heading-urgent">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Immediate Merchant Attention Required (1)</span>
+      </div>
+
+      <div class="triage-card urgent">
+        <div>
+          <div class="dossier-headline">Jessica Lee · VIP Customer ($1,800 Lifetime Value)</div>
+          <div class="dossier-reason">Dispute dp_S2 · Fraudulent / Unrecognized ($340.00)</div>
+          <div class="dossier-explanation" style="color:#fcd34d;">
+            Bedrock Recommendation: <strong>Concede dispute</strong>. Fighting risks alienating a top 1% repeat customer for low win odds (22%).
+          </div>
+        </div>
+        <div class="card-amount-col">
+          <div class="card-amount-val mono" style="color:#f59e0b;">$340.00</div>
+          <div class="card-amount-sub">Due in 16 days</div>
+        </div>
+        <div class="card-action-col">
+          <button class="btn-vanguard">Resolve Decision</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Triage Group 2: Defended Automatically -->
+    <div class="triage-group">
+      <div class="triage-heading heading-normal">
+        <span>Autonomous Defense in Progress (3)</span>
+      </div>
+
+      <div class="triage-card calm">
+        <div>
+          <div class="dossier-headline mono">du_1UCchuEmho7ai02fPo91XMwo</div>
+          <div class="dossier-reason">Order ORD-1001 · Product Not Received</div>
+          <div class="dossier-explanation">UPS Tracking signed by OKAFOR in Austin, TX. Dossier compiled & submitted.</div>
+        </div>
+        <div class="card-amount-col">
+          <div class="card-amount-val mono">$48.00</div>
+          <div class="card-amount-sub">Under Review</div>
+        </div>
+        <div class="card-action-col">
+          <button class="btn-secondary">View Dossier</button>
+        </div>
+      </div>
+
+      <div class="triage-card calm">
+        <div>
+          <div class="dossier-headline mono">dp_S3</div>
+          <div class="dossier-reason">Order ORD-1003 · Subscription Canceled Pre-dispute</div>
+          <div class="dossier-explanation">Early inquiry notification: Auto-refund executed to avert formal $15 chargeback fee.</div>
+        </div>
+        <div class="card-amount-col">
+          <div class="card-amount-val mono">$129.00</div>
+          <div class="card-amount-sub">Fee Saved</div>
+        </div>
+        <div class="card-action-col">
+          <button class="btn-secondary">View Dossier</button>
+        </div>
+      </div>
+
+      <div class="triage-card calm">
+        <div>
+          <div class="dossier-headline mono">dp_S1</div>
+          <div class="dossier-reason">Order ORD-1001 · Product Not Received</div>
+          <div class="dossier-explanation">Autonomous evidence generation confirmed carrier delivery coordinates.</div>
+        </div>
+        <div class="card-amount-col">
+          <div class="card-amount-val mono">$48.00</div>
+          <div class="card-amount-sub">Under Review</div>
+        </div>
+        <div class="card-action-col">
+          <button class="btn-secondary">View Dossier</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

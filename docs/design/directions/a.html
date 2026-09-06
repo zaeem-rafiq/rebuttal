@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>Direction A · The Evidence Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0b0f17;
+      color: #f9fafb;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px 64px; }
+    
+    /* Header */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #1f2937;
+      margin-bottom: 28px;
+    }
+    .brand-row { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 32px; height: 32px; border-radius: 6px; background: #1e3a8a;
+      border: 1px solid #2563eb; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 16px; color: #93c5fd;
+    }
+    .brand-title { font-size: 18px; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; }
+    .brand-badge {
+      font-size: 11px; font-weight: 600; color: #9ca3af; background: #161e2e;
+      border: 1px solid #283548; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.04em;
+    }
+    .agent-pill {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 11px;
+      color: #34d399; background: #064e3b; border: 1px solid #059669;
+      padding: 3px 9px; border-radius: 4px; font-weight: 600;
+    }
+    .agent-dot { width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 8px #34d399; }
+    .top-actions { display: flex; align-items: center; gap: 12px; }
+    .pulse-meta { font-size: 12px; color: #6b7280; display: flex; align-items: center; gap: 8px; }
+    .btn-quiet {
+      background: #111827; border: 1px solid #1f2937; color: #d1d5db;
+      padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+    }
+
+    /* Primary Ledger Banner */
+    .ledger-banner {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .banner-cell {
+      padding: 20px 24px;
+      border-right: 1px solid #1f2937;
+    }
+    .banner-cell:last-child { border-right: none; }
+    .cell-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .cell-val-lead {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      line-height: 1.1;
+    }
+    .cell-val {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+    .cell-sub { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+    .text-emerald { color: #34d399; }
+    .text-amber { color: #fbbf24; }
+
+    /* Scenario Bar */
+    .scenario-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0d131f;
+      border: 1px solid #1e293b;
+      padding: 12px 18px;
+      border-radius: 6px;
+      margin-bottom: 24px;
+    }
+    .scenario-left { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #94a3b8; }
+    .scenario-label { font-weight: 600; color: #cbd5e1; }
+    .scenario-btns { display: flex; gap: 8px; }
+    .btn-scenario {
+      background: #161e2e;
+      border: 1px solid #283548;
+      color: #e2e8f0;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .btn-scenario .code-tag {
+      background: #0b0f17;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #38bdf8;
+    }
+
+    /* Dispute Ledger Table */
+    .ledger-section {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ledger-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1f2937;
+      background: #0f1523;
+    }
+    .ledger-title-group { display: flex; align-items: center; gap: 12px; }
+    .ledger-title { font-size: 14px; font-weight: 700; color: #ffffff; letter-spacing: -0.01em; }
+    .count-chip {
+      background: #1f2937;
+      color: #9ca3af;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .ledger-tabs { display: flex; gap: 4px; background: #0b0f17; padding: 3px; border-radius: 6px; border: 1px solid #1f2937; }
+    .tab-item {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .tab-item.active { background: #1f2937; color: #ffffff; }
+
+    /* Table */
+    .docket-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .docket-table th {
+      padding: 12px 18px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid #1f2937;
+      background: #0d131f;
+    }
+    .docket-table th.num-col, .docket-table td.num-col { text-align: right; }
+    .docket-table tbody tr {
+      border-bottom: 1px solid #1a2231;
+      transition: background 0.15s ease;
+    }
+    .docket-table tbody tr:last-child { border-bottom: none; }
+    .docket-table tbody tr:hover { background: #161e2e; }
+    .docket-table td {
+      padding: 16px 18px;
+      vertical-align: middle;
+      font-size: 12px;
+    }
+    
+    .dispute-id {
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 2px;
+    }
+    .order-ref { font-size: 11px; color: #6b7280; }
+    .reason-text { font-weight: 600; color: #e5e7eb; }
+    .docket-meta { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+    
+    /* Evidence Seal */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .badge-review {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+    }
+    .badge-inquiry {
+      background: #271c08;
+      color: #f59e0b;
+      border: 1px solid #78350f;
+    }
+    .badge-action {
+      background: #311317;
+      color: #f87171;
+      border: 1px solid #991b1b;
+    }
+
+    .amount-box {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .deadline-urgent { color: #f59e0b; font-weight: 600; font-size: 11px; }
+    .deadline-norm { color: #9ca3af; font-size: 11px; }
+
+    .btn-docket-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #1e3a8a;
+      color: #bfdbfe;
+      border: 1px solid #2563eb;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-docket-action:hover { background: #2563eb; color: #ffffff; }
+
+    .action-group { display: flex; gap: 6px; justify-content: flex-end; }
+    .btn-sub-action {
+      background: transparent;
+      border: 1px solid #374151;
+      color: #9ca3af;
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="top-bar">
+      <div class="brand-row">
+        <div class="brand-mark">R</div>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="brand-title">Rebuttal</span>
+            <span class="brand-badge">DISPUTE DOCKET</span>
+            <span class="agent-pill"><span class="agent-dot"></span> BEDROCK AGENTCORE ACTIVE</span>
+          </div>
+          <p style="font-size:11px; color:#6b7280; margin-top:2px;">Autonomous chargeback defense & carrier evidentiary synthesis</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="pulse-meta mono">Polling in 3s · Sync: 12:56:46 PM</div>
+        <button class="btn-quiet">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          Sync Ledger
+        </button>
+      </div>
+    </header>
+
+    <div class="ledger-banner">
+      <div class="banner-cell">
+        <div class="cell-label">Protected Net Volume</div>
+        <div class="cell-val-lead mono text-emerald">$48.00</div>
+        <div class="cell-sub">1 carrier receipt signed & locked with payment gateway</div>
+      </div>
+      <div class="banner-cell">
+        <div class="cell-label">Active Dispute Cases</div>
+        <div class="cell-val mono">4</div>
+        <div class="cell-sub">3 automated · 1 pending owner judgment</div>
+      </div>
+      <div class="banner-cell">
+        <div class="cell-label">Resolution Win Rate</div>
+        <div class="cell-val mono">—%</div>
+        <div class="cell-sub">Awaiting card scheme issuer verdict</div>
+      </div>
+      <div class="banner-cell">
+        <div class="cell-label">ApprovalGate Intercepts</div>
+        <div class="cell-val mono text-amber">1</div>
+        <div class="cell-sub">Action required on high-value dispute</div>
+      </div>
+    </div>
+
+    <div class="scenario-bar">
+      <div class="scenario-left">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span class="scenario-label">Inject Verification Cases:</span>
+        <span>Dispatches live test webhooks into Stripe & Bedrock multi-agent pipeline</span>
+      </div>
+      <div class="scenario-btns">
+        <button class="btn-scenario"><span class="code-tag">S1</span> $48 · Delivery Proof</button>
+        <button class="btn-scenario"><span class="code-tag">S2</span> $340 · VIP Fraud Triage</button>
+        <button class="btn-scenario"><span class="code-tag">S3</span> $129 · Subscription Inquiry</button>
+      </div>
+    </div>
+
+    <div class="ledger-section">
+      <div class="ledger-header">
+        <div class="ledger-title-group">
+          <span class="ledger-title">Evidentiary Docket Ledger</span>
+          <span class="count-chip mono">4 Records</span>
+        </div>
+        <div class="ledger-tabs">
+          <div class="tab-item active">All Disputes (4)</div>
+          <div class="tab-item">Needs Response (1)</div>
+          <div class="tab-item">Under Review (3)</div>
+          <div class="tab-item">Won (0)</div>
+          <div class="tab-item">Conceded (0)</div>
+        </div>
+      </div>
+
+      <table class="docket-table">
+        <thead>
+          <tr>
+            <th>Dispute ID & Order</th>
+            <th>Reason & Dossier Type</th>
+            <th>Evidentiary Status</th>
+            <th>Evidence Deadline</th>
+            <th class="num-col">Contested Amount</th>
+            <th style="text-align:right;">Docket Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <a href="#" class="dispute-id mono">du_1UCchuEmho7ai02fPo91XMwo</a>
+              <div class="order-ref mono">Ref: ORD-1001 · Michael Okafor</div>
+            </td>
+            <td>
+              <div class="reason-text">Product Not Received</div>
+              <div class="docket-meta">UPS Carrier Signed: OKAFOR · Austin, TX</div>
+            </td>
+            <td>
+              <span class="status-badge badge-review mono">Under Review</span>
+            </td>
+            <td>
+              <div class="deadline-norm mono">9/20/2026</div>
+              <div style="font-size:10px; color:#6b7280;">14 days remaining</div>
+            </td>
+            <td class="num-col">
+              <div class="amount-box mono">$48.00</div>
+              <div style="font-size:10px; color:#6b7280;">USD</div>
+            </td>
+            <td style="text-align:right;">
+              <a href="#" class="btn-docket-action">Review Docket</a>
+            </td>
+          </tr>
+
+          <tr style="background:#171113;">
+            <td>
+              <a href="#" class="dispute-id mono" style="color:#fca5a5;">dp_S2</a>
+              <div class="order-ref mono">Ref: ORD-1002 · Jessica Lee (VIP)</div>
+            </td>
+            <td>
+              <div class="reason-text" style="color:#fecaca;">Fraudulent — Unrecognized Charge</div>
+              <div class="docket-meta" style="color:#f87171;">SMS ApprovalGate: Concede recommended to protect $1,800 CLV</div>
+            </td>
+            <td>
+              <span class="status-badge badge-action mono">Approval Needed</span>
+            </td>
+            <td>
+              <div class="deadline-urgent mono">9/21/2026</div>
+              <div style="font-size:10px; color:#f87171;">16 days remaining</div>
+            </td>
+            <td class="num-col">
+              <div class="amount-box mono" style="color:#fca5a5;">$340.00</div>
+              <div style="font-size:10px; color:#f87171;">High Stakes</div>
+            </td>
+            <td style="text-align:right;">
+              <div class="action-group">
+                <button class="btn-sub-action" style="background:#311317; color:#fca5a5; border-color:#991b1b; font-weight:600;">SMS Gate [2]</button>
+                <a href="#" class="btn-docket-action" style="background:#450a0a; border-color:#dc2626; color:#fecaca;">Resolve</a>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="#" class="dispute-id mono">dp_S3</a>
+              <div class="order-ref mono">Ref: ORD-1003 · Active Subscriber</div>
+            </td>
+            <td>
+              <div class="reason-text">Subscription Canceled</div>
+              <div class="docket-meta">Pre-dispute inquiry · Auto-refund eligible to save $15 fee</div>
+            </td>
+            <td>
+              <span class="status-badge badge-inquiry mono">Inquiry (Pre-dispute)</span>
+            </td>
+            <td>
+              <div class="deadline-norm mono">9/24/2026</div>
+              <div style="font-size:10px; color:#6b7280;">19 days remaining</div>
+            </td>
+            <td class="num-col">
+              <div class="amount-box mono">$129.00</div>
+              <div style="font-size:10px; color:#6b7280;">USD</div>
+            </td>
+            <td style="text-align:right;">
+              <a href="#" class="btn-docket-action">Review Docket</a>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="#" class="dispute-id mono">dp_S1</a>
+              <div class="order-ref mono">Ref: ORD-1001 · Michael Okafor</div>
+            </td>
+            <td>
+              <div class="reason-text">Product Not Received</div>
+              <div class="docket-meta">Delivery verified with UPS tracking signature</div>
+            </td>
+            <td>
+              <span class="status-badge badge-review mono">Under Review</span>
+            </td>
+            <td>
+              <div class="deadline-norm mono">9/19/2026</div>
+              <div style="font-size:10px; color:#6b7280;">14 days remaining</div>
+            </td>
+            <td class="num-col">
+              <div class="amount-box mono">$48.00</div>
+              <div style="font-size:10px; color:#6b7280;">USD</div>
+            </td>
+            <td style="text-align:right;">
+              <a href="#" class="btn-docket-action">Review Docket</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
