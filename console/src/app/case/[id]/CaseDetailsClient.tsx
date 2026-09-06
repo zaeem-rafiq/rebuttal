@@ -107,7 +107,34 @@ export default function CaseDetailsPage() {
     );
   }
 
-  const amountFormatted = dispute ? `$${(dispute.amount_cents / 100).toFixed(2)}` : '$0.00';
+  if (!dispute) {
+    return (
+      <div className="space-y-6">
+        <Header
+          lastUpdated={lastUpdated}
+          isRefreshing={isRefreshing}
+          onRefresh={fetchCaseDetails}
+          secondsRemaining={secondsRemaining}
+        />
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center text-slate-400">
+          <ShieldAlert className="h-10 w-10 text-slate-600 mx-auto mb-3" />
+          <h3 className="text-base font-semibold text-slate-200">Dispute Not Found</h3>
+          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+            Dispute &ldquo;{disputeId}&rdquo; was not found in the database. Use the Scenario Injector on the dashboard to generate a live dispute case.
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center space-x-1.5 mt-4 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Back to All Disputes</span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const amountFormatted = `$${(dispute.amount_cents / 100).toFixed(2)}`;
 
   return (
     <div className="space-y-6">
@@ -122,7 +149,7 @@ export default function CaseDetailsPage() {
         <div className="space-y-1">
           <Link
             href="/"
-            className="inline-flex items-center space-x-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium mb-1 transition-colors"
+            className="inline-flex items-center space-x-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium py-1.5 px-2 -ml-2 rounded-lg hover:bg-slate-800/60 min-h-[28px] transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Back to All Disputes</span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Decision } from '@/lib/types';
-import { Target, TrendingUp, DollarSign, Award, FileText } from 'lucide-react';
+import { Target, TrendingUp, DollarSign, Award, FileText, Info } from 'lucide-react';
 import { StatusChip } from './StatusChip';
 
 interface StrategyCardProps {
@@ -13,8 +13,8 @@ export const StrategyCard: React.FC<StrategyCardProps> = ({ decision, amountCent
     return (
       <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 text-center text-slate-400">
         <Target className="h-6 w-6 mx-auto mb-2 text-slate-600" />
-        <p className="text-sm font-medium">Evaluation In Progress</p>
-        <p className="text-xs text-slate-500 mt-1">Bedrock AgentCore Evidence Graph is currently analyzing evidence and computing win probability.</p>
+        <p className="text-sm font-medium text-slate-200">Evaluation In Progress</p>
+        <p className="text-xs text-slate-400 mt-1">Bedrock AgentCore Evidence Graph is currently analyzing evidence and computing win probability.</p>
       </div>
     );
   }
@@ -63,11 +63,20 @@ export const StrategyCard: React.FC<StrategyCardProps> = ({ decision, amountCent
 
         <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
-            <span>Expected Value</span>
+            <span className="flex items-center space-x-1">
+              <span>Expected Value</span>
+              <span
+                title={`EV Model: (${winProbPercent}% × ${disputeAmountFormatted}) − $15.00 dispute fee = ${expectedValueFormatted}`}
+                className="cursor-help text-slate-400 hover:text-indigo-300 transition-colors"
+                aria-label={`Expected value calculation: ${winProbPercent}% times ${disputeAmountFormatted} minus $15 dispute fee`}
+              >
+                <Info className="h-3 w-3 inline" />
+              </span>
+            </span>
             <DollarSign className="h-3.5 w-3.5 text-indigo-400" />
           </div>
           <div className="text-xl font-bold text-indigo-300 font-mono">{expectedValueFormatted}</div>
-          <p className="text-[10px] text-slate-500 mt-1">Dispute: {disputeAmountFormatted}</p>
+          <p className="text-[10px] text-slate-400 mt-1">Dispute: {disputeAmountFormatted}</p>
         </div>
 
         <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between">
@@ -76,7 +85,7 @@ export const StrategyCard: React.FC<StrategyCardProps> = ({ decision, amountCent
             <Award className="h-3.5 w-3.5 text-purple-400" />
           </div>
           <div className="text-base font-bold text-purple-300 capitalize">{decision.evidence_strength}</div>
-          <p className="text-[10px] text-slate-500 mt-1">Proof grade: production</p>
+          <p className="text-[10px] text-slate-400 mt-1">Proof grade: production</p>
         </div>
       </div>
 

@@ -32,7 +32,7 @@ export const Header: React.FC<HeaderProps> = ({
               Risk Operations Console
             </span>
             <span className="flex items-center space-x-1 px-2 py-0.5 text-xs font-medium rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 ring-2 ring-emerald-500/30" />
               <span>AgentCore Live</span>
             </span>
           </div>
@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {lastUpdated && (
-          <span className="hidden md:inline-block text-slate-500">
+          <span className="hidden md:inline-block text-slate-400">
             Updated {lastUpdated.toLocaleTimeString()}
           </span>
         )}

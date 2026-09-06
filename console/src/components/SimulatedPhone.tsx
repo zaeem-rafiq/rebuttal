@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Smartphone, Send, Check, CheckCheck, Shield } from 'lucide-react';
+import { Smartphone, Send, Check, CheckCheck, Shield, CheckCircle2, AlertCircle, RotateCcw } from 'lucide-react';
 import { TWILIO_WEBHOOK_URL } from '@/lib/config';
 
 interface SimulatedPhoneProps {
@@ -26,7 +26,11 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
   const [replyMessage, setReplyMessage] = useState<string>('');
   const [sending, setSending] = useState<boolean>(false);
   const [sentReplies, setSentReplies] = useState<Array<{ text: string; time: string }>>([]);
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{
+    type: 'success' | 'error';
+    message: string;
+    onRetry?: () => void;
+  } | null>(null);
 
   const defaultAlert =
     ownerSummary ||
@@ -68,17 +72,28 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
         });
       }
 
+      if (!resp.ok) {
+        throw new Error(`Server returned HTTP ${resp.status}`);
+      }
+
       setSentReplies((prev) => [
         ...prev,
         { text: displayValue, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
       ]);
 
-      setFeedback(`Reply "${displayValue}" sent to Twilio handler!`);
+      setFeedback({
+        type: 'success',
+        message: `Reply "${displayValue}" dispatched successfully!`,
+      });
       if (onReplySuccess) {
         onReplySuccess(bodyValue);
       }
     } catch (err: any) {
-      setFeedback(`Failed to send reply: ${err.message}`);
+      setFeedback({
+        type: 'error',
+        message: `Failed to dispatch reply: ${err.message || 'Network error'}`,
+        onRetry: () => sendReply(bodyValue, displayValue),
+      });
     } finally {
       setSending(false);
     }
@@ -114,13 +129,13 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-slate-200 truncate">Rebuttal Security</p>
-              <p className="text-[10px] text-slate-500 font-mono">+1 (812) 955-1686</p>
+              <p className="text-[10px] text-slate-400 font-mono">+1 (812) 955-1686</p>
             </div>
           </div>
 
           {/* Message Thread */}
           <div className="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
-            <div className="text-center text-[10px] text-slate-500 my-1">Today</div>
+            <div className="text-center text-[10px] text-slate-400 my-1">Today</div>
 
             {/* Inbound Alert Bubble from Rebuttal */}
             <div className="flex flex-col items-start max-w-[85%]">
@@ -158,7 +173,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
                 onClick={() => handleQuickReply('1')}
                 disabled={sending}
                 aria-label="Send reply 1 Fight"
-                className="py-2 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-semibold text-xs transition-all disabled:opacity-50"
+                className="py-2 px-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 active:scale-95 text-white font-semibold text-xs transition-all disabled:opacity-50 shadow-sm"
               >
                 1 Fight
               </button>
@@ -167,7 +182,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
                 onClick={() => handleQuickReply('2')}
                 disabled={sending}
                 aria-label="Send reply 2 Concede"
-                className="py-2 px-2 rounded-lg bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-semibold text-xs transition-all disabled:opacity-50"
+                className="py-2 px-2 rounded-lg bg-rose-700 hover:bg-rose-600 active:scale-95 text-white font-semibold text-xs transition-all disabled:opacity-50 shadow-sm"
               >
                 2 Concede
               </button>
@@ -176,7 +191,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
                 onClick={() => handleQuickReply('3')}
                 disabled={sending}
                 aria-label="Send reply 3 Hold"
-                className="py-2 px-2 rounded-lg bg-slate-700 hover:bg-slate-600 active:scale-95 text-white font-semibold text-xs transition-all disabled:opacity-50"
+                className="py-2 px-2 rounded-lg bg-slate-700 hover:bg-slate-600 active:scale-95 text-white font-semibold text-xs transition-all disabled:opacity-50 shadow-sm"
               >
                 3 Hold
               </button>
@@ -195,7 +210,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
                 placeholder="Type 1, 2, or 3..."
                 disabled={sending}
                 aria-label="Type reply message"
-                className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1 text-xs text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
               />
               <button
                 type="submit"
@@ -211,9 +226,34 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
       </div>
 
       {feedback && (
-        <p className="text-xs text-emerald-400 mt-3 font-medium text-center">
-          ✓ {feedback}
-        </p>
+        <div
+          role="status"
+          aria-live="polite"
+          className={`mt-3 p-2.5 px-3 rounded-xl text-xs flex items-center justify-between gap-2 border shadow-md max-w-[340px] w-full ${
+            feedback.type === 'success'
+              ? 'bg-emerald-950/70 border-emerald-800 text-emerald-300'
+              : 'bg-rose-950/80 border-rose-800 text-rose-300'
+          }`}
+        >
+          <div className="flex items-center space-x-2 min-w-0">
+            {feedback.type === 'success' ? (
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+            ) : (
+              <AlertCircle className="h-3.5 w-3.5 text-rose-400 shrink-0" />
+            )}
+            <span className="truncate font-medium">{feedback.message}</span>
+          </div>
+          {feedback.onRetry && (
+            <button
+              type="button"
+              onClick={feedback.onRetry}
+              className="text-[11px] font-semibold bg-rose-800 hover:bg-rose-700 text-white px-2 py-0.5 rounded flex items-center space-x-1 shrink-0 transition-colors"
+            >
+              <RotateCcw className="h-3 w-3" />
+              <span>Retry</span>
+            </button>
+          )}
+        </div>
       )}
     </div>
   );

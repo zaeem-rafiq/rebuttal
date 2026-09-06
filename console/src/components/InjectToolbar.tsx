@@ -124,7 +124,7 @@ export const InjectToolbar: React.FC<InjectToolbarProps> = ({ onInjectSuccess })
             aria-label="Inject Scenario 1 Delivery Dispute"
             className="flex-1 sm:flex-none flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-sm"
           >
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">S1</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-950 text-blue-200 border border-blue-800">S1</span>
             <span>$48 · Delivery</span>
             {loadingScenario === 'S1' && <Clock className="h-3.5 w-3.5 animate-spin text-blue-400 ml-1" />}
           </button>
@@ -137,7 +137,7 @@ export const InjectToolbar: React.FC<InjectToolbarProps> = ({ onInjectSuccess })
             aria-label="Inject Scenario 2 Fraud Dispute"
             className="flex-1 sm:flex-none flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-sm"
           >
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">S2</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-950 text-rose-200 border border-rose-800">S2</span>
             <span>$340 · Fraud</span>
             {loadingScenario === 'S2' && <Clock className="h-3.5 w-3.5 animate-spin text-rose-400 ml-1" />}
           </button>
@@ -150,7 +150,7 @@ export const InjectToolbar: React.FC<InjectToolbarProps> = ({ onInjectSuccess })
             aria-label="Inject Scenario 3 Subscription Inquiry"
             className="flex-1 sm:flex-none flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-sm"
           >
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">S3</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-950 text-amber-200 border border-amber-800">S3</span>
             <span>$129 · Inquiry</span>
             {loadingScenario === 'S3' && <Clock className="h-3.5 w-3.5 animate-spin text-amber-400 ml-1" />}
           </button>

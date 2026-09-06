@@ -6,7 +6,7 @@ import { Dispute } from '@/lib/types';
 import { Header } from '@/components/Header';
 import { InjectToolbar } from '@/components/InjectToolbar';
 import { CaseFeed } from '@/components/CaseFeed';
-import { ShieldAlert, TrendingUp, DollarSign, Clock, AlertCircle } from 'lucide-react';
+import { ShieldAlert, TrendingUp, DollarSign, Clock, AlertCircle, CheckCircle2, RotateCcw, X } from 'lucide-react';
 
 export default function HomePage() {
   const [disputes, setDisputes] = useState<Dispute[]>([]);
@@ -16,6 +16,11 @@ export default function HomePage() {
   const [secondsRemaining, setSecondsRemaining] = useState<number>(5);
   const [replyingId, setReplyingId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [actionToast, setActionToast] = useState<{
+    type: 'success' | 'error';
+    message: string;
+    onRetry?: () => void;
+  } | null>(null);
 
   const fetchDisputes = useCallback(async () => {
     setIsRefreshing(true);
@@ -64,15 +69,34 @@ export default function HomePage() {
 
   const handleQuickReply = async (disputeId: string, replyCode: '1' | '2' | '3') => {
     setReplyingId(disputeId);
+    setActionToast(null);
+    const actionLabel = replyCode === '1' ? 'Fight' : replyCode === '2' ? 'Concede' : 'Hold';
+
     try {
-      await fetch('/api/reply', {
+      const res = await fetch('/api/reply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ Body: replyCode, dispute_id: disputeId }),
       });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || `HTTP status ${res.status}`);
+      }
+
+      setActionToast({
+        type: 'success',
+        message: `Action '${actionLabel}' recorded for ${disputeId}. Bedrock AgentCore defense pipeline notified.`,
+      });
       setTimeout(() => fetchDisputes(), 1500);
-    } catch (err) {
+      setTimeout(() => setActionToast((prev) => (prev?.type === 'success' ? null : prev)), 6000);
+    } catch (err: any) {
       console.error('Quick reply error:', err);
+      setActionToast({
+        type: 'error',
+        message: `Failed to record '${actionLabel}' for ${disputeId}: ${err.message || 'Network error'}`,
+        onRetry: () => handleQuickReply(disputeId, replyCode),
+      });
     } finally {
       setReplyingId(null);
     }
@@ -143,6 +167,47 @@ export default function HomePage() {
           <span className="text-[11px] text-slate-400 mt-1">Awaiting owner confirmation</span>
         </div>
       </div>
+
+      {actionToast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={`p-4 rounded-xl text-xs flex items-center justify-between gap-3 border shadow-lg animate-in fade-in duration-200 ${
+            actionToast.type === 'success'
+              ? 'bg-emerald-950/70 border-emerald-800 text-emerald-200'
+              : 'bg-rose-950/80 border-rose-700 text-rose-200'
+          }`}
+        >
+          <div className="flex items-center space-x-2.5">
+            {actionToast.type === 'success' ? (
+              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+            ) : (
+              <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
+            )}
+            <span className="font-medium">{actionToast.message}</span>
+          </div>
+          <div className="flex items-center space-x-2 shrink-0">
+            {actionToast.onRetry && (
+              <button
+                type="button"
+                onClick={actionToast.onRetry}
+                className="px-2.5 py-1 rounded-lg bg-rose-800 hover:bg-rose-700 text-white font-medium flex items-center space-x-1 transition-colors"
+              >
+                <RotateCcw className="h-3 w-3" />
+                <span>Retry</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setActionToast(null)}
+              aria-label="Dismiss notification"
+              className="text-slate-400 hover:text-white p-1"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {errorMsg && (
         <div className="p-4 rounded-xl bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300 flex items-center space-x-2">

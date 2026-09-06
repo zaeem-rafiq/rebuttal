@@ -23,11 +23,11 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
       <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-3">
         <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
           <div>
-            <span className="text-[10px] font-mono text-slate-500 uppercase">Order ID</span>
+            <span className="text-[10px] font-mono text-slate-400 uppercase">Order ID</span>
             <p className="text-sm font-bold text-slate-200 font-mono">{order.id}</p>
           </div>
           <div className="text-right">
-            <span className="text-[10px] font-mono text-slate-500 uppercase">Total</span>
+            <span className="text-[10px] font-mono text-slate-400 uppercase">Total</span>
             <p className="text-sm font-bold text-indigo-400 font-mono">${(order.amount_cents / 100).toFixed(2)}</p>
           </div>
         </div>
@@ -37,14 +37,14 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
             <p className="text-slate-300 font-medium">{order.customer.name}</p>
             <p className="text-slate-400 font-mono text-[11px]">{order.customer.email}</p>
             {order.customer.phone && (
-              <p className="text-slate-500 font-mono text-[11px]">{order.customer.phone}</p>
+              <p className="text-slate-400 font-mono text-[11px]">{order.customer.phone}</p>
             )}
           </div>
         )}
 
         {order.items && order.items.length > 0 && (
           <div className="pt-2 border-t border-slate-800/80">
-            <span className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider">
+            <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
               Purchased Items
             </span>
             <div className="mt-1.5 space-y-1">
@@ -100,7 +100,7 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
 
           {shipment.events && shipment.events.length > 0 && (
             <div className="pt-2 border-t border-slate-800">
-              <span className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider">
+              <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
                 Carrier Scan Events
               </span>
               <div className="mt-2 space-y-2">
@@ -109,7 +109,7 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
                     <CheckCircle className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-slate-200 font-medium">{ev.details || ev.status}</p>
-                      <p className="text-[10px] text-slate-500 font-mono">
+                      <p className="text-[10px] text-slate-400 font-mono">
                         {ev.location} · {new Date(ev.timestamp).toLocaleString()}
                       </p>
                     </div>
@@ -138,7 +138,7 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
                     : 'bg-indigo-950/40 border-indigo-900/50 text-indigo-200 ml-3'
                 }`}
               >
-                <div className="flex items-center justify-between text-[10px] text-slate-500 mb-1">
+                <div className="flex items-center justify-between text-[10px] text-slate-400 mb-1">
                   <span className="font-semibold uppercase">{msg.direction} ({msg.channel})</span>
                   <span>{new Date(msg.created_at).toLocaleDateString()}</span>
                 </div>
