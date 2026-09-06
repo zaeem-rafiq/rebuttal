@@ -570,14 +570,17 @@ export default function HomePage() {
                     <Stamp
                       text={`APPROVED · ${localDecision.timestamp} · BY OWNER (SMS)`}
                       variant="approved"
+                      animate={true}
                     />
                   ) : (
                     <Stamp
                       text={`CONCEDED · ${localDecision.timestamp} · BY OWNER (SMS)`}
                       variant="conceded"
+                      animate={true}
                     />
                   )
                 ) : openDispute.status === 'won' ? (
+
                   <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
                 ) : openDispute.status === 'lost' ? (
                   <Stamp text="LOST · 06 SEP 14:07 · ISSUER DECISION" variant="lost" />
