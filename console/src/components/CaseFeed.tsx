@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Dispute } from '@/lib/types';
 import { StatusChip } from './StatusChip';
-import { AlertTriangle, Search, X, ShieldAlert } from 'lucide-react';
+import { Scale, Search, X } from 'lucide-react';
 
 interface CaseFeedProps {
   disputes: Dispute[];
@@ -63,11 +63,11 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
 
   if (!disputes || disputes.length === 0) {
     return (
-      <div className="bg-surface-card border border-surface-border rounded-lg p-12 text-center text-text-muted">
-        <ShieldAlert className="h-9 w-9 text-text-muted mx-auto mb-3" />
-        <h3 className="text-sm font-semibold text-text-primary">Evidentiary Docket Awaiting Cases</h3>
-        <p className="text-xs text-text-muted mt-1 max-w-sm mx-auto leading-relaxed">
-          No dispute cases are currently recorded. Inject S1, S2, or S3 using the verification toolbar above to launch Bedrock AgentCore defense pipelines.
+      <div className="bg-surface border border-border rounded-xs p-12 text-center text-docket-text-muted">
+        <Scale className="h-10 w-10 text-docket-gold/60 mx-auto mb-3" />
+        <h3 className="text-base font-serif font-medium text-docket-text">DOCKET CLEAR // AWAITING CLAIMS</h3>
+        <p className="text-xs text-docket-text-muted mt-1 max-w-sm mx-auto leading-relaxed">
+          No chargeback claims currently filed in jurisdiction. Inject S1, S2, or S3 using the scenario ribbon above to activate the Bedrock evidentiary compiler.
         </p>
       </div>
     );
@@ -92,28 +92,28 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
   };
 
   return (
-    <div className="bg-surface-card border border-surface-border rounded-lg overflow-hidden shadow-xs">
+    <div className="bg-surface border border-border rounded-xs overflow-hidden shadow-xs">
       {/* Header with Title, Search and Tabs */}
-      <div className="p-4 border-b border-surface-border bg-surface-subtle/50 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+      <div className="p-4 border-b border-border bg-surface-subtle flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div className="flex items-center space-x-3">
-          <h3 className="text-sm font-semibold tracking-tight text-text-primary">
-            Evidentiary Docket Ledger
+          <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-docket-text">
+            Active Docket Ledger — Chronological Stream
           </h3>
-          <span className="font-mono text-[11px] font-semibold text-text-muted bg-surface-card border border-surface-border px-2 py-0.5 rounded">
+          <span className="font-mono text-[11px] font-semibold text-docket-gold bg-surface-elevated border border-border px-2 py-0.5 rounded-xs">
             {disputes.length} Records
           </span>
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           {/* Filter Tabs */}
-          <div className="flex flex-wrap items-center bg-canvas-base p-1 rounded-md border border-surface-border text-xs gap-1 sm:gap-0">
+          <div className="flex flex-wrap items-center bg-canvas p-1 rounded-xs border border-border text-xs gap-1 sm:gap-0 font-mono">
             <button
               type="button"
               onClick={() => setActiveTab('all')}
-              className={`px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+              className={`px-3 py-1.5 sm:py-1 min-h-[44px] sm:min-h-0 rounded-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold ${
                 activeTab === 'all'
-                  ? 'bg-surface-card text-text-primary border border-surface-border shadow-xs'
-                  : 'text-text-muted hover:text-text-secondary'
+                  ? 'bg-surface-elevated text-docket-text border border-docket-gold/40 shadow-xs'
+                  : 'text-docket-text-muted hover:text-docket-text-secondary'
               }`}
             >
               All ({counts.all})
@@ -121,10 +121,10 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
             <button
               type="button"
               onClick={() => setActiveTab('needs_response')}
-              className={`px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+              className={`px-3 py-1.5 sm:py-1 min-h-[44px] sm:min-h-0 rounded-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold ${
                 activeTab === 'needs_response'
-                  ? 'bg-status-review-bg text-status-review-text border border-status-review-border'
-                  : 'text-text-muted hover:text-text-secondary'
+                  ? 'bg-docket-gold/15 text-docket-gold border border-docket-gold/50'
+                  : 'text-docket-text-muted hover:text-docket-text-secondary'
               }`}
             >
               Action Req ({counts.needs_response})
@@ -132,10 +132,10 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
             <button
               type="button"
               onClick={() => setActiveTab('under_review')}
-              className={`px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+              className={`px-3 py-1.5 sm:py-1 min-h-[44px] sm:min-h-0 rounded-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold ${
                 activeTab === 'under_review'
-                  ? 'bg-status-submitted-bg text-status-submitted-text border border-status-submitted-border'
-                  : 'text-text-muted hover:text-text-secondary'
+                  ? 'bg-status-review/15 text-status-review border border-status-review/40'
+                  : 'text-docket-text-muted hover:text-docket-text-secondary'
               }`}
             >
               Under Review ({counts.under_review})
@@ -143,10 +143,10 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
             <button
               type="button"
               onClick={() => setActiveTab('won')}
-              className={`px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+              className={`px-3 py-1.5 sm:py-1 min-h-[44px] sm:min-h-0 rounded-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold ${
                 activeTab === 'won'
-                  ? 'bg-status-won-bg text-status-won-text border border-status-won-border'
-                  : 'text-text-muted hover:text-text-secondary'
+                  ? 'bg-status-won/15 text-status-won border border-status-won/40'
+                  : 'text-docket-text-muted hover:text-docket-text-secondary'
               }`}
             >
               Won ({counts.won})
@@ -155,21 +155,21 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
 
           {/* Search Bar */}
           <div className="relative max-w-xs w-full">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-docket-text-muted" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search ID, reason, order..."
-              aria-label="Search disputes"
-              className="w-full bg-canvas-base border border-surface-border rounded-md pl-8 pr-7 py-2 sm:py-1 min-h-[44px] sm:min-h-0 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary font-mono"
+              aria-label="Search docket records"
+              className="w-full bg-canvas border border-border rounded-xs pl-8 pr-7 py-1.5 sm:py-1 min-h-[44px] sm:min-h-0 text-xs text-docket-text placeholder:text-docket-text-subtle focus:outline-none focus:ring-1 focus:ring-docket-gold focus:border-docket-gold font-mono"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
                 aria-label="Clear search query"
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-docket-text-muted hover:text-docket-text"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -180,10 +180,10 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
 
       {/* Empty Filter State */}
       {filteredDisputes.length === 0 ? (
-        <div className="p-12 text-center text-text-muted">
-          <p className="text-sm font-medium text-text-secondary">No disputes match your current filter</p>
-          <p className="text-xs text-text-muted mt-1">
-            Try resetting your search query or selecting another status tab.
+        <div className="p-12 text-center text-docket-text-muted">
+          <p className="text-sm font-serif text-docket-text-secondary">No claims match the specified filter query</p>
+          <p className="text-xs text-docket-text-muted mt-1">
+            Reset filter selection or search terms to inspect full docket.
           </p>
           <button
             type="button"
@@ -191,7 +191,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
               setActiveTab('all');
               setSearchQuery('');
             }}
-            className="mt-3 px-3 py-1.5 rounded-md text-xs font-medium bg-surface-subtle hover:bg-surface-hover text-text-primary border border-surface-border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            className="mt-3 px-3 py-1.5 rounded-xs text-xs font-mono bg-surface-elevated hover:bg-surface-hover text-docket-text border border-border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold"
           >
             Reset Filters
           </button>
@@ -199,18 +199,18 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
       ) : (
         <div className="overflow-x-auto">
           {/* Desktop Table View */}
-          <table className="w-full border-collapse text-left text-xs">
+          <table className="w-full border-collapse text-left text-xs font-mono">
             <thead>
-              <tr className="border-b border-surface-border bg-surface-subtle/40 text-[11px] font-mono font-medium text-text-muted">
-                <th className="py-3 px-4">Dispute ID & Order</th>
-                <th className="py-3 px-4">Reason & Evidentiary Dossier</th>
+              <tr className="border-b border-border bg-surface-subtle text-[11px] font-mono uppercase tracking-wider text-docket-text-muted">
+                <th className="py-3 px-4">Docket ID</th>
+                <th className="py-3 px-4">Claimant / Reason</th>
                 <th className="py-3 px-4">Docket Status</th>
-                <th className="py-3 px-4">Evidence Deadline</th>
+                <th className="py-3 px-4">Filing Deadline</th>
                 <th className="py-3 px-4 text-right">Contested Amount</th>
-                <th className="py-3 px-4 text-right">Docket Action</th>
+                <th className="py-3 px-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-border">
+            <tbody className="divide-y divide-border/60">
               {filteredDisputes.map((d) => {
                 const amountFormatted = `$${(d.amount_cents / 100).toFixed(2)}`;
                 const isPending = d.status === 'needs_response' || (d.decision && d.decision.status === 'pending');
@@ -221,36 +221,34 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
                 return (
                   <tr
                     key={d.id}
-                    className={`transition-colors hover:bg-surface-hover/60 ${
-                      isPending ? 'bg-status-review-bg/20 border-l-2 border-l-status-review-border' : ''
+                    className={`transition-colors hover:bg-surface-hover/50 ${
+                      isPending ? 'bg-docket-gold/5 border-l-2 border-l-docket-gold' : ''
                     }`}
                   >
-                    {/* Dispute ID & Order */}
+                    {/* Docket ID & Order */}
                     <td className="py-3.5 px-4 align-middle">
                       <Link
                         href={`/case/${d.id}`}
-                        className={`font-mono font-semibold hover:underline block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded ${
-                          isPending ? 'text-text-primary' : 'text-text-primary'
-                        }`}
+                        className="font-mono font-semibold text-docket-text hover:text-docket-gold hover:underline block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold rounded-xs"
                       >
                         {d.id}
                       </Link>
-                      <div className="font-mono text-[11px] text-text-muted mt-0.5">
-                        {d.order_id ? `Ref: ${d.order_id}` : 'No linked order'}
+                      <div className="font-mono text-[11px] text-docket-text-muted mt-0.5">
+                        {d.order_id ? `Ref: ${d.order_id}` : 'Direct claim'}
                       </div>
                     </td>
 
-                    {/* Reason & Evidentiary Dossier */}
-                    <td className="py-3.5 px-4 align-middle max-w-xs">
-                      <div className="font-medium text-text-primary capitalize">
+                    {/* Reason & Evidentiary Summary */}
+                    <td className="py-3.5 px-4 align-middle max-w-xs font-sans">
+                      <div className="font-medium text-docket-text capitalize font-mono text-xs">
                         {d.reason.replace(/_/g, ' ')}
                       </div>
-                      <div className="text-[11px] text-text-muted mt-0.5 truncate">
+                      <div className="text-[11px] text-docket-text-muted mt-0.5 truncate">
                         {d.decision?.owner_summary || (
                           d.reason === 'product_not_received'
-                            ? 'Carrier signature verified, proof ready'
+                            ? 'UPS carrier signature matched (M. Brown)'
                             : d.reason === 'fraudulent'
-                            ? 'VIP account, ApprovalGate interrupt'
+                            ? 'VIP Account ($4.8k LTV) — ApprovalGate Intercept'
                             : 'Pre-dispute inquiry notification'
                         )}
                       </div>
@@ -263,11 +261,11 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
 
                     {/* Deadline */}
                     <td className="py-3.5 px-4 align-middle font-mono">
-                      <div className={`text-[11px] font-semibold ${dueInfo.urgent ? 'text-status-review-text' : 'text-text-secondary'}`}>
+                      <div className={`text-[11px] font-semibold ${dueInfo.urgent ? 'text-docket-gold' : 'text-docket-text-secondary'}`}>
                         {dueInfo.label}
                       </div>
                       {dueInfo.days && (
-                        <div className="text-[10px] text-text-muted">
+                        <div className="text-[10px] text-docket-text-muted">
                           {dueInfo.days}
                         </div>
                       )}
@@ -275,18 +273,18 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
 
                     {/* Contested Amount */}
                     <td className="py-3.5 px-4 align-middle text-right font-mono">
-                      <div className="text-sm font-bold tabular-nums text-text-primary">
+                      <div className="text-sm font-bold tabular-nums text-docket-gold">
                         {amountFormatted}
                       </div>
-                      <div className="text-[10px] text-text-muted">USD</div>
+                      <div className="text-[10px] text-docket-text-muted">USD</div>
                     </td>
 
                     {/* Actions */}
                     <td className="py-3.5 px-4 align-middle text-right">
                       {isPending && onQuickReply ? (
                         isConcedePrompt ? (
-                          <div className="inline-flex items-center gap-1.5 bg-status-lost-bg p-1 px-2 rounded border border-status-lost-border text-xs font-mono">
-                            <span className="text-status-lost-text text-[11px] font-medium">Concede?</span>
+                          <div className="inline-flex items-center gap-1.5 bg-surface-elevated p-1 px-2 rounded-xs border border-border text-xs font-mono">
+                            <span className="text-docket-text-secondary text-[11px]">Concede?</span>
                             <button
                               type="button"
                               disabled={isReplying}
@@ -294,7 +292,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
                                 setConfirmingConcedeId(null);
                                 onQuickReply(d.id, '2');
                               }}
-                              className="px-2 py-0.5 text-[11px] font-bold rounded bg-status-lost-text text-canvas-base hover:opacity-90 disabled:opacity-50 transition-opacity focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-status-lost-border"
+                              className="px-2 py-0.5 text-[11px] font-bold rounded-xs bg-status-action text-white hover:opacity-90 disabled:opacity-50 transition-opacity focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-docket-gold"
                             >
                               Yes
                             </button>
@@ -302,45 +300,45 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
                               type="button"
                               disabled={isReplying}
                               onClick={() => setConfirmingConcedeId(null)}
-                              className="px-1.5 py-0.5 text-[11px] rounded bg-surface-subtle text-text-muted hover:text-text-primary border border-surface-border transition-colors"
+                              className="px-1.5 py-0.5 text-[11px] rounded-xs bg-surface text-docket-text-muted hover:text-docket-text border border-border transition-colors"
                             >
                               Cancel
                             </button>
                           </div>
                         ) : (
-                          <div className="inline-flex items-center gap-1">
+                          <div className="inline-flex items-center gap-1 font-mono">
                             <button
                               type="button"
                               disabled={isReplying}
                               onClick={() => onQuickReply(d.id, '1')}
-                              title="Fight dispute"
-                              className="px-2.5 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded text-[11px] font-mono font-semibold bg-status-won-bg text-status-won-text border border-status-won-border hover:bg-status-won-border/30 active:scale-95 disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
+                              title="Authorize Evidence Submission"
+                              className="px-2.5 py-1 min-h-[44px] sm:min-h-0 rounded-xs text-[11px] font-mono font-semibold bg-docket-gold text-canvas hover:bg-docket-gold-light active:scale-95 disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-docket-gold"
                             >
-                              1 Fight
+                              1 Submit Proof
                             </button>
                             <button
                               type="button"
                               disabled={isReplying}
                               onClick={() => setConfirmingConcedeId(d.id)}
                               title="Concede dispute"
-                              className="px-2.5 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded text-[11px] font-mono font-semibold bg-status-lost-bg text-status-lost-text border border-status-lost-border hover:bg-status-lost-border/30 active:scale-95 disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
+                              className="px-2 py-1 min-h-[44px] sm:min-h-0 rounded-xs text-[11px] font-mono bg-surface-elevated text-docket-text-muted border border-border hover:text-docket-text active:scale-95 disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-docket-gold"
                             >
                               2 Concede
                             </button>
                             <Link
                               href={`/case/${d.id}`}
-                              className="px-2.5 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded text-[11px] font-medium bg-surface-subtle hover:bg-surface-hover text-text-secondary hover:text-text-primary border border-surface-border active:scale-95 transition-all ml-1 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                              className="px-2 py-1 min-h-[44px] sm:min-h-0 rounded-xs text-[11px] font-mono bg-surface-elevated hover:bg-surface-hover text-docket-text-secondary hover:text-docket-text border border-border active:scale-95 transition-all ml-1 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold"
                             >
-                              Review
+                              Dossier &rarr;
                             </Link>
                           </div>
                         )
                       ) : (
                         <Link
                           href={`/case/${d.id}`}
-                          className="inline-flex items-center px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded text-[11px] font-medium bg-surface-subtle hover:bg-surface-hover text-text-secondary hover:text-text-primary border border-surface-border active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                          className="inline-flex items-center px-3 py-1 min-h-[44px] sm:min-h-0 rounded-xs text-[11px] font-mono bg-surface-elevated hover:bg-surface-hover text-docket-text-secondary hover:text-docket-text border border-border active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold"
                         >
-                          Review Docket
+                          Review Case &rarr;
                         </Link>
                       )}
                     </td>

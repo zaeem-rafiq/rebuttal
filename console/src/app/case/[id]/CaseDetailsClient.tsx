@@ -11,7 +11,7 @@ import { StrategyCard } from '@/components/StrategyCard';
 import { AuditTimeline } from '@/components/AuditTimeline';
 import { EvidencePacket } from '@/components/EvidencePacket';
 import { SimulatedPhone } from '@/components/SimulatedPhone';
-import { ArrowLeft, Clock, ShieldAlert, Cpu, Smartphone } from 'lucide-react';
+import { ArrowLeft, Clock, Scale, Cpu, Smartphone, ShieldCheck } from 'lucide-react';
 
 export default function CaseDetailsPage() {
   const params = useParams();
@@ -100,22 +100,22 @@ export default function CaseDetailsPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6 animate-pulse" aria-busy="true" aria-label="Loading Dispute Case">
+      <div className="space-y-6 animate-skeleton" aria-busy="true" aria-label="Loading Dispute Case Dossier">
         <Header
           lastUpdated={lastUpdated}
           isRefreshing={isRefreshing}
           onRefresh={fetchCaseDetails}
           secondsRemaining={secondsRemaining}
         />
-        <div className="h-14 bg-surface-card border border-surface-border rounded-lg" />
+        <div className="h-16 bg-surface border border-border rounded-xs" />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-8 space-y-6">
-            <div className="h-56 bg-surface-card border border-surface-border rounded-lg" />
-            <div className="h-64 bg-surface-card border border-surface-border rounded-lg" />
-            <div className="h-48 bg-surface-card border border-surface-border rounded-lg" />
+            <div className="h-56 bg-surface border border-border rounded-xs" />
+            <div className="h-64 bg-surface border border-border rounded-xs" />
+            <div className="h-48 bg-surface border border-border rounded-xs" />
           </div>
           <div className="lg:col-span-4">
-            <div className="h-[520px] bg-surface-card border border-surface-border rounded-lg" />
+            <div className="h-[520px] bg-surface border border-border rounded-xs" />
           </div>
         </div>
       </div>
@@ -131,18 +131,18 @@ export default function CaseDetailsPage() {
           onRefresh={fetchCaseDetails}
           secondsRemaining={secondsRemaining}
         />
-        <div className="bg-surface-card border border-surface-border rounded-lg p-12 text-center text-text-muted">
-          <ShieldAlert className="h-9 w-9 text-text-muted mx-auto mb-3" />
-          <h3 className="text-sm font-semibold text-text-primary">Dispute Not Found in Docket</h3>
-          <p className="text-xs text-text-muted mt-1 max-w-sm mx-auto">
-            Dispute &ldquo;{disputeId}&rdquo; was not located in the active database. Use the verification toolbar on the ledger to inject a test case.
+        <div className="bg-surface border border-border rounded-xs p-12 text-center text-docket-text-muted">
+          <Scale className="h-10 w-10 text-docket-gold/60 mx-auto mb-3" />
+          <h3 className="text-base font-serif font-medium text-docket-text">Dispute Not Found in Docket</h3>
+          <p className="text-xs text-docket-text-muted mt-1 max-w-sm mx-auto font-mono">
+            Dispute &ldquo;{disputeId}&rdquo; was not located in the active magistrate database. Return to the docket ledger to select an active case.
           </p>
           <Link
             href="/"
-            className="inline-flex items-center space-x-1.5 mt-4 px-3 py-1.5 rounded-md text-xs font-medium bg-surface-subtle hover:bg-surface-hover text-text-primary border border-surface-border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            className="inline-flex items-center space-x-1.5 mt-4 px-3.5 py-1.5 rounded-xs text-xs font-mono font-medium bg-surface-elevated hover:bg-surface-hover text-docket-text border border-border hover:border-docket-gold/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Return to Ledger</span>
+            <ArrowLeft className="h-3.5 w-3.5 text-docket-gold" />
+            <span>Return to Docket</span>
           </Link>
         </div>
       </div>
@@ -160,47 +160,47 @@ export default function CaseDetailsPage() {
         secondsRemaining={secondsRemaining}
       />
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-border pb-5">
-        <div className="space-y-1">
+      {/* Case Header Folio Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-5">
+        <div className="space-y-1.5">
           <Link
             href="/"
-            className="inline-flex items-center space-x-1.5 text-xs text-brand-primary hover:text-brand-hover font-medium py-1 px-1.5 -ml-1.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            className="inline-flex items-center space-x-1.5 text-xs text-docket-gold hover:text-docket-gold-light font-mono font-medium py-1 -ml-0.5 rounded-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Back to Dispute Docket</span>
+            <span>&larr; Return to Active Docket</span>
           </Link>
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-bold font-mono text-text-primary tracking-tight">
-              {disputeId}
+            <h1 className="text-2xl sm:text-3xl font-serif font-medium text-docket-text tracking-tight">
+              Case Dossier: <span className="font-mono text-docket-gold font-bold">{disputeId}</span>
             </h1>
             {dispute && <StatusChip status={dispute.status} />}
           </div>
-          <p className="text-xs text-text-muted">
-            <span className="font-semibold text-text-secondary capitalize">
-              {dispute?.reason.replace(/_/g, ' ')}
-            </span>
-            <span className="mx-2 text-surface-border">|</span>
-            Contested Amount: <strong className="font-mono text-text-primary tabular-nums">{amountFormatted}</strong>
+          <p className="text-xs text-docket-text-muted font-mono">
+            Reason: <span className="font-semibold text-docket-text capitalize">{dispute?.reason.replace(/_/g, ' ')}</span>
+            <span className="mx-2 text-border">|</span>
+            Contested Value: <strong className="font-bold text-docket-gold tabular-nums">{amountFormatted} USD</strong>
           </p>
         </div>
 
-        <div className="flex items-center space-x-3 text-xs text-text-muted font-mono">
+        <div className="flex items-center space-x-3 text-xs font-mono text-docket-text-muted">
           {dispute?.evidence_due_by && (
-            <div className="bg-surface-card border border-surface-border px-3 py-1.5 rounded-md flex items-center space-x-1.5">
-              <Clock className="h-3.5 w-3.5 text-status-review-text" />
-              <span>Evidence Due: <strong className="text-text-primary">{new Date(dispute.evidence_due_by).toLocaleDateString()}</strong></span>
+            <div className="bg-surface-elevated border border-border px-3.5 py-1.5 rounded-xs flex items-center space-x-2">
+              <Clock className="h-3.5 w-3.5 text-docket-gold" />
+              <span>Evidence Due: <strong className="text-docket-text">{new Date(dispute.evidence_due_by).toLocaleDateString()}</strong></span>
             </div>
           )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Column (8 cols): Strategy, Evidence, and Audit Trace */}
         <div className="lg:col-span-8 space-y-6">
           <div>
             <div className="flex items-center space-x-2 mb-2.5">
-              <Cpu className="h-4 w-4 text-brand-primary" />
-              <h2 className="text-xs font-semibold text-text-primary">
-                Agent Defense Strategy & Evidence Valuation
+              <Cpu className="h-4 w-4 text-docket-gold" />
+              <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-docket-text">
+                Bedrock Defense Strategy &amp; Expected Value Model
               </h2>
             </div>
             <StrategyCard
@@ -211,9 +211,9 @@ export default function CaseDetailsPage() {
 
           <div>
             <div className="flex items-center space-x-2 mb-2.5">
-              <ShieldAlert className="h-4 w-4 text-status-won-text" />
-              <h2 className="text-xs font-semibold text-text-primary">
-                Evidentiary Dossier & Carrier Proof
+              <ShieldCheck className="h-4 w-4 text-status-won" />
+              <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-docket-text">
+                Evidentiary Exhibits &amp; Carrier Verification
               </h2>
             </div>
             <EvidencePacket order={order || undefined} />
@@ -221,26 +221,27 @@ export default function CaseDetailsPage() {
 
           <div>
             <div className="flex items-center space-x-2 mb-2.5">
-              <Clock className="h-4 w-4 text-text-muted" />
-              <h2 className="text-xs font-semibold text-text-primary">
-                AgentCore Telemetry & Audit Trail
+              <Clock className="h-4 w-4 text-docket-text-muted" />
+              <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-docket-text">
+                AgentCore Audit Trail &amp; Telemetry
               </h2>
             </div>
-            <div className="bg-surface-card border border-surface-border rounded-lg p-5">
+            <div className="bg-surface border border-border rounded-xs p-5">
               <AuditTimeline entries={auditLogs} />
             </div>
           </div>
         </div>
 
+        {/* Right Column (4 cols): Merchant ApprovalGate Handset */}
         <div className="lg:col-span-4 space-y-6">
           <div className="sticky top-6">
             <div className="flex items-center space-x-2 mb-2.5">
-              <Smartphone className="h-4 w-4 text-brand-primary" />
-              <h2 className="text-xs font-semibold text-text-primary">
-                Merchant ApprovalGate Handset (SMS)
+              <Smartphone className="h-4 w-4 text-docket-gold" />
+              <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-docket-text">
+                Merchant Intercept Handset (SMS)
               </h2>
             </div>
-            <div className="bg-surface-card border border-surface-border rounded-lg p-4 flex justify-center min-h-[580px]">
+            <div className="bg-surface border border-border rounded-xs p-4 flex justify-center min-h-[580px]">
               <SimulatedPhone
                 disputeId={disputeId}
                 amountFormatted={amountFormatted}

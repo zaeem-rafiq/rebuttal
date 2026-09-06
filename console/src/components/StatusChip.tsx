@@ -9,41 +9,41 @@ export const StatusChip: React.FC<StatusChipProps> = ({ status, size = 'md' }) =
   const normalized = (status || '').toLowerCase().trim();
 
   let label = status;
-  let badgeStyle = 'bg-surface-subtle text-text-secondary border-surface-border';
+  let badgeStyle = 'bg-surface-subtle text-docket-text-secondary border-border';
 
   switch (normalized) {
     case 'won':
-      label = 'Won';
-      badgeStyle = 'bg-status-won-bg text-status-won-text border-status-won-border';
+      label = '✓ Won';
+      badgeStyle = 'bg-status-won/15 text-status-won border-status-won/30 font-semibold';
       break;
     case 'conceded':
     case 'charge_refunded':
-      label = normalized === 'conceded' ? 'Conceded' : 'Refunded';
-      badgeStyle = 'bg-status-lost-bg text-status-lost-text border-status-lost-border';
+      label = normalized === 'conceded' ? '⊘ Conceded' : 'Refunded';
+      badgeStyle = 'bg-surface-subtle text-docket-text-muted border-border';
       break;
     case 'lost':
       label = 'Lost';
-      badgeStyle = 'bg-status-lost-bg text-status-lost-text border-status-lost-border';
+      badgeStyle = 'bg-status-action/15 text-status-action border-status-action/30 font-semibold';
       break;
     case 'needs_response':
-      label = 'Approval Needed';
-      badgeStyle = 'bg-status-review-bg text-status-review-text border-status-review-border';
+      label = '⚠ Action Required';
+      badgeStyle = 'bg-docket-gold/15 text-docket-gold border-docket-gold/40 font-semibold';
       break;
     case 'warning_needs_response':
       label = 'Inquiry (Pre-dispute)';
-      badgeStyle = 'bg-status-review-bg text-status-review-text border-status-review-border';
+      badgeStyle = 'bg-status-inquiry/15 text-status-inquiry border-status-inquiry/30 font-semibold';
       break;
     case 'under_review':
       label = 'Under Review';
-      badgeStyle = 'bg-status-submitted-bg text-status-submitted-text border-status-submitted-border';
+      badgeStyle = 'bg-status-review/15 text-status-review border-status-review/30';
       break;
     case 'approved':
       label = 'Approved';
-      badgeStyle = 'bg-status-submitted-bg text-status-submitted-text border-status-submitted-border';
+      badgeStyle = 'bg-status-won/15 text-status-won border-status-won/30 font-semibold';
       break;
     case 'executed':
       label = 'Executed';
-      badgeStyle = 'bg-brand-primary/15 text-brand-primary border-brand-primary/30';
+      badgeStyle = 'bg-docket-gold/15 text-docket-gold border-docket-gold/30 font-semibold';
       break;
     default:
       label = status;
@@ -53,7 +53,7 @@ export const StatusChip: React.FC<StatusChipProps> = ({ status, size = 'md' }) =
 
   return (
     <span
-      className={`inline-flex items-center font-mono font-medium rounded border whitespace-nowrap ${badgeStyle} ${px}`}
+      className={`inline-flex items-center font-mono rounded-xs border whitespace-nowrap tracking-tight ${badgeStyle} ${px}`}
     >
       <span>{label}</span>
     </span>

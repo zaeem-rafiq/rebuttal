@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Smartphone, Send, Check, CheckCheck, Shield, CheckCircle2, AlertCircle, RotateCcw } from 'lucide-react';
+import { Smartphone, Send, Check, CheckCheck, Scale, CheckCircle2, AlertCircle, RotateCcw } from 'lucide-react';
 import { TWILIO_WEBHOOK_URL } from '@/lib/config';
 
 interface SimulatedPhoneProps {
@@ -34,10 +34,10 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
 
   const defaultAlert =
     ownerSummary ||
-    `Rebuttal Security Alert: New ${(reason || 'Dispute').replace(/_/g, ' ')} dispute for ${amountFormatted} from ${customerName}. Evidentiary dossier compiled. Reply 1 to Fight, 2 to Concede, 3 to Hold.`;
+    `Rebuttal Alert: Dispute #${disputeId} (${amountFormatted}) for customer ${customerName}. Auto-defense brief compiled. Reply 1 to Authorize Evidence, 2 to Concede, 3 to Hold.`;
 
   const handleQuickReply = async (code: '1' | '2' | '3') => {
-    const text = code === '1' ? '1. Fight' : code === '2' ? '2. Concede' : '3. Hold';
+    const text = code === '1' ? '1. Authorize' : code === '2' ? '2. Concede' : '3. Hold';
     await sendReply(code, text);
   };
 
@@ -73,7 +73,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
 
       setFeedback({
         type: 'success',
-        message: `Reply "${displayValue}" dispatched successfully!`,
+        message: `Decision token "${displayValue}" dispatched to Bedrock AgentCore!`,
       });
       if (onReplySuccess) {
         onReplySuccess(bodyValue);
@@ -81,7 +81,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
     } catch (err: any) {
       setFeedback({
         type: 'error',
-        message: `Failed to dispatch reply: ${err.message || 'Network error'}`,
+        message: `Failed to dispatch decision: ${err.message || 'Network error'}`,
         onRetry: () => sendReply(bodyValue, displayValue),
       });
     } finally {
@@ -90,50 +90,50 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       {/* Smartphone Chassis */}
-      <div className="w-full max-w-[340px] bg-canvas-base rounded-[36px] p-2.5 shadow-2xl border-2 border-surface-border-strong relative">
+      <div className="w-full max-w-[340px] bg-surface rounded-[32px] p-2.5 shadow-xl border-2 border-border relative">
         {/* Dynamic Island / Speaker */}
-        <div aria-hidden="true" className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-3.5 bg-surface-subtle rounded-full z-20 flex items-center justify-center space-x-1.5 border border-surface-border">
-          <div className="h-1 w-1 rounded-full bg-text-muted" />
-          <div className="h-1.5 w-1.5 rounded-full bg-surface-card ring-1 ring-surface-border" />
+        <div aria-hidden="true" className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-3.5 bg-canvas rounded-full z-20 flex items-center justify-center space-x-1.5 border border-border">
+          <div className="h-1 w-1 rounded-full bg-docket-text-muted" />
+          <div className="h-1.5 w-1.5 rounded-full bg-surface-elevated ring-1 ring-border" />
         </div>
 
         {/* Screen Area */}
-        <div className="bg-canvas-subtle rounded-[28px] overflow-hidden flex flex-col h-[520px] border border-surface-border">
+        <div className="bg-canvas rounded-[24px] overflow-hidden flex flex-col h-[520px] border border-border">
           {/* Phone Status Bar */}
-          <div aria-hidden="true" className="pt-3 px-5 pb-2 flex justify-between items-center text-[10px] text-text-muted select-none font-mono">
-            <span className="font-semibold text-text-primary">9:41</span>
+          <div aria-hidden="true" className="pt-3 px-5 pb-2 flex justify-between items-center text-[10px] text-docket-text-muted select-none font-mono">
+            <span className="font-semibold text-docket-text">09:41</span>
             <div className="flex items-center space-x-1.5">
-              <span>5G</span>
-              <div className="w-4 h-2 border border-text-muted rounded-xs p-0.5">
-                <div className="h-full w-full bg-text-primary rounded-xs" />
+              <span>LTE</span>
+              <div className="w-4 h-2 border border-docket-text-muted rounded-xs p-0.5">
+                <div className="h-full w-full bg-docket-gold rounded-xs" />
               </div>
             </div>
           </div>
 
           {/* SMS Contact Header */}
-          <div className="px-4 py-2.5 border-b border-surface-border bg-surface-card/60 flex items-center space-x-2.5">
-            <div className="h-7 w-7 rounded-full bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center text-brand-primary">
-              <Shield className="h-3.5 w-3.5" />
+          <div className="px-4 py-2.5 border-b border-border bg-surface-elevated/70 flex items-center space-x-2.5">
+            <div className="h-7 w-7 rounded-full bg-docket-gold/15 border border-docket-gold/30 flex items-center justify-center text-docket-gold">
+              <Scale className="h-3.5 w-3.5" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-text-primary truncate">Rebuttal ApprovalGate</p>
-              <p className="text-[10px] text-text-muted font-mono">+1 (812) 955-1686</p>
+              <p className="text-xs font-semibold text-docket-text truncate">Rebuttal ApprovalGate</p>
+              <p className="text-[10px] text-docket-text-muted font-mono">+1 (812) 955-1686</p>
             </div>
           </div>
 
           {/* Message Thread */}
           <div className="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
-            <div className="text-center font-mono text-[10px] text-text-muted my-1">Today</div>
+            <div className="text-center font-mono text-[10px] text-docket-text-muted my-1">Arbitration Channel</div>
 
             {/* Inbound Alert Bubble from Rebuttal */}
-            <div className="flex flex-col items-start max-w-[90%]">
-              <div className="bg-surface-card text-text-primary p-3 rounded-xl rounded-tl-xs border border-surface-border leading-relaxed font-sans text-xs">
+            <div className="flex flex-col items-start max-w-[92%]">
+              <div className="bg-surface-elevated text-docket-text p-3 rounded-xs border border-border leading-relaxed font-sans text-xs">
                 <p>{defaultAlert}</p>
               </div>
-              <span className="text-[10px] text-brand-primary mt-1 ml-1 flex items-center space-x-1 font-mono">
-                <Shield className="h-3 w-3" />
+              <span className="text-[10px] text-docket-gold mt-1 ml-1 flex items-center space-x-1 font-mono">
+                <Scale className="h-3 w-3" />
                 <span>AgentCore Intercept</span>
               </span>
             </div>
@@ -141,38 +141,38 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
             {/* Outbound Reply Bubbles from Owner */}
             {sentReplies.map((reply, idx) => (
               <div key={idx} className="flex flex-col items-end ml-auto max-w-[85%]">
-                <div className="bg-brand-primary text-white font-medium p-2.5 px-3.5 rounded-xl rounded-tr-xs shadow-sm">
+                <div className="bg-docket-gold text-canvas font-mono font-bold p-2.5 px-3.5 rounded-xs shadow-xs text-xs">
                   <p>{reply.text}</p>
                 </div>
-                <span className="text-[9px] text-text-muted font-mono mt-1 mr-1 flex items-center space-x-1">
+                <span className="text-[9px] text-docket-text-muted font-mono mt-1 mr-1 flex items-center space-x-1">
                   <span>{reply.time}</span>
-                  <CheckCheck className="h-3 w-3 text-brand-primary" />
+                  <CheckCheck className="h-3 w-3 text-docket-gold" />
                 </span>
               </div>
             ))}
           </div>
 
           {/* Quick Reply Action Buttons */}
-          <div className="p-2.5 border-t border-surface-border bg-surface-card/80">
-            <p className="text-[10px] font-mono text-text-muted mb-1.5 px-0.5">
-              Decision Intercept:
+          <div className="p-2.5 border-t border-border bg-surface-elevated/90">
+            <p className="text-[10px] font-mono text-docket-text-muted mb-1.5 px-0.5 uppercase tracking-wider">
+              Single-Tap Intercept:
             </p>
-            <div className="grid grid-cols-3 gap-1.5 mb-2">
+            <div className="grid grid-cols-3 gap-1.5 mb-2 font-mono">
               <button
                 type="button"
                 onClick={() => handleQuickReply('1')}
                 disabled={sending}
-                aria-label="Send reply 1 Fight"
-                className="py-2 px-1.5 rounded-md bg-status-won-bg text-status-won-text border border-status-won-border hover:bg-status-won-border/30 font-mono text-xs font-semibold transition-colors disabled:opacity-50 text-center"
+                aria-label="Send reply 1 Authorize"
+                className="py-2 px-1.5 rounded-xs bg-docket-gold text-canvas hover:bg-docket-gold-light text-xs font-bold transition-colors disabled:opacity-50 text-center"
               >
-                1 Fight
+                1 Submit
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickReply('2')}
                 disabled={sending}
                 aria-label="Send reply 2 Concede"
-                className="py-2 px-1.5 rounded-md bg-status-lost-bg text-status-lost-text border border-status-lost-border hover:bg-status-lost-border/30 font-mono text-xs font-semibold transition-colors disabled:opacity-50 text-center"
+                className="py-2 px-1.5 rounded-xs bg-surface border border-border text-docket-text-secondary hover:text-docket-text text-xs font-semibold transition-colors disabled:opacity-50 text-center"
               >
                 2 Concede
               </button>
@@ -181,7 +181,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
                 onClick={() => handleQuickReply('3')}
                 disabled={sending}
                 aria-label="Send reply 3 Hold"
-                className="py-2 px-1.5 rounded-md bg-surface-subtle text-text-secondary border border-surface-border hover:bg-surface-hover hover:text-text-primary font-mono text-xs font-semibold transition-colors disabled:opacity-50 text-center"
+                className="py-2 px-1.5 rounded-xs bg-surface border border-border text-docket-text-muted hover:text-docket-text text-xs font-semibold transition-colors disabled:opacity-50 text-center"
               >
                 3 Hold
               </button>
@@ -200,13 +200,13 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
                 placeholder="Type 1, 2, or 3..."
                 disabled={sending}
                 aria-label="Type reply message"
-                className="flex-1 bg-canvas-base border border-surface-border rounded-md px-2.5 py-1.5 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary font-mono"
+                className="flex-1 bg-canvas border border-border rounded-xs px-2.5 py-1.5 text-xs text-docket-text placeholder:text-docket-text-subtle focus:outline-none focus:border-docket-gold focus:ring-1 focus:ring-docket-gold font-mono"
               />
               <button
                 type="submit"
                 disabled={sending || !replyMessage.trim()}
                 aria-label="Submit SMS reply"
-                className="h-7 w-7 rounded-md bg-brand-primary hover:bg-brand-hover text-white disabled:opacity-30 flex items-center justify-center transition-colors shrink-0"
+                className="h-7 w-7 rounded-xs bg-docket-gold hover:bg-docket-gold-light text-canvas disabled:opacity-30 flex items-center justify-center transition-colors shrink-0 font-bold"
               >
                 <Send className="h-3.5 w-3.5" />
               </button>
@@ -219,10 +219,10 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
         <div
           role="status"
           aria-live="polite"
-          className={`mt-3 p-2.5 px-3 rounded-lg text-xs flex items-center justify-between gap-2 border shadow-sm max-w-[340px] w-full font-mono ${
+          className={`mt-3 p-2.5 px-3 rounded-xs text-xs flex items-center justify-between gap-2 border shadow-xs max-w-[340px] w-full font-mono ${
             feedback.type === 'success'
-              ? 'bg-status-won-bg border-status-won-border text-status-won-text'
-              : 'bg-status-lost-bg border-status-lost-border text-status-lost-text'
+              ? 'bg-status-won/10 border-status-won/30 text-status-won'
+              : 'bg-status-action/10 border-status-action/30 text-status-action'
           }`}
         >
           <div className="flex items-center space-x-2 min-w-0">
@@ -237,7 +237,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
             <button
               type="button"
               onClick={feedback.onRetry}
-              className="text-[11px] font-semibold bg-surface-subtle hover:bg-surface-hover text-text-primary px-2 py-0.5 rounded border border-surface-border flex items-center space-x-1 shrink-0 transition-colors"
+              className="text-[11px] font-semibold bg-surface-elevated hover:bg-surface-hover text-docket-text px-2 py-0.5 rounded-xs border border-border flex items-center space-x-1 shrink-0 transition-colors"
             >
               <RotateCcw className="h-3 w-3" />
               <span>Retry</span>

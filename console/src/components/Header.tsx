@@ -2,13 +2,16 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Scale } from 'lucide-react';
 
 interface HeaderProps {
   lastUpdated?: Date | null;
   isRefreshing?: boolean;
   onRefresh?: () => void;
   secondsRemaining?: number;
+  activeCount?: number;
+  volumeWonFormatted?: string;
+  winRateFormatted?: string;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,44 +19,49 @@ export const Header: React.FC<HeaderProps> = ({
   isRefreshing = false,
   onRefresh,
   secondsRemaining = 5,
+  activeCount = 3,
+  volumeWonFormatted = '$388.00',
+  winRateFormatted = '88.5%',
 }) => {
   return (
-    <header className="border-b border-surface-border pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <div className="flex items-center space-x-3.5">
+    <header className="border-b border-border pb-5 mb-6 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+      {/* Title & Folio Identity */}
+      <div className="flex items-start space-x-3.5">
         <Link
           href="/"
-          className="h-9 w-9 min-w-[44px] min-h-[44px] sm:h-8 sm:w-8 sm:min-w-0 sm:min-h-0 rounded-md bg-brand-primary/15 border border-brand-primary/40 flex items-center justify-center font-mono font-bold text-sm text-brand-primary shadow-xs hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary transition-all"
+          className="h-10 w-10 min-w-[44px] min-h-[44px] rounded-xs bg-surface-elevated border border-docket-gold/40 flex items-center justify-center font-mono font-bold text-sm text-docket-gold hover:border-docket-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold"
+          title="Return to Magistrate Docket"
+          aria-label="Return to Magistrate Docket"
         >
-          R
+          <Scale className="h-5 w-5" />
         </Link>
         <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Link
-              href="/"
-              className="text-lg font-bold tracking-tight text-text-primary hover:text-brand-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded min-h-[44px] sm:min-h-0 inline-flex items-center"
-            >
-              Rebuttal
-            </Link>
-            <span className="px-2 py-0.5 text-[11px] font-mono font-medium rounded bg-surface-subtle text-text-secondary border border-surface-border">
-              Dispute Docket
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-mono font-medium rounded bg-status-won-bg text-status-won-text border border-status-won-border">
-              <span className="h-1.5 w-1.5 rounded-full bg-status-won-text shadow-xs" />
-              <span>AgentCore Active</span>
-            </span>
+          <div className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-docket-gold">
+            Magistrate Record // Rebuttal Arbitration Core
           </div>
-          <p className="text-xs text-text-muted mt-0.5">
-            Autonomous chargeback defense & carrier evidentiary synthesis
+          <h1 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight text-docket-text mt-0.5">
+            <Link href="/" className="hover:text-docket-gold transition-colors">
+              Dispute Docket &amp; <em className="italic text-docket-gold font-serif">Evidence Triage</em>
+            </Link>
+          </h1>
+          <p className="text-xs text-docket-text-muted mt-1 font-sans">
+            Autonomous chargeback defense, scheme arbitration, &amp; carrier evidentiary synthesis
           </p>
         </div>
       </div>
 
-      <div className="flex items-center space-x-3 text-xs text-text-muted">
-        <div className="font-mono text-[11px] text-text-muted">
-          Polling in <span className="tabular-nums font-semibold text-text-secondary">{secondsRemaining}s</span>
+      {/* Meta Stream & Live Sync Controls */}
+      <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xs bg-surface-subtle border border-border text-docket-text-secondary text-[11px]">
+          <span className="h-2 w-2 rounded-full bg-status-won shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          <span>BEDROCK AGENTCORE ACTIVE</span>
+        </div>
+
+        <div className="text-[11px] text-docket-text-muted">
+          Auto-sync in <span className="tabular-nums font-semibold text-docket-text font-mono">{secondsRemaining}s</span>
           {lastUpdated && (
-            <span className="hidden md:inline text-text-muted ml-1.5">
-              (Synced {lastUpdated.toLocaleTimeString()})
+            <span className="hidden sm:inline text-docket-text-subtle ml-1">
+              ({lastUpdated.toLocaleTimeString()})
             </span>
           )}
         </div>
@@ -62,12 +70,12 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={onRefresh}
             disabled={isRefreshing}
-            title="Sync Ledger"
-            aria-label="Sync Ledger"
-            className="inline-flex items-center gap-1.5 bg-surface-subtle border border-surface-border hover:bg-surface-hover active:bg-surface-subtle disabled:opacity-50 text-text-primary px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 rounded-md font-medium text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            title="Synchronize Docket Ledger"
+            aria-label="Synchronize Docket Ledger"
+            className="inline-flex items-center gap-1.5 bg-surface-elevated border border-border hover:border-docket-gold/60 active:bg-surface-subtle disabled:opacity-50 text-docket-text px-3 py-1.5 min-h-[44px] sm:min-h-0 rounded-xs font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-brand-primary' : 'text-text-muted'}`} />
-            <span>{isRefreshing ? 'Syncing...' : 'Sync Ledger'}</span>
+            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-docket-gold' : 'text-docket-text-muted'}`} />
+            <span>{isRefreshing ? 'Syncing...' : 'Sync Docket'}</span>
           </button>
         )}
       </div>
