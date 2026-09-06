@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="flex items-center space-x-3.5">
         <Link
           href="/"
-          className="h-8 w-8 rounded-md bg-brand-primary/15 border border-brand-primary/40 flex items-center justify-center font-mono font-bold text-sm text-brand-primary shadow-xs hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary transition-all"
+          className="h-9 w-9 min-w-[44px] min-h-[44px] sm:h-8 sm:w-8 sm:min-w-0 sm:min-h-0 rounded-md bg-brand-primary/15 border border-brand-primary/40 flex items-center justify-center font-mono font-bold text-sm text-brand-primary shadow-xs hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary transition-all"
         >
           R
         </Link>
@@ -30,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/"
-              className="text-lg font-bold tracking-tight text-text-primary hover:text-brand-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded"
+              className="text-lg font-bold tracking-tight text-text-primary hover:text-brand-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded min-h-[44px] sm:min-h-0 inline-flex items-center"
             >
               Rebuttal
             </Link>
@@ -64,7 +64,7 @@ export const Header: React.FC<HeaderProps> = ({
             disabled={isRefreshing}
             title="Sync Ledger"
             aria-label="Sync Ledger"
-            className="inline-flex items-center gap-1.5 bg-surface-subtle border border-surface-border hover:bg-surface-hover active:bg-surface-subtle disabled:opacity-50 text-text-primary px-3 py-1.5 rounded-md font-medium text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            className="inline-flex items-center gap-1.5 bg-surface-subtle border border-surface-border hover:bg-surface-hover active:bg-surface-subtle disabled:opacity-50 text-text-primary px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 rounded-md font-medium text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-brand-primary' : 'text-text-muted'}`} />
             <span>{isRefreshing ? 'Syncing...' : 'Sync Ledger'}</span>

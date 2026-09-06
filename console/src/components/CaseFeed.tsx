@@ -106,11 +106,11 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           {/* Filter Tabs */}
-          <div className="flex items-center bg-canvas-base p-1 rounded-md border border-surface-border text-xs">
+          <div className="flex flex-wrap items-center bg-canvas-base p-1 rounded-md border border-surface-border text-xs gap-1 sm:gap-0">
             <button
               type="button"
               onClick={() => setActiveTab('all')}
-              className={`px-2.5 py-1 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+              className={`px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
                 activeTab === 'all'
                   ? 'bg-surface-card text-text-primary border border-surface-border shadow-xs'
                   : 'text-text-muted hover:text-text-secondary'
@@ -121,7 +121,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
             <button
               type="button"
               onClick={() => setActiveTab('needs_response')}
-              className={`px-2.5 py-1 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+              className={`px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
                 activeTab === 'needs_response'
                   ? 'bg-status-review-bg text-status-review-text border border-status-review-border'
                   : 'text-text-muted hover:text-text-secondary'
@@ -132,7 +132,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
             <button
               type="button"
               onClick={() => setActiveTab('under_review')}
-              className={`px-2.5 py-1 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+              className={`px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
                 activeTab === 'under_review'
                   ? 'bg-status-submitted-bg text-status-submitted-text border border-status-submitted-border'
                   : 'text-text-muted hover:text-text-secondary'
@@ -143,7 +143,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
             <button
               type="button"
               onClick={() => setActiveTab('won')}
-              className={`px-2.5 py-1 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+              className={`px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
                 activeTab === 'won'
                   ? 'bg-status-won-bg text-status-won-text border border-status-won-border'
                   : 'text-text-muted hover:text-text-secondary'
@@ -162,7 +162,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search ID, reason, order..."
               aria-label="Search disputes"
-              className="w-full bg-canvas-base border border-surface-border rounded-md pl-8 pr-7 py-1 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary font-mono"
+              className="w-full bg-canvas-base border border-surface-border rounded-md pl-8 pr-7 py-2 sm:py-1 min-h-[44px] sm:min-h-0 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary font-mono"
             />
             {searchQuery && (
               <button
@@ -314,7 +314,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
                               disabled={isReplying}
                               onClick={() => onQuickReply(d.id, '1')}
                               title="Fight dispute"
-                              className="px-2 py-1 rounded text-[11px] font-mono font-semibold bg-status-won-bg text-status-won-text border border-status-won-border hover:bg-status-won-border/30 active:scale-95 disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
+                              className="px-2.5 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded text-[11px] font-mono font-semibold bg-status-won-bg text-status-won-text border border-status-won-border hover:bg-status-won-border/30 active:scale-95 disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
                             >
                               1 Fight
                             </button>
@@ -323,13 +323,13 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
                               disabled={isReplying}
                               onClick={() => setConfirmingConcedeId(d.id)}
                               title="Concede dispute"
-                              className="px-2 py-1 rounded text-[11px] font-mono font-semibold bg-status-lost-bg text-status-lost-text border border-status-lost-border hover:bg-status-lost-border/30 active:scale-95 disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
+                              className="px-2.5 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded text-[11px] font-mono font-semibold bg-status-lost-bg text-status-lost-text border border-status-lost-border hover:bg-status-lost-border/30 active:scale-95 disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
                             >
                               2 Concede
                             </button>
                             <Link
                               href={`/case/${d.id}`}
-                              className="px-2.5 py-1 rounded text-[11px] font-medium bg-surface-subtle hover:bg-surface-hover text-text-secondary hover:text-text-primary border border-surface-border active:scale-95 transition-all ml-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                              className="px-2.5 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded text-[11px] font-medium bg-surface-subtle hover:bg-surface-hover text-text-secondary hover:text-text-primary border border-surface-border active:scale-95 transition-all ml-1 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
                             >
                               Review
                             </Link>
@@ -338,7 +338,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
                       ) : (
                         <Link
                           href={`/case/${d.id}`}
-                          className="inline-flex items-center px-3 py-1 rounded text-[11px] font-medium bg-surface-subtle hover:bg-surface-hover text-text-secondary hover:text-text-primary border border-surface-border active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                          className="inline-flex items-center px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded text-[11px] font-medium bg-surface-subtle hover:bg-surface-hover text-text-secondary hover:text-text-primary border border-surface-border active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
                         >
                           Review Docket
                         </Link>

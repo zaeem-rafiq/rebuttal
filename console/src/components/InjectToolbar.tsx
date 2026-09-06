@@ -128,7 +128,7 @@ export const InjectToolbar: React.FC<InjectToolbarProps> = ({ onInjectSuccess })
             disabled={cooldown > 0 || loadingScenario !== null}
             aria-busy={loadingScenario === 'S1'}
             aria-label="Inject Scenario 1 Delivery Dispute"
-            className="flex-1 sm:flex-none inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium bg-surface-subtle hover:bg-surface-hover active:bg-surface-card text-text-primary border border-surface-border hover:border-surface-border-strong disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            className="flex-1 sm:flex-none inline-flex items-center gap-2 px-3 py-2 sm:py-1.5 min-h-[44px] rounded-md text-xs font-medium bg-surface-subtle hover:bg-surface-hover active:bg-surface-card text-text-primary border border-surface-border hover:border-surface-border-strong disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
             <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-canvas-base text-brand-primary border border-brand-primary/30">S1</span>
             <span className="font-mono text-text-muted">$48</span>
@@ -142,7 +142,7 @@ export const InjectToolbar: React.FC<InjectToolbarProps> = ({ onInjectSuccess })
             disabled={cooldown > 0 || loadingScenario !== null}
             aria-busy={loadingScenario === 'S2'}
             aria-label="Inject Scenario 2 Fraud Dispute"
-            className="flex-1 sm:flex-none inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium bg-surface-subtle hover:bg-surface-hover active:bg-surface-card text-text-primary border border-surface-border hover:border-surface-border-strong disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            className="flex-1 sm:flex-none inline-flex items-center gap-2 px-3 py-2 sm:py-1.5 min-h-[44px] rounded-md text-xs font-medium bg-surface-subtle hover:bg-surface-hover active:bg-surface-card text-text-primary border border-surface-border hover:border-surface-border-strong disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
             <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-canvas-base text-status-review-text border border-status-review-border">S2</span>
             <span className="font-mono text-text-muted">$340</span>
@@ -156,7 +156,7 @@ export const InjectToolbar: React.FC<InjectToolbarProps> = ({ onInjectSuccess })
             disabled={cooldown > 0 || loadingScenario !== null}
             aria-busy={loadingScenario === 'S3'}
             aria-label="Inject Scenario 3 Subscription Inquiry"
-            className="flex-1 sm:flex-none inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium bg-surface-subtle hover:bg-surface-hover active:bg-surface-card text-text-primary border border-surface-border hover:border-surface-border-strong disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            className="flex-1 sm:flex-none inline-flex items-center gap-2 px-3 py-2 sm:py-1.5 min-h-[44px] rounded-md text-xs font-medium bg-surface-subtle hover:bg-surface-hover active:bg-surface-card text-text-primary border border-surface-border hover:border-surface-border-strong disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
             <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-canvas-base text-text-muted border border-surface-border">S3</span>
             <span className="font-mono text-text-muted">$129</span>
