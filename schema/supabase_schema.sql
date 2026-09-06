@@ -193,3 +193,53 @@ CREATE INDEX IF NOT EXISTS idx_disputes_order_id ON disputes(order_id);
 CREATE INDEX IF NOT EXISTS idx_disputes_payment_intent_id ON disputes(payment_intent_id);
 CREATE INDEX IF NOT EXISTS idx_decisions_dispute_id ON decisions(dispute_id);
 CREATE INDEX IF NOT EXISTS idx_audit_log_dispute_id ON audit_log(dispute_id);
+
+-- -----------------------------------------------------------------------------
+-- Row Level Security (RLS) Policies
+-- Anon role: SELECT only (read-only for judge console)
+-- Service role: bypasses RLS automatically (backend lambdas, AgentCore)
+-- -----------------------------------------------------------------------------
+ALTER TABLE customers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE shipments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE shipment_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE customer_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE disputes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE decisions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
+ALTER TABLE merchant_policy ENABLE ROW LEVEL SECURITY;
+
+-- Read-only policies for anon and authenticated users
+DO $$
+BEGIN
+    DROP POLICY IF EXISTS "Allow anon select on customers" ON customers;
+    CREATE POLICY "Allow anon select on customers" ON customers FOR SELECT USING (true);
+
+    DROP POLICY IF EXISTS "Allow anon select on orders" ON orders;
+    CREATE POLICY "Allow anon select on orders" ON orders FOR SELECT USING (true);
+
+    DROP POLICY IF EXISTS "Allow anon select on order_items" ON order_items;
+    CREATE POLICY "Allow anon select on order_items" ON order_items FOR SELECT USING (true);
+
+    DROP POLICY IF EXISTS "Allow anon select on shipments" ON shipments;
+    CREATE POLICY "Allow anon select on shipments" ON shipments FOR SELECT USING (true);
+
+    DROP POLICY IF EXISTS "Allow anon select on shipment_events" ON shipment_events;
+    CREATE POLICY "Allow anon select on shipment_events" ON shipment_events FOR SELECT USING (true);
+
+    DROP POLICY IF EXISTS "Allow anon select on customer_messages" ON customer_messages;
+    CREATE POLICY "Allow anon select on customer_messages" ON customer_messages FOR SELECT USING (true);
+
+    DROP POLICY IF EXISTS "Allow anon select on disputes" ON disputes;
+    CREATE POLICY "Allow anon select on disputes" ON disputes FOR SELECT USING (true);
+
+    DROP POLICY IF EXISTS "Allow anon select on decisions" ON decisions;
+    CREATE POLICY "Allow anon select on decisions" ON decisions FOR SELECT USING (true);
+
+    DROP POLICY IF EXISTS "Allow anon select on audit_log" ON audit_log;
+    CREATE POLICY "Allow anon select on audit_log" ON audit_log FOR SELECT USING (true);
+
+    DROP POLICY IF EXISTS "Allow anon select on merchant_policy" ON merchant_policy;
+    CREATE POLICY "Allow anon select on merchant_policy" ON merchant_policy FOR SELECT USING (true);
+END $$;

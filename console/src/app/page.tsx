@@ -1,0 +1,156 @@
+'use client';
+
+import React, { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/lib/supabase';
+import { Dispute } from '@/lib/types';
+import { Header } from '@/components/Header';
+import { InjectToolbar } from '@/components/InjectToolbar';
+import { CaseFeed } from '@/components/CaseFeed';
+import { ShieldAlert, TrendingUp, DollarSign, Clock, AlertCircle } from 'lucide-react';
+
+export default function HomePage() {
+  const [disputes, setDisputes] = useState<Dispute[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [secondsRemaining, setSecondsRemaining] = useState<number>(5);
+  const [replyingId, setReplyingId] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const fetchDisputes = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      const { data, error } = await supabase
+        .from('disputes')
+        .select(`
+          *,
+          decision:decisions(*)
+        `)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      setDisputes((data as Dispute[]) || []);
+      setLastUpdated(new Date());
+      setErrorMsg(null);
+    } catch (err: any) {
+      console.error('Failed to fetch disputes from Supabase:', err);
+      setErrorMsg(err.message || 'Error connecting to database');
+    } finally {
+      setIsRefreshing(false);
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDisputes();
+  }, [fetchDisputes]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSecondsRemaining((prev) => {
+        if (prev <= 1) {
+          fetchDisputes();
+          return 5;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [fetchDisputes]);
+
+  const handleQuickReply = async (disputeId: string, replyCode: '1' | '2' | '3') => {
+    setReplyingId(disputeId);
+    try {
+      await fetch('/api/reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ Body: replyCode, dispute_id: disputeId }),
+      });
+      setTimeout(() => fetchDisputes(), 1500);
+    } catch (err) {
+      console.error('Quick reply error:', err);
+    } finally {
+      setReplyingId(null);
+    }
+  };
+
+  const totalCount = disputes.length;
+  const wonCount = disputes.filter((d) => d.status === 'won').length;
+  const wonVolume = disputes
+    .filter((d) => d.status === 'won')
+    .reduce((acc, d) => acc + (d.amount_cents || 0), 0);
+  const pendingCount = disputes.filter(
+    (d) => d.status === 'needs_response' || (d.decision && d.decision.status === 'pending')
+  ).length;
+  const winRate = totalCount > 0 ? Math.round((wonCount / totalCount) * 100) : 100;
+
+  return (
+    <div className="space-y-6">
+      <Header
+        lastUpdated={lastUpdated}
+        isRefreshing={isRefreshing}
+        onRefresh={fetchDisputes}
+        secondsRemaining={secondsRemaining}
+      />
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span>Total Disputes</span>
+            <ShieldAlert className="h-4 w-4 text-indigo-400" />
+          </div>
+          <p className="text-2xl font-bold font-mono text-white mt-2">{totalCount}</p>
+          <span className="text-[10px] text-slate-500 mt-1">Synthetic & live Stripe events</span>
+        </div>
+
+        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span>Win Rate</span>
+            <TrendingUp className="h-4 w-4 text-emerald-400" />
+          </div>
+          <p className="text-2xl font-bold font-mono text-emerald-300 mt-2">{winRate}%</p>
+          <span className="text-[10px] text-slate-500 mt-1">Defended vs. lost disputes</span>
+        </div>
+
+        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span>Protected Revenue</span>
+            <DollarSign className="h-4 w-4 text-indigo-400" />
+          </div>
+          <p className="text-2xl font-bold font-mono text-indigo-300 mt-2">
+            ${(wonVolume / 100).toFixed(2)}
+          </p>
+          <span className="text-[10px] text-slate-500 mt-1">Recovered automatically</span>
+        </div>
+
+        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span>Pending Action</span>
+            <Clock className="h-4 w-4 text-amber-400" />
+          </div>
+          <p className="text-2xl font-bold font-mono text-amber-300 mt-2">{pendingCount}</p>
+          <span className="text-[10px] text-slate-500 mt-1">Awaiting owner confirmation</span>
+        </div>
+      </div>
+
+      {errorMsg && (
+        <div className="p-4 rounded-xl bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300 flex items-center space-x-2">
+          <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
+          <p>Database notice: {errorMsg}</p>
+        </div>
+      )}
+
+      <InjectToolbar onInjectSuccess={fetchDisputes} />
+
+      <CaseFeed
+        disputes={disputes}
+        onQuickReply={handleQuickReply}
+        isReplyingId={replyingId}
+      />
+    </div>
+  );
+}

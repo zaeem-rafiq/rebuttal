@@ -30,6 +30,15 @@ Parameters:
     Type: String
     Default: ''
     Description: Owner phone number for inbound SMS matching
+  ConsoleKey:
+    Type: String
+    Default: 'rebuttal-judge-console-key-2026'
+    Description: Shared secret for console to call inject lambda
+  StripeSecretKey:
+    Type: String
+    NoEcho: true
+    Default: ''
+    Description: Stripe Secret Key (sk_test_...)
 
 Resources:
   StripeWebhookFunction:
@@ -85,6 +94,33 @@ Resources:
           OWNER_PHONE: !Ref OwnerPhone
           AWS_REGION_NAME: !Ref 'AWS::Region'
 
+  InjectFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: rebuttal-inject
+      CodeUri: lambdas/inject/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Timeout: 30
+      MemorySize: 256
+      FunctionUrlConfig:
+        AuthType: NONE
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock-agentcore:InvokeAgentRuntime
+              Resource:
+                - !Sub '${AgentRuntimeArn}*'
+                - !Sub '${AgentRuntimeArn}/*'
+      Environment:
+        Variables:
+          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          CONSOLE_KEY: !Ref ConsoleKey
+          SUPABASE_URL: !Ref SupabaseUrl
+          SUPABASE_SERVICE_KEY: !Ref SupabaseServiceKey
+          AWS_REGION_NAME: !Ref 'AWS::Region'
+
   SweepFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -121,3 +157,7 @@ Outputs:
   TwilioWebhookUrl:
     Description: Function URL for incoming Twilio messaging webhooks
     Value: !GetAtt TwilioWebhookFunctionUrl.FunctionUrl
+
+  InjectFunctionUrl:
+    Description: Function URL for inject scenario lambda
+    Value: !GetAtt InjectFunctionUrl.FunctionUrl
