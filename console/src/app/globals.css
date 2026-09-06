@@ -25,6 +25,15 @@ body {
   outline-offset: 2px;
 }
 
+/* Accessible touch targets on small screens */
+@media (max-width: 640px) {
+  button,
+  [role="button"],
+  input[type="text"] {
+    min-height: 44px;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
