@@ -11,10 +11,10 @@ interface StrategyCardProps {
 export const StrategyCard: React.FC<StrategyCardProps> = ({ decision, amountCents }) => {
   if (!decision) {
     return (
-      <div className="bg-surface border border-border rounded-lg p-6 text-center text-slate-400">
-        <Target className="h-5 w-5 mx-auto mb-2 text-slate-500" />
-        <p className="text-xs font-semibold text-slate-200">Evaluation In Progress</p>
-        <p className="text-[11px] text-slate-400 mt-1">Bedrock AgentCore Evidence Graph is analyzing carrier dockets & computing win probability.</p>
+      <div className="bg-surface-card border border-surface-border rounded-lg p-6 text-center text-text-muted">
+        <Target className="h-5 w-5 mx-auto mb-2 text-text-muted" />
+        <p className="text-xs font-semibold text-text-primary">Evaluation In Progress</p>
+        <p className="text-[11px] text-text-muted mt-1">Bedrock AgentCore Evidence Graph is analyzing carrier dockets & computing win probability.</p>
       </div>
     );
   }
@@ -24,88 +24,88 @@ export const StrategyCard: React.FC<StrategyCardProps> = ({ decision, amountCent
   const disputeAmountFormatted = `$${(amountCents / 100).toFixed(2)}`;
 
   return (
-    <div className="bg-surface border border-border rounded-lg p-5 space-y-4 shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3.5">
+    <div className="bg-surface-card border border-surface-border rounded-lg p-5 space-y-4 shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-3.5">
         <div>
-          <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+          <span className="text-xs font-medium text-text-muted">
             Recommended Action
           </span>
-          <h3 className="text-base font-bold text-white uppercase tracking-tight flex items-center space-x-2 mt-0.5">
+          <h3 className="text-base font-bold text-text-primary flex items-center space-x-2 mt-0.5 capitalize">
             <span>{decision.action.replace('_', ' ')}</span>
             <StatusChip status={decision.status} size="sm" />
           </h3>
         </div>
 
         <div className="flex items-center space-x-2">
-          <span className="text-[11px] text-slate-400">Customer Tier:</span>
-          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-surface-elevated text-slate-200 border border-border uppercase">
+          <span className="text-[11px] text-text-muted">Customer Tier:</span>
+          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-surface-subtle text-text-secondary border border-surface-border uppercase">
             {decision.customer_value}
           </span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-[#0b0f17] border border-border rounded-md p-3 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+        <div className="bg-canvas-base border border-surface-border rounded-md p-3 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[11px] text-text-muted mb-1 font-mono">
             <span>Win Probability</span>
-            <TrendingUp className="h-3 w-3 text-emerald-400" />
+            <TrendingUp className="h-3 w-3 text-status-won-text" />
           </div>
-          <div className="text-xl font-bold text-white font-mono tabular-nums">{winProbPercent}%</div>
-          <div className="w-full bg-[#1f2937] h-1.5 rounded-full mt-2 overflow-hidden">
+          <div className="text-xl font-bold text-text-primary font-mono tabular-nums">{winProbPercent}%</div>
+          <div className="w-full bg-surface-subtle h-1.5 rounded-full mt-2 overflow-hidden border border-surface-border">
             <div
               className={`h-full rounded-full ${
-                winProbPercent >= 70 ? 'bg-emerald-500' : winProbPercent >= 40 ? 'bg-amber-500' : 'bg-rose-500'
+                winProbPercent >= 70 ? 'bg-status-won-text' : winProbPercent >= 40 ? 'bg-status-review-text' : 'bg-status-lost-text'
               }`}
               style={{ width: `${winProbPercent}%` }}
             />
           </div>
         </div>
 
-        <div className="bg-[#0b0f17] border border-border rounded-md p-3 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+        <div className="bg-canvas-base border border-surface-border rounded-md p-3 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[11px] text-text-muted mb-1 font-mono">
             <span className="flex items-center space-x-1">
               <span>Expected Value</span>
               <span
                 title={`EV Model: (${winProbPercent}% × ${disputeAmountFormatted}) − $15.00 dispute fee = ${expectedValueFormatted}`}
-                className="cursor-help text-slate-400 hover:text-blue-400 transition-colors"
+                className="cursor-help text-text-muted hover:text-brand-primary transition-colors"
                 aria-label={`Expected value calculation: ${winProbPercent}% times ${disputeAmountFormatted} minus $15 dispute fee`}
               >
                 <Info className="h-3 w-3 inline" />
               </span>
             </span>
-            <DollarSign className="h-3 w-3 text-blue-400" />
+            <DollarSign className="h-3 w-3 text-brand-primary" />
           </div>
-          <div className="text-xl font-bold text-blue-300 font-mono tabular-nums">{expectedValueFormatted}</div>
-          <p className="text-[10px] text-slate-400 mt-1 font-mono">Dispute: {disputeAmountFormatted}</p>
+          <div className="text-xl font-bold text-brand-primary font-mono tabular-nums">{expectedValueFormatted}</div>
+          <p className="text-[10px] text-text-muted mt-1 font-mono">Dispute: {disputeAmountFormatted}</p>
         </div>
 
-        <div className="bg-[#0b0f17] border border-border rounded-md p-3 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+        <div className="bg-canvas-base border border-surface-border rounded-md p-3 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[11px] text-text-muted mb-1 font-mono">
             <span>Evidence Strength</span>
-            <Award className="h-3 w-3 text-blue-400" />
+            <Award className="h-3 w-3 text-brand-primary" />
           </div>
-          <div className="text-sm font-bold text-slate-200 capitalize">{decision.evidence_strength}</div>
-          <p className="text-[10px] text-slate-400 mt-1">Proof grade: Production Verified</p>
+          <div className="text-sm font-semibold text-text-primary capitalize">{decision.evidence_strength}</div>
+          <p className="text-[10px] text-text-muted mt-1 font-mono">Verified Artifacts</p>
         </div>
       </div>
 
       <div className="space-y-2.5 pt-1">
         {decision.owner_summary && (
-          <div className="bg-surface-elevated border border-border rounded-md p-3">
-            <p className="text-[10px] font-bold text-blue-300 uppercase tracking-wider mb-1 flex items-center space-x-1.5">
+          <div className="bg-surface-subtle border border-surface-border rounded-md p-3">
+            <p className="text-xs font-semibold text-brand-primary mb-1 flex items-center space-x-1.5 font-mono">
               <FileText className="h-3 w-3" />
               <span>Executive Summary</span>
             </p>
-            <p className="text-xs text-slate-200 leading-relaxed max-w-prose">{decision.owner_summary}</p>
+            <p className="text-xs text-text-primary leading-relaxed max-w-prose">{decision.owner_summary}</p>
           </div>
         )}
 
         {decision.rationale && (
-          <div className="bg-[#0b0f17] border border-border rounded-md p-3">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+          <div className="bg-canvas-base border border-surface-border rounded-md p-3">
+            <p className="text-xs font-medium text-text-muted mb-1 font-mono">
               Agent Decision Rationale
             </p>
-            <p className="text-xs text-slate-300 leading-relaxed max-w-prose">{decision.rationale}</p>
+            <p className="text-xs text-text-secondary leading-relaxed max-w-prose font-mono text-[11px]">{decision.rationale}</p>
           </div>
         )}
       </div>

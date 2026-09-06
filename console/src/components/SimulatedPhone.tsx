@@ -125,7 +125,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
 
           {/* Message Thread */}
           <div className="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
-            <div className="text-center font-mono text-[10px] text-text-muted my-1 uppercase tracking-wider">Today</div>
+            <div className="text-center font-mono text-[10px] text-text-muted my-1">Today</div>
 
             {/* Inbound Alert Bubble from Rebuttal */}
             <div className="flex flex-col items-start max-w-[90%]">
@@ -154,7 +154,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
 
           {/* Quick Reply Action Buttons */}
           <div className="p-2.5 border-t border-surface-border bg-surface-card/80">
-            <p className="text-[10px] font-mono uppercase tracking-wider text-text-muted mb-1.5 px-0.5">
+            <p className="text-[10px] font-mono text-text-muted mb-1.5 px-0.5">
               Decision Intercept:
             </p>
             <div className="grid grid-cols-3 gap-1.5 mb-2">

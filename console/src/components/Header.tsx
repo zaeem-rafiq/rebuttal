@@ -18,11 +18,11 @@ export const Header: React.FC<HeaderProps> = ({
   secondsRemaining = 5,
 }) => {
   return (
-    <header className="border-b border-border pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <header className="border-b border-surface-border pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div className="flex items-center space-x-3.5">
         <Link
           href="/"
-          className="h-8 w-8 rounded-md bg-[#1e3a8a] border border-[#2563eb] flex items-center justify-center font-mono font-bold text-sm text-[#93c5fd] shadow-sm hover:brightness-110 transition-all"
+          className="h-8 w-8 rounded-md bg-brand-primary/15 border border-brand-primary/40 flex items-center justify-center font-mono font-bold text-sm text-brand-primary shadow-xs hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary transition-all"
         >
           R
         </Link>
@@ -30,30 +30,30 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/"
-              className="text-lg font-bold tracking-tight text-white hover:text-blue-400 transition-colors"
+              className="text-lg font-bold tracking-tight text-text-primary hover:text-brand-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded"
             >
               Rebuttal
             </Link>
-            <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded bg-[#161e2e] text-slate-300 border border-[#283548]">
+            <span className="px-2 py-0.5 text-[11px] font-mono font-medium rounded bg-surface-subtle text-text-secondary border border-surface-border">
               Dispute Docket
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold rounded bg-emerald-950/60 text-emerald-400 border border-emerald-800/60">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
-              <span>Bedrock AgentCore Active</span>
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-mono font-medium rounded bg-status-won-bg text-status-won-text border border-status-won-border">
+              <span className="h-1.5 w-1.5 rounded-full bg-status-won-text shadow-xs" />
+              <span>AgentCore Active</span>
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-text-muted mt-0.5">
             Autonomous chargeback defense & carrier evidentiary synthesis
           </p>
         </div>
       </div>
 
-      <div className="flex items-center space-x-3 text-xs text-slate-400">
-        <div className="font-mono text-[11px] text-slate-400">
-          Polling in <span className="tabular-nums font-semibold text-slate-200">{secondsRemaining}s</span>
+      <div className="flex items-center space-x-3 text-xs text-text-muted">
+        <div className="font-mono text-[11px] text-text-muted">
+          Polling in <span className="tabular-nums font-semibold text-text-secondary">{secondsRemaining}s</span>
           {lastUpdated && (
-            <span className="hidden md:inline text-slate-500 ml-1.5">
-              · Sync: {lastUpdated.toLocaleTimeString()}
+            <span className="hidden md:inline text-text-muted ml-1.5">
+              (Synced {lastUpdated.toLocaleTimeString()})
             </span>
           )}
         </div>
@@ -64,9 +64,9 @@ export const Header: React.FC<HeaderProps> = ({
             disabled={isRefreshing}
             title="Sync Ledger"
             aria-label="Sync Ledger"
-            className="inline-flex items-center gap-1.5 bg-surface border border-border hover:bg-surface-elevated active:bg-surface-highlight disabled:opacity-50 text-slate-200 px-3 py-1.5 rounded-md font-medium text-xs transition-colors focus-visible:ring-2 focus-visible:ring-brand"
+            className="inline-flex items-center gap-1.5 bg-surface-subtle border border-surface-border hover:bg-surface-hover active:bg-surface-subtle disabled:opacity-50 text-text-primary px-3 py-1.5 rounded-md font-medium text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-blue-400' : 'text-slate-400'}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-brand-primary' : 'text-text-muted'}`} />
             <span>{isRefreshing ? 'Syncing...' : 'Sync Ledger'}</span>
           </button>
         )}

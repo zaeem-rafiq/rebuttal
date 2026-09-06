@@ -11,7 +11,7 @@ import { StrategyCard } from '@/components/StrategyCard';
 import { AuditTimeline } from '@/components/AuditTimeline';
 import { EvidencePacket } from '@/components/EvidencePacket';
 import { SimulatedPhone } from '@/components/SimulatedPhone';
-import { ArrowLeft, Clock, ShieldAlert, Cpu } from 'lucide-react';
+import { ArrowLeft, Clock, ShieldAlert, Cpu, Smartphone } from 'lucide-react';
 
 export default function CaseDetailsPage() {
   const params = useParams();
@@ -100,22 +100,22 @@ export default function CaseDetailsPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6 animate-pulse">
+      <div className="space-y-6 animate-pulse" aria-busy="true" aria-label="Loading Dispute Case">
         <Header
           lastUpdated={lastUpdated}
           isRefreshing={isRefreshing}
           onRefresh={fetchCaseDetails}
           secondsRemaining={secondsRemaining}
         />
-        <div className="h-14 bg-surface border border-border rounded-lg" />
+        <div className="h-14 bg-surface-card border border-surface-border rounded-lg" />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-8 space-y-6">
-            <div className="h-56 bg-surface border border-border rounded-lg" />
-            <div className="h-64 bg-surface border border-border rounded-lg" />
-            <div className="h-48 bg-surface border border-border rounded-lg" />
+            <div className="h-56 bg-surface-card border border-surface-border rounded-lg" />
+            <div className="h-64 bg-surface-card border border-surface-border rounded-lg" />
+            <div className="h-48 bg-surface-card border border-surface-border rounded-lg" />
           </div>
           <div className="lg:col-span-4">
-            <div className="h-[520px] bg-surface border border-border rounded-lg" />
+            <div className="h-[520px] bg-surface-card border border-surface-border rounded-lg" />
           </div>
         </div>
       </div>
@@ -131,15 +131,15 @@ export default function CaseDetailsPage() {
           onRefresh={fetchCaseDetails}
           secondsRemaining={secondsRemaining}
         />
-        <div className="bg-surface border border-border rounded-lg p-12 text-center text-slate-400">
-          <ShieldAlert className="h-9 w-9 text-slate-500 mx-auto mb-3" />
-          <h3 className="text-sm font-semibold text-slate-200">Dispute Not Found in Docket</h3>
-          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+        <div className="bg-surface-card border border-surface-border rounded-lg p-12 text-center text-text-muted">
+          <ShieldAlert className="h-9 w-9 text-text-muted mx-auto mb-3" />
+          <h3 className="text-sm font-semibold text-text-primary">Dispute Not Found in Docket</h3>
+          <p className="text-xs text-text-muted mt-1 max-w-sm mx-auto">
             Dispute &ldquo;{disputeId}&rdquo; was not located in the active database. Use the verification toolbar on the ledger to inject a test case.
           </p>
           <Link
             href="/"
-            className="inline-flex items-center space-x-1.5 mt-4 px-3 py-1.5 rounded-md text-xs font-medium bg-surface-elevated hover:bg-surface-hover text-slate-200 border border-border transition-colors"
+            className="inline-flex items-center space-x-1.5 mt-4 px-3 py-1.5 rounded-md text-xs font-medium bg-surface-subtle hover:bg-surface-hover text-text-primary border border-surface-border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Return to Ledger</span>
@@ -160,35 +160,35 @@ export default function CaseDetailsPage() {
         secondsRemaining={secondsRemaining}
       />
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-border pb-5">
         <div className="space-y-1">
           <Link
             href="/"
-            className="inline-flex items-center space-x-1.5 text-xs text-blue-400 hover:text-blue-300 font-medium py-1 px-1.5 -ml-1.5 rounded hover:bg-surface-elevated transition-colors"
+            className="inline-flex items-center space-x-1.5 text-xs text-brand-primary hover:text-brand-hover font-medium py-1 px-1.5 -ml-1.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Back to Dispute Docket</span>
           </Link>
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-bold font-mono text-white tracking-tight">
+            <h1 className="text-2xl font-bold font-mono text-text-primary tracking-tight">
               {disputeId}
             </h1>
             {dispute && <StatusChip status={dispute.status} />}
           </div>
-          <p className="text-xs text-slate-400">
-            <span className="font-semibold text-slate-300 uppercase tracking-wide">
+          <p className="text-xs text-text-muted">
+            <span className="font-semibold text-text-secondary capitalize">
               {dispute?.reason.replace(/_/g, ' ')}
             </span>
-            <span className="mx-2 text-slate-600">|</span>
-            Contested Amount: <strong className="font-mono text-white tabular-nums">{amountFormatted}</strong>
+            <span className="mx-2 text-surface-border">|</span>
+            Contested Amount: <strong className="font-mono text-text-primary tabular-nums">{amountFormatted}</strong>
           </p>
         </div>
 
-        <div className="flex items-center space-x-3 text-xs text-slate-400 font-mono">
+        <div className="flex items-center space-x-3 text-xs text-text-muted font-mono">
           {dispute?.evidence_due_by && (
-            <div className="bg-surface border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5">
-              <Clock className="h-3.5 w-3.5 text-amber-400" />
-              <span>Evidence Due: <strong className="text-slate-200">{new Date(dispute.evidence_due_by).toLocaleDateString()}</strong></span>
+            <div className="bg-surface-card border border-surface-border px-3 py-1.5 rounded-md flex items-center space-x-1.5">
+              <Clock className="h-3.5 w-3.5 text-status-review-text" />
+              <span>Evidence Due: <strong className="text-text-primary">{new Date(dispute.evidence_due_by).toLocaleDateString()}</strong></span>
             </div>
           )}
         </div>
@@ -198,9 +198,9 @@ export default function CaseDetailsPage() {
         <div className="lg:col-span-8 space-y-6">
           <div>
             <div className="flex items-center space-x-2 mb-2.5">
-              <Cpu className="h-4 w-4 text-blue-400" />
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                Agent Defense Strategy & Valuation
+              <Cpu className="h-4 w-4 text-brand-primary" />
+              <h2 className="text-xs font-semibold text-text-primary">
+                Agent Defense Strategy & Evidence Valuation
               </h2>
             </div>
             <StrategyCard
@@ -211,8 +211,8 @@ export default function CaseDetailsPage() {
 
           <div>
             <div className="flex items-center space-x-2 mb-2.5">
-              <ShieldAlert className="h-4 w-4 text-emerald-400" />
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+              <ShieldAlert className="h-4 w-4 text-status-won-text" />
+              <h2 className="text-xs font-semibold text-text-primary">
                 Evidentiary Dossier & Carrier Proof
               </h2>
             </div>
@@ -221,12 +221,12 @@ export default function CaseDetailsPage() {
 
           <div>
             <div className="flex items-center space-x-2 mb-2.5">
-              <Clock className="h-4 w-4 text-slate-400" />
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+              <Clock className="h-4 w-4 text-text-muted" />
+              <h2 className="text-xs font-semibold text-text-primary">
                 AgentCore Telemetry & Audit Trail
               </h2>
             </div>
-            <div className="bg-surface border border-border rounded-lg p-5">
+            <div className="bg-surface-card border border-surface-border rounded-lg p-5">
               <AuditTimeline entries={auditLogs} />
             </div>
           </div>
@@ -235,12 +235,12 @@ export default function CaseDetailsPage() {
         <div className="lg:col-span-4 space-y-6">
           <div className="sticky top-6">
             <div className="flex items-center space-x-2 mb-2.5">
-              <span className="text-blue-400 text-sm">📱</span>
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                Owner Approval Stream (SMS)
+              <Smartphone className="h-4 w-4 text-brand-primary" />
+              <h2 className="text-xs font-semibold text-text-primary">
+                Merchant ApprovalGate Handset (SMS)
               </h2>
             </div>
-            <div className="bg-surface border border-border rounded-lg p-4 flex justify-center min-h-[580px]">
+            <div className="bg-surface-card border border-surface-border rounded-lg p-4 flex justify-center min-h-[580px]">
               <SimulatedPhone
                 disputeId={disputeId}
                 amountFormatted={amountFormatted}

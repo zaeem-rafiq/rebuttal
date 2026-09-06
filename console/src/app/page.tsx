@@ -186,7 +186,7 @@ export default function HomePage() {
       {/* Master Evidentiary Ledger Banner */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-surface-card border border-surface-border rounded-lg divide-y sm:divide-y-0 sm:divide-x divide-surface-border overflow-hidden shadow-xs">
         <div className="p-5 flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider font-mono">
+          <span className="text-xs font-mono font-medium text-text-muted">
             Protected Net Volume
           </span>
           <div className="mt-2">
@@ -200,7 +200,7 @@ export default function HomePage() {
         </div>
 
         <div className="p-5 flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider font-mono">
+          <span className="text-xs font-mono font-medium text-text-muted">
             Evidentiary Win Rate
           </span>
           <div className="mt-2">
@@ -214,7 +214,7 @@ export default function HomePage() {
         </div>
 
         <div className="p-5 flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider font-mono">
+          <span className="text-xs font-mono font-medium text-text-muted">
             Active Docket Load
           </span>
           <div className="mt-2">
@@ -228,7 +228,7 @@ export default function HomePage() {
         </div>
 
         <div className="p-5 flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider font-mono">
+          <span className="text-xs font-mono font-medium text-text-muted">
             ApprovalGate Intercepts
           </span>
           <div className="mt-2">

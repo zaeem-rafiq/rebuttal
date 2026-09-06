@@ -201,7 +201,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
           {/* Desktop Table View */}
           <table className="w-full border-collapse text-left text-xs">
             <thead>
-              <tr className="border-b border-surface-border bg-surface-subtle/40 text-[10px] font-mono font-semibold text-text-muted uppercase tracking-wider">
+              <tr className="border-b border-surface-border bg-surface-subtle/40 text-[11px] font-mono font-medium text-text-muted">
                 <th className="py-3 px-4">Dispute ID & Order</th>
                 <th className="py-3 px-4">Reason & Evidentiary Dossier</th>
                 <th className="py-3 px-4">Docket Status</th>
@@ -248,9 +248,9 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
                       <div className="text-[11px] text-text-muted mt-0.5 truncate">
                         {d.decision?.owner_summary || (
                           d.reason === 'product_not_received'
-                            ? 'Carrier signature verified · Proof ready'
+                            ? 'Carrier signature verified, proof ready'
                             : d.reason === 'fraudulent'
-                            ? 'VIP account · ApprovalGate interrupt'
+                            ? 'VIP account, ApprovalGate interrupt'
                             : 'Pre-dispute inquiry notification'
                         )}
                       </div>
