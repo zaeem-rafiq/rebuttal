@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Play, Sparkles, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
+import { Play, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 import { INJECT_URL, CONSOLE_KEY } from '@/lib/config';
 
 interface InjectToolbarProps {
@@ -99,7 +99,7 @@ export const InjectToolbar: React.FC<InjectToolbarProps> = ({ onInjectSuccess })
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <Sparkles className="h-4 w-4 text-amber-400" />
+            <Play className="h-4 w-4 text-emerald-400" />
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-200">
               Live Scenario Injector
             </h2>
@@ -120,36 +120,47 @@ export const InjectToolbar: React.FC<InjectToolbarProps> = ({ onInjectSuccess })
           <button
             onClick={() => handleInject('S1')}
             disabled={cooldown > 0 || loadingScenario !== null}
-            className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-xl text-xs font-medium bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-indigo-500/20 transition-all active:scale-[0.98]"
+            aria-busy={loadingScenario === 'S1'}
+            aria-label="Inject Scenario 1 Delivery Dispute"
+            className="flex-1 sm:flex-none flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-sm"
           >
-            <Play className={`h-3.5 w-3.5 ${loadingScenario === 'S1' ? 'animate-spin' : ''}`} />
-            <span>Inject S1 ($48 · Delivery)</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">S1</span>
+            <span>$48 · Delivery</span>
+            {loadingScenario === 'S1' && <Clock className="h-3.5 w-3.5 animate-spin text-blue-400 ml-1" />}
           </button>
 
           {/* S2 Button */}
           <button
             onClick={() => handleInject('S2')}
             disabled={cooldown > 0 || loadingScenario !== null}
-            className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-xl text-xs font-medium bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-purple-500/20 transition-all active:scale-[0.98]"
+            aria-busy={loadingScenario === 'S2'}
+            aria-label="Inject Scenario 2 Fraud Dispute"
+            className="flex-1 sm:flex-none flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-sm"
           >
-            <Play className={`h-3.5 w-3.5 ${loadingScenario === 'S2' ? 'animate-spin' : ''}`} />
-            <span>Inject S2 ($340 · Fraud)</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">S2</span>
+            <span>$340 · Fraud</span>
+            {loadingScenario === 'S2' && <Clock className="h-3.5 w-3.5 animate-spin text-rose-400 ml-1" />}
           </button>
 
           {/* S3 Button */}
           <button
             onClick={() => handleInject('S3')}
             disabled={cooldown > 0 || loadingScenario !== null}
-            className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-xl text-xs font-medium bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-amber-500/20 transition-all active:scale-[0.98]"
+            aria-busy={loadingScenario === 'S3'}
+            aria-label="Inject Scenario 3 Subscription Inquiry"
+            className="flex-1 sm:flex-none flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-sm"
           >
-            <Play className={`h-3.5 w-3.5 ${loadingScenario === 'S3' ? 'animate-spin' : ''}`} />
-            <span>Inject S3 ($129 · Inquiry)</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">S3</span>
+            <span>$129 · Inquiry</span>
+            {loadingScenario === 'S3' && <Clock className="h-3.5 w-3.5 animate-spin text-amber-400 ml-1" />}
           </button>
         </div>
       </div>
 
       {statusMessage && (
         <div
+          role="status"
+          aria-live="polite"
           className={`mt-4 p-3 rounded-xl text-xs flex items-start space-x-2 border ${
             statusMessage.type === 'success'
               ? 'bg-emerald-950/60 text-emerald-200 border-emerald-800/60'

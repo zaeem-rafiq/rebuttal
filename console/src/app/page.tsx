@@ -79,6 +79,7 @@ export default function HomePage() {
   };
 
   const totalCount = disputes.length;
+  const resolvedDisputes = disputes.filter((d) => ['won', 'lost', 'conceded', 'charge_refunded'].includes(d.status));
   const wonCount = disputes.filter((d) => d.status === 'won').length;
   const wonVolume = disputes
     .filter((d) => d.status === 'won')
@@ -86,7 +87,7 @@ export default function HomePage() {
   const pendingCount = disputes.filter(
     (d) => d.status === 'needs_response' || (d.decision && d.decision.status === 'pending')
   ).length;
-  const winRate = totalCount > 0 ? Math.round((wonCount / totalCount) * 100) : 100;
+  const winRate = resolvedDisputes.length > 0 ? Math.round((wonCount / resolvedDisputes.length) * 100) : 100;
 
   return (
     <div className="space-y-6">
@@ -113,15 +114,19 @@ export default function HomePage() {
             <TrendingUp className="h-4 w-4 text-emerald-400" />
           </div>
           <p className="text-2xl font-bold font-mono text-emerald-300 mt-2">{winRate}%</p>
-          <span className="text-[10px] text-slate-500 mt-1">Defended vs. lost disputes</span>
+          <span className="text-[10px] text-slate-500 mt-1">
+            {resolvedDisputes.length > 0
+              ? `${wonCount} of ${resolvedDisputes.length} resolved cases`
+              : 'Awaiting dispute resolutions'}
+          </span>
         </div>
 
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs text-slate-400">
             <span>Protected Revenue</span>
-            <DollarSign className="h-4 w-4 text-indigo-400" />
+            <DollarSign className="h-4 w-4 text-emerald-400" />
           </div>
-          <p className="text-2xl font-bold font-mono text-indigo-300 mt-2">
+          <p className="text-2xl font-bold font-mono text-white mt-2">
             ${(wonVolume / 100).toFixed(2)}
           </p>
           <span className="text-[10px] text-slate-500 mt-1">Recovered automatically</span>

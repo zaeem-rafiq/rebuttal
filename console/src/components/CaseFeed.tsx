@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { Dispute } from '@/lib/types';
 import { StatusChip } from './StatusChip';
-import { ArrowRight, Clock } from 'lucide-react';
+import { ArrowRight, Clock, AlertTriangle } from 'lucide-react';
 
 interface CaseFeedProps {
   disputes: Dispute[];
@@ -13,6 +13,7 @@ interface CaseFeedProps {
 }
 
 export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isReplyingId }) => {
+  const [confirmingConcedeId, setConfirmingConcedeId] = useState<string | null>(null);
   if (!disputes || disputes.length === 0) {
     return (
       <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center text-slate-400">
@@ -89,35 +90,68 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
 
               <div className="flex flex-wrap items-center gap-2">
                 {isPending && onQuickReply && (
-                  <div className="flex items-center space-x-1.5 bg-slate-950/80 p-1.5 rounded-xl border border-amber-500/30">
-                    <span className="text-[11px] font-semibold text-amber-300 px-2 uppercase">
-                      Owner Action:
-                    </span>
-                    <button
-                      type="button"
-                      disabled={isReplying}
-                      onClick={() => onQuickReply(d.id, '1')}
-                      className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-50 transition-colors"
-                    >
-                      1 Fight
-                    </button>
-                    <button
-                      type="button"
-                      disabled={isReplying}
-                      onClick={() => onQuickReply(d.id, '2')}
-                      className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-500 text-white disabled:opacity-50 transition-colors"
-                    >
-                      2 Concede
-                    </button>
-                    <button
-                      type="button"
-                      disabled={isReplying}
-                      onClick={() => onQuickReply(d.id, '3')}
-                      className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-700 hover:bg-slate-600 text-white disabled:opacity-50 transition-colors"
-                    >
-                      3 Hold
-                    </button>
-                  </div>
+                  confirmingConcedeId === d.id ? (
+                    <div className="flex items-center space-x-2 bg-rose-950/90 p-1.5 px-3 rounded-xl border border-rose-600 text-xs shadow-lg animate-in fade-in duration-200">
+                      <AlertTriangle className="h-4 w-4 text-rose-400 shrink-0" />
+                      <span className="text-rose-200 font-medium">
+                        Concede {amountFormatted}? Forfeits dispute to Stripe.
+                      </span>
+                      <button
+                        type="button"
+                        disabled={isReplying}
+                        onClick={() => {
+                          setConfirmingConcedeId(null);
+                          onQuickReply(d.id, '2');
+                        }}
+                        aria-label={`Confirm permanent concession of dispute ${d.id}`}
+                        className="px-2.5 py-1 text-xs font-bold rounded-lg bg-rose-600 hover:bg-rose-500 text-white disabled:opacity-50 transition-colors shadow-sm"
+                      >
+                        Yes, Concede
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isReplying}
+                        onClick={() => setConfirmingConcedeId(null)}
+                        aria-label="Cancel concession"
+                        className="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-1.5 bg-slate-950/80 p-1.5 rounded-xl border border-amber-500/30">
+                      <span className="text-[11px] font-semibold text-amber-300 px-2 uppercase">
+                        Owner Action:
+                      </span>
+                      <button
+                        type="button"
+                        disabled={isReplying}
+                        onClick={() => onQuickReply(d.id, '1')}
+                        aria-label={`Fight dispute ${d.id} and submit evidence`}
+                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-50 transition-colors"
+                      >
+                        1 Fight
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isReplying}
+                        onClick={() => setConfirmingConcedeId(d.id)}
+                        aria-label={`Initiate concession for dispute ${d.id}`}
+                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-500 text-white disabled:opacity-50 transition-colors"
+                      >
+                        2 Concede
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isReplying}
+                        onClick={() => onQuickReply(d.id, '3')}
+                        aria-label={`Hold dispute ${d.id} for manual review`}
+                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-700 hover:bg-slate-600 text-white disabled:opacity-50 transition-colors"
+                      >
+                        3 Hold
+                      </button>
+                    </div>
+                  )
                 )}
 
                 <Link

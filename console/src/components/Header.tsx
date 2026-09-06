@@ -20,16 +20,16 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="border-b border-slate-800/80 pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div className="flex items-center space-x-3.5">
-        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 ring-1 ring-white/20">
-          <ShieldAlert className="h-5 w-5 text-white" />
+        <div className="h-10 w-10 rounded-xl bg-slate-900 border border-slate-700/80 flex items-center justify-center shadow-md shadow-black/40 ring-1 ring-white/5">
+          <ShieldAlert className="h-5 w-5 text-indigo-400" />
         </div>
         <div>
           <div className="flex items-center space-x-2">
             <Link href="/" className="text-xl font-bold tracking-tight text-white hover:text-indigo-400 transition-colors">
               Rebuttal
             </Link>
-            <span className="px-2 py-0.5 text-xs font-semibold uppercase tracking-wider rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-              Judge Console
+            <span className="px-2 py-0.5 text-xs font-semibold uppercase tracking-wider rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+              Risk Operations Console
             </span>
             <span className="flex items-center space-x-1 px-2 py-0.5 text-xs font-medium rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -59,6 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={onRefresh}
             disabled={isRefreshing}
             title="Refresh disputes now"
+            aria-label="Refresh disputes now"
             className="flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700/60 transition-colors"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-indigo-400' : ''}`} />
