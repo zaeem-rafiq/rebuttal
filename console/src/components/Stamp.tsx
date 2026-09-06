@@ -5,7 +5,9 @@ import React from 'react';
 export type StampDecision = 'won' | 'lost' | 'approved' | 'fought' | 'conceded' | 'refunded';
 
 interface StampProps {
-  decision: StampDecision | string;
+  decision?: StampDecision | string;
+  variant?: StampDecision | string;
+  text?: string;
   actor?: 'agent' | 'owner' | 'issuer';
   timestamp?: string | Date;
   channel?: string;
@@ -16,6 +18,8 @@ interface StampProps {
 
 export const Stamp: React.FC<StampProps> = ({
   decision,
+  variant,
+  text,
   actor = 'agent',
   timestamp,
   channel,
@@ -23,34 +27,46 @@ export const Stamp: React.FC<StampProps> = ({
   size = 'md',
   className = '',
 }) => {
-  const norm = (decision || '').toLowerCase().trim();
+  const normDecision = (decision || variant || '').toLowerCase().trim();
+  const rawText = (text || '').toLowerCase().trim();
 
-  const isGreen = ['won', 'approved', 'fought'].includes(norm);
+  const isGreen =
+    ['won', 'approved', 'fought'].includes(normDecision) ||
+    rawText.includes('won') ||
+    rawText.includes('approved') ||
+    rawText.includes('fought');
+
   const colorClass = isGreen
     ? 'border-decision-green text-decision-green'
     : 'border-decision-red text-decision-red';
 
-  // Format date if provided, e.g. "06 SEP 14:07"
-  let timeStr = '';
-  if (timestamp) {
-    const d = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
-    if (!isNaN(d.getTime())) {
-      const day = String(d.getDate()).padStart(2, '0');
-      const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase();
-      const hours = String(d.getHours()).padStart(2, '0');
-      const mins = String(d.getMinutes()).padStart(2, '0');
-      timeStr = ` · ${day} ${month} ${hours}:${mins}`;
+  let label = text || '';
+  if (!label) {
+    let timeStr = '';
+    if (timestamp) {
+      const d = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
+      if (!isNaN(d.getTime())) {
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+        const hours = String(d.getHours()).padStart(2, '0');
+        const mins = String(d.getMinutes()).padStart(2, '0');
+        timeStr = ` · ${day} ${month} ${hours}:${mins}`;
+      }
     }
+
+    const byStr =
+      actor === 'owner'
+        ? channel
+          ? ` · BY OWNER (${channel.toUpperCase()})`
+          : ' · BY OWNER (SMS)'
+        : actor === 'issuer'
+        ? ' · BY ISSUER'
+        : ' · BY AGENT';
+
+    const actionStr = normDecision.toUpperCase();
+    label = `${actionStr}${timeStr}${byStr}`;
   }
 
-  const byStr = actor === 'owner'
-    ? (channel ? ` · BY OWNER (${channel.toUpperCase()})` : ' · BY OWNER (SMS)')
-    : actor === 'issuer'
-    ? ' · BY ISSUER'
-    : ' · BY AGENT';
-
-  const actionStr = norm.toUpperCase();
-  const label = `${actionStr}${timeStr}${byStr}`;
 
   const sizeClasses = {
     sm: 'text-[11px] px-1.5 py-0.5 border-[1.5px]',

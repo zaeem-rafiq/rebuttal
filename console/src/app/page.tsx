@@ -5,27 +5,188 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { Dispute } from '@/lib/types';
 import { Header } from '@/components/Header';
-import { InjectToolbar } from '@/components/InjectToolbar';
 import { CaseFeed } from '@/components/CaseFeed';
-import { TWILIO_WEBHOOK_URL } from '@/lib/config';
-import { Scale, CheckCircle2, AlertCircle, Clock, ArrowRight, ShieldCheck, PhoneCall } from 'lucide-react';
+import { Stamp } from '@/components/Stamp';
+import { TWILIO_WEBHOOK_URL, INJECT_URL, CONSOLE_KEY } from '@/lib/config';
+
+interface ExhibitItem {
+  letter: string;
+  title: string;
+  field: string;
+  source: string;
+  summary: string;
+  status: 'attached' | 'missing';
+}
+
+interface CaseFileMemo {
+  customerName: string;
+  orderRef: string;
+  headlineAmount: string;
+  respondByDate: string;
+  respondByDays: number;
+  briefNarrative: string;
+  recommendation: string;
+  exhibits: ExhibitItem[];
+  smsText: string | null;
+  smsRecipient: string | null;
+  smsTime: string | null;
+}
+
+function getCaseFileMemo(dispute: Dispute): CaseFileMemo {
+  const isFraud = dispute.reason === 'fraudulent' || dispute.id.includes('S2');
+  const isPNR = dispute.reason === 'product_not_received' || dispute.id.includes('S1');
+
+  if (isFraud) {
+    return {
+      customerName: 'Sarah Jenkins',
+      orderRef: 'Order #8841',
+      headlineAmount: `$${(dispute.amount_cents / 100).toFixed(2)}`,
+      respondByDate: '22 Sep 2026',
+      respondByDays: 16,
+      briefNarrative:
+        'Cardholder Sarah Jenkins disputes transaction of $340.00 citing unauthorized fraud. Internal ledger verification demonstrates an established commercial relationship spanning 14 prior completed orders totaling $4,820.00 lifetime spend, all delivered to the identical verified cardholder address with zero historical disputes. Stripe Radar score was 12/100 (low risk) and AVS postal code returned a full match. Rebuttal recommends defending this claim with high confidence, subject to owner authorization to confirm customer relationship preservation.',
+      recommendation: 'Recommend: fight (confidence 92%)',
+      exhibits: [
+        {
+          letter: 'A',
+          title: 'Prior order ledger and customer history',
+          field: 'prior_undisputed_transaction_description',
+          source: 'Shopify customer ledger',
+          summary: '14 prior orders ($4,820 lifetime spend) delivered to verified address',
+          status: 'attached',
+        },
+        {
+          letter: 'B',
+          title: 'Proof of delivery and cardholder signature',
+          field: 'shipping_documentation',
+          source: 'UPS tracking #1Z9999999999999999',
+          summary: 'Delivered to 880 Harrison St, San Francisco, CA; signed by cardholder',
+          status: 'attached',
+        },
+        {
+          letter: 'C',
+          title: 'Stripe Radar risk evaluation',
+          field: 'customer_communication',
+          source: 'Stripe Radar',
+          summary: 'Risk score 12/100, 3D Secure authenticated, CVC & AVS postal match',
+          status: 'attached',
+        },
+        {
+          letter: 'D',
+          title: 'Merchant checkout terms of service',
+          field: 'cancellation_policy',
+          source: 'Store checkout policy v2.4',
+          summary: 'Accepted by cardholder at checkout with timestamp and IP log',
+          status: 'attached',
+        },
+      ],
+      smsText:
+        'Alert: Dispute #8841 ($340.00) flagged for VIP Sarah Jenkins ($4,820 spend). Reply 1 to authorize evidence submission, or 2 to refund.',
+      smsRecipient: '+1 ••• 4471',
+      smsTime: '14:02',
+    };
+  }
+
+  if (isPNR) {
+    return {
+      customerName: 'Michael Okafor',
+      orderRef: 'Order #8840',
+      headlineAmount: `$${(dispute.amount_cents / 100).toFixed(2)}`,
+      respondByDate: '20 Sep 2026',
+      respondByDays: 14,
+      briefNarrative:
+        'Cardholder claims goods were not received. Carrier tracking scan from UPS confirms physical delivery directly to cardholder documented shipping address in Austin, TX, with direct signature confirmation matching claimant name. Counter-evidence packet assembled and submitted to card scheme automatically under merchant rule threshold (< $100).',
+      recommendation: 'Recommend: fight (confidence 98%)',
+      exhibits: [
+        {
+          letter: 'A',
+          title: 'Carrier proof of delivery and signature',
+          field: 'shipping_documentation',
+          source: 'UPS tracking #1Z88400019283746',
+          summary: 'Physical delivery confirmed to 1424 Elm St with recipient signature',
+          status: 'attached',
+        },
+        {
+          letter: 'B',
+          title: 'Order fulfillment and dispatch record',
+          field: 'receipt',
+          source: 'Shopify fulfillment service',
+          summary: 'Order ORD-1001 fulfilled within 24 hours of checkout',
+          status: 'attached',
+        },
+        {
+          letter: 'C',
+          title: 'Customer delivery notification log',
+          field: 'customer_communication',
+          source: 'Gmail support thread',
+          summary: 'Delivery notice emailed to m.okafor@example.com with carrier tracking link',
+          status: 'attached',
+        },
+      ],
+      smsText: null,
+      smsRecipient: null,
+      smsTime: null,
+    };
+  }
+
+  // Subscription canceled or generic
+  return {
+    customerName: 'David Miller',
+    orderRef: 'Order #8842',
+    headlineAmount: `$${(dispute.amount_cents / 100).toFixed(2)}`,
+    respondByDate: '25 Sep 2026',
+    respondByDays: 19,
+    briefNarrative:
+      'Cardholder disputes recurring billing charge claiming account was canceled prior to renewal. Support inbox records indicate formal cancellation request was received 48 hours prior to billing cycle renewal. Contesting this claim would violate card brand rules and incur a statutory $15.00 arbitration fee with negligible win probability.',
+    recommendation: 'Recommend: concede (confidence 96%)',
+    exhibits: [
+      {
+        letter: 'A',
+        title: 'Inbound cancellation notice',
+        field: 'customer_communication',
+        source: 'Zendesk ticket #48102',
+        summary: 'Customer requested cancellation on Aug 22 prior to Aug 24 renewal',
+        status: 'attached',
+      },
+      {
+        letter: 'B',
+        title: 'Merchant subscription terms',
+        field: 'cancellation_policy',
+        source: 'Merchant TOS § 4.2',
+        summary: 'Terms permit cancellation up to 24 hours prior to billing date',
+        status: 'attached',
+      },
+      {
+        letter: 'C',
+        title: 'Billing timeline audit',
+        field: 'refund_policy',
+        source: 'Stripe billing schedule',
+        summary: 'Inadvertent renewal processed following valid cancellation window',
+        status: 'attached',
+      },
+    ],
+    smsText: null,
+    smsRecipient: null,
+    smsTime: null,
+  };
+}
 
 export default function HomePage() {
   const [disputes, setDisputes] = useState<Dispute[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [secondsRemaining, setSecondsRemaining] = useState<number>(5);
+  const [selectedDisputeId, setSelectedDisputeId] = useState<string | null>(null);
+  const [activeScenario, setActiveScenario] = useState<'S1' | 'S2' | 'S3' | null>('S2');
+  const [loadingScenario, setLoadingScenario] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState<number>(0);
   const [replyingId, setReplyingId] = useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [actionToast, setActionToast] = useState<{
-    type: 'success' | 'error';
-    message: string;
-    onRetry?: () => void;
-  } | null>(null);
+  const [localDecisions, setLocalDecisions] = useState<Record<string, {
+    action: 'approved' | 'conceded';
+    timestamp: string;
+    actor: 'SMS' | 'AGENT';
+  }>>({});
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const fetchDisputes = useCallback(async () => {
-    setIsRefreshing(true);
     try {
       const { data, error } = await supabase
         .from('disputes')
@@ -35,18 +196,11 @@ export default function HomePage() {
         `)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        throw error;
-      }
-
+      if (error) throw error;
       setDisputes((data as Dispute[]) || []);
-      setLastUpdated(new Date());
-      setErrorMsg(null);
     } catch (err: any) {
-      console.error('Failed to fetch disputes from Supabase:', err);
-      setErrorMsg(err.message || 'Error connecting to database');
+      console.error('Failed to fetch disputes:', err);
     } finally {
-      setIsRefreshing(false);
       setLoading(false);
     }
   }, []);
@@ -55,24 +209,73 @@ export default function HomePage() {
     fetchDisputes();
   }, [fetchDisputes]);
 
+  // Polling every 5s
   useEffect(() => {
     const timer = setInterval(() => {
-      setSecondsRemaining((prev) => {
-        if (prev <= 1) {
-          fetchDisputes();
-          return 5;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
+      fetchDisputes();
+    }, 5000);
     return () => clearInterval(timer);
   }, [fetchDisputes]);
 
-  const handleQuickReply = async (disputeId: string, replyCode: '1' | '2' | '3') => {
+  // Cooldown timer
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setInterval(() => {
+      setCooldown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [cooldown]);
+
+  const handleSelectScenario = async (scenario: 'S1' | 'S2' | 'S3') => {
+    if (cooldown > 0 || loadingScenario) return;
+    setLoadingScenario(scenario);
+    setActiveScenario(scenario);
+
+    try {
+      const resp = await fetch(INJECT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Console-Key': CONSOLE_KEY,
+        },
+        body: JSON.stringify({ scenario }),
+      });
+
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok) {
+        setCooldown(10);
+        setToastMessage(`Scenario ${scenario} injected.`);
+        setTimeout(() => setToastMessage(null), 4000);
+        await fetchDisputes();
+        if (data.dispute_id) {
+          setSelectedDisputeId(data.dispute_id);
+        }
+      }
+    } catch (err: any) {
+      console.error('Injection failed:', err);
+    } finally {
+      setLoadingScenario(null);
+    }
+  };
+
+  const handleQuickReply = async (disputeId: string, replyCode: '1' | '2') => {
     setReplyingId(disputeId);
-    setActionToast(null);
-    const actionLabel = replyCode === '1' ? 'Submit Evidence' : replyCode === '2' ? 'Concede' : 'Hold';
+    const now = new Date();
+    const day = now.getUTCDate().toString().padStart(2, '0');
+    const month = now.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
+    const hours = now.getUTCHours().toString().padStart(2, '0');
+    const mins = now.getUTCMinutes().toString().padStart(2, '0');
+    const timeStr = `${day} ${month} ${hours}:${mins}`;
+
+    // Optimistically update local decision state for instant gate stamp landing
+    setLocalDecisions((prev) => ({
+      ...prev,
+      [disputeId]: {
+        action: replyCode === '1' ? 'approved' : 'conceded',
+        timestamp: timeStr,
+        actor: 'SMS',
+      },
+    }));
 
     try {
       const formData = new URLSearchParams();
@@ -87,302 +290,333 @@ export default function HomePage() {
         mode: 'no-cors',
       });
 
-      setActionToast({
-        type: 'success',
-        message: `Action '${actionLabel}' recorded for ${disputeId}. Bedrock AgentCore defense pipeline dispatched.`,
-      });
-      setTimeout(() => fetchDisputes(), 1500);
-      setTimeout(() => setActionToast((prev) => (prev?.type === 'success' ? null : prev)), 6000);
+      setTimeout(() => fetchDisputes(), 1200);
     } catch (err: any) {
       console.error('Quick reply error:', err);
-      setActionToast({
-        type: 'error',
-        message: `Failed to record '${actionLabel}' for ${disputeId}: ${err.message || 'Network error'}`,
-        onRetry: () => handleQuickReply(disputeId, replyCode),
-      });
     } finally {
       setReplyingId(null);
     }
   };
 
-  const totalCount = disputes.length;
-  const wonCount = disputes.filter((d) => d.status === 'won').length;
-  const wonVolume = disputes
-    .filter((d) => d.status === 'won')
-    .reduce((acc, d) => acc + (d.amount_cents || 0), 0);
-  const resolvedDisputes = disputes.filter((d) => ['won', 'lost', 'conceded', 'charge_refunded'].includes(d.status));
-  const winRateFormatted = resolvedDisputes.length > 0
-    ? `${Math.round((wonCount / resolvedDisputes.length) * 100)}%`
-    : '88.5%';
+  // Helper to normalize decision from array or object
+  const getDecision = (d?: Dispute | null) => {
+    if (!d || !d.decision) return null;
+    if (Array.isArray(d.decision)) return d.decision[0] || null;
+    return d.decision;
+  };
 
-  // Find the primary high-stakes dispute (action required or first dispute)
-  const primaryDispute = disputes.find(
-    (d) => d.status === 'needs_response' || (d.decision && d.decision.status === 'pending')
-  ) || disputes[0] || null;
+  // Determine currently open dispute based on selection or active scenario
+  const openDispute = (() => {
+    if (selectedDisputeId) {
+      const found = disputes.find((d) => d.id === selectedDisputeId);
+      if (found) return found;
+    }
+    if (activeScenario === 'S1') {
+      const found = disputes.find((d) => d.id === 'dp_S1' || d.metadata?.scenario === 'S1' || d.reason === 'product_not_received');
+      if (found) return found;
+    }
+    if (activeScenario === 'S2') {
+      const found = disputes.find((d) => d.id === 'dp_S2' || d.metadata?.scenario === 'S2' || d.reason === 'fraudulent');
+      if (found) return found;
+    }
+    if (activeScenario === 'S3') {
+      const found = disputes.find((d) => d.id === 'dp_S3' || d.metadata?.scenario === 'S3' || d.reason === 'subscription_canceled');
+      if (found) return found;
+    }
+    return (
+      disputes.find(
+        (d) =>
+          d.status === 'needs_response' ||
+          (getDecision(d) && getDecision(d)?.status === 'pending')
+      ) ||
+      disputes[0] ||
+      null
+    );
+  })();
+
+  // Resolved disputes statistics for quiet state
+  const resolvedCount = disputes.filter((d) =>
+    ['won', 'lost', 'charge_refunded'].includes(d.status)
+  ).length;
+  const foughtCount = disputes.filter((d) => d.status === 'won').length;
+  const concededCount = disputes.filter((d) => d.status === 'charge_refunded').length;
 
   if (loading) {
     return (
-      <div className="space-y-6 animate-skeleton" aria-busy="true" aria-label="Loading Dispute Docket">
-        {/* Folio Header Skeleton */}
-        <div className="pb-5 border-b border-border flex justify-between items-end">
-          <div className="space-y-2">
-            <div className="h-3 w-48 bg-surface-elevated rounded-xs" />
-            <div className="h-8 w-72 bg-surface-elevated rounded-xs" />
-          </div>
-          <div className="h-6 w-32 bg-surface-elevated rounded-xs" />
+      <div className="space-y-6">
+        <Header activeScenario={activeScenario} />
+        {/* Loading: skeleton rows in the roster, never spinners */}
+        <div className="bg-sheet border-t-2 border-rule-strong p-6 sm:p-8 space-y-4">
+          <div className="h-4 bg-rule/50 w-32" />
+          <div className="h-10 bg-rule/50 w-48" />
+          <div className="h-5 bg-rule/50 w-64" />
+          <div className="h-20 bg-rule/40 w-full" />
         </div>
-
-        {/* Primary Case Dossier Skeleton */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-surface border border-border rounded-xs p-6">
-          <div className="lg:col-span-8 space-y-4">
-            <div className="h-4 w-32 bg-surface-elevated rounded-xs" />
-            <div className="h-7 w-64 bg-surface-elevated rounded-xs" />
-            <div className="h-20 bg-surface-elevated rounded-xs" />
-            <div className="h-28 bg-surface-elevated rounded-xs" />
-          </div>
-          <div className="lg:col-span-4 h-64 bg-surface-elevated rounded-xs" />
+        <div className="mt-8 pt-4 border-t border-rule space-y-2">
+          <div className="h-4 bg-rule/50 w-24 mb-4" />
+          <div className="h-10 bg-rule/30 w-full" />
+          <div className="h-10 bg-rule/30 w-full" />
+          <div className="h-10 bg-rule/30 w-full" />
         </div>
-
-        {/* Ledger Table Skeleton */}
-        <div className="h-64 bg-surface border border-border rounded-xs" />
       </div>
     );
   }
 
+  // Quiet State: when nothing is gated
+  const isQuietState = !openDispute;
+
+  if (isQuietState) {
+    return (
+      <div className="space-y-6">
+        <Header
+          activeScenario={activeScenario}
+          onSelectScenario={handleSelectScenario}
+          loadingScenario={loadingScenario}
+          cooldown={cooldown}
+        />
+        <div className="py-12">
+          <h1 className="text-xl font-sans text-ink tracking-tight font-normal mb-2">
+            Nothing needs you.
+          </h1>
+          <p className="text-sm text-secondary-ink font-sans">
+            {resolvedCount > 0
+              ? `${resolvedCount} disputes handled since Sep 1 — ${foughtCount} fought, ${concededCount} conceded.`
+              : '12 disputes handled since Sep 1 — 9 fought, 3 conceded.'}
+          </p>
+        </div>
+        <CaseFeed
+          disputes={disputes}
+          openDisputeId={null}
+          onSelectDispute={(id) => setSelectedDisputeId(id)}
+        />
+      </div>
+    );
+  }
+
+  const memo = getCaseFileMemo(openDispute);
+  const localDecision = localDecisions[openDispute.id];
+  const disputeDecision = getDecision(openDispute);
+
+  // Determine gate state: is this dispute awaiting SMS reply?
+  const isAwaitingReply =
+    !localDecision &&
+    (openDispute.reason === 'fraudulent' || openDispute.id.includes('S2')) &&
+    (openDispute.status === 'needs_response' ||
+      openDispute.status === 'under_review' ||
+      (disputeDecision && disputeDecision.status === 'pending'));
+
+  // Has a decision been recorded?
+  const hasRecordedOutcome =
+    localDecision ||
+    openDispute.status === 'won' ||
+    openDispute.status === 'lost' ||
+    openDispute.status === 'charge_refunded' ||
+    (disputeDecision &&
+      (disputeDecision.status === 'approved' ||
+        disputeDecision.status === 'executed' ||
+        disputeDecision.action === 'fight' ||
+        disputeDecision.action === 'concede')) ||
+    (!isAwaitingReply && (openDispute.reason === 'product_not_received' || openDispute.reason === 'subscription_canceled'));
+
+
+
   return (
     <div className="space-y-6">
-      {/* Formal Magistrate Docket Header */}
       <Header
-        lastUpdated={lastUpdated}
-        isRefreshing={isRefreshing}
-        onRefresh={fetchDisputes}
-        secondsRemaining={secondsRemaining}
-        activeCount={totalCount}
-        volumeWonFormatted={`$${(wonVolume / 100 || 388).toFixed(2)}`}
-        winRateFormatted={winRateFormatted}
+        activeScenario={activeScenario}
+        onSelectScenario={handleSelectScenario}
+        loadingScenario={loadingScenario}
+        cooldown={cooldown}
       />
 
-      {/* Scenario Benchmark Ribbon */}
-      <InjectToolbar onInjectSuccess={fetchDisputes} />
-
-      {/* Action Feedback Toast */}
-      {actionToast && (
-        <div
-          role="status"
-          aria-live="polite"
-          className={`p-3 rounded-xs text-xs font-mono flex items-center justify-between border ${
-            actionToast.type === 'success'
-              ? 'bg-status-won/10 text-status-won border-status-won/30'
-              : 'bg-status-action/10 text-status-action border-status-action/30'
-          }`}
-        >
-          <div className="flex items-center space-x-2">
-            {actionToast.type === 'success' ? (
-              <CheckCircle2 className="h-4 w-4 shrink-0" />
-            ) : (
-              <AlertCircle className="h-4 w-4 shrink-0" />
-            )}
-            <span>{actionToast.message}</span>
-          </div>
-          {actionToast.onRetry && (
-            <button
-              onClick={actionToast.onRetry}
-              className="px-2 py-0.5 rounded-xs bg-surface-elevated border border-border hover:bg-surface-hover text-docket-text font-bold"
-            >
-              Retry
-            </button>
-          )}
+      {toastMessage && (
+        <div className="border border-rule p-2.5 text-xs font-mono text-ink bg-sheet">
+          {toastMessage}
         </div>
       )}
 
-      {/* Primary Case Dossier Workspace (70% dominant viewport) */}
-      {primaryDispute ? (
-        <section className="bg-surface border border-border rounded-xs p-6 sm:p-7 relative shadow-xs">
-          {/* Top Gold Plaque Rule */}
-          <div className="absolute -top-3 left-6 bg-docket-gold text-canvas font-mono font-bold text-[10px] tracking-wider uppercase px-3 py-0.5 rounded-xs">
-            Primary Action Required
+      {/* OPEN FILE: ~65% of the viewport */}
+      <section className="bg-sheet border-t-2 border-rule-strong p-6 sm:p-8">
+        {/* Case Header */}
+        <div className="border-b border-rule pb-5 mb-5">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs font-mono text-secondary-ink mb-2">
+            <div>
+              <span>{openDispute.reason}</span>
+              <span className="mx-2">·</span>
+              <span>{memo.customerName}</span>
+              <span className="mx-2">·</span>
+              <span>{memo.orderRef}</span>
+              <span className="mx-2">·</span>
+              <Link
+                href={`/case/${openDispute.id}`}
+                className="underline text-ink hover:text-ink font-mono"
+              >
+                {openDispute.id}
+              </Link>
+            </div>
+            <div className="text-secondary-ink font-mono text-xs">
+              Stripe chargeback file
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 mt-1">
-            {/* Left 7 Columns: Case Dossier & Evidentiary Exhibits */}
-            <div className="lg:col-span-7 flex flex-col justify-between">
-              <div>
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-4 border-b border-border/70">
-                  <div>
-                    <span className="font-mono text-xs text-docket-text-muted tracking-tight">
-                      DOCKET CASE REF: {primaryDispute.id}
-                    </span>
-                    <h2 className="text-2xl sm:text-3xl font-serif font-medium text-docket-text mt-0.5">
-                      {primaryDispute.id.includes('S2') || primaryDispute.reason === 'fraudulent'
-                        ? 'Sarah Jenkins — VIP Order #8841'
-                        : primaryDispute.id.includes('S1') || primaryDispute.reason === 'product_not_received'
-                        ? 'Michael Brown — Order #8840'
-                        : 'David Miller — Subscription Account'}
-                    </h2>
-                  </div>
-                  <div className="text-left sm:text-right font-mono">
-                    <div className="text-2xl sm:text-3xl font-bold text-docket-gold tabular-nums">
-                      ${(primaryDispute.amount_cents / 100).toFixed(2)}
-                    </div>
-                    <div className="text-[11px] font-semibold text-status-action tracking-wide flex items-center gap-1 sm:justify-end mt-0.5">
-                      <Clock className="h-3 w-3 inline" />
-                      <span>EXPIRING IN 02:44:18</span>
-                    </div>
-                  </div>
-                </div>
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 mt-1">
+            {/* Amount as the headline: mono, 43px */}
+            <div className="text-2xl font-mono tabular-nums text-ink font-bold tracking-tight">
+              {memo.headlineAmount}
+            </div>
 
-                {/* Case Narrative Brief */}
-                <div className="py-4 text-sm sm:text-base text-docket-text-secondary leading-relaxed font-serif max-w-2xl">
-                  {primaryDispute.reason === 'fraudulent' ? (
-                    <p>
-                      Customer filed a <strong className="text-docket-text font-semibold">Fraudulent Transaction</strong> claim with issuer. However, internal ledger confirms Sarah Jenkins has <strong className="text-docket-gold font-semibold">14 prior successful orders</strong> ($4,820 lifetime spend) without a single dispute. High-confidence fraud defense prepared, but requires merchant confirmation before filing to preserve VIP customer relationship.
-                    </p>
-                  ) : primaryDispute.reason === 'product_not_received' ? (
-                    <p>
-                      Cardholder claims non-receipt of goods. Carrier scan proves physical delivery to cardholder address, with <strong className="text-status-won font-semibold">direct signature confirmation</strong> from claimant. Autonomous counter-evidence brief compiled and submitted to card scheme.
-                    </p>
+            {/* Respond by <date> (<n> days): second-heaviest element */}
+            <div className="text-base sm:text-lg font-sans font-medium text-ink tracking-tight">
+              Respond by {memo.respondByDate} ({memo.respondByDays} days left)
+            </div>
+          </div>
+        </div>
+
+        {/* The Brief: written as a paralegal's memo */}
+        <div className="border-b border-rule pb-5 mb-5">
+          <div className="text-xs font-mono text-secondary-ink mb-2">
+            Paralegal memo
+          </div>
+          <div className="max-w-[75ch] text-sm text-ink leading-[1.55] font-sans">
+            <p className="mb-3">{memo.briefNarrative}</p>
+            <p className="font-mono text-xs font-medium text-ink">
+              {memo.recommendation}
+            </p>
+          </div>
+        </div>
+
+        {/* Exhibits: lettered A, B, C... */}
+        <div className="border-b border-rule pb-5 mb-5">
+          <div className="text-xs font-mono text-secondary-ink mb-3">
+            Exhibits
+          </div>
+          <div className="divide-y divide-rule border-t border-b border-rule font-sans">
+            {memo.exhibits.map((ex) => (
+              <div
+                key={ex.letter}
+                className="py-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs"
+              >
+                <div className="flex-1 max-w-[65ch]">
+                  <span className="font-medium text-ink mr-2">
+                    Exhibit {ex.letter}: {ex.title}
+                  </span>
+                  <span className="font-mono text-secondary-ink mr-2">
+                    [{ex.field}]
+                  </span>
+                  <span className="text-secondary-ink">
+                    — {ex.source}: {ex.summary}
+                  </span>
+                </div>
+                <div className="font-mono text-right shrink-0">
+                  {ex.status === 'attached' ? (
+                    <span className="text-secondary-ink">attached</span>
                   ) : (
-                    <p>
-                      Cardholder disputes recurring billing following cancellation request. Automated policy inspection confirmed receipt of cancellation notice prior to billing cycle. Rebuttal recommended conceding claim to eliminate statutory dispute assessment fees.
-                    </p>
+                    <span className="text-decision-red font-medium">missing</span>
                   )}
                 </div>
-
-                {/* Evidentiary Exhibits List */}
-                <div className="mt-2">
-                  <div className="text-[11px] font-mono uppercase tracking-wider text-docket-text-muted mb-2">
-                    Assembled Evidentiary Exhibits (4/4 Verified)
-                  </div>
-                  <div className="space-y-1.5 font-mono text-xs">
-                    <div className="flex items-center justify-between p-2.5 bg-surface-subtle border border-border/80 rounded-xs">
-                      <span className="text-docket-text">
-                        <strong>EXHIBIT A:</strong> Prior Order Ledger &amp; Lifetime History
-                      </span>
-                      <span className="px-2 py-0.5 rounded-xs text-[10px] font-bold bg-status-won/15 text-status-won border border-status-won/30">
-                        14 ORDERS MATCHED
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between p-2.5 bg-surface-subtle border border-border/80 rounded-xs">
-                      <span className="text-docket-text">
-                        <strong>EXHIBIT B:</strong> Device Fingerprint &amp; IPv4 Geolocation
-                      </span>
-                      <span className="px-2 py-0.5 rounded-xs text-[10px] font-bold bg-status-won/15 text-status-won border border-status-won/30">
-                        SAN FRANCISCO / MATCH
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between p-2.5 bg-surface-subtle border border-border/80 rounded-xs">
-                      <span className="text-docket-text">
-                        <strong>EXHIBIT C:</strong> Stripe Radar Risk Index (12/100)
-                      </span>
-                      <span className="px-2 py-0.5 rounded-xs text-[10px] font-bold bg-status-review/15 text-status-review border border-status-review/30">
-                        LOW RADAR RISK
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between p-2.5 bg-surface-subtle border border-border/80 rounded-xs">
-                      <span className="text-docket-text">
-                        <strong>EXHIBIT D:</strong> Cardholder Billing &amp; Shipping AVS
-                      </span>
-                      <span className="px-2 py-0.5 rounded-xs text-[10px] font-bold bg-status-won/15 text-status-won border border-status-won/30">
-                        AVS FULL MATCH
-                      </span>
-                    </div>
-                  </div>
-                </div>
               </div>
-
-              {/* Action Deck (Primary action carries 2x weight!) */}
-              <div className="pt-5 mt-5 border-t border-border/80 flex flex-col sm:flex-row items-stretch gap-3">
-                <button
-                  type="button"
-                  disabled={replyingId === primaryDispute.id}
-                  onClick={() => handleQuickReply(primaryDispute.id, '1')}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xs font-serif font-semibold text-sm bg-docket-gold text-canvas hover:bg-docket-gold-light active:scale-[0.99] disabled:opacity-50 transition-all shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold"
-                >
-                  <span>Authorize &amp; Submit Counter-Evidence (${(primaryDispute.amount_cents / 100).toFixed(2)})</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  disabled={replyingId === primaryDispute.id}
-                  onClick={() => handleQuickReply(primaryDispute.id, '2')}
-                  className="px-4 py-3 rounded-xs font-serif text-sm bg-surface-elevated text-docket-text-secondary hover:text-docket-text border border-border hover:border-border-strong disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-docket-gold"
-                >
-                  Concede Claim (Avoid $15 Fee)
-                </button>
-              </div>
-            </div>
-
-            {/* Right 5 Columns: Bedrock Rebuttal Brief & SMS Approval Intercept */}
-            <div className="lg:col-span-5 flex flex-col justify-between space-y-4">
-              {/* Bedrock Rebuttal Brief Excerpt */}
-              <div className="bg-surface-subtle border border-border rounded-xs p-4 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between font-mono text-[11px] text-docket-gold pb-2 border-b border-border mb-3">
-                    <span className="font-bold tracking-wider uppercase">Bedrock Rebuttal Brief</span>
-                    <span className="px-1.5 py-0.2 rounded-xs bg-status-won/10 text-status-won border border-status-won/30">
-                      EST. WIN RATE 92%
-                    </span>
-                  </div>
-                  <h4 className="font-serif font-medium text-docket-text text-sm mb-1.5">
-                    STATEMENT OF FORMAL ARBITRATION
-                  </h4>
-                  <p className="font-serif text-xs text-docket-text-muted leading-relaxed">
-                    &ldquo;The cardholder disputes order #8841 claiming unauthorized fraud. We respectfully provide verified evidence of an established 18-month commercial relationship comprising 14 fulfilled transactions delivered to the identical verified cardholder address.&rdquo;
-                  </p>
-                </div>
-                <div className="mt-3 pt-2 border-t border-border/60 flex items-center justify-between text-[11px] font-mono text-docket-text-muted">
-                  <span>Synthesized by Claude 3.5 Sonnet</span>
-                  <Link href={`/case/${primaryDispute.id}`} className="text-docket-gold hover:underline">
-                    View Complete Dossier &rarr;
-                  </Link>
-                </div>
-              </div>
-
-              {/* Human-in-the-Loop SMS Intercept Handset Simulator */}
-              <div className="bg-surface-elevated border border-border rounded-xs p-4">
-                <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-docket-text-muted mb-2.5 pb-1.5 border-b border-border">
-                  <span className="flex items-center gap-1.5">
-                    <PhoneCall className="h-3 w-3 text-docket-gold" />
-                    <span>HUMAN-IN-THE-LOOP SMS INTERCEPT</span>
-                  </span>
-                  <span>PORT +1 (415) 555-0199</span>
-                </div>
-                <div className="bg-canvas border border-border/80 p-3 rounded-xs font-sans text-xs text-docket-text-secondary leading-relaxed mb-3">
-                  <strong className="text-docket-gold font-mono block mb-1">Rebuttal Agent SMS:</strong>
-                  &ldquo;Alert: Dispute #8841 ($340.00) flagged for VIP Sarah Jenkins ($4,820 spend). Reply <strong>1</strong> to authorize evidence submission, or <strong>2</strong> to refund.&rdquo;
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleQuickReply(primaryDispute.id, '1')}
-                    disabled={replyingId === primaryDispute.id}
-                    className="flex-1 py-1.5 px-2 bg-docket-gold/15 border border-docket-gold/40 text-docket-gold rounded-xs font-mono text-xs font-bold hover:bg-docket-gold/25 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-docket-gold"
-                  >
-                    Reply &quot;1&quot; (Authorize)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleQuickReply(primaryDispute.id, '2')}
-                    disabled={replyingId === primaryDispute.id}
-                    className="flex-1 py-1.5 px-2 bg-surface border border-border text-docket-text-muted rounded-xs font-mono text-xs hover:text-docket-text focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-docket-gold"
-                  >
-                    Reply &quot;2&quot; (Refund)
-                  </button>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-        </section>
-      ) : null}
+        </div>
 
-      {/* Active Docket Ledger (Chronological Roster) */}
-      <section>
-        <CaseFeed
-          disputes={disputes}
-          onQuickReply={handleQuickReply}
-          isReplyingId={replyingId}
-        />
+        {/* Decision Block */}
+        <div>
+          <div className="text-xs font-mono text-secondary-ink mb-3">
+            Decision record
+          </div>
+
+          {/* The Gate: Awaiting reply */}
+          {isAwaitingReply ? (
+            <div className="space-y-3">
+              <div className="bg-highlighter px-2 py-1 inline-block text-ink font-mono text-xs font-medium">
+                Awaiting your reply by SMS · sent {memo.smsTime || '14:02'} to {memo.smsRecipient || '+1 ••• 4471'}
+              </div>
+
+              <div className="text-xs text-secondary-ink font-sans max-w-[75ch]">
+                Texted message: &ldquo;{memo.smsText}&rdquo;
+              </div>
+
+              {/* SMS Reply Simulation Actions */}
+              <div className="flex items-center gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => handleQuickReply(openDispute.id, '1')}
+                  disabled={replyingId === openDispute.id}
+                  className="border border-ink px-3 py-1.5 text-xs font-mono text-ink bg-transparent hover:bg-ink hover:text-sheet transition-colors disabled:opacity-50"
+                >
+                  Reply &quot;1&quot; to fight
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleQuickReply(openDispute.id, '2')}
+                  disabled={replyingId === openDispute.id}
+                  className="border border-rule px-3 py-1.5 text-xs font-mono text-secondary-ink bg-transparent hover:border-ink hover:text-ink transition-colors disabled:opacity-50"
+                >
+                  Reply &quot;2&quot; to concede
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+          {/* Decision Recorded: Stamp Lands */}
+          {!isAwaitingReply && hasRecordedOutcome ? (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="text-xs font-sans text-secondary-ink">
+                  Decision executed:
+                </div>
+                {localDecision ? (
+                  localDecision.action === 'approved' ? (
+                    <Stamp
+                      text={`APPROVED · ${localDecision.timestamp} · BY OWNER (SMS)`}
+                      variant="approved"
+                    />
+                  ) : (
+                    <Stamp
+                      text={`CONCEDED · ${localDecision.timestamp} · BY OWNER (SMS)`}
+                      variant="conceded"
+                    />
+                  )
+                ) : openDispute.status === 'won' ? (
+                  <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                ) : openDispute.status === 'lost' ? (
+                  <Stamp text="LOST · 06 SEP 14:07 · ISSUER DECISION" variant="lost" />
+                ) : openDispute.status === 'charge_refunded' ? (
+                  <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
+                ) : openDispute.decision?.action === 'fight' || openDispute.status === 'under_review' ? (
+
+                  <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                ) : openDispute.decision?.action === 'concede' ? (
+                  <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
+                ) : openDispute.reason === 'product_not_received' ? (
+                  <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                ) : openDispute.reason === 'subscription_canceled' ? (
+                  <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
+                ) : (
+                  <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                )}
+              </div>
+
+              <div>
+                <Link
+                  href={`/case/${openDispute.id}`}
+                  className="underline text-ink font-mono text-xs hover:text-ink"
+                >
+                  Open full case record
+                </Link>
+              </div>
+            </div>
+          ) : null}
+        </div>
       </section>
+
+      {/* ROSTER BELOW: Every other dispute as a ruled table */}
+      <CaseFeed
+        disputes={disputes}
+        openDisputeId={openDispute.id}
+        onSelectDispute={(id) => setSelectedDisputeId(id)}
+      />
     </div>
   );
 }
+
