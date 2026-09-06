@@ -45,7 +45,10 @@ export const AuditTimeline: React.FC<AuditTimelineProps> = ({ entries }) => {
     return (
       <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 text-center text-slate-400">
         <Clock className="h-6 w-6 mx-auto mb-2 text-slate-600" />
-        <p className="text-sm">No audit logs recorded for this dispute yet.</p>
+        <p className="text-sm font-medium text-slate-300">No audit logs recorded for this dispute yet.</p>
+        <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+          Audit telemetry will populate automatically as AWS Bedrock AgentCore processes evidence and triggers defense tools.
+        </p>
       </div>
     );
   }
