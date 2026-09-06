@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Dispute } from '@/lib/types';
 import { StatusChip } from './StatusChip';
-import { ArrowRight, Clock, AlertTriangle, Search, X, TrendingUp } from 'lucide-react';
+import { AlertTriangle, Search, X, ShieldAlert } from 'lucide-react';
 
 interface CaseFeedProps {
   disputes: Dispute[];
@@ -63,136 +63,125 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
 
   if (!disputes || disputes.length === 0) {
     return (
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center text-slate-400">
-        <Clock className="h-10 w-10 text-slate-600 mx-auto mb-3" />
-        <h3 className="text-base font-semibold text-slate-200">No Disputes Recorded Yet</h3>
+      <div className="bg-surface border border-border rounded-lg p-12 text-center text-slate-400">
+        <ShieldAlert className="h-9 w-9 text-slate-600 mx-auto mb-3" />
+        <h3 className="text-sm font-semibold text-slate-200">No Dispute Cases Recorded</h3>
         <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-          Use the Scenario Injector above to inject S1, S2, or S3 into Stripe test mode. The dispute will appear here within 5 seconds.
+          Inject S1, S2, or S3 using the verification toolbar above to generate a live Stripe test case.
         </p>
       </div>
     );
   }
 
   const formatDueBy = (dateStr?: string) => {
-    if (!dateStr) return 'No deadline';
+    if (!dateStr) return { label: 'No deadline', days: null, urgent: false };
     const due = new Date(dateStr);
     const diffDays = Math.ceil((due.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
     if (diffDays > 0) {
-      return `Due in ${diffDays} days (${due.toLocaleDateString()})`;
+      return {
+        label: due.toLocaleDateString(),
+        days: `${diffDays} days left`,
+        urgent: diffDays <= 7,
+      };
     }
-    return `Passed (${due.toLocaleDateString()})`;
+    return {
+      label: due.toLocaleDateString(),
+      days: 'Deadline passed',
+      urgent: true,
+    };
   };
 
   return (
-    <div className="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl shadow-black/20">
-      {/* Header with Title, Search and Auto-refresh note */}
-      <div className="p-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="bg-surface border border-border rounded-lg overflow-hidden shadow-sm">
+      {/* Header with Title, Search and Tabs */}
+      <div className="p-4 border-b border-border bg-[#0f1523] flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div className="flex items-center space-x-3">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-200">
-            Dispute Cases ({disputes.length})
+          <h3 className="text-sm font-bold tracking-tight text-white">
+            Evidentiary Docket Ledger
           </h3>
-          <span className="text-xs text-slate-400">Auto-refreshing every 5s</span>
+          <span className="font-mono text-[11px] font-semibold text-slate-400 bg-border px-2 py-0.5 rounded">
+            {disputes.length} Records
+          </span>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative max-w-xs w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search ID, reason, or order..."
-            aria-label="Search disputes"
-            className="w-full bg-slate-950 border border-slate-700/80 rounded-xl pl-8 pr-8 py-1.5 text-xs text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-          />
-          {searchQuery && (
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {/* Filter Tabs */}
+          <div className="flex items-center bg-[#0b0f17] p-1 rounded-md border border-border text-xs">
             <button
               type="button"
-              onClick={() => setSearchQuery('')}
-              aria-label="Clear search query"
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+              onClick={() => setActiveTab('all')}
+              className={`px-2.5 py-1 rounded font-medium transition-colors ${
+                activeTab === 'all'
+                  ? 'bg-border text-white shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
             >
-              <X className="h-3 w-3" />
+              All ({counts.all})
             </button>
-          )}
+            <button
+              type="button"
+              onClick={() => setActiveTab('needs_response')}
+              className={`px-2.5 py-1 rounded font-medium transition-colors ${
+                activeTab === 'needs_response'
+                  ? 'bg-amber-950/80 text-amber-200 border border-amber-800/60'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Action Req ({counts.needs_response})
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('under_review')}
+              className={`px-2.5 py-1 rounded font-medium transition-colors ${
+                activeTab === 'under_review'
+                  ? 'bg-blue-950/80 text-blue-200 border border-blue-800/60'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Under Review ({counts.under_review})
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('won')}
+              className={`px-2.5 py-1 rounded font-medium transition-colors ${
+                activeTab === 'won'
+                  ? 'bg-emerald-950/80 text-emerald-200 border border-emerald-800/60'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Won ({counts.won})
+            </button>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative max-w-xs w-full">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search ID, reason, order..."
+              aria-label="Search disputes"
+              className="w-full bg-[#0b0f17] border border-border rounded-md pl-8 pr-7 py-1 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search query"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="px-4 py-2 bg-slate-950/60 border-b border-slate-800 flex flex-wrap items-center gap-1.5 text-xs">
-        <button
-          type="button"
-          onClick={() => setActiveTab('all')}
-          className={`px-3 py-1 rounded-lg font-medium transition-colors ${
-            activeTab === 'all'
-              ? 'bg-indigo-600 text-white shadow-sm'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-          }`}
-        >
-          All ({counts.all})
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('needs_response')}
-          className={`px-3 py-1 rounded-lg font-medium transition-colors flex items-center space-x-1.5 ${
-            activeTab === 'needs_response'
-              ? 'bg-amber-600 text-white shadow-sm'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-          }`}
-        >
-          <span>Needs Response</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900/60 font-mono">
-            {counts.needs_response}
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('under_review')}
-          className={`px-3 py-1 rounded-lg font-medium transition-colors flex items-center space-x-1.5 ${
-            activeTab === 'under_review'
-              ? 'bg-blue-600 text-white shadow-sm'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-          }`}
-        >
-          <span>Under Review</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900/60 font-mono">
-            {counts.under_review}
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('won')}
-          className={`px-3 py-1 rounded-lg font-medium transition-colors flex items-center space-x-1.5 ${
-            activeTab === 'won'
-              ? 'bg-emerald-600 text-white shadow-sm'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-          }`}
-        >
-          <span>Won</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900/60 font-mono">
-            {counts.won}
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('lost')}
-          className={`px-3 py-1 rounded-lg font-medium transition-colors flex items-center space-x-1.5 ${
-            activeTab === 'lost'
-              ? 'bg-rose-600 text-white shadow-sm'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-          }`}
-        >
-          <span>Lost / Conceded</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900/60 font-mono">
-            {counts.lost}
-          </span>
-        </button>
-      </div>
-
-      {/* Disputes List */}
+      {/* Empty Filter State */}
       {filteredDisputes.length === 0 ? (
-        <div className="p-10 text-center text-slate-400">
-          <p className="text-sm font-medium text-slate-300">No disputes match your current filter</p>
+        <div className="p-12 text-center text-slate-400">
+          <p className="text-sm font-medium text-slate-200">No disputes match your current filter</p>
           <p className="text-xs text-slate-400 mt-1">
             Try resetting your search query or selecting another status tab.
           </p>
@@ -202,145 +191,164 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({ disputes, onQuickReply, isRe
               setActiveTab('all');
               setSearchQuery('');
             }}
-            className="mt-3 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
+            className="mt-3 px-3 py-1.5 rounded-md text-xs font-medium bg-surface-elevated hover:bg-surface-hover text-slate-200 border border-border transition-colors"
           >
             Reset Filters
           </button>
         </div>
       ) : (
-        <div className="divide-y divide-slate-800/80">
-          {filteredDisputes.map((d) => {
-            const amountFormatted = `$${(d.amount_cents / 100).toFixed(2)}`;
-            const isPending = d.status === 'needs_response' || (d.decision && d.decision.status === 'pending');
-            const isReplying = isReplyingId === d.id;
-            const evFormatted = d.decision?.expected_value_cents
-              ? `$${(d.decision.expected_value_cents / 100).toFixed(2)}`
-              : null;
+        <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <table className="w-full border-collapse text-left text-xs">
+            <thead>
+              <tr className="border-b border-border bg-[#0d131f] text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                <th className="py-3 px-4">Dispute ID & Order</th>
+                <th className="py-3 px-4">Reason & Evidentiary Dossier</th>
+                <th className="py-3 px-4">Docket Status</th>
+                <th className="py-3 px-4">Evidence Deadline</th>
+                <th className="py-3 px-4 text-right">Contested Amount</th>
+                <th className="py-3 px-4 text-right">Docket Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/60">
+              {filteredDisputes.map((d) => {
+                const amountFormatted = `$${(d.amount_cents / 100).toFixed(2)}`;
+                const isPending = d.status === 'needs_response' || (d.decision && d.decision.status === 'pending');
+                const isReplying = isReplyingId === d.id;
+                const dueInfo = formatDueBy(d.evidence_due_by);
+                const isConcedePrompt = confirmingConcedeId === d.id;
 
-            return (
-              <div
-                key={d.id}
-                className="p-5 hover:bg-slate-800/40 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4"
-              >
-                <div className="space-y-1.5">
-                  <div className="flex flex-wrap items-center space-x-2.5">
-                    <Link
-                      href={`/case/${d.id}`}
-                      className="font-mono font-bold text-slate-100 hover:text-indigo-400 text-sm transition-colors flex items-center space-x-1"
-                    >
-                      <span>{d.id}</span>
-                    </Link>
-                    <StatusChip status={d.status} size="sm" />
-                    <span className="text-xs font-mono font-semibold text-indigo-300">
-                      {amountFormatted}
-                    </span>
-
-                    {evFormatted && (
-                      <span
-                        title={`Expected Net Value: (Win Prob × ${amountFormatted}) - $15.00 dispute fee`}
-                        className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/20"
-                      >
-                        <TrendingUp className="h-3 w-3 text-emerald-400" />
-                        <span>EV: +{evFormatted}</span>
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex flex-wrap items-center space-x-3 text-xs text-slate-400">
-                    <span className="capitalize text-slate-300 font-medium">
-                      Reason: {d.reason.replace(/_/g, ' ')}
-                    </span>
-                    <span>•</span>
-                    <span className="flex items-center space-x-1 text-slate-400">
-                      <Clock className="h-3 w-3" />
-                      <span>{formatDueBy(d.evidence_due_by)}</span>
-                    </span>
-                    {d.order_id && (
-                      <>
-                        <span>•</span>
-                        <span className="font-mono text-slate-400">Order: {d.order_id}</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2">
-                  {isPending && onQuickReply && (
-                    confirmingConcedeId === d.id ? (
-                      <div className="flex items-center space-x-2 bg-rose-950/90 p-1.5 px-3 rounded-xl border border-rose-600 text-xs shadow-lg animate-in fade-in duration-200">
-                        <AlertTriangle className="h-4 w-4 text-rose-400 shrink-0" />
-                        <span className="text-rose-200 font-medium">
-                          Concede {amountFormatted}? Forfeits dispute to Stripe.
-                        </span>
-                        <button
-                          type="button"
-                          disabled={isReplying}
-                          onClick={() => {
-                            setConfirmingConcedeId(null);
-                            onQuickReply(d.id, '2');
-                          }}
-                          aria-label={`Confirm permanent concession of dispute ${d.id}`}
-                          className="px-2.5 py-1 text-xs font-bold rounded-lg bg-rose-700 hover:bg-rose-600 text-white disabled:opacity-50 transition-colors shadow-sm"
-                        >
-                          Yes, Concede
-                        </button>
-                        <button
-                          type="button"
-                          disabled={isReplying}
-                          onClick={() => setConfirmingConcedeId(null)}
-                          aria-label="Cancel concession"
-                          className="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center space-x-1.5 bg-slate-950/80 p-1.5 rounded-xl border border-amber-500/30">
-                        <span className="text-[11px] font-semibold text-amber-300 px-2 uppercase">
-                          Owner Action:
-                        </span>
-                        <button
-                          type="button"
-                          disabled={isReplying}
-                          onClick={() => onQuickReply(d.id, '1')}
-                          aria-label={`Fight dispute ${d.id} and submit evidence`}
-                          className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white disabled:opacity-50 transition-colors"
-                        >
-                          1 Fight
-                        </button>
-                        <button
-                          type="button"
-                          disabled={isReplying}
-                          onClick={() => setConfirmingConcedeId(d.id)}
-                          aria-label={`Initiate concession for dispute ${d.id}`}
-                          className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-rose-700 hover:bg-rose-600 text-white disabled:opacity-50 transition-colors"
-                        >
-                          2 Concede
-                        </button>
-                        <button
-                          type="button"
-                          disabled={isReplying}
-                          onClick={() => onQuickReply(d.id, '3')}
-                          aria-label={`Hold dispute ${d.id} for manual review`}
-                          className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-700 hover:bg-slate-600 text-white disabled:opacity-50 transition-colors"
-                        >
-                          3 Hold
-                        </button>
-                      </div>
-                    )
-                  )}
-
-                  <Link
-                    href={`/case/${d.id}`}
-                    className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
+                return (
+                  <tr
+                    key={d.id}
+                    className={`transition-colors hover:bg-surface-elevated/70 ${
+                      isPending ? 'bg-[#171113] border-l-2 border-l-rose-500' : ''
+                    }`}
                   >
-                    <span>Review Case</span>
-                    <ArrowRight className="h-3.5 w-3.5 text-indigo-400" />
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
+                    {/* Dispute ID & Order */}
+                    <td className="py-3.5 px-4 align-middle">
+                      <Link
+                        href={`/case/${d.id}`}
+                        className={`font-mono font-semibold hover:underline block ${
+                          isPending ? 'text-rose-200' : 'text-slate-100'
+                        }`}
+                      >
+                        {d.id}
+                      </Link>
+                      <div className="font-mono text-[11px] text-slate-400 mt-0.5">
+                        {d.order_id ? `Ref: ${d.order_id}` : 'No linked order'}
+                      </div>
+                    </td>
+
+                    {/* Reason & Evidentiary Dossier */}
+                    <td className="py-3.5 px-4 align-middle max-w-xs">
+                      <div className="font-semibold text-slate-200 capitalize">
+                        {d.reason.replace(/_/g, ' ')}
+                      </div>
+                      <div className="text-[11px] text-slate-400 mt-0.5 truncate">
+                        {d.decision?.owner_summary || (
+                          d.reason === 'product_not_received'
+                            ? 'Carrier signature verified · Proof ready'
+                            : d.reason === 'fraudulent'
+                            ? 'VIP account · ApprovalGate interrupt'
+                            : 'Pre-dispute inquiry notification'
+                        )}
+                      </div>
+                    </td>
+
+                    {/* Status */}
+                    <td className="py-3.5 px-4 align-middle">
+                      <StatusChip status={d.status} size="sm" />
+                    </td>
+
+                    {/* Deadline */}
+                    <td className="py-3.5 px-4 align-middle font-mono">
+                      <div className={`text-[11px] font-semibold ${dueInfo.urgent ? 'text-amber-400' : 'text-slate-300'}`}>
+                        {dueInfo.label}
+                      </div>
+                      {dueInfo.days && (
+                        <div className="text-[10px] text-slate-400">
+                          {dueInfo.days}
+                        </div>
+                      )}
+                    </td>
+
+                    {/* Contested Amount */}
+                    <td className="py-3.5 px-4 align-middle text-right font-mono">
+                      <div className={`text-sm font-bold tabular-nums ${isPending ? 'text-rose-200' : 'text-white'}`}>
+                        {amountFormatted}
+                      </div>
+                      <div className="text-[10px] text-slate-400">USD</div>
+                    </td>
+
+                    {/* Actions */}
+                    <td className="py-3.5 px-4 align-middle text-right">
+                      {isPending && onQuickReply ? (
+                        isConcedePrompt ? (
+                          <div className="inline-flex items-center gap-1.5 bg-rose-950 p-1 px-2 rounded border border-rose-700 text-xs">
+                            <span className="text-rose-200 text-[11px] font-medium">Concede?</span>
+                            <button
+                              type="button"
+                              disabled={isReplying}
+                              onClick={() => {
+                                setConfirmingConcedeId(null);
+                                onQuickReply(d.id, '2');
+                              }}
+                              className="px-2 py-0.5 text-[11px] font-bold rounded bg-rose-700 hover:bg-rose-600 text-white disabled:opacity-50"
+                            >
+                              Yes
+                            </button>
+                            <button
+                              type="button"
+                              disabled={isReplying}
+                              onClick={() => setConfirmingConcedeId(null)}
+                              className="px-1.5 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center gap-1">
+                            <button
+                              type="button"
+                              disabled={isReplying}
+                              onClick={() => onQuickReply(d.id, '1')}
+                              title="Fight dispute"
+                              className="px-2 py-1 rounded text-[11px] font-bold bg-emerald-900/80 hover:bg-emerald-800 text-emerald-200 border border-emerald-700 transition-colors"
+                            >
+                              1 Fight
+                            </button>
+                            <button
+                              type="button"
+                              disabled={isReplying}
+                              onClick={() => setConfirmingConcedeId(d.id)}
+                              title="Concede dispute"
+                              className="px-2 py-1 rounded text-[11px] font-bold bg-rose-950 hover:bg-rose-900 text-rose-200 border border-rose-800 transition-colors"
+                            >
+                              2 Concede
+                            </button>
+                            <Link
+                              href={`/case/${d.id}`}
+                              className="px-2.5 py-1 rounded text-[11px] font-medium bg-surface-elevated hover:bg-surface-hover text-slate-200 border border-border transition-colors ml-1"
+                            >
+                              Review
+                            </Link>
+                          </div>
+                        )
+                      ) : (
+                        <Link
+                          href={`/case/${d.id}`}
+                          className="inline-flex items-center px-3 py-1 rounded text-[11px] font-semibold bg-brand/20 hover:bg-brand text-blue-200 hover:text-white border border-brand/50 transition-colors"
+                        >
+                          Review Docket
+                        </Link>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

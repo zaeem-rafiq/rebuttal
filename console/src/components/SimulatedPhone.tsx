@@ -92,70 +92,70 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
   return (
     <div className="flex flex-col items-center">
       {/* Smartphone Chassis */}
-      <div className="w-full max-w-[340px] bg-slate-950 rounded-[44px] p-3 shadow-2xl shadow-black/50 border-[4px] border-slate-800 relative">
+      <div className="w-full max-w-[340px] bg-canvas-base rounded-[36px] p-2.5 shadow-2xl border-2 border-surface-border-strong relative">
         {/* Dynamic Island / Speaker */}
-        <div aria-hidden="true" className="absolute top-5 left-1/2 -translate-x-1/2 w-24 h-4 bg-slate-900 rounded-full z-20 flex items-center justify-center space-x-1.5">
-          <div className="h-1.5 w-1.5 rounded-full bg-slate-700" />
-          <div className="h-2 w-2 rounded-full bg-slate-800 ring-1 ring-slate-700" />
+        <div aria-hidden="true" className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-3.5 bg-surface-subtle rounded-full z-20 flex items-center justify-center space-x-1.5 border border-surface-border">
+          <div className="h-1 w-1 rounded-full bg-text-muted" />
+          <div className="h-1.5 w-1.5 rounded-full bg-surface-card ring-1 ring-surface-border" />
         </div>
 
         {/* Screen Area */}
-        <div className="bg-slate-900 rounded-[34px] overflow-hidden flex flex-col h-[520px] border border-slate-800">
+        <div className="bg-canvas-subtle rounded-[28px] overflow-hidden flex flex-col h-[520px] border border-surface-border">
           {/* Phone Status Bar */}
-          <div aria-hidden="true" className="pt-3 px-6 pb-2 flex justify-between items-center text-[10px] text-slate-400 select-none">
-            <span className="font-semibold text-slate-200">9:41</span>
+          <div aria-hidden="true" className="pt-3 px-5 pb-2 flex justify-between items-center text-[10px] text-text-muted select-none font-mono">
+            <span className="font-semibold text-text-primary">9:41</span>
             <div className="flex items-center space-x-1.5">
               <span>5G</span>
-              <div className="w-5 h-2.5 border border-slate-400 rounded-sm p-0.5">
-                <div className="h-full w-full bg-slate-200 rounded-[1px]" />
+              <div className="w-4 h-2 border border-text-muted rounded-xs p-0.5">
+                <div className="h-full w-full bg-text-primary rounded-xs" />
               </div>
             </div>
           </div>
 
           {/* SMS Contact Header */}
-          <div className="px-4 py-2 border-b border-slate-800 bg-slate-900/90 flex items-center space-x-2.5">
-            <div className="h-7 w-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-200">
-              <Shield className="h-3.5 w-3.5 text-indigo-400" />
+          <div className="px-4 py-2.5 border-b border-surface-border bg-surface-card/60 flex items-center space-x-2.5">
+            <div className="h-7 w-7 rounded-full bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center text-brand-primary">
+              <Shield className="h-3.5 w-3.5" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-slate-200 truncate">Rebuttal Security</p>
-              <p className="text-[10px] text-slate-400 font-mono">+1 (812) 955-1686</p>
+              <p className="text-xs font-semibold text-text-primary truncate">Rebuttal ApprovalGate</p>
+              <p className="text-[10px] text-text-muted font-mono">+1 (812) 955-1686</p>
             </div>
           </div>
 
           {/* Message Thread */}
           <div className="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
-            <div className="text-center text-[10px] text-slate-400 my-1">Today</div>
+            <div className="text-center font-mono text-[10px] text-text-muted my-1 uppercase tracking-wider">Today</div>
 
             {/* Inbound Alert Bubble from Rebuttal */}
-            <div className="flex flex-col items-start max-w-[85%]">
-              <div className="bg-slate-800 text-slate-100 p-3 rounded-2xl rounded-tl-sm border border-slate-700/60 shadow-sm leading-relaxed">
+            <div className="flex flex-col items-start max-w-[90%]">
+              <div className="bg-surface-card text-text-primary p-3 rounded-xl rounded-tl-xs border border-surface-border leading-relaxed font-sans text-xs">
                 <p>{defaultAlert}</p>
               </div>
-              <span className="text-[10px] text-slate-400 mt-1 ml-1 flex items-center space-x-1">
-                <Shield className="h-3 w-3 text-emerald-400" />
-                <span>Rebuttal Agent</span>
+              <span className="text-[10px] text-brand-primary mt-1 ml-1 flex items-center space-x-1 font-mono">
+                <Shield className="h-3 w-3" />
+                <span>AgentCore Intercept</span>
               </span>
             </div>
 
             {/* Outbound Reply Bubbles from Owner */}
             {sentReplies.map((reply, idx) => (
               <div key={idx} className="flex flex-col items-end ml-auto max-w-[85%]">
-                <div className="bg-indigo-600 text-white p-2.5 px-3 rounded-2xl rounded-tr-sm shadow-md">
+                <div className="bg-brand-primary text-white font-medium p-2.5 px-3.5 rounded-xl rounded-tr-xs shadow-sm">
                   <p>{reply.text}</p>
                 </div>
-                <span className="text-[9px] text-slate-400 mt-1 mr-1 flex items-center space-x-1">
+                <span className="text-[9px] text-text-muted font-mono mt-1 mr-1 flex items-center space-x-1">
                   <span>{reply.time}</span>
-                  <CheckCheck className="h-3 w-3 text-indigo-400" />
+                  <CheckCheck className="h-3 w-3 text-brand-primary" />
                 </span>
               </div>
             ))}
           </div>
 
           {/* Quick Reply Action Buttons */}
-          <div className="p-2 border-t border-slate-800 bg-slate-950/80">
-            <p className="text-[10px] uppercase font-semibold text-slate-400 mb-1.5 px-1">
-              Quick Reply:
+          <div className="p-2.5 border-t border-surface-border bg-surface-card/80">
+            <p className="text-[10px] font-mono uppercase tracking-wider text-text-muted mb-1.5 px-0.5">
+              Decision Intercept:
             </p>
             <div className="grid grid-cols-3 gap-1.5 mb-2">
               <button
@@ -163,7 +163,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
                 onClick={() => handleQuickReply('1')}
                 disabled={sending}
                 aria-label="Send reply 1 Fight"
-                className="py-2 px-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 active:scale-95 text-white font-semibold text-xs transition-all disabled:opacity-50 shadow-sm"
+                className="py-2 px-1.5 rounded-md bg-status-won-bg text-status-won-text border border-status-won-border hover:bg-status-won-border/30 font-mono text-xs font-semibold transition-colors disabled:opacity-50 text-center"
               >
                 1 Fight
               </button>
@@ -172,7 +172,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
                 onClick={() => handleQuickReply('2')}
                 disabled={sending}
                 aria-label="Send reply 2 Concede"
-                className="py-2 px-2 rounded-lg bg-rose-700 hover:bg-rose-600 active:scale-95 text-white font-semibold text-xs transition-all disabled:opacity-50 shadow-sm"
+                className="py-2 px-1.5 rounded-md bg-status-lost-bg text-status-lost-text border border-status-lost-border hover:bg-status-lost-border/30 font-mono text-xs font-semibold transition-colors disabled:opacity-50 text-center"
               >
                 2 Concede
               </button>
@@ -181,7 +181,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
                 onClick={() => handleQuickReply('3')}
                 disabled={sending}
                 aria-label="Send reply 3 Hold"
-                className="py-2 px-2 rounded-lg bg-slate-700 hover:bg-slate-600 active:scale-95 text-white font-semibold text-xs transition-all disabled:opacity-50 shadow-sm"
+                className="py-2 px-1.5 rounded-md bg-surface-subtle text-text-secondary border border-surface-border hover:bg-surface-hover hover:text-text-primary font-mono text-xs font-semibold transition-colors disabled:opacity-50 text-center"
               >
                 3 Hold
               </button>
@@ -200,13 +200,13 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
                 placeholder="Type 1, 2, or 3..."
                 disabled={sending}
                 aria-label="Type reply message"
-                className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1 text-xs text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                className="flex-1 bg-canvas-base border border-surface-border rounded-md px-2.5 py-1.5 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary font-mono"
               />
               <button
                 type="submit"
                 disabled={sending || !replyMessage.trim()}
                 aria-label="Submit SMS reply"
-                className="h-7 w-7 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 disabled:opacity-40 flex items-center justify-center transition-colors"
+                className="h-7 w-7 rounded-md bg-brand-primary hover:bg-brand-hover text-white disabled:opacity-30 flex items-center justify-center transition-colors shrink-0"
               >
                 <Send className="h-3.5 w-3.5" />
               </button>
@@ -219,17 +219,17 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
         <div
           role="status"
           aria-live="polite"
-          className={`mt-3 p-2.5 px-3 rounded-xl text-xs flex items-center justify-between gap-2 border shadow-md max-w-[340px] w-full ${
+          className={`mt-3 p-2.5 px-3 rounded-lg text-xs flex items-center justify-between gap-2 border shadow-sm max-w-[340px] w-full font-mono ${
             feedback.type === 'success'
-              ? 'bg-emerald-950/70 border-emerald-800 text-emerald-300'
-              : 'bg-rose-950/80 border-rose-800 text-rose-300'
+              ? 'bg-status-won-bg border-status-won-border text-status-won-text'
+              : 'bg-status-lost-bg border-status-lost-border text-status-lost-text'
           }`}
         >
           <div className="flex items-center space-x-2 min-w-0">
             {feedback.type === 'success' ? (
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+              <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
             ) : (
-              <AlertCircle className="h-3.5 w-3.5 text-rose-400 shrink-0" />
+              <AlertCircle className="h-3.5 w-3.5 shrink-0" />
             )}
             <span className="truncate font-medium">{feedback.message}</span>
           </div>
@@ -237,7 +237,7 @@ export const SimulatedPhone: React.FC<SimulatedPhoneProps> = ({
             <button
               type="button"
               onClick={feedback.onRetry}
-              className="text-[11px] font-semibold bg-rose-800 hover:bg-rose-700 text-white px-2 py-0.5 rounded flex items-center space-x-1 shrink-0 transition-colors"
+              className="text-[11px] font-semibold bg-surface-subtle hover:bg-surface-hover text-text-primary px-2 py-0.5 rounded border border-surface-border flex items-center space-x-1 shrink-0 transition-colors"
             >
               <RotateCcw className="h-3 w-3" />
               <span>Retry</span>

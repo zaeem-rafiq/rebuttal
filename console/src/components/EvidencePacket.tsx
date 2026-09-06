@@ -9,9 +9,10 @@ interface EvidencePacketProps {
 export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
   if (!order) {
     return (
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 text-center text-slate-400">
-        <Package className="h-6 w-6 mx-auto mb-2 text-slate-600" />
-        <p className="text-sm">No linked order found for this dispute.</p>
+      <div className="bg-surface border border-border rounded-lg p-6 text-center text-slate-400">
+        <Package className="h-5 w-5 mx-auto mb-2 text-slate-500" />
+        <p className="text-xs font-semibold text-slate-200">No Linked Order File</p>
+        <p className="text-[11px] text-slate-400 mt-1">No order record was linked to this dispute event.</p>
       </div>
     );
   }
@@ -19,22 +20,23 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
   const shipment = order.shipments && order.shipments.length > 0 ? order.shipments[0] : null;
 
   return (
-    <div className="space-y-4">
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-3">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+    <div className="space-y-3.5">
+      {/* Order & Customer Dossier */}
+      <div className="bg-surface border border-border rounded-lg p-4 space-y-3 shadow-sm">
+        <div className="flex items-center justify-between border-b border-border pb-2.5">
           <div>
-            <span className="text-[10px] font-mono text-slate-400 uppercase">Order ID</span>
-            <p className="text-sm font-bold text-slate-200 font-mono">{order.id}</p>
+            <span className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-wider">Order Reference</span>
+            <p className="text-sm font-bold text-white font-mono">{order.id}</p>
           </div>
           <div className="text-right">
-            <span className="text-[10px] font-mono text-slate-400 uppercase">Total</span>
-            <p className="text-sm font-bold text-indigo-400 font-mono">${(order.amount_cents / 100).toFixed(2)}</p>
+            <span className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-wider">Settled Total</span>
+            <p className="text-sm font-bold text-blue-400 font-mono tabular-nums">${(order.amount_cents / 100).toFixed(2)}</p>
           </div>
         </div>
 
         {order.customer && (
-          <div className="text-xs space-y-1">
-            <p className="text-slate-300 font-medium">{order.customer.name}</p>
+          <div className="text-xs space-y-0.5">
+            <p className="text-slate-200 font-semibold">{order.customer.name}</p>
             <p className="text-slate-400 font-mono text-[11px]">{order.customer.email}</p>
             {order.customer.phone && (
               <p className="text-slate-400 font-mono text-[11px]">{order.customer.phone}</p>
@@ -43,17 +45,17 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
         )}
 
         {order.items && order.items.length > 0 && (
-          <div className="pt-2 border-t border-slate-800/80">
-            <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
-              Purchased Items
+          <div className="pt-2.5 border-t border-border">
+            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+              Purchased Line Items
             </span>
             <div className="mt-1.5 space-y-1">
               {order.items.map((item) => (
                 <div key={item.id} className="flex justify-between text-xs text-slate-300">
                   <span>
-                    {item.quantity}x {item.product_name}
+                    <span className="font-mono text-slate-400">{item.quantity}x</span> {item.product_name}
                   </span>
-                  <span className="font-mono text-slate-400">
+                  <span className="font-mono tabular-nums text-slate-400">
                     ${(item.total_price_cents / 100).toFixed(2)}
                   </span>
                 </div>
@@ -63,35 +65,36 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
         )}
       </div>
 
+      {/* Shipment & Carrier Proof */}
       {shipment && (
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-3">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+        <div className="bg-surface border border-border rounded-lg p-4 space-y-3 shadow-sm">
+          <div className="flex items-center justify-between border-b border-border pb-2.5">
             <div className="flex items-center space-x-2">
               <Truck className="h-4 w-4 text-emerald-400" />
-              <span className="text-xs font-semibold text-slate-200">
-                {shipment.carrier.toUpperCase()} Tracking
+              <span className="text-xs font-bold text-white uppercase tracking-wider">
+                {shipment.carrier} Carrier Dossier
               </span>
             </div>
-            <span className="text-xs font-mono font-semibold text-indigo-400">
+            <span className="text-xs font-mono font-bold text-blue-400">
               {shipment.tracking_number}
             </span>
           </div>
 
           <div className="space-y-2 text-xs">
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-400">Status:</span>
-              <span className="font-semibold text-emerald-400 capitalize">{shipment.status.replace('_', ' ')}</span>
+            <div className="flex justify-between items-center text-slate-300">
+              <span className="text-slate-400 text-[11px]">Delivery Status:</span>
+              <span className="font-mono font-semibold text-emerald-400 capitalize">{shipment.status.replace('_', ' ')}</span>
             </div>
             {shipment.delivered_at && (
-              <div className="flex justify-between text-slate-300">
-                <span className="text-slate-400">Delivered At:</span>
-                <span className="font-mono text-slate-200">{new Date(shipment.delivered_at).toLocaleString()}</span>
+              <div className="flex justify-between items-center text-slate-300">
+                <span className="text-slate-400 text-[11px]">Carrier Timestamp:</span>
+                <span className="font-mono tabular-nums text-slate-200 text-[11px]">{new Date(shipment.delivered_at).toLocaleString()}</span>
               </div>
             )}
             {shipment.signed_by && (
-              <div className="flex justify-between text-slate-300">
-                <span className="text-slate-400">Signed Confirmation:</span>
-                <span className="font-semibold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/40">
+              <div className="flex justify-between items-center text-slate-300">
+                <span className="text-slate-400 text-[11px]">Recipient Signature Seal:</span>
+                <span className="font-mono text-[11px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/60">
                   ✓ {shipment.signed_by}
                 </span>
               </div>
@@ -99,9 +102,9 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
           </div>
 
           {shipment.events && shipment.events.length > 0 && (
-            <div className="pt-2 border-t border-slate-800">
-              <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
-                Carrier Scan Events
+            <div className="pt-2.5 border-t border-border">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                Carrier Scan Ledger
               </span>
               <div className="mt-2 space-y-2">
                 {shipment.events.map((ev) => (
@@ -109,7 +112,7 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
                     <CheckCircle className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-slate-200 font-medium">{ev.details || ev.status}</p>
-                      <p className="text-[10px] text-slate-400 font-mono">
+                      <p className="text-[10px] text-slate-500 font-mono tabular-nums">
                         {ev.location} · {new Date(ev.timestamp).toLocaleString()}
                       </p>
                     </div>
@@ -121,33 +124,36 @@ export const EvidencePacket: React.FC<EvidencePacketProps> = ({ order }) => {
         </div>
       )}
 
+      {/* Customer Comms */}
       {order.messages && order.messages.length > 0 && (
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-3">
-          <div className="flex items-center space-x-2 border-b border-slate-800 pb-2">
-            <MessageSquare className="h-4 w-4 text-sky-400" />
-            <span className="text-xs font-semibold text-slate-200">Customer Communication History</span>
+        <div className="bg-surface border border-border rounded-lg p-4 space-y-3 shadow-sm">
+          <div className="flex items-center space-x-2 border-b border-border pb-2.5">
+            <MessageSquare className="h-4 w-4 text-blue-400" />
+            <span className="text-xs font-bold text-white uppercase tracking-wider">
+              Customer Communications
+            </span>
           </div>
 
           <div className="space-y-2.5">
             {order.messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`p-3 rounded-xl border text-xs leading-relaxed ${
+                className={`p-3 rounded-md border text-xs leading-relaxed ${
                   msg.direction === 'inbound'
-                    ? 'bg-slate-950/80 border-slate-800 text-slate-200'
-                    : 'bg-indigo-950/40 border-indigo-900/50 text-indigo-200 ml-3'
+                    ? 'bg-[#0b0f17] border-border text-slate-200'
+                    : 'bg-surface-elevated border-border text-slate-200'
                 }`}
               >
                 <div className="flex items-center justify-between text-[10px] text-slate-400 mb-1">
-                  <span className="font-semibold uppercase">{msg.direction} ({msg.channel})</span>
-                  <span>{new Date(msg.created_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                  <span className="font-mono font-bold uppercase">{msg.direction} · {msg.channel}</span>
+                  <span className="font-mono tabular-nums">{new Date(msg.created_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
-                {msg.subject && <p className="font-semibold text-white mb-1">{msg.subject}</p>}
-                <p>{msg.body}</p>
+                {msg.subject && <p className="font-bold text-white mb-0.5">{msg.subject}</p>}
+                <p className="text-slate-300">{msg.body}</p>
                 {msg.has_shipping_change && (
-                  <div className="mt-2 flex items-center space-x-1.5 text-[11px] text-amber-300 bg-amber-950/60 p-1.5 rounded-lg border border-amber-800/50">
+                  <div className="mt-2 flex items-center space-x-1.5 text-[11px] text-amber-300 bg-amber-950/70 p-1.5 rounded border border-amber-800/60 font-medium">
                     <AlertTriangle className="h-3 w-3 shrink-0" />
-                    <span>Customer requested shipping address change via message</span>
+                    <span>Customer requested alternate shipping address in message</span>
                   </div>
                 )}
               </div>

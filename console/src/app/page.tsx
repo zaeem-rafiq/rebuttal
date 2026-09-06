@@ -126,47 +126,64 @@ export default function HomePage() {
         secondsRemaining={secondsRemaining}
       />
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs text-slate-400">
-            <span>Total Disputes</span>
-            <ShieldAlert className="h-4 w-4 text-indigo-400" />
-          </div>
-          <p className="text-2xl font-bold font-mono text-white mt-2">{totalCount}</p>
-          <span className="text-[11px] text-slate-400 mt-1">Synthetic & live Stripe events</span>
-        </div>
-
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs text-slate-400">
-            <span>Win Rate</span>
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
-          </div>
-          <p className="text-2xl font-bold font-mono text-emerald-300 mt-2">{winRateFormatted}</p>
-          <span className="text-[11px] text-slate-400 mt-1">
-            {resolvedDisputes.length > 0
-              ? `${wonCount} of ${resolvedDisputes.length} resolved cases`
-              : 'Awaiting dispute resolutions'}
+      {/* Master Evidentiary Ledger Banner */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-surface border border-border rounded-lg divide-y sm:divide-y-0 sm:divide-x divide-border overflow-hidden shadow-sm">
+        <div className="p-5 flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            Protected Net Volume
           </span>
+          <div className="mt-2">
+            <p className="text-3xl font-bold font-mono text-emerald-400 tabular-nums tracking-tight">
+              ${(wonVolume / 100).toFixed(2)}
+            </p>
+            <span className="text-[11px] text-slate-400 mt-1 block">
+              {wonCount > 0 ? `${wonCount} carrier receipts signed & locked` : 'Recovered automatically via carrier POD'}
+            </span>
+          </div>
         </div>
 
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs text-slate-400">
-            <span>Protected Revenue</span>
-            <DollarSign className="h-4 w-4 text-emerald-400" />
+        <div className="p-5 flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            Active Dispute Cases
+          </span>
+          <div className="mt-2">
+            <p className="text-2xl font-bold font-mono text-white tabular-nums">
+              {totalCount}
+            </p>
+            <span className="text-[11px] text-slate-400 mt-1 block">
+              {totalCount - pendingCount} automated · {pendingCount} awaiting judgment
+            </span>
           </div>
-          <p className="text-2xl font-bold font-mono text-white mt-2">
-            ${(wonVolume / 100).toFixed(2)}
-          </p>
-          <span className="text-[11px] text-slate-400 mt-1">Recovered automatically</span>
         </div>
 
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs text-slate-400">
-            <span>Pending Action</span>
-            <Clock className="h-4 w-4 text-amber-400" />
+        <div className="p-5 flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            Resolution Win Rate
+          </span>
+          <div className="mt-2">
+            <p className="text-2xl font-bold font-mono text-white tabular-nums">
+              {winRateFormatted}
+            </p>
+            <span className="text-[11px] text-slate-400 mt-1 block">
+              {resolvedDisputes.length > 0
+                ? `${wonCount} of ${resolvedDisputes.length} resolved cases`
+                : 'Awaiting scheme issuer verdict'}
+            </span>
           </div>
-          <p className="text-2xl font-bold font-mono text-amber-300 mt-2">{pendingCount}</p>
-          <span className="text-[11px] text-slate-400 mt-1">Awaiting owner confirmation</span>
+        </div>
+
+        <div className="p-5 flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            ApprovalGate Intercepts
+          </span>
+          <div className="mt-2">
+            <p className={`text-2xl font-bold font-mono tabular-nums ${pendingCount > 0 ? 'text-amber-400' : 'text-slate-300'}`}>
+              {pendingCount}
+            </p>
+            <span className="text-[11px] text-slate-400 mt-1 block">
+              {pendingCount > 0 ? 'Action required on high-value dispute' : 'All dossiers running on autopilot'}
+            </span>
+          </div>
         </div>
       </div>
 

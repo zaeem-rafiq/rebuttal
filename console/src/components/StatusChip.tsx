@@ -1,5 +1,4 @@
 import React from 'react';
-import { CheckCircle2, XCircle, Clock, AlertTriangle, HelpCircle } from 'lucide-react';
 
 interface StatusChipProps {
   status: string;
@@ -10,60 +9,52 @@ export const StatusChip: React.FC<StatusChipProps> = ({ status, size = 'md' }) =
   const normalized = (status || '').toLowerCase().trim();
 
   let label = status;
-  let bgClass = 'bg-slate-800 text-slate-300 border-slate-700';
-  let Icon = HelpCircle;
+  let badgeStyle = 'bg-surface-elevated text-slate-300 border-border';
 
   switch (normalized) {
     case 'won':
       label = 'Won';
-      bgClass = 'bg-emerald-950/80 text-emerald-300 border-emerald-700/50 shadow-sm shadow-emerald-900/30';
-      Icon = CheckCircle2;
+      badgeStyle = 'bg-[#064e3b]/80 text-[#34d399] border-[#059669]/60';
       break;
     case 'conceded':
     case 'charge_refunded':
       label = normalized === 'conceded' ? 'Conceded' : 'Refunded';
-      bgClass = 'bg-rose-950/70 text-rose-300 border-rose-800/50';
-      Icon = XCircle;
+      badgeStyle = 'bg-[#311317]/80 text-[#fca5a5] border-[#991b1b]/60';
       break;
     case 'lost':
       label = 'Lost';
-      bgClass = 'bg-red-950/80 text-red-300 border-red-800/50';
-      Icon = XCircle;
+      badgeStyle = 'bg-[#450a0a]/80 text-[#fca5a5] border-[#dc2626]/60';
       break;
     case 'needs_response':
-      label = 'Pending Decision';
-      bgClass = 'bg-amber-950/80 text-amber-300 border-amber-700/50 animate-pulse';
-      Icon = AlertTriangle;
+      label = 'Approval Needed';
+      badgeStyle = 'bg-[#311317] text-[#f87171] border-[#991b1b]';
       break;
     case 'warning_needs_response':
       label = 'Inquiry (Pre-dispute)';
-      bgClass = 'bg-yellow-950/80 text-yellow-300 border-yellow-700/50';
-      Icon = AlertTriangle;
+      badgeStyle = 'bg-[#271c08] text-[#fbbf24] border-[#78350f]';
       break;
     case 'under_review':
       label = 'Under Review';
-      bgClass = 'bg-sky-950/80 text-sky-300 border-sky-700/50';
-      Icon = Clock;
+      badgeStyle = 'bg-[#161e2e] text-[#93c5fd] border-[#2563eb]/40';
       break;
     case 'approved':
       label = 'Approved';
-      bgClass = 'bg-blue-950/80 text-blue-300 border-blue-700/50';
-      Icon = CheckCircle2;
+      badgeStyle = 'bg-[#172554]/80 text-[#93c5fd] border-[#1d4ed8]/60';
       break;
     case 'executed':
       label = 'Executed';
-      bgClass = 'bg-indigo-950/80 text-indigo-300 border-indigo-700/50';
-      Icon = CheckCircle2;
+      badgeStyle = 'bg-[#1e1b4b]/80 text-[#c7d2fe] border-[#4338ca]/60';
       break;
     default:
       label = status;
   }
 
-  const px = size === 'sm' ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-1 text-xs';
+  const px = size === 'sm' ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-0.5 text-[11px]';
 
   return (
-    <span className={`inline-flex items-center space-x-1.5 font-medium rounded-full border ${bgClass} ${px}`}>
-      <Icon className={size === 'sm' ? 'h-3 w-3' : 'h-3.5 w-3.5'} />
+    <span
+      className={`inline-flex items-center font-mono font-medium rounded border whitespace-nowrap ${badgeStyle} ${px}`}
+    >
       <span>{label}</span>
     </span>
   );

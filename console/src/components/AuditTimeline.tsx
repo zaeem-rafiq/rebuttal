@@ -15,46 +15,46 @@ export const AuditTimeline: React.FC<AuditTimelineProps> = ({ entries }) => {
     const act = (actor || '').toLowerCase();
     if (act.includes('agent') || act.includes('bedrock') || act.includes('strands')) {
       return {
-        label: 'Bedrock Agent',
+        label: 'Bedrock AgentCore',
         icon: Bot,
-        color: 'bg-purple-950/60 text-purple-300 border-purple-800/50',
+        color: 'bg-status-submitted-bg text-status-submitted-text border-status-submitted-border',
       };
     }
     if (act.includes('stripe')) {
       return {
-        label: 'Stripe Webhook',
+        label: 'Stripe API',
         icon: CreditCard,
-        color: 'bg-blue-950/60 text-blue-300 border-blue-800/50',
+        color: 'bg-status-won-bg text-status-won-text border-status-won-border',
       };
     }
     if (act.includes('twilio') || act.includes('sms')) {
       return {
-        label: 'Twilio SMS',
+        label: 'Twilio Gateway',
         icon: MessageSquare,
-        color: 'bg-emerald-950/60 text-emerald-300 border-emerald-800/50',
+        color: 'bg-status-review-bg text-status-review-text border-status-review-border',
       };
     }
     return {
-      label: actor || 'System',
+      label: actor || 'System Engine',
       icon: Terminal,
-      color: 'bg-slate-800 text-slate-300 border-slate-700',
+      color: 'bg-surface-subtle text-text-secondary border-surface-border',
     };
   };
 
   if (!entries || entries.length === 0) {
     return (
-      <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 text-center text-slate-400">
-        <Clock className="h-6 w-6 mx-auto mb-2 text-slate-600" />
-        <p className="text-sm font-medium text-slate-300">No audit logs recorded for this dispute yet.</p>
-        <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-          Audit telemetry will populate automatically as AWS Bedrock AgentCore processes evidence and triggers defense tools.
+      <div className="bg-surface-card border border-surface-border rounded-lg p-6 text-center text-text-muted">
+        <Clock className="h-5 w-5 mx-auto mb-2 text-text-muted" />
+        <p className="text-xs font-medium text-text-secondary">No evidentiary actions recorded yet</p>
+        <p className="text-[11px] text-text-muted mt-1 max-w-sm mx-auto">
+          Audit telemetry registers synchronously as AWS Bedrock AgentCore processes evidence packets.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-800">
+    <div className="relative pl-5 space-y-3 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-px before:bg-surface-border">
       {entries.map((entry, index) => {
         const { label, icon: Icon, color } = getActorBadge(entry.actor);
         const isExpanded = expandedId === entry.id || (index === 0 && expandedId === null);
@@ -62,35 +62,36 @@ export const AuditTimeline: React.FC<AuditTimelineProps> = ({ entries }) => {
 
         return (
           <div key={entry.id || index} className="relative">
-            <div className="absolute -left-[27px] top-1.5 h-3.5 w-3.5 rounded-full bg-slate-950 border-2 border-indigo-500 shadow-sm shadow-indigo-500/50" />
+            {/* Timeline node */}
+            <div className="absolute -left-[21px] top-2 h-2.5 w-2.5 rounded-full bg-canvas-base border-2 border-brand-primary" />
 
-            <div className="bg-slate-900/80 border border-slate-800/90 rounded-xl p-3.5 text-xs transition-colors hover:border-slate-700">
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+            <div className="bg-surface-card border border-surface-border rounded-lg p-3 text-xs transition-colors hover:border-surface-border-strong">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center space-x-2">
-                  <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-md border text-[11px] font-medium ${color}`}>
-                    <Icon className="h-3 w-3" />
+                  <span className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded border text-[10px] font-mono font-medium ${color}`}>
+                    <Icon className="h-2.5 w-2.5" />
                     <span>{label}</span>
                   </span>
-                  <span className="font-semibold text-slate-200">{entry.action}</span>
+                  <span className="font-mono text-xs font-medium text-text-primary">{entry.action}</span>
                 </div>
-                <span className="text-slate-400 font-mono text-[11px]">
+                <span className="text-text-muted font-mono text-[11px] tabular-nums">
                   {new Date(entry.created_at).toLocaleTimeString()}
                 </span>
               </div>
 
               {hasDetails && (
-                <div className="mt-2">
+                <div className="mt-2.5 pt-2 border-t border-surface-border">
                   <button
                     type="button"
                     onClick={() => setExpandedId(isExpanded ? '' : entry.id)}
-                    className="flex items-center space-x-1 text-[11px] text-slate-400 hover:text-slate-200 font-mono"
+                    className="flex items-center space-x-1 text-[11px] text-text-muted hover:text-text-primary font-mono transition-colors"
                   >
-                    <span>{isExpanded ? 'Hide Payload' : 'View Payload'}</span>
+                    <span>{isExpanded ? 'Hide Payload' : 'Inspect Payload'}</span>
                     {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                   </button>
 
                   {isExpanded && (
-                    <pre className="mt-2 p-2.5 rounded-lg bg-slate-950 text-slate-300 font-mono text-[11px] overflow-x-auto border border-slate-800/80 leading-relaxed">
+                    <pre className="mt-2 p-2.5 rounded bg-canvas-base text-text-secondary font-mono text-[11px] overflow-x-auto border border-surface-border leading-relaxed">
                       {JSON.stringify(entry.details, null, 2)}
                     </pre>
                   )}

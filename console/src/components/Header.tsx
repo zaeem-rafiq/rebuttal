@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ShieldAlert, RefreshCw, Activity } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 interface HeaderProps {
   lastUpdated?: Date | null;
@@ -18,52 +18,56 @@ export const Header: React.FC<HeaderProps> = ({
   secondsRemaining = 5,
 }) => {
   return (
-    <header className="border-b border-slate-800/80 pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <header className="border-b border-border pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div className="flex items-center space-x-3.5">
-        <div className="h-10 w-10 rounded-xl bg-slate-900 border border-slate-700/80 flex items-center justify-center shadow-md shadow-black/40 ring-1 ring-white/5">
-          <ShieldAlert className="h-5 w-5 text-indigo-400" />
-        </div>
+        <Link
+          href="/"
+          className="h-8 w-8 rounded-md bg-[#1e3a8a] border border-[#2563eb] flex items-center justify-center font-mono font-bold text-sm text-[#93c5fd] shadow-sm hover:brightness-110 transition-all"
+        >
+          R
+        </Link>
         <div>
-          <div className="flex items-center space-x-2">
-            <Link href="/" className="text-xl font-bold tracking-tight text-white hover:text-indigo-400 transition-colors">
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/"
+              className="text-lg font-bold tracking-tight text-white hover:text-blue-400 transition-colors"
+            >
               Rebuttal
             </Link>
-            <span className="px-2 py-0.5 text-xs font-semibold uppercase tracking-wider rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-              Risk Operations Console
+            <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded bg-[#161e2e] text-slate-300 border border-[#283548]">
+              Dispute Docket
             </span>
-            <span className="flex items-center space-x-1 px-2 py-0.5 text-xs font-medium rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 ring-2 ring-emerald-500/30" />
-              <span>AgentCore Live</span>
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold rounded bg-emerald-950/60 text-emerald-400 border border-emerald-800/60">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+              <span>Bedrock AgentCore Active</span>
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
-            Autonomous Chargeback Defense · AWS Bedrock AgentCore & Strands SDK
+            Autonomous chargeback defense & carrier evidentiary synthesis
           </p>
         </div>
       </div>
 
       <div className="flex items-center space-x-3 text-xs text-slate-400">
-        <div className="flex items-center space-x-1.5 bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-lg">
-          <Activity className="h-3.5 w-3.5 text-indigo-400" />
-          <span>Polling: <strong className="text-slate-200">{secondsRemaining}s</strong></span>
+        <div className="font-mono text-[11px] text-slate-400">
+          Polling in <span className="tabular-nums font-semibold text-slate-200">{secondsRemaining}s</span>
+          {lastUpdated && (
+            <span className="hidden md:inline text-slate-500 ml-1.5">
+              · Sync: {lastUpdated.toLocaleTimeString()}
+            </span>
+          )}
         </div>
-
-        {lastUpdated && (
-          <span className="hidden md:inline-block text-slate-400">
-            Updated {lastUpdated.toLocaleTimeString()}
-          </span>
-        )}
 
         {onRefresh && (
           <button
             onClick={onRefresh}
             disabled={isRefreshing}
-            title="Refresh disputes now"
-            aria-label="Refresh disputes now"
-            className="flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700/60 transition-colors"
+            title="Sync Ledger"
+            aria-label="Sync Ledger"
+            className="inline-flex items-center gap-1.5 bg-surface border border-border hover:bg-surface-elevated active:bg-surface-highlight disabled:opacity-50 text-slate-200 px-3 py-1.5 rounded-md font-medium text-xs transition-colors focus-visible:ring-2 focus-visible:ring-brand"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-indigo-400' : ''}`} />
-            <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-blue-400' : 'text-slate-400'}`} />
+            <span>{isRefreshing ? 'Syncing...' : 'Sync Ledger'}</span>
           </button>
         )}
       </div>
