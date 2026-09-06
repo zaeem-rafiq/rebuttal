@@ -1,0 +1,83 @@
+﻿graph TB
+    subgraph External["External Triggers & Inputs"]
+        Stripe["Stripe Payments & Disputes<br/>(Webhooks: created/closed)"]
+        OwnerPhone["Merchant Owner Phone<br/>(SMS: 1 Fight | 2 Concede | 3 Hold)"]
+        JudgeUser["Judge / Demo Operator<br/>(Amplify Console)"]
+        EventBridge["Amazon EventBridge<br/>(Rate: 6 hours deadline sweep)"]
+    end
+
+    subgraph Ingestion["AWS Serverless Ingestion Layer (SAM)"]
+        StripeLambda["StripeWebhookFunction<br/>(Lambda Function URL + HMAC)"]
+        TwilioLambda["TwilioWebhookFunction<br/>(Lambda Function URL + SigV4)"]
+        SweepLambda["SweepFunction<br/>(Deadline Sweep Scheduler)"]
+        InjectLambda["InjectFunction<br/>(Test Scenario Injector)"]
+    end
+
+    subgraph AgentCore["Amazon Bedrock AgentCore Runtime (rebuttal-pASUe6CVmu)"]
+        direction TB
+        subgraph StrandsSDK["AWS Strands Agents SDK Architecture"]
+            Intake["Intake Node<br/>(Dispute Normalization)"]
+            
+            subgraph EvidenceInvestigators["Parallel Evidence Agents"]
+                OrderAgent["Orders Agent<br/>(Order & Item Context)"]
+                ShippingAgent["Shipping Agent<br/>(Carrier Scans & Signature)"]
+                CommsAgent["Comms Agent<br/>(Customer Inbound/Outbound)"]
+                HistoryAgent["History Agent<br/>(Prior Disputes & Memory)"]
+            end
+            
+            StrategyAgent["Strategy Synthesizer<br/>(Outputs DisputeStrategy JSON)"]
+            DrafterAgent["Evidence Drafter<br/>(Builds Evidence Dossier)"]
+            ApprovalGate["ApprovalGate Hook<br/>(BeforeToolCallEvent / Interrupt)"]
+            ExecutorAgent["Executor Agent<br/>(Action Dispatch & Submission)"]
+        end
+    end
+
+    subgraph MemoryObs["AWS Intelligence, Persistence & Observability"]
+        AgentCoreMemory["Amazon Bedrock AgentCore Memory<br/>(/merchant/{actorId}/outcomes)"]
+        CloudWatchObs["AWS CloudWatch GenAI Observability<br/>(OTel Spans, Waterfall & Tokens)"]
+        SupabaseDB["Supabase Cloud Postgres<br/>(10 Tables with Read-Only RLS)"]
+    end
+
+    subgraph Frontend["Merchant & Judge Experience"]
+        AmplifyConsole["Next.js 14 Judge Console<br/>(AWS Amplify Hosting)"]
+        TwilioService["Twilio Messaging Service<br/>(Outbound & Inbound SMS)"]
+    end
+
+    %% Wiring
+    Stripe --> StripeLambda
+    OwnerPhone <--> TwilioService
+    TwilioService --> TwilioLambda
+    EventBridge --> SweepLambda
+    JudgeUser --> AmplifyConsole
+    AmplifyConsole --> InjectLambda
+    InjectLambda --> Stripe
+
+    StripeLambda --> Intake
+    TwilioLambda --> ApprovalGate
+    SweepLambda --> ApprovalGate
+
+    Intake --> EvidenceInvestigators
+    EvidenceInvestigators --> StrategyAgent
+    StrategyAgent --> DrafterAgent
+    DrafterAgent --> ApprovalGate
+
+    ApprovalGate --> TwilioService
+    ApprovalGate --> ExecutorAgent
+
+    ExecutorAgent --> Stripe
+    ExecutorAgent --> SupabaseDB
+
+    HistoryAgent <--> AgentCoreMemory
+    ExecutorAgent --> AgentCoreMemory
+    StrandsSDK -.-> CloudWatchObs
+    SupabaseDB -.-> AmplifyConsole
+
+    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:#232F3E;
+    classDef runtime fill:#1E293B,stroke:#6366F1,stroke-width:2px,color:#F8FAFC;
+    classDef external fill:#0F172A,stroke:#38BDF8,stroke-width:1px,color:#F8FAFC;
+    classDef storage fill:#064E3B,stroke:#10B981,stroke-width:2px,color:#ECFDF5;
+
+    class StripeLambda,TwilioLambda,SweepLambda,InjectLambda,AgentCoreMemory,CloudWatchObs,AmplifyConsole aws;
+    class Intake,OrderAgent,ShippingAgent,CommsAgent,HistoryAgent,StrategyAgent,DrafterAgent,ApprovalGate,ExecutorAgent runtime;
+    class Stripe,OwnerPhone,JudgeUser,EventBridge,TwilioService external;
+    class SupabaseDB storage;
