@@ -117,6 +117,63 @@ export default function HomePage() {
     ? `${Math.round((wonCount / resolvedDisputes.length) * 100)}%`
     : '—%';
 
+  if (loading) {
+    return (
+      <div className="space-y-6 animate-pulse" aria-busy="true" aria-label="Loading Evidentiary Docket">
+        {/* Header Skeleton */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-surface-border">
+          <div className="flex items-center space-x-3">
+            <div className="h-9 w-9 rounded-lg bg-surface-subtle" />
+            <div className="space-y-1.5">
+              <div className="h-4 w-40 bg-surface-subtle rounded" />
+              <div className="h-3 w-56 bg-surface-subtle rounded" />
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="h-8 w-24 bg-surface-subtle rounded-md" />
+            <div className="h-8 w-8 bg-surface-subtle rounded-md" />
+          </div>
+        </div>
+
+        {/* Metric Ledger Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-surface-card border border-surface-border rounded-lg divide-y sm:divide-y-0 sm:divide-x divide-surface-border overflow-hidden">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="p-5 space-y-3">
+              <div className="h-3 w-28 bg-surface-subtle rounded" />
+              <div className="h-7 w-20 bg-surface-subtle rounded" />
+              <div className="h-2.5 w-36 bg-surface-subtle rounded" />
+            </div>
+          ))}
+        </div>
+
+        {/* Inject Toolbar Skeleton */}
+        <div className="h-14 bg-surface-card border border-surface-border rounded-lg" />
+
+        {/* Docket Table Skeleton */}
+        <div className="bg-surface-card border border-surface-border rounded-lg overflow-hidden">
+          <div className="p-4 border-b border-surface-border flex justify-between items-center">
+            <div className="h-4 w-36 bg-surface-subtle rounded" />
+            <div className="h-7 w-48 bg-surface-subtle rounded" />
+          </div>
+          <div className="divide-y divide-surface-border">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="p-4 flex items-center justify-between">
+                <div className="space-y-1">
+                  <div className="h-3.5 w-32 bg-surface-subtle rounded" />
+                  <div className="h-2.5 w-24 bg-surface-subtle rounded" />
+                </div>
+                <div className="h-3.5 w-40 bg-surface-subtle rounded hidden sm:block" />
+                <div className="h-5 w-20 bg-surface-subtle rounded" />
+                <div className="h-3.5 w-16 bg-surface-subtle rounded" />
+                <div className="h-7 w-20 bg-surface-subtle rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <Header
@@ -127,61 +184,59 @@ export default function HomePage() {
       />
 
       {/* Master Evidentiary Ledger Banner */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-surface border border-border rounded-lg divide-y sm:divide-y-0 sm:divide-x divide-border overflow-hidden shadow-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-surface-card border border-surface-border rounded-lg divide-y sm:divide-y-0 sm:divide-x divide-surface-border overflow-hidden shadow-xs">
         <div className="p-5 flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider font-mono">
             Protected Net Volume
           </span>
           <div className="mt-2">
-            <p className="text-3xl font-bold font-mono text-emerald-400 tabular-nums tracking-tight">
+            <p className="text-3xl font-bold font-mono text-status-won-text tabular-nums tracking-tight">
               ${(wonVolume / 100).toFixed(2)}
             </p>
-            <span className="text-[11px] text-slate-400 mt-1 block">
+            <span className="text-[11px] text-text-muted mt-1 block">
               {wonCount > 0 ? `${wonCount} carrier receipts signed & locked` : 'Recovered automatically via carrier POD'}
             </span>
           </div>
         </div>
 
         <div className="p-5 flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-            Active Dispute Cases
+          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider font-mono">
+            Evidentiary Win Rate
           </span>
           <div className="mt-2">
-            <p className="text-2xl font-bold font-mono text-white tabular-nums">
-              {totalCount}
-            </p>
-            <span className="text-[11px] text-slate-400 mt-1 block">
-              {totalCount - pendingCount} automated · {pendingCount} awaiting judgment
-            </span>
-          </div>
-        </div>
-
-        <div className="p-5 flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-            Resolution Win Rate
-          </span>
-          <div className="mt-2">
-            <p className="text-2xl font-bold font-mono text-white tabular-nums">
+            <p className="text-2xl font-bold font-mono text-text-primary tabular-nums">
               {winRateFormatted}
             </p>
-            <span className="text-[11px] text-slate-400 mt-1 block">
-              {resolvedDisputes.length > 0
-                ? `${wonCount} of ${resolvedDisputes.length} resolved cases`
-                : 'Awaiting scheme issuer verdict'}
+            <span className="text-[11px] text-text-muted mt-1 block">
+              {resolvedDisputes.length > 0 ? `${wonCount} won of ${resolvedDisputes.length} resolved` : 'Awaiting initial dispute resolution'}
             </span>
           </div>
         </div>
 
         <div className="p-5 flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider font-mono">
+            Active Docket Load
+          </span>
+          <div className="mt-2">
+            <p className="text-2xl font-bold font-mono text-text-primary tabular-nums">
+              {totalCount}
+            </p>
+            <span className="text-[11px] text-text-muted mt-1 block">
+              Stripe cases currently on record
+            </span>
+          </div>
+        </div>
+
+        <div className="p-5 flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider font-mono">
             ApprovalGate Intercepts
           </span>
           <div className="mt-2">
-            <p className={`text-2xl font-bold font-mono tabular-nums ${pendingCount > 0 ? 'text-amber-400' : 'text-slate-300'}`}>
+            <p className={`text-2xl font-bold font-mono tabular-nums ${pendingCount > 0 ? 'text-status-review-text' : 'text-text-secondary'}`}>
               {pendingCount}
             </p>
-            <span className="text-[11px] text-slate-400 mt-1 block">
-              {pendingCount > 0 ? 'Action required on high-value dispute' : 'All dossiers running on autopilot'}
+            <span className="text-[11px] text-text-muted mt-1 block">
+              {pendingCount > 0 ? 'Merchant SMS action required' : 'All dossiers running on autopilot'}
             </span>
           </div>
         </div>
@@ -191,17 +246,17 @@ export default function HomePage() {
         <div
           role="status"
           aria-live="polite"
-          className={`p-4 rounded-xl text-xs flex items-center justify-between gap-3 border shadow-lg animate-in fade-in duration-200 ${
+          className={`p-3.5 rounded-lg text-xs flex items-center justify-between gap-3 border shadow-sm font-mono ${
             actionToast.type === 'success'
-              ? 'bg-emerald-950/70 border-emerald-800 text-emerald-200'
-              : 'bg-rose-950/80 border-rose-700 text-rose-200'
+              ? 'bg-status-won-bg border-status-won-border text-status-won-text'
+              : 'bg-status-lost-bg border-status-lost-border text-status-lost-text'
           }`}
         >
           <div className="flex items-center space-x-2.5">
             {actionToast.type === 'success' ? (
-              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+              <CheckCircle2 className="h-4 w-4 shrink-0" />
             ) : (
-              <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
+              <AlertCircle className="h-4 w-4 shrink-0" />
             )}
             <span className="font-medium">{actionToast.message}</span>
           </div>
@@ -210,7 +265,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={actionToast.onRetry}
-                className="px-2.5 py-1 rounded-lg bg-rose-800 hover:bg-rose-700 text-white font-medium flex items-center space-x-1 transition-colors"
+                className="px-2 py-0.5 rounded bg-surface-subtle hover:bg-surface-hover text-text-primary font-medium flex items-center space-x-1 border border-surface-border transition-colors"
               >
                 <RotateCcw className="h-3 w-3" />
                 <span>Retry</span>
@@ -220,7 +275,7 @@ export default function HomePage() {
               type="button"
               onClick={() => setActionToast(null)}
               aria-label="Dismiss notification"
-              className="text-slate-400 hover:text-white p-1"
+              className="text-text-muted hover:text-text-primary p-1"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -229,9 +284,19 @@ export default function HomePage() {
       )}
 
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300 flex items-center space-x-2">
-          <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
-          <p>Database notice: {errorMsg}</p>
+        <div className="p-3.5 rounded-lg bg-status-lost-bg border border-status-lost-border text-xs text-status-lost-text flex items-center justify-between gap-3 font-mono">
+          <div className="flex items-center space-x-2">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            <p>Database telemetry error: {errorMsg}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => fetchDisputes()}
+            className="px-2.5 py-1 rounded bg-surface-subtle hover:bg-surface-hover text-text-primary text-[11px] font-medium border border-surface-border flex items-center space-x-1 transition-colors shrink-0"
+          >
+            <RotateCcw className="h-3 w-3" />
+            <span>Reconnect</span>
+          </button>
         </div>
       )}
 
