@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>Direction B — The Manifest (Rebuttal)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #EDECE6;
+      color: #111418;
+      font-family: 'IBM Plex Mono', Courier, monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      min-width: 1280px;
+      padding: 40px 60px;
+    }
+
+    /* Tactile Paper Sheet — 0 border-radius, pure ruled paper form */
+    .manifest-sheet {
+      background: #FFFFFF;
+      border: 2px solid #111418;
+      box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.12);
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    /* Bill of Lading Header */
+    .manifest-header {
+      border-bottom: 2px solid #111418;
+      padding: 24px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      align-items: center;
+      gap: 20px;
+    }
+    .carrier-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .carrier-sub {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: #555;
+      display: block;
+      margin-top: 2px;
+    }
+    .manifest-title-block {
+      text-align: center;
+      border-left: 1px solid #CCC;
+      border-right: 1px solid #CCC;
+      padding: 0 16px;
+    }
+    .manifest-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .manifest-serial {
+      font-size: 11px;
+      color: #666;
+      margin-top: 4px;
+    }
+    .manifest-stamps {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .ink-stamp {
+      border: 2px solid #B91C1C;
+      color: #B91C1C;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transform: rotate(-2deg);
+      display: inline-block;
+      line-height: 1.1;
+      text-align: center;
+    }
+    .ink-stamp.green {
+      border-color: #15803D;
+      color: #15803D;
+      transform: rotate(1.5deg);
+    }
+
+    /* Tabular Manifest Metadata Strip */
+    .manifest-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 2px solid #111418;
+      background: #FAF9F5;
+    }
+    .meta-cell {
+      padding: 12px 20px;
+      border-right: 1px solid #111418;
+    }
+    .meta-cell:last-child {
+      border-right: none;
+    }
+    .meta-lbl {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #71717A;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .meta-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: #111418;
+    }
+
+    /* Waybill Scenario Index Bar */
+    .scenario-tabs {
+      display: flex;
+      border-bottom: 1px solid #111418;
+      background: #F4F3EE;
+    }
+    .tab-btn {
+      padding: 10px 24px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      border-right: 1px solid #111418;
+      background: transparent;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .tab-btn.active {
+      background: #FFFFFF;
+      border-bottom: 2px solid #FFFFFF;
+      margin-bottom: -1px;
+      font-weight: 700;
+      color: #111418;
+    }
+
+    /* Active Waybill Inspection Section */
+    .waybill-body {
+      padding: 32px;
+    }
+    .section-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #111418;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .section-badge {
+      font-size: 11px;
+      background: #111418;
+      color: #FFFFFF;
+      padding: 2px 8px;
+      font-weight: 600;
+    }
+
+    /* Detailed Waybill Item Ruled Grid */
+    .line-items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 28px;
+    }
+    .line-items-table th {
+      background: #111418;
+      color: #FFFFFF;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: left;
+      padding: 8px 12px;
+      font-weight: 600;
+    }
+    .line-items-table td {
+      border: 1px solid #D4D4D8;
+      padding: 12px;
+      font-size: 12px;
+      vertical-align: top;
+    }
+    .line-items-table tr.highlight-row td {
+      background: #FEF3C7;
+      border-top: 2px solid #111418;
+      border-bottom: 2px solid #111418;
+      font-weight: 500;
+    }
+
+    /* Evidence Audit Block */
+    .audit-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+      padding: 20px;
+      background: #FAF9F5;
+      border: 1px solid #111418;
+    }
+    .audit-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #CCC;
+      padding-bottom: 4px;
+    }
+    .carrier-proof-box {
+      border: 1px dashed #71717A;
+      padding: 12px;
+      background: #FFF;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+    .carrier-barcode {
+      letter-spacing: 4px;
+      font-size: 18px;
+      font-weight: 700;
+      margin: 8px 0;
+      display: inline-block;
+      background: repeating-linear-gradient(90deg, #111 0, #111 2px, transparent 2px, transparent 4px, #111 4px, #111 7px, transparent 7px, transparent 9px);
+      color: transparent;
+      height: 28px;
+      width: 220px;
+    }
+
+    /* Form Sign-Off Footer & Action Bar */
+    .manifest-footer {
+      border-top: 2px solid #111418;
+      padding: 20px 32px;
+      background: #FAF9F5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .signoff-note {
+      font-size: 11px;
+      color: #555;
+      max-width: 600px;
+      line-height: 1.4;
+    }
+    .action-group {
+      display: flex;
+      gap: 12px;
+    }
+    .btn-paper {
+      background: #111418;
+      color: #FFFFFF;
+      border: 2px solid #111418;
+      padding: 10px 20px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+    }
+    .btn-paper.secondary {
+      background: #FFFFFF;
+      color: #111418;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Physical Paper Manifest Form -->
+  <div class="manifest-sheet">
+
+    <!-- Header / Carrier Bill of Lading -->
+    <div class="manifest-header">
+      <div>
+        <div class="carrier-logo">
+          REBUTTAL // 09
+        </div>
+        <span class="carrier-sub">AUTONOMOUS CHARGEBACK ARBITRATION</span>
+      </div>
+      <div class="manifest-title-block">
+        <div class="manifest-title">Waybill &amp; Settlement Manifest</div>
+        <div class="manifest-serial">STRIPE SCHEME AUDIT BATCH REF #8824-2026</div>
+      </div>
+      <div class="manifest-stamps">
+        <div class="ink-stamp green">
+          VERIFIED<br>BEDROCK AI
+        </div>
+        <div class="ink-stamp">
+          AUDIT<br>ACTIVE
+        </div>
+      </div>
+    </div>
+
+    <!-- Metadata Grid -->
+    <div class="manifest-meta-grid">
+      <div class="meta-cell">
+        <span class="meta-lbl">TOTAL CONTESTED</span>
+        <div class="meta-val">$388.00 USD</div>
+      </div>
+      <div class="meta-cell">
+        <span class="meta-lbl">RECOVERED WIN VALUE</span>
+        <div class="meta-val">$48.00 (88.5%)</div>
+      </div>
+      <div class="meta-cell">
+        <span class="meta-lbl">ACTIONABLE CLAIMS</span>
+        <div class="meta-val">1 Pending Approval</div>
+      </div>
+      <div class="meta-cell">
+        <span class="meta-lbl">FILING DEADLINE</span>
+        <div class="meta-val" style="color: #B91C1C;">TODAY 17:00 UTC</div>
+      </div>
+    </div>
+
+    <!-- Scenario Index Tabs -->
+    <div class="scenario-tabs">
+      <button class="tab-btn">WAYBILL #1: S1 CARRIER PROOF ($48)</button>
+      <button class="tab-btn active">WAYBILL #2: S2 VIP FRAUD ($340) [FLAGGED]</button>
+      <button class="tab-btn">WAYBILL #3: S3 SUBSCRIPTION ($129)</button>
+    </div>
+
+    <!-- Active Waybill Inspection Section -->
+    <div class="waybill-body">
+      <div class="section-banner">
+        <div class="section-title">ACTIVE CLAIM DECLARATION: DISPUTE dp_1S2_fraud_4820</div>
+        <div class="section-badge">INTERVENTION REQUIRED</div>
+      </div>
+
+      <!-- Ruled Line Items Table -->
+      <table class="line-items-table">
+        <thead>
+          <tr>
+            <th>Line</th>
+            <th>Dispute Ref</th>
+            <th>Cardholder</th>
+            <th>Reason Category</th>
+            <th>Claim Value</th>
+            <th>Fulfillment Evidence</th>
+            <th>Disposition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>01</td>
+            <td>#dp_1S1_phys</td>
+            <td>Michael Brown</td>
+            <td>Product Not Received</td>
+            <td>$48.00</td>
+            <td>UPS 1Z9999999999999999 (Signed: M. Brown)</td>
+            <td style="color: #15803D; font-weight: 700;">[WON // DISPATCHED]</td>
+          </tr>
+          <tr class="highlight-row">
+            <td>02</td>
+            <td>#dp_1S2_fraud</td>
+            <td>Sarah Jenkins (VIP)</td>
+            <td>Fraudulent Claim</td>
+            <td>$340.00</td>
+            <td>14 Orders Matched, San Francisco IP, AVS Match</td>
+            <td style="color: #B91C1C; font-weight: 700;">[AWAITING MERCHANT SIGN-OFF]</td>
+          </tr>
+          <tr>
+            <td>03</td>
+            <td>#dp_1S3_subs</td>
+            <td>David Miller</td>
+            <td>Subscription Canceled</td>
+            <td>$129.00</td>
+            <td>Prior Cancellation Notice Acknowledged</td>
+            <td style="color: #71717A; font-weight: 700;">[CONCEDED // SAVED $15 FEE]</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Evidentiary Audit Block -->
+      <div class="audit-grid">
+        <div>
+          <div class="audit-title">1. Cardholder Commercial Profile &amp; Fraud Telemetry</div>
+          <div class="carrier-proof-box">
+            <p><strong>ACCOUNT:</strong> Sarah Jenkins (Customer #CUST-9821)</p>
+            <p><strong>LIFETIME TRANSACTIONS:</strong> 14 fulfilled orders across 18 months ($4,820.00 volume)</p>
+            <p><strong>DISPUTE RATIO:</strong> 0.00% historical chargeback rate prior to this claim</p>
+            <p><strong>IP &amp; AVS VERIFICATION:</strong> IP resolved to San Francisco, CA. Street address and 5-digit ZIP matched card issuer records with 100% concordance.</p>
+            <div class="carrier-barcode"></div>
+            <p style="font-size: 10px; color: #71717A;">BARCODE: STRIPE-RADAR-RISK-SCORE-12-LOW</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="audit-title">2. Human Approval Intercept (SMS Protocol)</div>
+          <div class="carrier-proof-box" style="background: #FAF5FF; border-color: #A855F7;">
+            <p style="color: #6B21A8; font-weight: 700; margin-bottom: 6px;">DISPATCH SMS TO MERCHANT PHONE:</p>
+            <p style="font-style: italic; margin-bottom: 12px;">
+              "Rebuttal: $340 dispute from VIP Sarah Jenkins ($4.8k spend). Auto-defense ready with 92% win rate. Reply APPROVE to file, or REFUND to waive."
+            </p>
+            <p><strong>GATEWAY STATUS:</strong> Outbound transmission queued. Standing by for merchant keystroke or SMS response.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sign-off Footer -->
+    <div class="manifest-footer">
+      <div class="signoff-note">
+        I hereby certify that the evidence documented on this manifest is true, accurate, and extracted directly from verified Stripe and shipping carrier databases for submission to the card network.
+      </div>
+      <div class="action-group">
+        <button class="btn-paper secondary">CONCEDE DISPUTE</button>
+        <button class="btn-paper">SIGN &amp; TRANSMIT EVIDENCE ($340.00)</button>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

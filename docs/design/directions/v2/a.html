@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>Direction A — The Docket (Rebuttal)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #0A0D12;
+      color: #E8E5DF;
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.5;
+      min-width: 1280px;
+      padding: 32px 48px;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.02em;
+    }
+    
+    /* Top Formal Folio Header */
+    .docket-folio {
+      border-bottom: 1px solid #232B36;
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .folio-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .folio-pre {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #D4A359;
+      font-weight: 600;
+    }
+    .folio-heading {
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: #F5F2EC;
+    }
+    .folio-heading em {
+      font-style: italic;
+      color: #D4A359;
+    }
+    .folio-meta {
+      display: flex;
+      gap: 24px;
+      font-size: 13px;
+      color: #8C96A5;
+    }
+    .folio-meta span strong {
+      color: #E8E5DF;
+      font-weight: 500;
+    }
+    .seal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #151C24;
+      border: 1px solid #2C3848;
+      border-radius: 2px;
+      font-size: 12px;
+      color: #D4A359;
+    }
+    .seal-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Scenario Ribbon */
+    .scenario-ribbon {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #11161D;
+      border: 1px solid #1E2733;
+      border-left: 3px solid #D4A359;
+      padding: 12px 20px;
+      margin-bottom: 28px;
+      border-radius: 2px;
+    }
+    .ribbon-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #7E8B9B;
+    }
+    .scenario-triggers {
+      display: flex;
+      gap: 12px;
+    }
+    .scenario-btn {
+      background: transparent;
+      border: 1px solid #283342;
+      color: #9AA6B5;
+      padding: 6px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+    }
+    .scenario-btn.active {
+      background: #1C2430;
+      color: #F5F2EC;
+      border-color: #D4A359;
+    }
+
+    /* Primary Active Case Dossier (70% dominant viewport) */
+    .dossier-workspace {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      margin-bottom: 36px;
+    }
+
+    .case-card {
+      background: #121820;
+      border: 1px solid #232D3B;
+      padding: 28px;
+      border-radius: 2px;
+      position: relative;
+    }
+    .case-card::before {
+      content: "PRIMARY ACTION REQUIRED";
+      position: absolute;
+      top: -10px;
+      left: 24px;
+      background: #D4A359;
+      color: #0A0D12;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 1px;
+    }
+
+    .case-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 8px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #1C2430;
+    }
+    .case-id-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .case-num {
+      font-size: 12px;
+      color: #8C96A5;
+      letter-spacing: 0.05em;
+    }
+    .case-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #FFFFFF;
+    }
+    .case-amount-block {
+      text-align: right;
+    }
+    .case-amount {
+      font-size: 28px;
+      font-weight: 600;
+      color: #F59E0B;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .case-countdown {
+      font-size: 12px;
+      color: #EF4444;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+    }
+
+    /* Narrative Case Brief */
+    .case-prose {
+      font-size: 16px;
+      line-height: 1.65;
+      color: #C5CBD3;
+      margin-bottom: 24px;
+    }
+    .case-prose strong {
+      color: #F5F2EC;
+      font-weight: 600;
+    }
+    .case-prose em {
+      font-style: italic;
+      color: #D4A359;
+    }
+
+    /* Evidence Exhibit Grid */
+    .exhibits-header {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #8C96A5;
+      margin-bottom: 12px;
+    }
+    .exhibit-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #0E131A;
+      border: 1px solid #1A222D;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .exhibit-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .tag-match { background: #064E3B; color: #34D399; }
+    .tag-verified { background: #1E3A8A; color: #60A5FA; }
+
+    /* Action Deck */
+    .docket-actions {
+      display: flex;
+      gap: 14px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #1C2430;
+    }
+    .btn-affirm {
+      flex: 1;
+      background: #D4A359;
+      color: #0A0D12;
+      border: none;
+      padding: 12px 18px;
+      font-family: 'Newsreader', serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-concede {
+      background: #18202A;
+      border: 1px solid #2B3747;
+      color: #9AA6B5;
+      padding: 12px 20px;
+      font-family: 'Newsreader', serif;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    /* Right Column: Automated Rebuttal Brief & Approval Phone Simulator */
+    .brief-card {
+      background: #121820;
+      border: 1px solid #232D3B;
+      padding: 24px;
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .brief-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #D4A359;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .brief-document {
+      background: #0B0E14;
+      border: 1px solid #1E2733;
+      padding: 20px;
+      font-family: 'Newsreader', serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #A6B0BC;
+      margin-bottom: 20px;
+    }
+    .brief-document h4 {
+      color: #EDE8DF;
+      font-size: 15px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .handset-card {
+      background: #0E131A;
+      border: 1px solid #24303F;
+      padding: 16px;
+      border-radius: 4px;
+    }
+    .handset-header {
+      font-size: 11px;
+      color: #7E8B9B;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .sms-bubble {
+      background: #1E2836;
+      color: #EDE8DF;
+      padding: 10px 14px;
+      border-radius: 8px 8px 8px 0;
+      font-size: 12px;
+      line-height: 1.45;
+      margin-bottom: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Secondary Docket Strip (Bottom Chronological Roster) */
+    .docket-roster-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #8C96A5;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .docket-roster-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+    .docket-roster-table th {
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #64748B;
+      padding: 10px 14px;
+      border-bottom: 1px solid #232B36;
+    }
+    .docket-roster-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #161D26;
+      color: #CBD5E1;
+    }
+    .status-won { color: #10B981; }
+    .status-held { color: #F59E0B; }
+    .status-conceded { color: #94A3B8; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Formal Folio Header -->
+  <header class="docket-folio">
+    <div class="folio-title-block">
+      <div class="folio-pre">Magistrate Record // Rebuttal Arbitration Core</div>
+      <h1 class="folio-heading">Dispute Docket &amp; <em>Evidence Triage</em></h1>
+    </div>
+    <div class="folio-meta mono">
+      <span>CLAIMS IN JURISDICTION: <strong>3 Active</strong></span>
+      <span>RECOVERY VOLUME: <strong>$388.00 USD</strong></span>
+      <span>SCHEME WIN RATE: <strong>88.5%</strong></span>
+      <div class="seal-badge">
+        <div class="seal-dot"></div>
+        <span>BEDROCK AGENT ACTIVE</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Scenario Ribbon -->
+  <section class="scenario-ribbon">
+    <div class="ribbon-label mono">Test Benchmark Injection:</div>
+    <div class="scenario-triggers">
+      <button class="scenario-btn mono">S1: Carrier Delivery ($48 Won)</button>
+      <button class="scenario-btn mono active">S2: VIP Fraud ($340 Action Reqd)</button>
+      <button class="scenario-btn mono">S3: Subscription Concession ($129)</button>
+    </div>
+  </section>
+
+  <!-- Primary Active Case Dossier (70% viewport dominant) -->
+  <main class="dossier-workspace">
+    <!-- Left: Judicial Case Examination -->
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-id-group">
+          <span class="case-num mono">DISPUTE REF: dp_1S2_fraud_4820</span>
+          <h2 class="case-title">Sarah Jenkins — VIP Order #8841</h2>
+        </div>
+        <div class="case-amount-block">
+          <div class="case-amount">$340.00</div>
+          <div class="case-countdown">EXPIRING IN 02:44:18</div>
+        </div>
+      </div>
+
+      <div class="case-prose">
+        Customer filed a <strong>Fraudulent Transaction</strong> claim with issuer. However, internal ledger confirms Sarah Jenkins has <strong>14 prior successful orders</strong> ($4,820 lifetime spend) without a single dispute. High-confidence fraud defense prepared, but requires merchant confirmation before filing to preserve VIP customer relationship.
+      </div>
+
+      <div class="exhibits-header mono">Assembled Evidentiary Exhibits (4/4 Ready)</div>
+      
+      <div class="exhibit-row mono">
+        <div><strong>EXHIBIT A:</strong> Order Ledger &amp; Prior Fulfillment History</div>
+        <span class="exhibit-tag tag-match">14 ORDERS MATCHED</span>
+      </div>
+      <div class="exhibit-row mono">
+        <div><strong>EXHIBIT B:</strong> Device Fingerprint &amp; IPv4 Geolocation</div>
+        <span class="exhibit-tag tag-match">SAN FRANCISCO / MATCH</span>
+      </div>
+      <div class="exhibit-row mono">
+        <div><strong>EXHIBIT C:</strong> Stripe Radar Risk Score (12/100)</div>
+        <span class="exhibit-tag tag-verified">LOW RADAR RISK</span>
+      </div>
+      <div class="exhibit-row mono">
+        <div><strong>EXHIBIT D:</strong> Cardholder Billing &amp; Shipping Address Verification</div>
+        <span class="exhibit-tag tag-match">AVS FULL MATCH</span>
+      </div>
+
+      <div class="docket-actions">
+        <button class="btn-affirm">
+          <span>Authorize &amp; Submit Counter-Evidence ($340.00)</span>
+          <span class="mono">â†’</span>
+        </button>
+        <button class="btn-concede">Concede Claim (Avoid $15 Fee)</button>
+      </div>
+    </div>
+
+    <!-- Right: Bedrock Brief & SMS Verification Handset -->
+    <div class="brief-card">
+      <div>
+        <div class="brief-title mono">
+          <span>Bedrock Rebuttal Brief</span>
+          <span>EST. WIN 92%</span>
+        </div>
+        <div class="brief-document">
+          <h4>STATEMENT OF DISPUTE ARBITRATION</h4>
+          <p>
+            The cardholder disputes order #8841 claiming unauthorized fraud. We respectfully provide evidence of an established 18-month commercial relationship comprising 14 fulfilled transactions sent to the identical verified billing address.
+          </p>
+        </div>
+      </div>
+
+      <div class="handset-card">
+        <div class="handset-header mono">
+          <span>HUMAN-IN-THE-LOOP SMS INTERCEPT</span>
+          <span>PORT +1 (415) 555-0199</span>
+        </div>
+        <div class="sms-bubble">
+          <strong>Rebuttal Agent:</strong> "Alert: Dispute #8841 ($340.00) flagged for Sarah Jenkins. Since customer LTV is $4,820, reply YES to submit evidence or NO to refund."
+        </div>
+        <div class="mono" style="font-size: 11px; color: #10B981;">
+          &gt; Awaiting merchant SMS response to trigger Bedrock execution...
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Secondary Docket Strip (Bottom Chronological Roster) -->
+  <section>
+    <div class="docket-roster-title mono">
+      <span>Active Docket Ledger — Chronological Stream</span>
+      <span>Showing 3 of 3 Disputes</span>
+    </div>
+    <table class="docket-roster-table">
+      <thead>
+        <tr>
+          <th>Docket ID</th>
+          <th>Claimant / Customer</th>
+          <th>Reason</th>
+          <th>Amount</th>
+          <th>Evidentiary Proof</th>
+          <th>Disposition</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#dp_1S1_phys</td>
+          <td>Michael Brown</td>
+          <td>product_not_received</td>
+          <td>$48.00</td>
+          <td>UPS 1Z9999999999999999 (Signed: M. Brown)</td>
+          <td class="status-won">âœ“ WON (Autonomous)</td>
+          <td style="color: #64748B;">Archived</td>
+        </tr>
+        <tr style="background: #161D26;">
+          <td><strong style="color: #F59E0B;">#dp_1S2_fraud</strong></td>
+          <td><strong>Sarah Jenkins (VIP)</strong></td>
+          <td>fraudulent</td>
+          <td><strong style="color: #F59E0B;">$340.00</strong></td>
+          <td>14 Past Orders + AVS Match + Radar 12</td>
+          <td class="status-held">âš  AWAITING APPROVAL</td>
+          <td style="color: #D4A359; font-weight: 600;">Active in Dossier â†‘</td>
+        </tr>
+        <tr>
+          <td>#dp_1S3_subs</td>
+          <td>David Miller</td>
+          <td>subscription_canceled</td>
+          <td>$129.00</td>
+          <td>Cancellation Email prior to billing cycle</td>
+          <td class="status-conceded">âŠ– CONCEDED (Saved $15 fee)</td>
+          <td style="color: #64748B;">Closed</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</body>
+</html>

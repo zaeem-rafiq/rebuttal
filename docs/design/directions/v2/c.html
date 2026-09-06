@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>Direction C — The Turret (Rebuttal)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #06090E;
+      color: #D1D5DB;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      line-height: 1.4;
+      min-width: 1280px;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* Leftmost Vertical Command Rail (48px) */
+    .turret-rail {
+      width: 48px;
+      background: #0B0F17;
+      border-right: 1px solid #1E293B;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+    .rail-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: #06B6D4;
+      border: 1px solid #0891B2;
+      padding: 4px 6px;
+    }
+    .rail-icon {
+      color: #64748B;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 2px;
+      transition: all 0.15s;
+    }
+    .rail-icon.active {
+      color: #06B6D4;
+      background: #152238;
+      border-left: 2px solid #06B6D4;
+    }
+    .rail-bottom {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .status-beacon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px #10B981;
+    }
+
+    /* Main Turret Deck Layout */
+    .turret-deck {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* Top Telemetry Ticker */
+    .telemetry-ticker {
+      background: #0B111D;
+      border-bottom: 1px solid #1E293B;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-size: 11px;
+    }
+    .ticker-group {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .ticker-item {
+      display: flex;
+      gap: 6px;
+    }
+    .ticker-key { color: #64748B; }
+    .ticker-val { color: #06B6D4; font-weight: 600; }
+    .ticker-val.green { color: #10B981; }
+
+    /* Dual-Pane Split Command HUD */
+    .hud-workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      background: #06090E;
+      overflow: hidden;
+    }
+
+    /* Left Pane: Dispute Queue & Key Controls */
+    .queue-pane {
+      border-right: 1px solid #1E293B;
+      display: flex;
+      flex-direction: column;
+      background: #090E17;
+    }
+    .pane-header {
+      background: #0E1626;
+      border-bottom: 1px solid #1E293B;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #94A3B8;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .key-badge {
+      background: #1E293B;
+      color: #38BDF8;
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-size: 10px;
+      margin-left: 4px;
+    }
+
+    /* Queue Item Feed */
+    .queue-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .queue-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid #141E30;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: background 0.1s;
+    }
+    .queue-item:hover {
+      background: #111B2C;
+    }
+    .queue-item.active {
+      background: #142238;
+      border-left: 3px solid #06B6D4;
+    }
+    .queue-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .item-id {
+      font-weight: 700;
+      color: #F8FAFC;
+    }
+    .item-amount {
+      color: #06B6D4;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .item-desc {
+      color: #94A3B8;
+      font-size: 11px;
+    }
+    .item-tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .hud-tag {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 1px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .tag-amber { background: #451A03; color: #F59E0B; border: 1px solid #78350F; }
+    .tag-green { background: #064E3B; color: #34D399; border: 1px solid #047857; }
+    .tag-cyan { background: #083344; color: #38BDF8; border: 1px solid #0E7490; }
+
+    /* Scenario Injector Command Strip */
+    .scenario-cmd-bar {
+      border-top: 1px solid #1E293B;
+      background: #0B111D;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cmd-label {
+      font-size: 10px;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .cmd-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-cmd {
+      flex: 1;
+      background: #141E30;
+      border: 1px solid #233550;
+      color: #CBD5E1;
+      padding: 6px 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .btn-cmd.selected {
+      background: #0E7490;
+      border-color: #06B6D4;
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    /* Right Pane: Telemetry Engine & Live Handset */
+    .detail-pane {
+      display: grid;
+      grid-template-rows: 1fr 220px;
+      background: #06090E;
+      overflow: hidden;
+    }
+
+    /* Active Dossier Inspection */
+    .dossier-panel {
+      padding: 24px;
+      overflow-y: auto;
+      border-bottom: 1px solid #1E293B;
+    }
+    .dossier-headline {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #1E293B;
+      padding-bottom: 16px;
+    }
+    .case-h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #F8FAFC;
+    }
+    .case-sub {
+      color: #06B6D4;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    /* Telemetry Grid */
+    .hud-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .hud-stat-box {
+      background: #0B111E;
+      border: 1px solid #1A263B;
+      padding: 12px;
+    }
+    .hud-stat-title {
+      font-size: 10px;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .hud-stat-num {
+      font-size: 16px;
+      font-weight: 700;
+      color: #F8FAFC;
+    }
+
+    /* Bedrock Terminal Stream */
+    .terminal-trace {
+      background: #03060A;
+      border: 1px solid #142238;
+      padding: 14px;
+      margin-bottom: 20px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .trace-line {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .trace-ts { color: #475569; }
+    .trace-act { color: #06B6D4; font-weight: 600; }
+    .trace-msg { color: #94A3B8; }
+
+    /* Bottom Control & Handset Strip */
+    .lower-turret {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      background: #080D15;
+    }
+    .action-turret-controls {
+      padding: 20px;
+      border-right: 1px solid #1E293B;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .quick-key-grid {
+      display: flex;
+      gap: 12px;
+    }
+    .btn-key-action {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #1E293B;
+      background: #0F172A;
+      color: #F8FAFC;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .btn-key-action.primary {
+      background: #0E7490;
+      border-color: #06B6D4;
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+
+    /* Interactive SMS Handset Mockup */
+    .handset-turret {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      background: #05080E;
+    }
+    .handset-screen {
+      flex: 1;
+      background: #0B111D;
+      border: 1px solid #1E293B;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .phone-sms-text {
+      background: #142238;
+      border: 1px solid #1E3A5F;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      line-height: 1.35;
+      color: #E2E8F0;
+    }
+    .phone-input-bar {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .phone-input {
+      flex: 1;
+      background: #060A10;
+      border: 1px solid #1E293B;
+      color: #38BDF8;
+      padding: 4px 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+    }
+    .phone-send {
+      background: #06B6D4;
+      color: #06090E;
+      border: none;
+      padding: 4px 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Leftmost 48px Command Rail -->
+  <aside class="turret-rail">
+    <div class="rail-logo">R9</div>
+    <div class="rail-icon active" title="Dispute Console">[D]</div>
+    <div class="rail-icon" title="Scheme Rules">[S]</div>
+    <div class="rail-icon" title="Carrier Logs">[C]</div>
+    <div class="rail-bottom">
+      <div class="status-beacon" title="Bedrock Agent Connected"></div>
+    </div>
+  </aside>
+
+  <!-- Turret Main Operator Deck -->
+  <div class="turret-deck">
+
+    <!-- Top Telemetry Ticker -->
+    <header class="telemetry-ticker">
+      <div class="ticker-group">
+        <div class="ticker-item">
+          <span class="ticker-key">QUEUE:</span>
+          <span class="ticker-val">3 ACTIVE</span>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-key">EXPOSURE:</span>
+          <span class="ticker-val">$388.00</span>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-key">RECOVERED:</span>
+          <span class="ticker-val green">$48.00 (88.5%)</span>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-key">MODEL:</span>
+          <span class="ticker-val">BEDROCK CLAUDE 3.5</span>
+        </div>
+      </div>
+      <div class="ticker-group">
+        <div class="ticker-item">
+          <span class="ticker-key">HOTKEYS:</span>
+          <span class="ticker-val">[J/K] NAV</span>
+          <span class="ticker-val">[F] FIGHT</span>
+          <span class="ticker-val">[C] CONCEDE</span>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-key">TIME:</span>
+          <span class="ticker-val">19:02:44 UTC</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Split HUD Workspace -->
+    <div class="hud-workspace">
+
+      <!-- Left Column: Fast Queue & Scenario Injector -->
+      <section class="queue-pane">
+        <div class="pane-header">
+          <span>CHARGEBACK DISPUTE QUEUE</span>
+          <span>SELECT: <span class="key-badge">J</span> <span class="key-badge">K</span></span>
+        </div>
+
+        <div class="queue-list">
+          <!-- Item 1 -->
+          <div class="queue-item">
+            <div class="queue-row-top">
+              <span class="item-id">#dp_1S1_phys</span>
+              <span class="item-amount" style="color: #10B981;">+$48.00</span>
+            </div>
+            <div class="item-desc">Michael Brown â€¢ Wireless Headphones</div>
+            <div class="item-tags">
+              <span class="hud-tag tag-green">AUTO-WON</span>
+              <span class="hud-tag tag-cyan">UPS VERIFIED</span>
+            </div>
+          </div>
+
+          <!-- Item 2 (Active) -->
+          <div class="queue-item active">
+            <div class="queue-row-top">
+              <span class="item-id">#dp_1S2_fraud</span>
+              <span class="item-amount" style="color: #F59E0B;">$340.00</span>
+            </div>
+            <div class="item-desc">Sarah Jenkins â€¢ VIP Customer ($4,820 LTV)</div>
+            <div class="item-tags">
+              <span class="hud-tag tag-amber">HUMAN APPROVAL REQD</span>
+              <span class="hud-tag tag-cyan">AVS + RADAR 12</span>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="queue-item">
+            <div class="queue-row-top">
+              <span class="item-id">#dp_1S3_subs</span>
+              <span class="item-amount" style="color: #94A3B8;">$129.00</span>
+            </div>
+            <div class="item-desc">David Miller â€¢ Monthly Pro Tier</div>
+            <div class="item-tags">
+              <span class="hud-tag" style="background: #334155; color: #94A3B8;">CONCEDED</span>
+              <span class="hud-tag" style="background: #1E293B; color: #64748B;">SAVED $15 FEE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scenario Injector -->
+        <div class="scenario-cmd-bar">
+          <div class="cmd-label">FAST SCENARIO INJECTION:</div>
+          <div class="cmd-buttons">
+            <button class="btn-cmd"><span class="key-badge">1</span> S1: UPS Win</button>
+            <button class="btn-cmd selected"><span class="key-badge">2</span> S2: VIP Fraud</button>
+            <button class="btn-cmd"><span class="key-badge">3</span> S3: Concede</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Case Telemetry & Live Handset Deck -->
+      <section class="detail-pane">
+
+        <!-- Active Dossier Telemetry -->
+        <div class="dossier-panel">
+          <div class="dossier-headline">
+            <div>
+              <div class="case-sub">DISPUTE INSPECTOR // CASE dp_1S2_fraud_4820</div>
+              <h1 class="case-h1">Sarah Jenkins — VIP Order #8841</h1>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 24px; font-weight: 700; color: #06B6D4;">$340.00 USD</div>
+              <div style="color: #EF4444; font-size: 11px;">EXPIRING: 02h 44m</div>
+            </div>
+          </div>
+
+          <!-- 3-box HUD Stats -->
+          <div class="hud-grid">
+            <div class="hud-stat-box">
+              <div class="hud-stat-title">Customer Lifetime Value</div>
+              <div class="hud-stat-num" style="color: #10B981;">$4,820.00</div>
+              <div style="font-size: 10px; color: #64748B; margin-top: 2px;">14 Prior Orders / 0 Disputes</div>
+            </div>
+            <div class="hud-stat-box">
+              <div class="hud-stat-title">Bedrock Win Probability</div>
+              <div class="hud-stat-num" style="color: #06B6D4;">92.4%</div>
+              <div style="font-size: 10px; color: #64748B; margin-top: 2px;">High-concordance fraud proof</div>
+            </div>
+            <div class="hud-stat-box">
+              <div class="hud-stat-title">Stripe Radar Risk Index</div>
+              <div class="hud-stat-num">12 / 100</div>
+              <div style="font-size: 10px; color: #10B981; margin-top: 2px;">Low Risk / Trusted Entity</div>
+            </div>
+          </div>
+
+          <!-- Real-Time Bedrock Execution Terminal -->
+          <div class="terminal-trace">
+            <div class="trace-line">
+              <span class="trace-ts">19:01:04</span>
+              <span class="trace-act">[AGENT_CORE]</span>
+              <span class="trace-msg">Loaded dispute evidence packet for customer Sarah Jenkins.</span>
+            </div>
+            <div class="trace-line">
+              <span class="trace-ts">19:01:05</span>
+              <span class="trace-act">[TOOL_RADAR]</span>
+              <span class="trace-msg">AVS Match: Address line 1 + ZIP match verified issuer database.</span>
+            </div>
+            <div class="trace-line">
+              <span class="trace-ts">19:01:06</span>
+              <span class="trace-act">[TOOL_POLICY]</span>
+              <span class="trace-msg">VIP threshold reached ($4.8k &gt; $1k). Escalating to Merchant SMS intercept.</span>
+            </div>
+            <div class="trace-line">
+              <span class="trace-ts">19:01:07</span>
+              <span class="trace-act" style="color: #F59E0B;">[GATE_SMS]</span>
+              <span class="trace-msg" style="color: #F59E0B;">SMS payload dispatched to merchant +1 (415) 555-0199. Awaiting token.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lower Controls & Handset -->
+        <div class="lower-turret">
+          <div class="action-turret-controls">
+            <div>
+              <div style="font-size: 10px; color: #64748B; text-transform: uppercase; margin-bottom: 8px;">
+                OPERATOR EXECUTION ACTIONS:
+              </div>
+              <div class="quick-key-grid">
+                <button class="btn-key-action primary">
+                  <span class="key-badge" style="background: #083344; color: #38BDF8;">F</span> SUBMIT REBUTTAL ($340)
+                </button>
+                <button class="btn-key-action">
+                  <span class="key-badge">C</span> CONCEDE &amp; WAIVE FEE
+                </button>
+              </div>
+            </div>
+            <div style="font-size: 10px; color: #64748B;">
+              STATUS: Agent pipeline halted on Human-in-the-Loop decision gate.
+            </div>
+          </div>
+
+          <!-- Handset Simulator -->
+          <div class="handset-turret">
+            <div style="font-size: 10px; color: #64748B; margin-bottom: 6px;">SMS INTERCEPT HANDSET:</div>
+            <div class="handset-screen">
+              <div class="phone-sms-text">
+                <strong>Rebuttal Alert:</strong> Sarah Jenkins ($4.8k LTV) filed $340 fraud. Reply <strong>YES</strong> to submit evidence, or <strong>NO</strong> to concede.
+              </div>
+              <div class="phone-input-bar">
+                <input type="text" class="phone-input" value="YES" readonly>
+                <button class="phone-send">SEND</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

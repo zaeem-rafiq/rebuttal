@@ -1,0 +1,84 @@
+<USER_REQUEST>
+# UI ELEVATION — from vibe-coded to designed
+
+## Mission
+This product's dashboard UI reads as generic / AI-generated. Make it read as designed for THIS product and THIS user. Generic is a sameness problem, not a polish problem: more cards, shadows, gradients and motion make it worse. Fix it by making fewer, more deliberate choices.
+
+Work through the phases in order. There is a hard stop after Phase 2. Do NOT edit application code before I pick a direction at that stop.
+
+## Phase 0 — Discover (no edits)
+1. Identify: framework; styling system (Tailwind / shadcn / CSS modules / styled / other); where colors, type and spacing are defined today (tokens, tailwind config, or scattered); icon set; fonts; dark-mode status; how to run the app locally; any design docs, brand assets or agent rules already in the repo (load them if they exist).
+2. Create a branch `design/elevation`. Run the app. Use your browser tool to screenshot the main dashboard plus the 3–5 most-used screens at 1280px and 390px, and one empty state and one loading state if reachable. Save to `docs/design/before/`. If you cannot run the app or take screenshots, go to Failure handoff.
+3. In ≤5 lines: what is this product, who uses it, what job are they doing on this dashboard, and which emotional register fits (e.g. calm & trustworthy / precise & fast / warm & personal). Name 2–3 cues from the product's own domain and vernacular that a designer could build a visual identity from. Distinctiveness comes from there, not from a palette.
+
+## Phase 1 — Diagnose: the generic-tells audit (no edits)
+Audit every screenshot against this list. Output a table: tell → where seen → severity (H/M/L). Then state the ONE root cause in one sentence (usually: "no point of view — every choice is the library default").
+
+- Layout: everything is an identical rounded card; one radius on everything regardless of hierarchy; the same grey shadow under everything; lists or tables chopped into cards; centered-everything; no density rhythm (uniformly cramped or uniformly bloated).
+- Color: Tailwind/shadcn default blue / indigo / violet as the "brand"; brand color used as background AND border AND text; pure #000 / #FFF; gradient washes, glassmorphism or blur blobs as decoration; charts on the library's default palette.
+- Type: Inter / Geist / system-ui by reflex; arbitrary sizes with no scale; loose kerning on large text; tracked-out ALL-CAPS eyebrow labels; one accent word in a headline; "WORD — fragment" labels; "A · B · C" middle-dot meta strings; monospace on small data labels as decoration.
+- Details: missing hover / focus / active / disabled / loading states; "→" appended to buttons and links; emoji as icons; unedited default icon set; 01 / 02 / 03 numbering on things that are not sequences; fade-and-slide-up on every section and hover-lift on every card; placeholder or marketing-speak copy inside product UI; empty states that just say "No data".
+- Dashboard: all KPI cards at equal weight (no headline metric); numbers not right-aligned or not tabular; inconsistent row heights; sidebar with no clear active state; spinners instead of skeletons; no visible reading order on the page.
+
+## Phase 2 — Propose 3 directions, then STOP (no app-code edits)
+Generate three genuinely different directions grounded in Phase 0 — not three palettes on the same layout. They must differ on at least three of these axes: density (airy ↔ data-dense), tone (institutional ↔ warm ↔ technical), type register (humanist sans ↔ grotesque ↔ serif display), color logic (monochrome + one signal color ↔ tinted neutrals ↔ dark-first), and the signature element (how numbers are set / the navigation / the data-viz style / one characteristic surface).
+
+For each direction give:
+- Name, a one-sentence thesis, and the sentence "This fits THIS product because …"
+- Palette: 4–6 named hex values. Neutrals do 80% of the work; 1 brand + 1 accent maximum.
+- Type: 1–2 families with roles and a scale ratio (1.2–1.333). Do not keep or pick Inter / Geist by reflex; if you keep the current font, say why it is the right choice here.
+- The ONE memorable element, and what this direction deliberately rejects.
+- Two real products in the same neighbourhood (calibration only — do not copy them).
+
+Then build a static mock of the main dashboard screen for each direction using the REAL content and numbers from the before-screenshot: one self-contained HTML file each at `docs/design/directions/{a,b,c}.html`, screenshotted at 1280px with the PNG saved beside it. If a full mock will not fit the time bound, produce a token board per direction instead (swatches, a type specimen using real headings and numbers from the app, one styled KPI card and one styled table row) and say so.
+
+Do not propose the other AI cliché: cream background (~#F4F1EA) + high-contrast serif + terracotta accent (~#D97757); near-black + a single acid-green or vermilion accent; broadsheet hairlines with zero radius. Those are defaults wearing a costume.
+
+STOP HERE. Present one artifact containing: the tells table, the three directions, the three screenshots, the concrete protected-paths list for this repo (see Guardrails), and your recommendation in ≤3 lines. Ask me to pick A / B / C or a mix. Wait for my answer.
+
+## Phase 3 — Build the chosen direction
+1. Tokens first, one source of truth: colors with tints and shades, semantic colors, type scale, spacing on a 4/8px grid, radii (nested radius = parent radius − padding), elevation, motion durations and easing, `tabular-nums` on all numeric data. Wire it into the styling system so screens consume tokens, never hardcoded values.
+2. Refactor screens in order of user traffic. On each screen: one focal point; the primary action carries roughly 2× the visual weight of anything else; secondary information de-emphasized by color and weight, not only size; body and table text ≤75 characters wide; density that matches the direction.
+3. States pass: every interactive element gets hover, focus-visible, active, disabled and loading; every data view gets a skeleton loading state and an empty state that tells the user what to do next.
+4. Restraint pass: on each screen remove one thing that carries no meaning. One bold move per screen; everything else quiet.
+5. Quality floor, non-negotiable: text contrast ≥ WCAG AA; visible keyboard focus everywhere; `prefers-reduced-motion` respected; layout holds at 390 / 768 / 1280; dark mode, if it exists, gets its own palette rather than inverted colors.
+6. Re-screenshot the same screens at the same widths to `docs/design/after/` with the same file names.
+
+Commit at the end of each numbered step with a message naming the step.
+
+## Guardrails
+- Allowed: the presentation layer only — styles, tokens, component markup and classes, icons, fonts, and UI copy that is unclear (never its meaning). At most ONE new font family, loaded the framework's recommended way. No new UI libraries or dependencies without asking me.
+- Protected, do not touch: API routes, server and business logic, data models, migrations, auth, env and config, CI, tests other than snapshot updates, package files beyond the font. Enumerate the concrete paths for this repo in your Phase 2 artifact.
+- Do not change information architecture, navigation structure, feature behavior, or which data is shown.
+- Do not merge phases or skip the stop to save time.
+
+## Proof of success — print this block to the transcript when done
+
+    UI ELEVATION — PROOF
+    Direction: <name>
+    Screens touched: <n> — <list>
+    Tells audit: before <X> → after <Y>; remaining: <list + why each stays>
+    Quality floor: contrast AA ✔/✘ · focus-visible ✔/✘ · states ✔/✘ · empty+loading ✔/✘ · reduced-motion ✔/✘ · 390/768/1280 ✔/✘ · dark mode ✔/✘/n-a
+    Build / lint / typecheck / tests: ✔/✘ each
+    Diff scope: git diff --stat <base> — confirm no protected path changed
+    Screenshots: docs/design/before/ and docs/design/after/ (same names, same widths)
+    Open items: <anything unfinished>
+
+## Bounds
+Phases 0–2: ≤45 minutes wall-clock or ≤40 tool calls, then stop at the gate regardless of completeness. Phase 3: ≤3 hours; if exceeded, commit what is done, print the proof block with ✘ marks where applicable, and hand off.
+
+## Pre-conditions
+Clean git status (or stash and say so); the app runs locally; browser screenshots work. If any fail, do not improvise around them — hand off.
+
+## Failure handoff
+When blocked at any point, write `docs/design/BLOCKER.md` with: what you tried, the exact error or limit, what you need from me, and what is safe to continue without it. Then stop and tell me the file path in one line.
+
+## How to talk to me
+I have limited reading bandwidth. Lead with the decision you need or the result. ≤10 lines per message outside the artifacts above. Screenshots over descriptions.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-06T12:55:06-05:00.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Gemini 3.8 Flash (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
