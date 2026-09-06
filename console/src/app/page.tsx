@@ -79,6 +79,14 @@ function getCaseFileMemo(dispute: Dispute): CaseFileMemo {
           summary: 'Accepted by cardholder at checkout with timestamp and IP log',
           status: 'attached',
         },
+        {
+          letter: 'E',
+          title: 'Cardholder signature on file',
+          field: 'signature',
+          source: 'Stripe charge object',
+          summary: 'Missing from Stripe charge object',
+          status: 'missing',
+        },
       ],
       smsText:
         'Alert: Dispute #8841 ($340.00) flagged for VIP Sarah Jenkins ($4,820 spend). Reply 1 to authorize evidence submission, or 2 to refund.',
@@ -121,6 +129,14 @@ function getCaseFileMemo(dispute: Dispute): CaseFileMemo {
           source: 'Gmail support thread',
           summary: 'Delivery notice emailed to m.okafor@example.com with carrier tracking link',
           status: 'attached',
+        },
+        {
+          letter: 'D',
+          title: 'Cardholder non-receipt declaration',
+          field: 'customer_communication',
+          source: 'Stripe charge object',
+          summary: 'Missing from Stripe charge object',
+          status: 'missing',
         },
       ],
       smsText: null,
@@ -177,6 +193,8 @@ export default function HomePage() {
   const [selectedDisputeId, setSelectedDisputeId] = useState<string | null>(null);
   const [activeScenario, setActiveScenario] = useState<'S1' | 'S2' | 'S3' | null>('S2');
   const [loadingScenario, setLoadingScenario] = useState<string | null>(null);
+  const [forcedState, setForcedState] = useState<'empty' | 'loading' | 'error' | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState<number>(0);
   const [replyingId, setReplyingId] = useState<string | null>(null);
   const [localDecisions, setLocalDecisions] = useState<Record<string, {
@@ -186,9 +204,19 @@ export default function HomePage() {
   }>>({});
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const s = params.get('state');
+      if (s === 'empty' || s === 'loading' || s === 'error') {
+        setForcedState(s);
+      }
+    }
+  }, []);
+
   const fetchDisputes = useCallback(async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error: sbError } = await supabase
         .from('disputes')
         .select(`
           *,
@@ -196,10 +224,12 @@ export default function HomePage() {
         `)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (sbError) throw sbError;
       setDisputes((data as Dispute[]) || []);
+      setError(null);
     } catch (err: any) {
       console.error('Failed to fetch disputes:', err);
+      setError(err?.message || 'Stripe API communication timeout (ECONNRESET).');
     } finally {
       setLoading(false);
     }
@@ -341,7 +371,7 @@ export default function HomePage() {
   const foughtCount = disputes.filter((d) => d.status === 'won').length;
   const concededCount = disputes.filter((d) => d.status === 'charge_refunded').length;
 
-  if (loading) {
+  if (loading || forcedState === 'loading') {
     return (
       <div className="space-y-6">
         <Header activeScenario={activeScenario} />
@@ -350,20 +380,29 @@ export default function HomePage() {
           <div className="h-4 bg-rule/50 w-32" />
           <div className="h-10 bg-rule/50 w-48" />
           <div className="h-5 bg-rule/50 w-64" />
-          <div className="h-20 bg-rule/40 w-full" />
+          <div className="h-16 bg-rule/30 w-full" />
         </div>
-        <div className="mt-8 pt-4 border-t border-rule space-y-2">
-          <div className="h-4 bg-rule/50 w-24 mb-4" />
-          <div className="h-10 bg-rule/30 w-full" />
-          <div className="h-10 bg-rule/30 w-full" />
-          <div className="h-10 bg-rule/30 w-full" />
+        <div className="mt-8 pt-4 border-t border-rule">
+          <div className="text-xs font-mono text-secondary-ink mb-3">All disputes · Loading docket</div>
+          <div className="border-t border-rule divide-y divide-rule">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="h-[40px] flex items-center justify-between px-2">
+                <div className="h-3.5 bg-rule/40 w-28" />
+                <div className="h-3.5 bg-rule/40 w-16" />
+                <div className="h-3.5 bg-rule/40 w-36" />
+                <div className="h-3.5 bg-rule/40 w-24" />
+                <div className="h-3.5 bg-rule/40 w-20" />
+                <div className="h-3.5 bg-rule/40 w-20" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
   // Quiet State: when nothing is gated
-  const isQuietState = !openDispute;
+  const isQuietState = forcedState === 'empty' || !openDispute;
 
   if (isQuietState) {
     return (
@@ -379,7 +418,7 @@ export default function HomePage() {
             Nothing needs you.
           </h1>
           <p className="text-sm text-secondary-ink font-sans">
-            {resolvedCount > 0
+            {resolvedCount > 0 && forcedState !== 'empty'
               ? `${resolvedCount} disputes handled since Sep 1 — ${foughtCount} fought, ${concededCount} conceded.`
               : '12 disputes handled since Sep 1 — 9 fought, 3 conceded.'}
           </p>
@@ -418,8 +457,6 @@ export default function HomePage() {
         disputeDecision.action === 'concede')) ||
     (!isAwaitingReply && (openDispute.reason === 'product_not_received' || openDispute.reason === 'subscription_canceled'));
 
-
-
   return (
     <div className="space-y-6">
       <Header
@@ -428,6 +465,26 @@ export default function HomePage() {
         loadingScenario={loadingScenario}
         cooldown={cooldown}
       />
+
+      {/* Error State: 1px rule #B91C1C above error line, secondary ink, retry as ink link */}
+      {(error || forcedState === 'error') && (
+        <div className="border-t border-decision-red pt-3 pb-2 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs font-mono">
+          <span className="text-secondary-ink">
+            Failed to synchronize dispute docket: {error || 'Stripe API communication timeout (ECONNRESET).'}
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setError(null);
+              setForcedState(null);
+              fetchDisputes();
+            }}
+            className="underline text-ink hover:text-ink cursor-pointer shrink-0"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {toastMessage && (
         <div className="border border-rule p-2.5 text-xs font-mono text-ink bg-sheet">
