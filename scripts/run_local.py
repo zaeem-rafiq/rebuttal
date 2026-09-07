@@ -141,8 +141,12 @@ def ensure_active_stripe_dispute(scenario: str) -> Tuple[str, str]:
 
     scen = scenario.upper()
     order_id = "ORD-1001" if scen == "S1" else ("ORD-1002" if scen == "S2" else "ORD-1003")
-    amount = 4800 if scen == "S1" else 34000
-    pm = "pm_card_createDisputeProductNotReceived" if scen == "S1" else "pm_card_createDispute"
+    amount = 4800 if scen == "S1" else (34000 if scen == "S2" else 12900)
+    pm = (
+        "pm_card_createDisputeProductNotReceived"
+        if scen == "S1"
+        else ("pm_card_createDispute" if scen == "S2" else "pm_card_createDisputeInquiry")
+    )
 
     conn = sqlite3.connect(LOCAL_DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -213,10 +217,10 @@ def ensure_active_stripe_dispute(scenario: str) -> Tuple[str, str]:
     meta_dict = {"order_id": order_id, "scenario": scen, "stripe_dispute_id": dispute_id}
     cur.execute(
         """UPDATE disputes 
-           SET payment_intent_id = ?, charge_id = ?, status = 'needs_response',
+           SET payment_intent_id = ?, charge_id = ?, status = ?,
                metadata = ?
            WHERE id = ? OR order_id = ?""",
-        (pi.id, charge_id, json.dumps(meta_dict), f"dp_{scen}", order_id),
+        (pi.id, charge_id, dispute.status, json.dumps(meta_dict), f"dp_{scen}", order_id),
     )
     cur.execute(
         """UPDATE orders 

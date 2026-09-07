@@ -65,6 +65,9 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
     if (d.status === 'lost') {
       return <Stamp text="LOST" variant="lost" size="sm" />;
     }
+    if (d.status === 'refunded_inquiry' || d.decision?.action === 'refund_inquiry') {
+      return <Stamp text="INQUIRY CLOSED · $15 FEE AVOIDED" variant="inquiry_closed" size="sm" />;
+    }
     if (d.status === 'charge_refunded') {
       return <Stamp text="CONCEDED" variant="conceded" size="sm" />;
     }

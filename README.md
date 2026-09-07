@@ -1,4 +1,4 @@
-﻿# Rebuttal: Autonomous Chargeback Defense for Stripe Merchants
+# Rebuttal: Autonomous Chargeback Defense for Stripe Merchants
 
 [![AWS Hackathon](https://img.shields.io/badge/AWS_Hackathon-Agents_for_Humans-FF9900?logo=amazon-aws)](https://devpost.com)
 [![Strands Agents SDK](https://img.shields.io/badge/Strands_Agents_SDK-v1.54.0-6366F1)](https://github.com/strands-agents)
@@ -230,6 +230,7 @@ python scripts/deploy_amplify.py
 * **Live-Key Guard:** Every initialization of the Stripe client enforces an invariant assertion that `STRIPE_SECRET_KEY.startswith("sk_test_")`. Any live production key immediately halts execution with an explicit error.
 * **Test Mode Only:** All PaymentIntents, charges, and dispute outcomes utilize Stripe test payment methods (`pm_card_createDisputeProductNotReceived`, `pm_card_createDispute`).
 * **Owner Gate Protection:** The system never unilaterally concedes or defends high-value disputes (\$200+) without positive confirmation from the verified store owner.
+* **Inquiry Pre-Chargeback Lifecycle:** When an inquiry (`warning_needs_response`, e.g. Scenario S3) is refunded before becoming a formal chargeback, Rebuttal issues a full refund via `Refund.create(charge=...)` to avoid the statutory \$15 dispute loss fee. In Stripe test mode, test inquiries do not auto-close in the Stripe API immediately after refund; Rebuttal preserves and tracks the internal case status as `refunded_inquiry` across all audit trails and the merchant console.
 * **Silence Policy:** When merchant owners fail to respond to SMS notifications, the EventBridge sweep scheduler defaults to merchant-protective actions (filing defenses before evidence cutoff deadlines expire).
 * **Row-Level Security:** Client browsers connect to Supabase Cloud using a public anon key restricted strictly to read-only `SELECT` queries across all tables.
 

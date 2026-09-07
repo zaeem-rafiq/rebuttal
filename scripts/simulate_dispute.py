@@ -132,6 +132,50 @@ def update_order_database(order_id: str, payment_intent_id: str, charge_id: Opti
             print(f"Note: Local SQLite update error: {e}")
 
 
+def update_dispute_database(
+    scenario_name: str,
+    order_id: str,
+    payment_intent_id: str,
+    charge_id: Optional[str],
+    dispute_id: str,
+    status: str,
+    due_by_iso: str,
+):
+    """Update dispute record in Supabase cloud and local SQLite database."""
+    disp_alias = f"dp_{scenario_name}"
+    meta_dict = {"order_id": order_id, "scenario": scenario_name, "stripe_dispute_id": dispute_id}
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_SERVICE_KEY")
+    if url and key:
+        try:
+            from supabase import create_client
+            client = create_client(url, key)
+            client.table("disputes").update({
+                "payment_intent_id": payment_intent_id,
+                "charge_id": charge_id,
+                "status": status,
+                "evidence_due_by": due_by_iso,
+                "metadata": meta_dict,
+            }).eq("id", disp_alias).execute()
+        except Exception as e:
+            print(f"Note: Cloud Supabase dispute update skipped: {e}")
+
+    if LOCAL_DB_PATH.exists():
+        try:
+            conn = sqlite3.connect(LOCAL_DB_PATH)
+            cur = conn.cursor()
+            cur.execute(
+                """UPDATE disputes 
+                   SET payment_intent_id = ?, charge_id = ?, status = ?, evidence_due_by = ?, metadata = ?
+                   WHERE id = ? OR order_id = ?""",
+                (payment_intent_id, charge_id, status, due_by_iso, json.dumps(meta_dict), disp_alias, order_id),
+            )
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            print(f"Note: Local SQLite dispute update error: {e}")
+
+
 def simulate_mock(scenario_name: str) -> Dict[str, Any]:
     """Simulate dispute flow for tests/mock environments without calling live Stripe."""
     cfg = SCENARIO_CONFIG[scenario_name]
@@ -259,7 +303,8 @@ def simulate_stripe(scenario_name: str) -> Dict[str, Any]:
     # Write PaymentIntent ID back to order fixture & database
     update_order_fixture(order_id, pi.id, charge_id)
     update_order_database(order_id, pi.id, charge_id)
-    print(f"  Updated order {order_id} with payment_intent_id={pi.id}")
+    update_dispute_database(scenario_name, order_id, pi.id, charge_id, dispute_id, dispute.status, due_by_iso)
+    print(f"  Updated order {order_id} and dispute dp_{scenario_name} with payment_intent_id={pi.id}")
 
     # Proof outputs
     if scenario_name == "S1":

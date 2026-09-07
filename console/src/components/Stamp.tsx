@@ -31,10 +31,12 @@ export const Stamp: React.FC<StampProps> = ({
   const rawText = (text || '').toLowerCase().trim();
 
   const isGreen =
-    ['won', 'approved', 'fought'].includes(normDecision) ||
+    ['won', 'approved', 'fought', 'inquiry_closed'].includes(normDecision) ||
     rawText.includes('won') ||
     rawText.includes('approved') ||
-    rawText.includes('fought');
+    rawText.includes('fought') ||
+    rawText.includes('inquiry closed') ||
+    rawText.includes('fee avoided');
 
   const colorClass = isGreen
     ? 'border-decision-green text-decision-green'

@@ -145,23 +145,23 @@ function getCaseFileMemo(dispute: Dispute): CaseFileMemo {
     };
   }
 
-  // Subscription canceled or generic
+  // Subscription canceled or inquiry scenario (S3)
   return {
-    customerName: 'David Miller',
-    orderRef: 'Order #8842',
+    customerName: 'Roberto Alvarez',
+    orderRef: 'Order #ORD-1003',
     headlineAmount: `$${(dispute.amount_cents / 100).toFixed(2)}`,
     respondByDate: '25 Sep 2026',
     respondByDays: 19,
     briefNarrative:
-      'Cardholder disputes recurring billing charge claiming account was canceled prior to renewal. Support inbox records indicate formal cancellation request was received 48 hours prior to billing cycle renewal. Contesting this claim would violate card brand rules and incur a statutory $15.00 arbitration fee with negligible win probability.',
-    recommendation: 'Recommend: concede (confidence 96%)',
+      'Pre-chargeback inquiry for $129.00 coffee subscription renewal. Support inbox shows customer Roberto Alvarez submitted cancellation request prior to billing cycle renewal. Contesting this claim violates card brand rules and risks a statutory $15.00 chargeback loss fee. Rebuttal recommends issuing an immediate inquiry refund to close the case with $15 fee avoided.',
+    recommendation: 'Recommend: refund inquiry ($15 fee avoided)',
     exhibits: [
       {
         letter: 'A',
-        title: 'Inbound cancellation notice',
+        title: 'Customer cancellation request',
         field: 'customer_communication',
-        source: 'Zendesk ticket #48102',
-        summary: 'Customer requested cancellation on Aug 22 prior to Aug 24 renewal',
+        source: 'Email inbox MSG-005',
+        summary: 'Customer requested cancellation prior to renewal charge',
         status: 'attached',
       },
       {
@@ -169,21 +169,22 @@ function getCaseFileMemo(dispute: Dispute): CaseFileMemo {
         title: 'Merchant subscription terms',
         field: 'cancellation_policy',
         source: 'Merchant TOS § 4.2',
-        summary: 'Terms permit cancellation up to 24 hours prior to billing date',
+        summary: 'Terms permit cancellation prior to recurring billing date',
         status: 'attached',
       },
       {
         letter: 'C',
-        title: 'Billing timeline audit',
-        field: 'refund_policy',
-        source: 'Stripe billing schedule',
-        summary: 'Inadvertent renewal processed following valid cancellation window',
+        title: 'Pre-chargeback inquiry disclosure',
+        field: 'uncategorized_text',
+        source: 'Stripe warning_needs_response',
+        summary: 'Card scheme inquiry; full refund resolves claim with zero chargeback fee',
         status: 'attached',
       },
     ],
-    smsText: null,
-    smsRecipient: null,
-    smsTime: null,
+    smsText:
+      'Pre-chargeback inquiry: Roberto Alvarez ($129.00). Customer emailed to cancel before renewal. Reply 1 Fight, 2 Refund ($15 fee avoided), 3 Hold.',
+    smsRecipient: '+1 ••• 4471',
+    smsTime: '14:04',
   };
 }
 
@@ -439,22 +440,30 @@ export default function HomePage() {
   // Determine gate state: is this dispute awaiting SMS reply?
   const isAwaitingReply =
     !localDecision &&
-    (openDispute.reason === 'fraudulent' || openDispute.id.includes('S2')) &&
-    (openDispute.status === 'needs_response' ||
-      openDispute.status === 'under_review' ||
-      (disputeDecision && disputeDecision.status === 'pending'));
+    openDispute.status !== 'won' &&
+    openDispute.status !== 'lost' &&
+    openDispute.status !== 'refunded_inquiry' &&
+    openDispute.status !== 'charge_refunded' &&
+    ((openDispute.reason === 'fraudulent' || openDispute.id.includes('S2')) &&
+      (openDispute.status === 'needs_response' ||
+        openDispute.status === 'under_review' ||
+        (disputeDecision && disputeDecision.status === 'pending')) ||
+      ((openDispute.reason === 'subscription_canceled' || openDispute.id.includes('S3') || openDispute.status === 'warning_needs_response') &&
+        (disputeDecision?.status === 'pending' || openDispute.status === 'warning_needs_response')));
 
   // Has a decision been recorded?
   const hasRecordedOutcome =
     localDecision ||
     openDispute.status === 'won' ||
     openDispute.status === 'lost' ||
+    openDispute.status === 'refunded_inquiry' ||
     openDispute.status === 'charge_refunded' ||
     (disputeDecision &&
       (disputeDecision.status === 'approved' ||
         disputeDecision.status === 'executed' ||
         disputeDecision.action === 'fight' ||
-        disputeDecision.action === 'concede')) ||
+        disputeDecision.action === 'concede' ||
+        disputeDecision.action === 'refund_inquiry')) ||
     (!isAwaitingReply && (openDispute.reason === 'product_not_received' || openDispute.reason === 'subscription_canceled'));
 
   return (
@@ -609,7 +618,9 @@ export default function HomePage() {
                   disabled={replyingId === openDispute.id}
                   className="border border-rule px-3 py-1.5 text-xs font-mono text-secondary-ink bg-transparent hover:border-ink hover:text-ink transition-colors disabled:opacity-50"
                 >
-                  Reply &quot;2&quot; to concede
+                  {openDispute.status === 'warning_needs_response' || openDispute.id.includes('S3') || openDispute.reason === 'subscription_canceled'
+                    ? 'Reply "2" to refund'
+                    : 'Reply "2" to concede'}
                 </button>
               </div>
             </div>
@@ -623,7 +634,13 @@ export default function HomePage() {
                   Decision executed:
                 </div>
                 {localDecision ? (
-                  localDecision.action === 'approved' ? (
+                  openDispute.status === 'refunded_inquiry' || openDispute.id.includes('S3') || openDispute.reason === 'subscription_canceled' || openDispute.status === 'warning_needs_response' ? (
+                    <Stamp
+                      text="INQUIRY CLOSED · $15 FEE AVOIDED"
+                      variant="inquiry_closed"
+                      animate={true}
+                    />
+                  ) : localDecision.action === 'approved' ? (
                     <Stamp
                       text={`APPROVED · ${localDecision.timestamp} · BY OWNER (SMS)`}
                       variant="approved"
@@ -636,22 +653,20 @@ export default function HomePage() {
                       animate={true}
                     />
                   )
+                ) : openDispute.status === 'refunded_inquiry' || openDispute.decision?.action === 'refund_inquiry' || (openDispute.reason === 'subscription_canceled' && openDispute.status !== 'needs_response' && openDispute.status !== 'warning_needs_response') ? (
+                  <Stamp text="INQUIRY CLOSED · $15 FEE AVOIDED" variant="inquiry_closed" />
                 ) : openDispute.status === 'won' ? (
-
                   <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
                 ) : openDispute.status === 'lost' ? (
                   <Stamp text="LOST · 06 SEP 14:07 · ISSUER DECISION" variant="lost" />
                 ) : openDispute.status === 'charge_refunded' ? (
                   <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
                 ) : openDispute.decision?.action === 'fight' || openDispute.status === 'under_review' ? (
-
                   <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
                 ) : openDispute.decision?.action === 'concede' ? (
                   <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
                 ) : openDispute.reason === 'product_not_received' ? (
                   <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
-                ) : openDispute.reason === 'subscription_canceled' ? (
-                  <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
                 ) : (
                   <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
                 )}

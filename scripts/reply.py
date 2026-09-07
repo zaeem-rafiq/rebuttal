@@ -151,37 +151,79 @@ def process_reply(
         final_status = "held"
 
     elif chosen_action == "concede":
-        # Concede dispute with Stripe if not already closed by resumed agent
-        try:
-            concede_resp = concede_dispute(clean_dispute_id)
-            final_status = concede_resp.get("status", "lost")
-        except Exception as e:
-            if "already closed" in str(e).lower():
-                disp_check = get_dispute(clean_dispute_id)
-                final_status = disp_check.get("status", "lost")
-            else:
-                raise
+        is_inquiry = False
+        if dec_row and dec_row["action"] == "refund_inquiry":
+            is_inquiry = True
+        elif disp_row and disp_row["status"] == "warning_needs_response":
+            is_inquiry = True
+        elif "S3" in clean_dispute_id or (disp_row and "S3" in str(disp_row["metadata"] or "")):
+            is_inquiry = True
 
-        # Update decision in database
-        conn = sqlite3.connect(LOCAL_DB_PATH)
-        cur = conn.cursor()
-        cur.execute(
-            "UPDATE decisions SET status = 'approved', action = 'concede', answered_at = ? WHERE dispute_id = ?",
-            (now_iso, clean_dispute_id),
-        )
-        conn.commit()
-        conn.close()
+        refund_id = None
+        if is_inquiry:
+            from agent.tools.stripe_tools import refund_inquiry
+            try:
+                refund_resp = refund_inquiry(clean_dispute_id)
+                refund_id = refund_resp.get("id")
+                final_status = "refunded_inquiry"
+            except Exception as e:
+                if "already refunded" in str(e).lower() or "charge has already been refunded" in str(e).lower():
+                    final_status = "refunded_inquiry"
+                    refund_id = "re_mock_already_refunded"
+                else:
+                    raise
 
-        record_case(
-            dispute_id=clean_dispute_id,
-            status="lost",
-            action="concede_dispute",
-            actor="owner",
-            details={"stripe_dispute_id": target_stripe_id, "answered_at": now_iso},
-        )
+            conn = sqlite3.connect(LOCAL_DB_PATH)
+            cur = conn.cursor()
+            cur.execute(
+                "UPDATE decisions SET status = 'approved', action = 'refund_inquiry', answered_at = ? WHERE dispute_id = ?",
+                (now_iso, clean_dispute_id),
+            )
+            conn.commit()
+            conn.close()
 
-        conf_msg = f"Rebuttal: Dispute {clean_dispute_id} CONCEDED per owner confirmation. Stripe status: {final_status}."
-        conf_sms_sid = send_owner_sms(conf_msg)
+            record_case(
+                dispute_id=clean_dispute_id,
+                status="refunded_inquiry",
+                action="refund_inquiry",
+                actor="owner",
+                details={"stripe_dispute_id": target_stripe_id, "refund_id": refund_id, "answered_at": now_iso},
+            )
+
+            conf_msg = f"Rebuttal: Dispute {clean_dispute_id} INQUIRY REFUNDED per owner confirmation. Refund ID: {refund_id}. Status: refunded_inquiry."
+            conf_sms_sid = send_owner_sms(conf_msg)
+        else:
+            # Concede dispute with Stripe if not already closed by resumed agent
+            try:
+                concede_resp = concede_dispute(clean_dispute_id)
+                final_status = concede_resp.get("status", "lost")
+            except Exception as e:
+                if "already closed" in str(e).lower():
+                    disp_check = get_dispute(clean_dispute_id)
+                    final_status = disp_check.get("status", "lost")
+                else:
+                    raise
+
+            # Update decision in database
+            conn = sqlite3.connect(LOCAL_DB_PATH)
+            cur = conn.cursor()
+            cur.execute(
+                "UPDATE decisions SET status = 'approved', action = 'concede', answered_at = ? WHERE dispute_id = ?",
+                (now_iso, clean_dispute_id),
+            )
+            conn.commit()
+            conn.close()
+
+            record_case(
+                dispute_id=clean_dispute_id,
+                status="lost",
+                action="concede_dispute",
+                actor="owner",
+                details={"stripe_dispute_id": target_stripe_id, "answered_at": now_iso},
+            )
+
+            conf_msg = f"Rebuttal: Dispute {clean_dispute_id} CONCEDED per owner confirmation. Stripe status: {final_status}."
+            conf_sms_sid = send_owner_sms(conf_msg)
 
     elif chosen_action == "fight":
         # Update decision in database
@@ -242,6 +284,8 @@ def process_reply(
         "dispute_id": clean_dispute_id,
         "action": chosen_action,
         "stripe_status": retrieved_status,
+        "case_status": final_status,
+        "refund_id": refund_id if "refund_id" in locals() else None,
         "answered_at": dec_check["answered_at"] if dec_check else None,
         "confirmation_sms_sid": conf_sms_sid,
         "proof_passed": p_pass,

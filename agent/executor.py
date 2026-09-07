@@ -379,11 +379,11 @@ def execute_strategy(
 
     elif action == "refund_inquiry":
         refund_resp = refund_inquiry(target_stripe_id)
-        final_status = "charge_refunded"
+        final_status = "refunded_inquiry"
 
         record_case(
             dispute_id=clean_dispute_id,
-            status="charge_refunded",
+            status="refunded_inquiry",
             action="refund_inquiry",
             actor="executor",
             details={"refund_id": refund_resp.get("id"), "rationale": strategy.rationale},
@@ -406,7 +406,7 @@ def execute_strategy(
             dispute_id=clean_dispute_id,
             action="complete_execution",
             actor="executor",
-            details={"final_status": "charge_refunded", "action": action},
+            details={"final_status": "refunded_inquiry", "action": action, "refund_id": refund_resp.get("id")},
         )
 
     else:
