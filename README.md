@@ -96,6 +96,7 @@ Rebuttal includes three representative merchant scenarios verified end-to-end:
 Rebuttal includes an automated evaluation harness in [`evals/run.py`](evals/run.py) running the multi-agent evidence pipeline against 20 synthetic cases spanning dispute reasons, evidence strengths, and customer relationship tiers.
 
 Each case is evaluated across four binary checks:
+
 1. **Action Match:** Correct action selected (`fight`, `concede`, `refund_inquiry`).
 2. **Gate Match:** Exact alignment with the merchant risk policy gate ($\ge \$200$, uncertainty band $0.35 - 0.65$, non-fight actions).
 3. **Narrative Judge:** Bedrock LLM-as-judge rubric validating reason code defense, required fact citations, zero hallucinations, and length constraint ($\le 250$ words).
@@ -111,6 +112,17 @@ Each case is evaluated across four binary checks:
 | **(d) EV Sign Pass** | $20 / 20$ (100%) | **20 / 20 (100%)** | **PASS** |
 
 Complete evaluation reports with per-case failure analysis are persisted in [`evals/results/2026-09-07.md`](evals/results/2026-09-07.md). Documented failure modes and regression defenses are detailed in [`docs/evals.md`](docs/evals.md).
+
+## Merchant & Judge Console (The Case File)
+
+The live web console is designed under **The Case File** manifest design system—presenting disputes as formal evidentiary case files open on a tactile paper desk rather than generic SaaS card dashboards.
+
+* **Main Docket (`/`):** Dominant open case dossier with evidence exhibits A–E, paralegal briefing memo, SMS approval gate, and ruled dispute roster.
+* **Case Dossier (`/case/[id]`):** Deep-dive case file featuring carrier fulfillment scans, customer communication threads, and append-only cryptographic audit trail.
+
+![Rebuttal Console - Main Docket](docs/media/console-home.png)
+
+![Rebuttal Console - Case Dossier](docs/media/console-case.png)
 
 ---
 
@@ -128,6 +140,9 @@ Rebuttal exercises the full capabilities of the **AWS Strands Agents SDK**:
 | **Interrupts** | Halts agent workflow on high-stakes disputes via `agent.interrupt()` and persists state until owner response. | `agent/hooks.py` |
 | **Session Manager** | `AgentCoreMemorySessionManager` binding Strands conversational agent state to Bedrock AgentCore sessions. | `agent/executor.py` |
 | **Memory** | Integrates semantic outcome storage to recall past merchant dispute victories and concessions by reason code. | `agent/tools/memory_tools.py` |
+| **Gateway / MCP** | Bedrock AgentCore Gateway MCP integration connecting investigator agents to standardized external tool endpoints. | `agent/gateway.py` |
+| **Gmail Comms** | Ingests and analyzes customer communication emails via Gmail API to establish cancellation timelines and customer history. | `agent/tools/gmail_tools.py` |
+| **Pre-Dispute Inquiry (S3)** | Resolves Stripe `warning_needs_response` inquiries via strategic full refunds before escalation, saving the \$15 dispute fee. | `agent/strategy.py` |
 
 ---
 
@@ -139,6 +154,7 @@ Rebuttal is built on AWS Bedrock AgentCore services:
 | :--- | :--- | :--- |
 | **AgentCore Runtime** | Serverless microVM running the containerized Strands agent application with rapid HTTP acknowledgment and background async tasks. | `arn:aws:bedrock-agentcore:us-east-1:292341338711:runtime/rebuttal-pASUe6CVmu` |
 | **AgentCore Memory** | Two-tier memory managing short-term session state across human SMS interruptions and long-term semantic outcomes. | Namespace `/merchant/{actorId}/outcomes` |
+| **AgentCore Gateway** | Managed Model Context Protocol (MCP) server integration (`rebuttal-mcp-gateway`) exposing Lambda tools for secure multi-system integration. | `arn:aws:bedrock-agentcore:us-east-1:292341338711:gateway/rebuttal-mcp-gateway` |
 | **CloudWatch GenAI Observability** | OpenTelemetry distributed tracing recording complete span execution waterfalls (92+ spans per S1 run) with model token consumption. | Log group `/aws/bedrock-agentcore/runtimes/rebuttal-pASUe6CVmu` |
 
 ---

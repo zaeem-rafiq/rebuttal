@@ -60,29 +60,24 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
 
   const renderOutcomeStamp = (d: Dispute) => {
     if (d.status === 'won') {
-      return <Stamp text="FOUGHT · WON" variant="won" size="sm" />;
+      return <Stamp text="WON" variant="won" size="sm" />;
     }
     if (d.status === 'lost') {
       return <Stamp text="LOST" variant="lost" size="sm" />;
     }
     if (d.status === 'refunded_inquiry' || d.decision?.action === 'refund_inquiry') {
-      return <Stamp text="INQUIRY CLOSED · $15 FEE AVOIDED" variant="inquiry_closed" size="sm" />;
+      return <Stamp text="INQUIRY CLOSED" variant="inquiry_closed" size="sm" />;
     }
-    if (d.status === 'charge_refunded') {
+    if (d.status === 'charge_refunded' || d.decision?.action === 'concede') {
       return <Stamp text="CONCEDED" variant="conceded" size="sm" />;
     }
-
-    if (d.decision?.action === 'fight' || d.decision?.status === 'approved' || d.status === 'under_review') {
-      return <Stamp text="FOUGHT" variant="won" size="sm" />;
+    if (d.status === 'under_review') {
+      return <Stamp text="UNDER REVIEW" variant="under_review" size="sm" />;
     }
-    if (d.decision?.action === 'concede') {
-      return <Stamp text="CONCEDED" variant="conceded" size="sm" />;
+    if (d.decision?.action === 'fight' || d.decision?.status === 'approved') {
+      return <Stamp text="WON" variant="won" size="sm" />;
     }
-    return (
-      <span className="font-mono text-secondary-ink text-xs">
-        Awaiting reply
-      </span>
-    );
+    return <Stamp text="PENDING" variant="pending" size="sm" />;
   };
 
   if (rosterDisputes.length === 0) {
@@ -110,15 +105,15 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-left text-xs">
+        <table className="w-full border-collapse text-left text-xs" aria-label="Dispute roster">
           <thead>
             <tr className="border-b border-rule text-secondary-ink font-mono text-xs">
-              <th className="py-2.5 px-3 font-normal">Case ID</th>
-              <th className="py-2.5 px-3 font-normal">Reason</th>
-              <th className="py-2.5 px-3 font-normal">Agent action</th>
-              <th className="py-2.5 px-3 font-normal">Outcome</th>
-              <th className="py-2.5 px-3 font-normal">Respond by</th>
-              <th className="py-2.5 px-3 font-normal text-right">Amount</th>
+              <th scope="col" className="py-2.5 px-3 font-normal">Case ID</th>
+              <th scope="col" className="py-2.5 px-3 font-normal">Reason</th>
+              <th scope="col" className="py-2.5 px-3 font-normal">Agent action</th>
+              <th scope="col" className="py-2.5 px-3 font-normal">Outcome</th>
+              <th scope="col" className="py-2.5 px-3 font-normal">Respond by</th>
+              <th scope="col" className="py-2.5 px-3 font-normal text-right">Amount</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-rule font-sans">
@@ -137,6 +132,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
                     <button
                       type="button"
                       onClick={() => onSelectDispute ? onSelectDispute(d.id) : undefined}
+                      aria-label={`Select case ${d.id}`}
                       className="underline text-ink hover:text-ink font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
                     >
                       {d.id}

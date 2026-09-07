@@ -536,19 +536,19 @@ export default function CaseDetailsPage() {
               ) : dispute.status === 'refunded_inquiry' || decision?.action === 'refund_inquiry' || (dispute.reason === 'subscription_canceled' && dispute.status !== 'needs_response' && dispute.status !== 'warning_needs_response') ? (
                 <Stamp text="INQUIRY CLOSED · $15 FEE AVOIDED" variant="inquiry_closed" />
               ) : dispute.status === 'won' ? (
-                <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
               ) : dispute.status === 'lost' ? (
                 <Stamp text="LOST · 06 SEP 14:07 · ISSUER DECISION" variant="lost" />
               ) : dispute.status === 'charge_refunded' ? (
                 <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
-              ) : decision?.action === 'fight' || dispute.status === 'under_review' ? (
-                <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+              ) : dispute.status === 'under_review' || decision?.action === 'fight' ? (
+                <Stamp text="UNDER REVIEW · EVIDENCE SUBMITTED" variant="under_review" />
               ) : decision?.action === 'concede' ? (
                 <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
               ) : dispute.reason === 'product_not_received' ? (
-                <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
               ) : (
-                <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
               )}
             </div>
           ) : null}
@@ -568,9 +568,9 @@ export default function CaseDetailsPage() {
               <table className="w-full border-collapse text-left text-xs">
                 <thead>
                   <tr className="border-b border-rule text-secondary-ink font-mono text-xs">
-                    <th className="py-2 px-3 font-normal">Timestamp</th>
-                    <th className="py-2 px-3 font-normal">Actor</th>
-                    <th className="py-2 px-3 font-normal">Action</th>
+                    <th scope="col" className="py-2 px-3 font-normal">Timestamp</th>
+                    <th scope="col" className="py-2 px-3 font-normal">Actor</th>
+                    <th scope="col" className="py-2 px-3 font-normal">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-rule font-sans">

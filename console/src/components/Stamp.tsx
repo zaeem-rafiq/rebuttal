@@ -2,12 +2,24 @@
 
 import React from 'react';
 
-export type StampDecision = 'won' | 'lost' | 'approved' | 'fought' | 'conceded' | 'refunded';
+export type StampDecision =
+  | 'won'
+  | 'lost'
+  | 'approved'
+  | 'fought'
+  | 'conceded'
+  | 'refunded'
+  | 'pending'
+  | 'under_review'
+  | 'under review'
+  | 'inquiry_closed'
+  | 'inquiry closed';
 
 interface StampProps {
   decision?: StampDecision | string;
   variant?: StampDecision | string;
   text?: string;
+  color?: 'green' | 'red' | 'ink' | 'secondary';
   actor?: 'agent' | 'owner' | 'issuer';
   timestamp?: string | Date;
   channel?: string;
@@ -20,6 +32,7 @@ export const Stamp: React.FC<StampProps> = ({
   decision,
   variant,
   text,
+  color,
   actor = 'agent',
   timestamp,
   channel,
@@ -30,17 +43,47 @@ export const Stamp: React.FC<StampProps> = ({
   const normDecision = (decision || variant || '').toLowerCase().trim();
   const rawText = (text || '').toLowerCase().trim();
 
-  const isGreen =
-    ['won', 'approved', 'fought', 'inquiry_closed'].includes(normDecision) ||
-    rawText.includes('won') ||
-    rawText.includes('approved') ||
-    rawText.includes('fought') ||
-    rawText.includes('inquiry closed') ||
-    rawText.includes('fee avoided');
+  let colorClass = 'border-decision-green text-decision-green';
+  if (color === 'green') {
+    colorClass = 'border-decision-green text-decision-green';
+  } else if (color === 'red') {
+    colorClass = 'border-decision-red text-decision-red';
+  } else if (color === 'ink') {
+    colorClass = 'border-ink text-ink';
+  } else if (color === 'secondary') {
+    colorClass = 'border-ink-secondary text-ink-secondary';
+  } else {
+    const isGreen =
+      ['won', 'approved', 'fought', 'inquiry_closed', 'inquiry closed'].includes(normDecision) ||
+      rawText.includes('won') ||
+      rawText.includes('approved') ||
+      rawText.includes('fought') ||
+      rawText.includes('inquiry closed') ||
+      rawText.includes('fee avoided');
 
-  const colorClass = isGreen
-    ? 'border-decision-green text-decision-green'
-    : 'border-decision-red text-decision-red';
+    const isRed =
+      ['lost', 'conceded', 'refunded'].includes(normDecision) ||
+      rawText.includes('lost') ||
+      rawText.includes('conceded') ||
+      rawText.includes('refunded');
+
+    const isPending =
+      ['pending'].includes(normDecision) ||
+      rawText.includes('pending') ||
+      rawText.includes('awaiting');
+
+    if (isGreen) {
+      colorClass = 'border-decision-green text-decision-green';
+    } else if (isRed) {
+      colorClass = 'border-decision-red text-decision-red';
+    } else if (isPending) {
+      colorClass = 'border-ink text-ink';
+    } else if (normDecision.includes('under') || rawText.includes('under review')) {
+      colorClass = 'border-decision-green text-decision-green';
+    } else {
+      colorClass = 'border-ink text-ink';
+    }
+  }
 
   let label = text || '';
   if (!label) {

@@ -15,6 +15,7 @@ const config: Config = {
           DEFAULT: "#111418",
           secondary: "#5C6370",
         },
+        "secondary-ink": "#5C6370",
         rule: {
           DEFAULT: "#D4D4D8",
           strong: "#111418",

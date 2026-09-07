@@ -656,19 +656,19 @@ export default function HomePage() {
                 ) : openDispute.status === 'refunded_inquiry' || openDispute.decision?.action === 'refund_inquiry' || (openDispute.reason === 'subscription_canceled' && openDispute.status !== 'needs_response' && openDispute.status !== 'warning_needs_response') ? (
                   <Stamp text="INQUIRY CLOSED · $15 FEE AVOIDED" variant="inquiry_closed" />
                 ) : openDispute.status === 'won' ? (
-                  <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
                 ) : openDispute.status === 'lost' ? (
                   <Stamp text="LOST · 06 SEP 14:07 · ISSUER DECISION" variant="lost" />
                 ) : openDispute.status === 'charge_refunded' ? (
                   <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
-                ) : openDispute.decision?.action === 'fight' || openDispute.status === 'under_review' ? (
-                  <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                ) : openDispute.status === 'under_review' || openDispute.decision?.action === 'fight' ? (
+                  <Stamp text="UNDER REVIEW · EVIDENCE SUBMITTED" variant="under_review" />
                 ) : openDispute.decision?.action === 'concede' ? (
                   <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
                 ) : openDispute.reason === 'product_not_received' ? (
-                  <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
                 ) : (
-                  <Stamp text="FOUGHT · 06 SEP 14:07 · BY AGENT" variant="won" />
+                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
                 )}
               </div>
 
