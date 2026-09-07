@@ -88,12 +88,29 @@ def build_evidence_graph(
         name="intake",
     )
 
+    # Gateway MCP Tools (HAC-18 / S-B)
+    use_gateway = os.getenv("USE_GATEWAY_MCP", "true").lower() in ("true", "1", "yes")
+    gateway_tools = []
+    if use_gateway:
+        try:
+            from agent.tools.gateway_client import get_gateway_tools
+            gateway_tools = get_gateway_tools(startup_timeout=15)
+        except Exception:
+            gateway_tools = []
+
+    if gateway_tools:
+        orders_tools = gateway_tools
+        shipping_tools = gateway_tools
+    else:
+        orders_tools = [get_order_evidence]
+        shipping_tools = [get_shipping_evidence]
+
     # 2. Orders Agent
     orders_agent = Agent(
         model=model,
-        tools=[get_order_evidence],
+        tools=orders_tools,
         system_prompt=(
-            "You are the Orders Evidence Agent. Your role is to look up order transaction details using `get_order_evidence(order_id)`.\n"
+            "You are the Orders Evidence Agent. Your role is to look up order transaction details using `lookup_order(order_id)` or `get_order_evidence(order_id)`.\n"
             "Report:\n"
             "- Customer name, email, and customer_id\n"
             "- Order status, total amount_cents, and currency\n"
@@ -108,9 +125,9 @@ def build_evidence_graph(
     # 3. Shipping Agent
     shipping_agent = Agent(
         model=model,
-        tools=[get_shipping_evidence],
+        tools=shipping_tools,
         system_prompt=(
-            "You are the Shipping & Fulfillment Evidence Agent. Your role is to look up carrier tracking and delivery using `get_shipping_evidence(order_id)`.\n"
+            "You are the Shipping & Fulfillment Evidence Agent. Your role is to look up carrier tracking and delivery using `get_tracking(order_id)` or `get_shipping_evidence(order_id)`.\n"
             "Report:\n"
             "- Carrier name and tracking number\n"
             "- Fulfillment status and shipping date\n"

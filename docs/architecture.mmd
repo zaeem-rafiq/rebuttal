@@ -1,4 +1,4 @@
-﻿graph TB
+graph TB
     subgraph External["External Triggers & Inputs"]
         Stripe["Stripe Payments & Disputes<br/>(Webhooks: created/closed)"]
         OwnerPhone["Merchant Owner Phone<br/>(SMS: 1 Fight | 2 Concede | 3 Hold)"]
@@ -32,6 +32,11 @@
         end
     end
 
+    subgraph GatewayLayer["Amazon Bedrock AgentCore Gateway (MCP Layer)"]
+        AgentCoreGateway["AgentCore Gateway<br/>(rebuttal-mcp-gateway)"]
+        GatewayLambda["GatewayToolsFunction<br/>(lookup_order & get_tracking)"]
+    end
+
     subgraph MemoryObs["AWS Intelligence, Persistence & Observability"]
         AgentCoreMemory["Amazon Bedrock AgentCore Memory<br/>(/merchant/{actorId}/outcomes)"]
         CloudWatchObs["AWS CloudWatch GenAI Observability<br/>(OTel Spans, Waterfall & Tokens)"]
@@ -57,6 +62,11 @@
     SweepLambda --> ApprovalGate
 
     Intake --> EvidenceInvestigators
+    OrderAgent -.-> AgentCoreGateway
+    ShippingAgent -.-> AgentCoreGateway
+    AgentCoreGateway --> GatewayLambda
+    GatewayLambda --> SupabaseDB
+
     EvidenceInvestigators --> StrategyAgent
     StrategyAgent --> DrafterAgent
     DrafterAgent --> ApprovalGate
@@ -77,7 +87,7 @@
     classDef external fill:#0F172A,stroke:#38BDF8,stroke-width:1px,color:#F8FAFC;
     classDef storage fill:#064E3B,stroke:#10B981,stroke-width:2px,color:#ECFDF5;
 
-    class StripeLambda,TwilioLambda,SweepLambda,InjectLambda,AgentCoreMemory,CloudWatchObs,AmplifyConsole aws;
+    class StripeLambda,TwilioLambda,SweepLambda,InjectLambda,AgentCoreGateway,GatewayLambda,AgentCoreMemory,CloudWatchObs,AmplifyConsole aws;
     class Intake,OrderAgent,ShippingAgent,CommsAgent,HistoryAgent,StrategyAgent,DrafterAgent,ApprovalGate,ExecutorAgent runtime;
     class Stripe,OwnerPhone,JudgeUser,EventBridge,TwilioService external;
     class SupabaseDB storage;

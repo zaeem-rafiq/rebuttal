@@ -43,6 +43,7 @@ htmlcov/
 *.sqlite
 *.sqlite3
 data/archive/
+data/gateway_config.json
 
 # IDE and OS
 .idea/
