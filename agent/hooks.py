@@ -56,11 +56,58 @@ def load_merchant_policy() -> Dict[str, Any]:
     }
 
 
-def send_owner_sms(body: str) -> str:
-    """Send an SMS to OWNER_PHONE via Twilio.
+def send_telegram_alert(body: str, dispute_id: str = "dp_S2") -> Optional[str]:
+    """Send an interactive alert to merchant owner via Telegram Bot API with inline action buttons."""
+    bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    if not bot_token or not chat_id:
+        return None
 
-    Returns the message SID. In environments without Twilio credentials, returns a mock SID.
+    try:
+        import urllib.request
+        import json
+
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+        payload = {
+            "chat_id": chat_id,
+            "text": f"🚨 *REBUTTAL DISPUTE ALERT*\n\n{body}",
+            "reply_markup": {
+                "inline_keyboard": [
+                    [
+                        {"text": "1 ⚔️ Fight", "callback_data": f"fight:{dispute_id}"},
+                        {"text": "2 🤝 Concede", "callback_data": f"concede:{dispute_id}"},
+                        {"text": "3 ⏸️ Hold", "callback_data": f"hold:{dispute_id}"},
+                    ]
+                ]
+            },
+        }
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            if data.get("ok"):
+                msg_id = data["result"]["message_id"]
+                print(f"  [Telegram] Interactive alert dispatched successfully (message_id={msg_id})")
+                return f"TG_{msg_id}"
+    except Exception as e:
+        print(f"  [Telegram Warning] Alert dispatch error: {e}", file=sys.stderr)
+
+    return None
+
+
+def send_owner_sms(body: str, dispute_id: str = "dp_S2") -> str:
+    """Send an alert to OWNER via Telegram (if configured) or SMS via Twilio.
+
+    Returns the message SID. In environments without credentials, returns a mock SID.
     """
+    # 1. Dispatch Telegram alert if configured
+    tg_sid = send_telegram_alert(body, dispute_id=dispute_id)
+
+    # 2. Dispatch Twilio SMS if credentials exist
     account_sid = os.getenv("TWILIO_ACCOUNT_SID")
     auth_token = os.getenv("TWILIO_AUTH_TOKEN")
     from_phone = os.getenv("TWILIO_FROM")
@@ -84,9 +131,12 @@ def send_owner_sms(body: str) -> str:
                 except Exception:
                     break
 
-            return sid
+            return tg_sid or sid
         except Exception as e:
             print(f"  [Twilio Warning] SMS dispatch error: {e}", file=sys.stderr)
+
+    if tg_sid:
+        return tg_sid
 
     # Fallback / mock SID
     return f"SM_{uuid.uuid4().hex[:30]}"
@@ -257,9 +307,9 @@ class ApprovalGate(HookProvider):
         except Exception:
             pass
 
-        # Dispatch SMS via Twilio
+        # Dispatch SMS via Twilio or Telegram alert
         sms_body = f"{owner_summary}\n\nReply:\n1 Fight\n2 Concede\n3 Hold"
-        sms_sid = send_owner_sms(sms_body)
+        sms_sid = send_owner_sms(sms_body, dispute_id=dispute_id)
         set_agent_state(agent, "sms_sid", sms_sid)
         set_agent_state(agent, "decision_id", decision_id)
 

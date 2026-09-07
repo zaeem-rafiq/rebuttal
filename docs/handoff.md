@@ -26,6 +26,10 @@ ules: #D4D4D8, highlighter: #FFE96B).
    - Captured and saved high-res screenshots: docs/media/console-home.png and docs/media/console-case.png.
    - Updated README.md v2 with Gateway/MCP tools, Gmail comms, S3 inquiry handling, and Bedrock AgentCore Gateway in feature tables.
    - Verified 0 markdownlint errors across all documentation.
+4. **Telegram Bot Integration (`@rebuttal_defense_bot`):**
+   - Carrier compliance (US A2P 10DLC registration delay) bypassed by supporting Telegram Bot API notifications with interactive inline buttons (`1 Fight`, `2 Concede`, `3 Hold`).
+   - Webhook dual-handling in `rebuttal-twilio-webhook` Lambda: parses Telegram JSON callback queries or text messages, triggers AgentCore runtime, answers callback queries, and sends execution confirmations back to the merchant's Telegram chat.
+   - Setup script added: `scripts/setup_telegram.py`. Tested and verified live on user device.
 
 ## Next Steps / User Handoff
 

@@ -146,7 +146,9 @@ def invoke_bedrock_approval(dispute_id: str, answer: str) -> dict:
 def lambda_handler(event, context):
     """Handle incoming Twilio messaging webhook POST requests."""
     logger.info("Received event: %s", json.dumps({k: v for k, v in event.items() if k != "body"}))
-    
+
+    headers = {k.lower(): v for k, v in (event.get("headers") or {}).items()}
+
     # Handle base64 body if sent by Function URL
     body = event.get("body", "")
     is_base64 = event.get("isBase64Encoded", False)
@@ -157,7 +159,79 @@ def lambda_handler(event, context):
     else:
         raw_str = ""
 
-    # Parse URL-encoded form parameters
+    # Check if this is a Telegram webhook payload (JSON)
+    content_type = headers.get("content-type", "")
+    is_json = "application/json" in content_type or (raw_str.strip().startswith("{") and raw_str.strip().endswith("}"))
+
+    if is_json:
+        try:
+            tg_data = json.loads(raw_str)
+            logger.info("Parsed Telegram webhook payload: %s", tg_data)
+
+            chat_id = None
+            answer = "1"
+            dispute_id = None
+            cq_id = None
+
+            if "callback_query" in tg_data:
+                cq = tg_data["callback_query"]
+                cq_id = cq.get("id")
+                chat_id = cq.get("message", {}).get("chat", {}).get("id")
+                raw_data = cq.get("data", "")
+                if ":" in raw_data:
+                    act_str, disp_str = raw_data.split(":", 1)
+                    answer = parse_reply_answer(act_str)
+                    dispute_id = disp_str
+                else:
+                    answer = parse_reply_answer(raw_data)
+            elif "message" in tg_data:
+                msg = tg_data["message"]
+                chat_id = msg.get("chat", {}).get("id")
+                text_val = msg.get("text", "")
+                answer = parse_reply_answer(text_val)
+
+            if not dispute_id:
+                dispute_id = query_latest_pending_decision(str(chat_id or ""))
+
+            logger.info("Telegram dispatching approval answer=%s for dispute=%s (chat_id=%s)", answer, dispute_id, chat_id)
+            runtime_res = invoke_bedrock_approval(dispute_id, answer)
+            logger.info("AgentCore approval response: %s", runtime_res)
+
+            # Send Telegram confirmation if token available
+            tg_token = os.environ.get("TELEGRAM_BOT_TOKEN")
+            if tg_token and cq_id:
+                try:
+                    ack_url = f"https://api.telegram.org/bot{tg_token}/answerCallbackQuery"
+                    ack_payload = json.dumps({"callback_query_id": cq_id, "text": f"Recorded: Action {answer}"}).encode("utf-8")
+                    req = urllib.request.Request(ack_url, data=ack_payload, headers={"Content-Type": "application/json"})
+                    urllib.request.urlopen(req, timeout=3)
+                except Exception as e:
+                    logger.warning("Error answering Telegram callback query: %s", e)
+
+            if tg_token and chat_id:
+                try:
+                    send_url = f"https://api.telegram.org/bot{tg_token}/sendMessage"
+                    action_labels = {"1": "Fight (Evidence Submitted)", "2": "Concede (Refund / Closed)", "3": "Hold"}
+                    send_payload = json.dumps({
+                        "chat_id": chat_id,
+                        "text": f"\u2705 *Rebuttal Decision Executed*\n\nDispute: `{dispute_id}`\nAction: *{action_labels.get(answer, answer)}*\nStatus: Executed in Bedrock AgentCore Runtime.",
+                        "parse_mode": "Markdown"
+                    }).encode("utf-8")
+                    req = urllib.request.Request(send_url, data=send_payload, headers={"Content-Type": "application/json"})
+                    urllib.request.urlopen(req, timeout=3)
+                    logger.info("Sent Telegram confirmation message to chat_id=%s", chat_id)
+                except Exception as e:
+                    logger.warning("Error sending Telegram confirmation: %s", e)
+
+            return {
+                "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"ok": True, "dispute_id": dispute_id, "answer": answer})
+            }
+        except Exception as e:
+            logger.error("Error processing Telegram JSON payload: %s", e)
+
+    # Parse URL-encoded form parameters (Twilio / Web Console)
     form_params = urllib.parse.parse_qs(raw_str)
     # Convert list values to single string
     params = {k: v[0] for k, v in form_params.items() if v}

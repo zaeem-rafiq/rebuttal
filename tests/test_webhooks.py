@@ -146,6 +146,54 @@ def test_twilio_webhook_handler():
             mock_invoke.assert_called_once_with("dp_S2", "2")
 
 
+def test_telegram_webhook_callback_query():
+    cq_payload = {
+        "callback_query": {
+            "id": "cq_999",
+            "message": {"chat": {"id": 8794236067}},
+            "data": "fight:dp_S2",
+        }
+    }
+    event = {
+        "isBase64Encoded": False,
+        "body": json.dumps(cq_payload),
+        "headers": {"content-type": "application/json"},
+    }
+    with patch("infra.lambdas.twilio_webhook.app.invoke_bedrock_approval") as mock_invoke:
+        mock_invoke.return_value = {"accepted": True, "final_status": "under_review"}
+        resp = twilio_handler(event, None)
+        assert resp["statusCode"] == 200
+        body = json.loads(resp["body"])
+        assert body["ok"] is True
+        assert body["dispute_id"] == "dp_S2"
+        assert body["answer"] == "1"
+        mock_invoke.assert_called_once_with("dp_S2", "1")
+
+
+def test_telegram_webhook_text_message():
+    msg_payload = {
+        "message": {
+            "chat": {"id": 8794236067},
+            "text": "1",
+        }
+    }
+    event = {
+        "isBase64Encoded": False,
+        "body": json.dumps(msg_payload),
+        "headers": {"content-type": "application/json"},
+    }
+    with patch("infra.lambdas.twilio_webhook.app.query_latest_pending_decision", return_value="dp_S2"):
+        with patch("infra.lambdas.twilio_webhook.app.invoke_bedrock_approval") as mock_invoke:
+            mock_invoke.return_value = {"accepted": True, "final_status": "under_review"}
+            resp = twilio_handler(event, None)
+            assert resp["statusCode"] == 200
+            body = json.loads(resp["body"])
+            assert body["ok"] is True
+            assert body["dispute_id"] == "dp_S2"
+            assert body["answer"] == "1"
+            mock_invoke.assert_called_once_with("dp_S2", "1")
+
+
 def test_sweep_handler():
     event = {"source": "aws.events"}
     with patch("infra.lambdas.sweep.app.boto3.client") as mock_boto:
