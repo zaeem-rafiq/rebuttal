@@ -1,0 +1,92 @@
+{
+  "id": "case_18",
+  "dispute_id": "dp_eval_18",
+  "order_id": "ORD-EVAL-018",
+  "customer_id": "CUST-EVAL-018",
+  "amount_cents": 45000,
+  "currency": "usd",
+  "reason": "product_not_received",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "repeat",
+  "expected_action": "concede",
+  "expected_gate": true,
+  "must_cite": [
+    "repeat",
+    "LTV",
+    "vip_concede_max_cents"
+  ],
+  "description": "Repeat customer ($1.2K LTV) dispute under $500 conceded per policy directive.",
+  "customer": {
+    "id": "CUST-EVAL-018",
+    "name": "Jessica Lee",
+    "email": "jessica.lee@example.com",
+    "phone": "+1555010018",
+    "customer_value": "repeat",
+    "order_count": 5,
+    "lifetime_value_cents": 120000
+  },
+  "order": {
+    "id": "ORD-EVAL-018",
+    "customer_id": "CUST-EVAL-018",
+    "amount_cents": 45000,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "190 Chestnut St",
+      "city": "San Francisco",
+      "state": "CA",
+      "postal_code": "94101",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "190 Chestnut St",
+      "city": "San Francisco",
+      "state": "CA",
+      "postal_code": "94101",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Smart Watch Ultra",
+        "quantity": 1,
+        "price_cents": 45000
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_18",
+    "order_id": "ORD-EVAL-018",
+    "carrier": "FedEx",
+    "tracking_number": "794918",
+    "status": "delivered",
+    "shipped_at": "2026-08-10T09:00:00Z",
+    "delivered_at": "2026-08-13T13:00:00Z",
+    "signed_by": "J. Lee",
+    "shipping_address": {
+      "line1": "190 Chestnut St",
+      "city": "San Francisco",
+      "state": "CA",
+      "postal_code": "94101",
+      "country": "US"
+    },
+    "events": []
+  },
+  "comms": [],
+  "charge": {
+    "amount": 45000,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Jessica Lee",
+      "email": "jessica.lee@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-018"
+    }
+  }
+}

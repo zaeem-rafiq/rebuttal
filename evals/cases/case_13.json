@@ -1,0 +1,92 @@
+{
+  "id": "case_13",
+  "dispute_id": "dp_eval_13",
+  "order_id": "ORD-EVAL-013",
+  "customer_id": "CUST-EVAL-013",
+  "amount_cents": 8900,
+  "currency": "usd",
+  "reason": "subscription_canceled",
+  "status": "needs_response",
+  "evidence_strength": "weak",
+  "customer_value": "new",
+  "expected_action": "concede",
+  "expected_gate": true,
+  "must_cite": [
+    "Aug 28",
+    "before renewal",
+    "cancellation request"
+  ],
+  "description": "Subscription dispute where customer sent cancellation request on Aug 28 before renewal.",
+  "customer": {
+    "id": "CUST-EVAL-013",
+    "name": "Lisa Montgomery",
+    "email": "l.mont@example.com",
+    "phone": "+1555010013",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 8900
+  },
+  "order": {
+    "id": "ORD-EVAL-013",
+    "customer_id": "CUST-EVAL-013",
+    "amount_cents": 8900,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "140 Redwood Dr",
+      "city": "Nashville",
+      "state": "TN",
+      "postal_code": "37201",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "140 Redwood Dr",
+      "city": "Nashville",
+      "state": "TN",
+      "postal_code": "37201",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Quarterly Membership",
+        "quantity": 1,
+        "price_cents": 8900
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_13",
+    "order_id": "ORD-EVAL-013",
+    "carrier": "Digital",
+    "tracking_number": "DIGITAL-13",
+    "status": "delivered",
+    "shipped_at": "2026-09-01T00:00:00Z",
+    "delivered_at": "2026-09-01T00:00:00Z",
+    "signed_by": "Digital Delivery",
+    "shipping_address": {},
+    "events": []
+  },
+  "comms": [
+    {
+      "subject": "Cancellation notice",
+      "body": "Please cancel my membership immediately. Sent on Aug 28, well before renewal on Sep 1. This is my formal cancellation request.",
+      "created_at": "2026-08-28T09:00:00Z"
+    }
+  ],
+  "charge": {
+    "amount": 8900,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Lisa Montgomery",
+      "email": "l.mont@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-013"
+    }
+  }
+}

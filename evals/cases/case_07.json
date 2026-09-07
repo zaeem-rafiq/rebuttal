@@ -1,0 +1,102 @@
+{
+  "id": "case_07",
+  "dispute_id": "dp_eval_07",
+  "order_id": "ORD-EVAL-007",
+  "customer_id": "CUST-EVAL-007",
+  "amount_cents": 8900,
+  "currency": "usd",
+  "reason": "product_unacceptable",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "new",
+  "expected_action": "fight",
+  "expected_gate": false,
+  "must_cite": [
+    "return policy",
+    "no return"
+  ],
+  "description": "Product unacceptable claim where customer did not initiate return under return policy.",
+  "customer": {
+    "id": "CUST-EVAL-007",
+    "name": "Emily Watson",
+    "email": "e.watson@example.com",
+    "phone": "+1555010007",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 8900
+  },
+  "order": {
+    "id": "ORD-EVAL-007",
+    "customer_id": "CUST-EVAL-007",
+    "amount_cents": 8900,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "707 Willow Way",
+      "city": "Portland",
+      "state": "OR",
+      "postal_code": "97201",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "707 Willow Way",
+      "city": "Portland",
+      "state": "OR",
+      "postal_code": "97201",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Designer Desk Lamp",
+        "quantity": 1,
+        "price_cents": 8900
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_07",
+    "order_id": "ORD-EVAL-007",
+    "carrier": "UPS",
+    "tracking_number": "1Z99907",
+    "status": "delivered",
+    "shipped_at": "2026-08-11T09:00:00Z",
+    "delivered_at": "2026-08-14T12:00:00Z",
+    "signed_by": "E. Watson",
+    "shipping_address": {
+      "line1": "707 Willow Way",
+      "city": "Portland",
+      "state": "OR",
+      "postal_code": "97201",
+      "country": "US"
+    },
+    "events": [
+      {
+        "timestamp": "2026-08-11T09:00:00Z",
+        "status": "shipped",
+        "location": "Seattle, WA"
+      },
+      {
+        "timestamp": "2026-08-14T12:00:00Z",
+        "status": "delivered",
+        "location": "Portland, OR"
+      }
+    ]
+  },
+  "comms": [],
+  "charge": {
+    "amount": 8900,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Emily Watson",
+      "email": "e.watson@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-007"
+    }
+  }
+}

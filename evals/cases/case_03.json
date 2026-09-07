@@ -1,0 +1,109 @@
+{
+  "id": "case_03",
+  "dispute_id": "dp_eval_03",
+  "order_id": "ORD-EVAL-003",
+  "customer_id": "CUST-EVAL-003",
+  "amount_cents": 6500,
+  "currency": "usd",
+  "reason": "product_not_received",
+  "status": "needs_response",
+  "evidence_strength": "weak",
+  "customer_value": "new",
+  "expected_action": "concede",
+  "expected_gate": true,
+  "must_cite": [
+    "940003",
+    "delayed",
+    "never delivered"
+  ],
+  "description": "Product not received with carrier delayed tracking and no delivery confirmation.",
+  "customer": {
+    "id": "CUST-EVAL-003",
+    "name": "Sarah Connor",
+    "email": "s.connor@example.com",
+    "phone": "+1555010003",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 6500
+  },
+  "order": {
+    "id": "ORD-EVAL-003",
+    "customer_id": "CUST-EVAL-003",
+    "amount_cents": 6500,
+    "currency": "usd",
+    "status": "shipped",
+    "shipping_address": {
+      "line1": "303 Oak St",
+      "city": "Phoenix",
+      "state": "AZ",
+      "postal_code": "85001",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "303 Oak St",
+      "city": "Phoenix",
+      "state": "AZ",
+      "postal_code": "85001",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "USB-C Hub Multiport",
+        "quantity": 1,
+        "price_cents": 6500
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_03",
+    "order_id": "ORD-EVAL-003",
+    "carrier": "USPS",
+    "tracking_number": "940003",
+    "status": "delayed",
+    "shipped_at": "2026-08-10T14:00:00Z",
+    "delivered_at": null,
+    "signed_by": null,
+    "shipping_address": {
+      "line1": "303 Oak St",
+      "city": "Phoenix",
+      "state": "AZ",
+      "postal_code": "85001",
+      "country": "US"
+    },
+    "events": [
+      {
+        "timestamp": "2026-08-10T14:00:00Z",
+        "status": "shipped",
+        "location": "Los Angeles, CA"
+      },
+      {
+        "timestamp": "2026-08-14T08:00:00Z",
+        "status": "delayed",
+        "location": "In transit - package delayed, never delivered"
+      }
+    ]
+  },
+  "comms": [
+    {
+      "subject": "Where is my order?",
+      "body": "It has been 2 weeks and tracking says delayed, package was never delivered.",
+      "created_at": "2026-08-25T10:00:00Z"
+    }
+  ],
+  "charge": {
+    "amount": 6500,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Sarah Connor",
+      "email": "s.connor@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-003"
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "id": "case_01",
+  "dispute_id": "dp_eval_01",
+  "order_id": "ORD-EVAL-001",
+  "customer_id": "CUST-EVAL-001",
+  "amount_cents": 7500,
+  "currency": "usd",
+  "reason": "product_not_received",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "new",
+  "expected_action": "fight",
+  "expected_gate": false,
+  "must_cite": [
+    "1Z99901",
+    "M. Taylor",
+    "delivered"
+  ],
+  "description": "Product not received under $200 with signature delivery confirmation.",
+  "customer": {
+    "id": "CUST-EVAL-001",
+    "name": "Michael Taylor",
+    "email": "m.taylor@example.com",
+    "phone": "+1555010001",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 7500
+  },
+  "order": {
+    "id": "ORD-EVAL-001",
+    "customer_id": "CUST-EVAL-001",
+    "amount_cents": 7500,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "101 Pine St",
+      "city": "Austin",
+      "state": "TX",
+      "postal_code": "78701",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "101 Pine St",
+      "city": "Austin",
+      "state": "TX",
+      "postal_code": "78701",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Wireless Charging Stand",
+        "quantity": 1,
+        "price_cents": 7500
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_01",
+    "order_id": "ORD-EVAL-001",
+    "carrier": "UPS",
+    "tracking_number": "1Z99901",
+    "status": "delivered",
+    "shipped_at": "2026-08-20T10:00:00Z",
+    "delivered_at": "2026-08-23T14:30:00Z",
+    "signed_by": "M. Taylor",
+    "shipping_address": {
+      "line1": "101 Pine St",
+      "city": "Austin",
+      "state": "TX",
+      "postal_code": "78701",
+      "country": "US"
+    },
+    "events": [
+      {
+        "timestamp": "2026-08-20T10:00:00Z",
+        "status": "shipped",
+        "location": "Dallas, TX"
+      },
+      {
+        "timestamp": "2026-08-23T14:30:00Z",
+        "status": "delivered",
+        "location": "Austin, TX"
+      }
+    ]
+  },
+  "comms": [],
+  "charge": {
+    "amount": 7500,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Michael Taylor",
+      "email": "m.taylor@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-001"
+    }
+  }
+}

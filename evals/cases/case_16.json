@@ -1,0 +1,92 @@
+{
+  "id": "case_16",
+  "dispute_id": "dp_eval_16",
+  "order_id": "ORD-EVAL-016",
+  "customer_id": "CUST-EVAL-016",
+  "amount_cents": 12900,
+  "currency": "usd",
+  "reason": "inquiry",
+  "status": "warning_needs_response",
+  "evidence_strength": "weak",
+  "customer_value": "new",
+  "expected_action": "refund_inquiry",
+  "expected_gate": true,
+  "must_cite": [
+    "inquiry",
+    "cancellation",
+    "$15 fee"
+  ],
+  "description": "Pre-chargeback inquiry on subscription where refund avoids $15 fee.",
+  "customer": {
+    "id": "CUST-EVAL-016",
+    "name": "Roberto Alvarez",
+    "email": "r.alvarez@example.com",
+    "phone": "+1555010016",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 12900
+  },
+  "order": {
+    "id": "ORD-EVAL-016",
+    "customer_id": "CUST-EVAL-016",
+    "amount_cents": 12900,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "170 Alder St",
+      "city": "Memphis",
+      "state": "TN",
+      "postal_code": "38101",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "170 Alder St",
+      "city": "Memphis",
+      "state": "TN",
+      "postal_code": "38101",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Annual Analytics SaaS Plan",
+        "quantity": 1,
+        "price_cents": 12900
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_16",
+    "order_id": "ORD-EVAL-016",
+    "carrier": "Digital",
+    "tracking_number": "DIGITAL-16",
+    "status": "delivered",
+    "shipped_at": "2026-08-01T00:00:00Z",
+    "delivered_at": "2026-08-01T00:00:00Z",
+    "signed_by": "Digital",
+    "shipping_address": {},
+    "events": []
+  },
+  "comms": [
+    {
+      "subject": "Cancel renewal",
+      "body": "I sent a cancellation email before renewal. This inquiry should be refunded to avoid the $15 fee.",
+      "created_at": "2026-08-01T08:00:00Z"
+    }
+  ],
+  "charge": {
+    "amount": 12900,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Roberto Alvarez",
+      "email": "r.alvarez@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-016"
+    }
+  }
+}

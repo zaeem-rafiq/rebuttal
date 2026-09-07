@@ -1,0 +1,103 @@
+{
+  "id": "case_02",
+  "dispute_id": "dp_eval_02",
+  "order_id": "ORD-EVAL-002",
+  "customer_id": "CUST-EVAL-002",
+  "amount_cents": 28000,
+  "currency": "usd",
+  "reason": "product_not_received",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "new",
+  "expected_action": "fight",
+  "expected_gate": true,
+  "must_cite": [
+    "794902",
+    "D. Vance",
+    "delivered"
+  ],
+  "description": "Product not received high amount ($280.00) requiring approval gate with signature.",
+  "customer": {
+    "id": "CUST-EVAL-002",
+    "name": "Daniel Vance",
+    "email": "d.vance@example.com",
+    "phone": "+1555010002",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 28000
+  },
+  "order": {
+    "id": "ORD-EVAL-002",
+    "customer_id": "CUST-EVAL-002",
+    "amount_cents": 28000,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "202 Maple Ave",
+      "city": "Denver",
+      "state": "CO",
+      "postal_code": "80202",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "202 Maple Ave",
+      "city": "Denver",
+      "state": "CO",
+      "postal_code": "80202",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Mechanical Keyboard Pro",
+        "quantity": 1,
+        "price_cents": 28000
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_02",
+    "order_id": "ORD-EVAL-002",
+    "carrier": "FedEx",
+    "tracking_number": "794902",
+    "status": "delivered",
+    "shipped_at": "2026-08-18T09:00:00Z",
+    "delivered_at": "2026-08-21T11:15:00Z",
+    "signed_by": "D. Vance",
+    "shipping_address": {
+      "line1": "202 Maple Ave",
+      "city": "Denver",
+      "state": "CO",
+      "postal_code": "80202",
+      "country": "US"
+    },
+    "events": [
+      {
+        "timestamp": "2026-08-18T09:00:00Z",
+        "status": "shipped",
+        "location": "Memphis, TN"
+      },
+      {
+        "timestamp": "2026-08-21T11:15:00Z",
+        "status": "delivered",
+        "location": "Denver, CO"
+      }
+    ]
+  },
+  "comms": [],
+  "charge": {
+    "amount": 28000,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Daniel Vance",
+      "email": "d.vance@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-002"
+    }
+  }
+}

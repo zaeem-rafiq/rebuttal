@@ -1,0 +1,98 @@
+{
+  "id": "case_15",
+  "dispute_id": "dp_eval_15",
+  "order_id": "ORD-EVAL-015",
+  "customer_id": "CUST-EVAL-015",
+  "amount_cents": 6000,
+  "currency": "usd",
+  "reason": "duplicate",
+  "status": "needs_response",
+  "evidence_strength": "weak",
+  "customer_value": "new",
+  "expected_action": "concede",
+  "expected_gate": true,
+  "must_cite": [
+    "double charge",
+    "identical",
+    "single shipment"
+  ],
+  "description": "Duplicate dispute with an accidental double charge for an identical cart with single shipment.",
+  "customer": {
+    "id": "CUST-EVAL-015",
+    "name": "Hannah Abbott",
+    "email": "h.abbott@example.com",
+    "phone": "+1555010015",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 6000
+  },
+  "order": {
+    "id": "ORD-EVAL-015",
+    "customer_id": "CUST-EVAL-015",
+    "amount_cents": 6000,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "160 Sycamore St",
+      "city": "Columbus",
+      "state": "OH",
+      "postal_code": "43201",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "160 Sycamore St",
+      "city": "Columbus",
+      "state": "OH",
+      "postal_code": "43201",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Fitness Resistance Bands",
+        "quantity": 1,
+        "price_cents": 6000
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_15",
+    "order_id": "ORD-EVAL-015",
+    "carrier": "USPS",
+    "tracking_number": "940015",
+    "status": "delivered",
+    "shipped_at": "2026-08-08T10:00:00Z",
+    "delivered_at": "2026-08-11T12:00:00Z",
+    "signed_by": null,
+    "shipping_address": {
+      "line1": "160 Sycamore St",
+      "city": "Columbus",
+      "state": "OH",
+      "postal_code": "43201",
+      "country": "US"
+    },
+    "events": []
+  },
+  "comms": [
+    {
+      "subject": "Double charged on my card",
+      "body": "System shows a double charge 2 seconds apart for identical items, but merchant only fulfilled a single shipment.",
+      "created_at": "2026-08-08T12:00:00Z"
+    }
+  ],
+  "charge": {
+    "amount": 6000,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Hannah Abbott",
+      "email": "h.abbott@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-015"
+    }
+  }
+}

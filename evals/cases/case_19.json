@@ -1,0 +1,103 @@
+{
+  "id": "case_19",
+  "dispute_id": "dp_eval_19",
+  "order_id": "ORD-EVAL-019",
+  "customer_id": "CUST-EVAL-019",
+  "amount_cents": 55000,
+  "currency": "usd",
+  "reason": "fraudulent",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "new",
+  "expected_action": "fight",
+  "expected_gate": true,
+  "must_cite": [
+    "1Z99919",
+    "S. Jenkins",
+    "AVS"
+  ],
+  "description": "High value ($550.00) fraudulent dispute with AVS match and cardholder signature.",
+  "customer": {
+    "id": "CUST-EVAL-019",
+    "name": "Samuel Jenkins",
+    "email": "s.jenkins@example.com",
+    "phone": "+1555010019",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 55000
+  },
+  "order": {
+    "id": "ORD-EVAL-019",
+    "customer_id": "CUST-EVAL-019",
+    "amount_cents": 55000,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "200 Walnut Ave",
+      "city": "Dallas",
+      "state": "TX",
+      "postal_code": "75201",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "200 Walnut Ave",
+      "city": "Dallas",
+      "state": "TX",
+      "postal_code": "75201",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Professional Drone 4K",
+        "quantity": 1,
+        "price_cents": 55000
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_19",
+    "order_id": "ORD-EVAL-019",
+    "carrier": "UPS",
+    "tracking_number": "1Z99919",
+    "status": "delivered",
+    "shipped_at": "2026-08-15T09:00:00Z",
+    "delivered_at": "2026-08-18T14:30:00Z",
+    "signed_by": "S. Jenkins",
+    "shipping_address": {
+      "line1": "200 Walnut Ave",
+      "city": "Dallas",
+      "state": "TX",
+      "postal_code": "75201",
+      "country": "US"
+    },
+    "events": [
+      {
+        "timestamp": "2026-08-15T09:00:00Z",
+        "status": "shipped",
+        "location": "Fort Worth, TX"
+      },
+      {
+        "timestamp": "2026-08-18T14:30:00Z",
+        "status": "delivered",
+        "location": "Dallas, TX"
+      }
+    ]
+  },
+  "comms": [],
+  "charge": {
+    "amount": 55000,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Samuel Jenkins",
+      "email": "s.jenkins@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-019"
+    }
+  }
+}

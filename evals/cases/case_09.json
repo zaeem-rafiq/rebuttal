@@ -1,0 +1,98 @@
+{
+  "id": "case_09",
+  "dispute_id": "dp_eval_09",
+  "order_id": "ORD-EVAL-009",
+  "customer_id": "CUST-EVAL-009",
+  "amount_cents": 19500,
+  "currency": "usd",
+  "reason": "product_unacceptable",
+  "status": "needs_response",
+  "evidence_strength": "mixed",
+  "customer_value": "vip",
+  "expected_action": "concede",
+  "expected_gate": true,
+  "must_cite": [
+    "VIP",
+    "LTV",
+    "policy"
+  ],
+  "description": "VIP customer concession under $500 policy limit to preserve relationship.",
+  "customer": {
+    "id": "CUST-EVAL-009",
+    "name": "Amanda Ross",
+    "email": "a.ross@example.com",
+    "phone": "+1555010009",
+    "customer_value": "vip",
+    "order_count": 12,
+    "lifetime_value_cents": 340000
+  },
+  "order": {
+    "id": "ORD-EVAL-009",
+    "customer_id": "CUST-EVAL-009",
+    "amount_cents": 19500,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "909 Walnut St",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02108",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "909 Walnut St",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02108",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Handmade Ceramic Vase",
+        "quantity": 1,
+        "price_cents": 19500
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_09",
+    "order_id": "ORD-EVAL-009",
+    "carrier": "FedEx",
+    "tracking_number": "794909",
+    "status": "delivered",
+    "shipped_at": "2026-08-10T10:00:00Z",
+    "delivered_at": "2026-08-13T14:00:00Z",
+    "signed_by": "A. Ross",
+    "shipping_address": {
+      "line1": "909 Walnut St",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02108",
+      "country": "US"
+    },
+    "events": []
+  },
+  "comms": [
+    {
+      "subject": "Vase color differs from online photo",
+      "body": "The glaze is much darker than pictured. Disappointed.",
+      "created_at": "2026-08-14T09:00:00Z"
+    }
+  ],
+  "charge": {
+    "amount": 19500,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Amanda Ross",
+      "email": "a.ross@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-009"
+    }
+  }
+}

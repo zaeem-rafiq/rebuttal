@@ -1,0 +1,103 @@
+{
+  "id": "case_20",
+  "dispute_id": "dp_eval_20",
+  "order_id": "ORD-EVAL-020",
+  "customer_id": "CUST-EVAL-020",
+  "amount_cents": 4500,
+  "currency": "usd",
+  "reason": "product_not_received",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "new",
+  "expected_action": "fight",
+  "expected_gate": false,
+  "must_cite": [
+    "940020",
+    "delivered",
+    "USPS"
+  ],
+  "description": "Low-value product not received dispute with confirmed USPS delivery.",
+  "customer": {
+    "id": "CUST-EVAL-020",
+    "name": "Olivia Moore",
+    "email": "o.moore@example.com",
+    "phone": "+1555010020",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 4500
+  },
+  "order": {
+    "id": "ORD-EVAL-020",
+    "customer_id": "CUST-EVAL-020",
+    "amount_cents": 4500,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "210 Beech St",
+      "city": "Minneapolis",
+      "state": "MN",
+      "postal_code": "55401",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "210 Beech St",
+      "city": "Minneapolis",
+      "state": "MN",
+      "postal_code": "55401",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Aroma Oil Diffuser",
+        "quantity": 1,
+        "price_cents": 4500
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_20",
+    "order_id": "ORD-EVAL-020",
+    "carrier": "USPS",
+    "tracking_number": "940020",
+    "status": "delivered",
+    "shipped_at": "2026-08-16T10:00:00Z",
+    "delivered_at": "2026-08-19T11:00:00Z",
+    "signed_by": "Delivered in Mailbox",
+    "shipping_address": {
+      "line1": "210 Beech St",
+      "city": "Minneapolis",
+      "state": "MN",
+      "postal_code": "55401",
+      "country": "US"
+    },
+    "events": [
+      {
+        "timestamp": "2026-08-16T10:00:00Z",
+        "status": "shipped",
+        "location": "St Paul, MN"
+      },
+      {
+        "timestamp": "2026-08-19T11:00:00Z",
+        "status": "delivered",
+        "location": "Minneapolis, MN"
+      }
+    ]
+  },
+  "comms": [],
+  "charge": {
+    "amount": 4500,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Olivia Moore",
+      "email": "o.moore@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-020"
+    }
+  }
+}

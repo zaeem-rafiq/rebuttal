@@ -1,0 +1,97 @@
+{
+  "id": "case_17",
+  "dispute_id": "dp_eval_17",
+  "order_id": "ORD-EVAL-017",
+  "customer_id": "CUST-EVAL-017",
+  "amount_cents": 7500,
+  "currency": "usd",
+  "reason": "inquiry",
+  "status": "warning_needs_response",
+  "evidence_strength": "weak",
+  "customer_value": "repeat",
+  "expected_action": "refund_inquiry",
+  "expected_gate": true,
+  "must_cite": [
+    "inquiry",
+    "$15 fee"
+  ],
+  "description": "Pre-chargeback inquiry for repeat customer where refund closes inquiry and avoids $15 fee.",
+  "customer": {
+    "id": "CUST-EVAL-017",
+    "name": "Patricia Hall",
+    "email": "p.hall@example.com",
+    "phone": "+1555010017",
+    "customer_value": "repeat",
+    "order_count": 4,
+    "lifetime_value_cents": 32000
+  },
+  "order": {
+    "id": "ORD-EVAL-017",
+    "customer_id": "CUST-EVAL-017",
+    "amount_cents": 7500,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "180 Hickory Way",
+      "city": "Louisville",
+      "state": "KY",
+      "postal_code": "40201",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "180 Hickory Way",
+      "city": "Louisville",
+      "state": "KY",
+      "postal_code": "40201",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Coffee Subscription Box",
+        "quantity": 1,
+        "price_cents": 7500
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_17",
+    "order_id": "ORD-EVAL-017",
+    "carrier": "USPS",
+    "tracking_number": "940017",
+    "status": "delivered",
+    "shipped_at": "2026-08-05T10:00:00Z",
+    "delivered_at": "2026-08-08T11:00:00Z",
+    "signed_by": null,
+    "shipping_address": {
+      "line1": "180 Hickory Way",
+      "city": "Louisville",
+      "state": "KY",
+      "postal_code": "40201",
+      "country": "US"
+    },
+    "events": []
+  },
+  "comms": [
+    {
+      "subject": "Inquiry regarding charge",
+      "body": "I had paused my delivery. Please refund this inquiry before chargeback to save the $15 fee.",
+      "created_at": "2026-08-09T10:00:00Z"
+    }
+  ],
+  "charge": {
+    "amount": 7500,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Patricia Hall",
+      "email": "p.hall@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-017"
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "id": "case_14",
+  "dispute_id": "dp_eval_14",
+  "order_id": "ORD-EVAL-014",
+  "customer_id": "CUST-EVAL-014",
+  "amount_cents": 12000,
+  "currency": "usd",
+  "reason": "duplicate",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "new",
+  "expected_action": "fight",
+  "expected_gate": false,
+  "must_cite": [
+    "ORD-14A",
+    "ORD-14B",
+    "distinct items"
+  ],
+  "description": "Duplicate dispute where orders ORD-14A and ORD-14B represent distinct items placed hours apart.",
+  "customer": {
+    "id": "CUST-EVAL-014",
+    "name": "Marcus Reid",
+    "email": "m.reid@example.com",
+    "phone": "+1555010014",
+    "customer_value": "new",
+    "order_count": 2,
+    "lifetime_value_cents": 24000
+  },
+  "order": {
+    "id": "ORD-EVAL-014",
+    "customer_id": "CUST-EVAL-014",
+    "amount_cents": 12000,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "150 Poplar Ave",
+      "city": "Indianapolis",
+      "state": "IN",
+      "postal_code": "46201",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "150 Poplar Ave",
+      "city": "Indianapolis",
+      "state": "IN",
+      "postal_code": "46201",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Leather Laptop Briefcase",
+        "quantity": 1,
+        "price_cents": 12000
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_14",
+    "order_id": "ORD-EVAL-014",
+    "carrier": "UPS",
+    "tracking_number": "1Z99914",
+    "status": "delivered",
+    "shipped_at": "2026-08-10T10:00:00Z",
+    "delivered_at": "2026-08-13T14:00:00Z",
+    "signed_by": "M. Reid",
+    "shipping_address": {
+      "line1": "150 Poplar Ave",
+      "city": "Indianapolis",
+      "state": "IN",
+      "postal_code": "46201",
+      "country": "US"
+    },
+    "events": []
+  },
+  "comms": [
+    {
+      "subject": "Order receipt",
+      "body": "Comparison shows ORD-14A and ORD-14B contained distinct items ordered separately.",
+      "created_at": "2026-08-10T11:00:00Z"
+    }
+  ],
+  "charge": {
+    "amount": 12000,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Marcus Reid",
+      "email": "m.reid@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-014",
+      "related_orders": "ORD-14A,ORD-14B"
+    }
+  }
+}

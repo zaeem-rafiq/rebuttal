@@ -1,0 +1,103 @@
+{
+  "id": "case_05",
+  "dispute_id": "dp_eval_05",
+  "order_id": "ORD-EVAL-005",
+  "customer_id": "CUST-EVAL-005",
+  "amount_cents": 35000,
+  "currency": "usd",
+  "reason": "fraudulent",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "new",
+  "expected_action": "fight",
+  "expected_gate": true,
+  "must_cite": [
+    "1Z99905",
+    "R. Martinez",
+    "AVS"
+  ],
+  "description": "Fraudulent claim $350.00 with AVS pass and cardholder signature.",
+  "customer": {
+    "id": "CUST-EVAL-005",
+    "name": "Rachel Martinez",
+    "email": "r.martinez@example.com",
+    "phone": "+1555010005",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 35000
+  },
+  "order": {
+    "id": "ORD-EVAL-005",
+    "customer_id": "CUST-EVAL-005",
+    "amount_cents": 35000,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "505 Birch Ln",
+      "city": "Miami",
+      "state": "FL",
+      "postal_code": "33101",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "505 Birch Ln",
+      "city": "Miami",
+      "state": "FL",
+      "postal_code": "33101",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Premium Noise Cancelling Headphones",
+        "quantity": 1,
+        "price_cents": 35000
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_05",
+    "order_id": "ORD-EVAL-005",
+    "carrier": "UPS",
+    "tracking_number": "1Z99905",
+    "status": "delivered",
+    "shipped_at": "2026-08-12T08:00:00Z",
+    "delivered_at": "2026-08-15T13:45:00Z",
+    "signed_by": "R. Martinez",
+    "shipping_address": {
+      "line1": "505 Birch Ln",
+      "city": "Miami",
+      "state": "FL",
+      "postal_code": "33101",
+      "country": "US"
+    },
+    "events": [
+      {
+        "timestamp": "2026-08-12T08:00:00Z",
+        "status": "shipped",
+        "location": "Atlanta, GA"
+      },
+      {
+        "timestamp": "2026-08-15T13:45:00Z",
+        "status": "delivered",
+        "location": "Miami, FL"
+      }
+    ]
+  },
+  "comms": [],
+  "charge": {
+    "amount": 35000,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Rachel Martinez",
+      "email": "r.martinez@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-005"
+    }
+  }
+}

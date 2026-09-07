@@ -1,0 +1,92 @@
+{
+  "id": "case_12",
+  "dispute_id": "dp_eval_12",
+  "order_id": "ORD-EVAL-012",
+  "customer_id": "CUST-EVAL-012",
+  "amount_cents": 4900,
+  "currency": "usd",
+  "reason": "subscription_canceled",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "new",
+  "expected_action": "fight",
+  "expected_gate": false,
+  "must_cite": [
+    "subscription terms",
+    "Sep 5",
+    "after renewal"
+  ],
+  "description": "Subscription canceled claim where cancellation was sent Sep 5, 4 days after renewal.",
+  "customer": {
+    "id": "CUST-EVAL-012",
+    "name": "Thomas Evans",
+    "email": "t.evans@example.com",
+    "phone": "+1555010012",
+    "customer_value": "new",
+    "order_count": 2,
+    "lifetime_value_cents": 9800
+  },
+  "order": {
+    "id": "ORD-EVAL-012",
+    "customer_id": "CUST-EVAL-012",
+    "amount_cents": 4900,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "130 Magnolia St",
+      "city": "Charlotte",
+      "state": "NC",
+      "postal_code": "28201",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "130 Magnolia St",
+      "city": "Charlotte",
+      "state": "NC",
+      "postal_code": "28201",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Monthly Pro Software License",
+        "quantity": 1,
+        "price_cents": 4900
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_12",
+    "order_id": "ORD-EVAL-012",
+    "carrier": "Digital",
+    "tracking_number": "DIGITAL-12",
+    "status": "delivered",
+    "shipped_at": "2026-09-01T00:00:00Z",
+    "delivered_at": "2026-09-01T00:00:00Z",
+    "signed_by": "Digital Delivery",
+    "shipping_address": {},
+    "events": []
+  },
+  "comms": [
+    {
+      "subject": "Cancel subscription",
+      "body": "Please cancel my account. I am writing this on Sep 5, 4 days after renewal. I agreed to subscription terms previously.",
+      "created_at": "2026-09-05T12:00:00Z"
+    }
+  ],
+  "charge": {
+    "amount": 4900,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Thomas Evans",
+      "email": "t.evans@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-012"
+    }
+  }
+}

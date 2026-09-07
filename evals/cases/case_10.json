@@ -1,0 +1,98 @@
+{
+  "id": "case_10",
+  "dispute_id": "dp_eval_10",
+  "order_id": "ORD-EVAL-010",
+  "customer_id": "CUST-EVAL-010",
+  "amount_cents": 9900,
+  "currency": "usd",
+  "reason": "credit_not_processed",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "new",
+  "expected_action": "fight",
+  "expected_gate": false,
+  "must_cite": [
+    "re_prior10",
+    "refund already issued"
+  ],
+  "description": "Credit not processed dispute where refund re_prior10 was already issued prior to dispute.",
+  "customer": {
+    "id": "CUST-EVAL-010",
+    "name": "Brian Cox",
+    "email": "b.cox@example.com",
+    "phone": "+1555010010",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 9900
+  },
+  "order": {
+    "id": "ORD-EVAL-010",
+    "customer_id": "CUST-EVAL-010",
+    "amount_cents": 9900,
+    "currency": "usd",
+    "status": "refunded",
+    "shipping_address": {
+      "line1": "110 Ash St",
+      "city": "San Jose",
+      "state": "CA",
+      "postal_code": "95101",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "110 Ash St",
+      "city": "San Jose",
+      "state": "CA",
+      "postal_code": "95101",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Wireless Gaming Mouse",
+        "quantity": 1,
+        "price_cents": 9900
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_10",
+    "order_id": "ORD-EVAL-010",
+    "carrier": "UPS",
+    "tracking_number": "1Z99910",
+    "status": "delivered",
+    "shipped_at": "2026-08-05T10:00:00Z",
+    "delivered_at": "2026-08-08T12:00:00Z",
+    "signed_by": "B. Cox",
+    "shipping_address": {
+      "line1": "110 Ash St",
+      "city": "San Jose",
+      "state": "CA",
+      "postal_code": "95101",
+      "country": "US"
+    },
+    "events": []
+  },
+  "comms": [
+    {
+      "subject": "Refund confirmation re_prior10",
+      "body": "Your refund of $99.00 was processed under reference re_prior10 on Aug 12. Full refund already issued.",
+      "created_at": "2026-08-12T11:00:00Z"
+    }
+  ],
+  "charge": {
+    "amount": 9900,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Brian Cox",
+      "email": "b.cox@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-010",
+      "refund_id": "re_prior10"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "id": "case_11",
+  "dispute_id": "dp_eval_11",
+  "order_id": "ORD-EVAL-011",
+  "customer_id": "CUST-EVAL-011",
+  "amount_cents": 13000,
+  "currency": "usd",
+  "reason": "credit_not_processed",
+  "status": "needs_response",
+  "evidence_strength": "weak",
+  "customer_value": "new",
+  "expected_action": "concede",
+  "expected_gate": true,
+  "must_cite": [
+    "MSG-11",
+    "promised refund"
+  ],
+  "description": "Credit not processed dispute where merchant promised refund in MSG-11 but failed to issue.",
+  "customer": {
+    "id": "CUST-EVAL-011",
+    "name": "Kelly Zhang",
+    "email": "k.zhang@example.com",
+    "phone": "+1555010011",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 13000
+  },
+  "order": {
+    "id": "ORD-EVAL-011",
+    "customer_id": "CUST-EVAL-011",
+    "amount_cents": 13000,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "120 Cypress Rd",
+      "city": "Atlanta",
+      "state": "GA",
+      "postal_code": "30301",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "120 Cypress Rd",
+      "city": "Atlanta",
+      "state": "GA",
+      "postal_code": "30301",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Espresso Grinder",
+        "quantity": 1,
+        "price_cents": 13000
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_11",
+    "order_id": "ORD-EVAL-011",
+    "carrier": "FedEx",
+    "tracking_number": "794911",
+    "status": "delivered",
+    "shipped_at": "2026-08-02T10:00:00Z",
+    "delivered_at": "2026-08-05T15:00:00Z",
+    "signed_by": "K. Zhang",
+    "shipping_address": {
+      "line1": "120 Cypress Rd",
+      "city": "Atlanta",
+      "state": "GA",
+      "postal_code": "30301",
+      "country": "US"
+    },
+    "events": []
+  },
+  "comms": [
+    {
+      "subject": "Support Ticket MSG-11",
+      "body": "We apologize for the issue. Support has approved your return and promised refund within 3 days.",
+      "created_at": "2026-08-07T14:00:00Z"
+    }
+  ],
+  "charge": {
+    "amount": 13000,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "Kelly Zhang",
+      "email": "k.zhang@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-011"
+    }
+  }
+}

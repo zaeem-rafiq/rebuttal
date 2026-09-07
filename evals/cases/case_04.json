@@ -1,0 +1,103 @@
+{
+  "id": "case_04",
+  "dispute_id": "dp_eval_04",
+  "order_id": "ORD-EVAL-004",
+  "customer_id": "CUST-EVAL-004",
+  "amount_cents": 14000,
+  "currency": "usd",
+  "reason": "fraudulent",
+  "status": "needs_response",
+  "evidence_strength": "strong",
+  "customer_value": "new",
+  "expected_action": "fight",
+  "expected_gate": false,
+  "must_cite": [
+    "AVS",
+    "CVC",
+    "442004"
+  ],
+  "description": "Fraudulent claim under $200 with full AVS/CVC match and verified delivery.",
+  "customer": {
+    "id": "CUST-EVAL-004",
+    "name": "David Kim",
+    "email": "d.kim@example.com",
+    "phone": "+1555010004",
+    "customer_value": "new",
+    "order_count": 1,
+    "lifetime_value_cents": 14000
+  },
+  "order": {
+    "id": "ORD-EVAL-004",
+    "customer_id": "CUST-EVAL-004",
+    "amount_cents": 14000,
+    "currency": "usd",
+    "status": "fulfilled",
+    "shipping_address": {
+      "line1": "404 Cedar Rd",
+      "city": "Seattle",
+      "state": "WA",
+      "postal_code": "98101",
+      "country": "US"
+    },
+    "billing_address": {
+      "line1": "404 Cedar Rd",
+      "city": "Seattle",
+      "state": "WA",
+      "postal_code": "98101",
+      "country": "US"
+    },
+    "items": [
+      {
+        "name": "Ergonomic Monitor Stand",
+        "quantity": 1,
+        "price_cents": 14000
+      }
+    ]
+  },
+  "shipment": {
+    "id": "shp_eval_04",
+    "order_id": "ORD-EVAL-004",
+    "carrier": "DHL",
+    "tracking_number": "442004",
+    "status": "delivered",
+    "shipped_at": "2026-08-15T11:00:00Z",
+    "delivered_at": "2026-08-18T16:20:00Z",
+    "signed_by": "D. Kim",
+    "shipping_address": {
+      "line1": "404 Cedar Rd",
+      "city": "Seattle",
+      "state": "WA",
+      "postal_code": "98101",
+      "country": "US"
+    },
+    "events": [
+      {
+        "timestamp": "2026-08-15T11:00:00Z",
+        "status": "shipped",
+        "location": "Portland, OR"
+      },
+      {
+        "timestamp": "2026-08-18T16:20:00Z",
+        "status": "delivered",
+        "location": "Seattle, WA"
+      }
+    ]
+  },
+  "comms": [],
+  "charge": {
+    "amount": 14000,
+    "currency": "usd",
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "billing_details": {
+      "name": "David Kim",
+      "email": "d.kim@example.com"
+    },
+    "metadata": {
+      "order_id": "ORD-EVAL-004"
+    }
+  }
+}

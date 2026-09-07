@@ -125,14 +125,19 @@ def get_customer_comms(customer_id: str, order_id: str = "") -> Dict[str, Any]:
     conn = _get_db_connection()
     try:
         cur = conn.cursor()
-        query = "SELECT * FROM customer_messages WHERE customer_id = ?"
-        params = [customer_id.strip()]
-        if order_id.strip():
-            query += " AND (order_id = ? OR order_id IS NULL)"
-            params.append(order_id.strip())
-        query += " ORDER BY created_at ASC"
-
-        rows = cur.execute(query, tuple(params)).fetchall()
+        cid = customer_id.strip() if customer_id else ""
+        oid = order_id.strip() if order_id else ""
+        if cid and oid:
+            query = "SELECT * FROM customer_messages WHERE customer_id = ? OR order_id = ? ORDER BY created_at ASC"
+            rows = cur.execute(query, (cid, oid)).fetchall()
+        elif cid:
+            query = "SELECT * FROM customer_messages WHERE customer_id = ? ORDER BY created_at ASC"
+            rows = cur.execute(query, (cid,)).fetchall()
+        elif oid:
+            query = "SELECT * FROM customer_messages WHERE order_id = ? ORDER BY created_at ASC"
+            rows = cur.execute(query, (oid,)).fetchall()
+        else:
+            rows = []
         messages = [dict(r) for r in rows]
 
         has_cancellation = any("cancel" in (m.get("subject", "") + m.get("body", "")).lower() for m in messages)

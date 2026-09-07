@@ -91,6 +91,29 @@ Rebuttal includes three representative merchant scenarios verified end-to-end:
 
 ---
 
+## Decision Evals Harness (R-16)
+
+Rebuttal includes an automated evaluation harness in [`evals/run.py`](evals/run.py) running the multi-agent evidence pipeline against 20 synthetic cases spanning dispute reasons, evidence strengths, and customer relationship tiers.
+
+Each case is evaluated across four binary checks:
+1. **Action Match:** Correct action selected (`fight`, `concede`, `refund_inquiry`).
+2. **Gate Match:** Exact alignment with the merchant risk policy gate ($\ge \$200$, uncertainty band $0.35 - 0.65$, non-fight actions).
+3. **Narrative Judge:** Bedrock LLM-as-judge rubric validating reason code defense, required fact citations, zero hallucinations, and length constraint ($\le 250$ words).
+4. **Expected Value (EV) Sign:** Non-negative EV for fight actions; non-positive for concessions.
+
+### Evals Benchmark Results
+
+| Metric | Target | Result | Status |
+| :--- | :--- | :--- | :--- |
+| **(a) Action Match** | $\ge 18 / 20$ (90%) | **20 / 20 (100%)** | **PASS** |
+| **(b) Gate Match** | $20 / 20$ (100%) | **20 / 20 (100%)** | **PASS** |
+| **(c) Narrative Judge Pass** | $\ge 18 / 20$ (90%) | **18 / 20 (90%)** | **PASS** |
+| **(d) EV Sign Pass** | $20 / 20$ (100%) | **20 / 20 (100%)** | **PASS** |
+
+Complete evaluation reports with per-case failure analysis are persisted in [`evals/results/2026-09-07.md`](evals/results/2026-09-07.md). Documented failure modes and regression defenses are detailed in [`docs/evals.md`](docs/evals.md).
+
+---
+
 ## AWS Strands Agents SDK Features
 
 Rebuttal exercises the full capabilities of the **AWS Strands Agents SDK**:
