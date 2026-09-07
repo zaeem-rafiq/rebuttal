@@ -6,7 +6,8 @@
 [![AWS Amplify](https://img.shields.io/badge/Hosted_on-AWS_Amplify-FF9900?logo=aws-amplify)](https://main.dtrewze9hbzeb.amplifyapp.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 
-**Live Judge Console:** [https://main.dtrewze9hbzeb.amplifyapp.com](https://main.dtrewze9hbzeb.amplifyapp.com)
+**Live Judge Console:** [https://main.dtrewze9hbzeb.amplifyapp.com](https://main.dtrewze9hbzeb.amplifyapp.com)  
+**Demo Video (1080p):** [`docs/media/rebuttal_demo_video.mp4`](docs/media/rebuttal_demo_video.mp4) · **Production Script:** [`docs/video-script.md`](docs/video-script.md)
 
 **Rebuttal** is an autonomous chargeback-defense agent built on the **AWS Strands Agents SDK** and **Amazon Bedrock AgentCore** for the AWS *Agents for Humans* Hackathon. It continuously defends small Stripe merchants against unfair credit card chargebacks, gathers proof across fragmented commerce systems, evaluates win probability with generative AI, and loops in human store owners via SMS only when high-stakes judgment calls are needed.
 

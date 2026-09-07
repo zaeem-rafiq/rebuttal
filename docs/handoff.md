@@ -30,6 +30,10 @@ ules: #D4D4D8, highlighter: #FFE96B).
    - Carrier compliance (US A2P 10DLC registration delay) bypassed by supporting Telegram Bot API notifications with interactive inline buttons (`1 Fight`, `2 Concede`, `3 Hold`).
    - Webhook dual-handling in `rebuttal-twilio-webhook` Lambda: parses Telegram JSON callback queries or text messages, triggers AgentCore runtime, answers callback queries, and sends execution confirmations back to the merchant's Telegram chat.
    - Setup script added: `scripts/setup_telegram.py`. Tested and verified live on user device.
+5. **Full 1080p Demo Video Recorded (`docs/media/rebuttal_demo_video.mp4`):**
+   - Automated video recording orchestrated via Playwright Chromium (`scripts/record_demo_video.py`) capturing real-time interactions across all 3 scenarios on AWS Amplify.
+   - Professional audio narration synthesized via AWS Polly Neural (`Matthew`) in `docs/media/demo_narration.mp3` and muxed via FFmpeg into a 1080p progressive MP4 (`rebuttal_demo_video.mp4`, 21.92 MB, 02:32 duration).
+   - Proof line passed: `PROOF R-12: ffprobe duration <= 300s, 1920x1080 = PASS`. Recorded in `docs/proofs/R-12.md`.
 
 ## Next Steps / User Handoff
 
