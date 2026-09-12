@@ -62,6 +62,7 @@ out/
 
 # Media raw artifacts
 docs/media/raw_video/
+docs/media/acts/*silence*.mp3
 
 # Bedrock AgentCore build cache
 .bedrock_agentcore/
