@@ -372,7 +372,7 @@ export default function HomePage() {
   const foughtCount = disputes.filter((d) => d.status === 'won').length;
   const concededCount = disputes.filter((d) => d.status === 'charge_refunded').length;
 
-  if (loading || forcedState === 'loading') {
+  if (forcedState === 'loading' || (loading && disputes.length === 0)) {
     return (
       <div className="space-y-6">
         <Header activeScenario={activeScenario} />
@@ -402,8 +402,40 @@ export default function HomePage() {
     );
   }
 
-  // Quiet State: when nothing is gated
-  const isQuietState = forcedState === 'empty' || !openDispute;
+  // Error State: network failure on cold start or forcedState === 'error'
+  if (forcedState === 'error' || (error && disputes.length === 0 && forcedState !== 'empty')) {
+    return (
+      <div className="space-y-6">
+        <Header
+          activeScenario={activeScenario}
+          onSelectScenario={handleSelectScenario}
+          loadingScenario={loadingScenario}
+          cooldown={cooldown}
+        />
+        {/* Error State: 1px rule #B91C1C above error line, secondary ink, retry as ink link */}
+        <div className="border-t border-decision-red pt-3 pb-2 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs font-mono">
+          <span className="text-secondary-ink">
+            Failed to synchronize dispute docket: {error || 'Stripe API communication timeout (ECONNRESET).'}
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setError(null);
+              setForcedState(null);
+              setLoading(true);
+              fetchDisputes();
+            }}
+            className="underline text-ink hover:text-ink cursor-pointer shrink-0"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Quiet State: when nothing is gated and no unhandled error
+  const isQuietState = forcedState === 'empty' || (!openDispute && !error);
 
   if (isQuietState) {
     return (
@@ -414,6 +446,25 @@ export default function HomePage() {
           loadingScenario={loadingScenario}
           cooldown={cooldown}
         />
+        {error && (
+          <div className="border-t border-decision-red pt-3 pb-2 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs font-mono">
+            <span className="text-secondary-ink">
+              Failed to synchronize dispute docket: {error}
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setError(null);
+                setForcedState(null);
+                setLoading(true);
+                fetchDisputes();
+              }}
+              className="underline text-ink hover:text-ink cursor-pointer shrink-0"
+            >
+              Retry
+            </button>
+          </div>
+        )}
         <div className="py-12">
           <h1 className="text-xl font-sans text-ink tracking-tight font-normal mb-2">
             Nothing needs you.

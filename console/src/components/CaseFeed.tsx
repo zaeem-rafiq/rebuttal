@@ -107,13 +107,13 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-xs" aria-label="Dispute roster">
           <thead>
-            <tr className="border-b border-rule text-secondary-ink font-mono text-xs">
-              <th scope="col" className="py-2.5 px-3 font-normal">Case ID</th>
-              <th scope="col" className="py-2.5 px-3 font-normal">Reason</th>
-              <th scope="col" className="py-2.5 px-3 font-normal">Agent action</th>
-              <th scope="col" className="py-2.5 px-3 font-normal">Outcome</th>
-              <th scope="col" className="py-2.5 px-3 font-normal">Respond by</th>
-              <th scope="col" className="py-2.5 px-3 font-normal text-right">Amount</th>
+            <tr className="border-b border-rule text-secondary-ink font-mono text-xs whitespace-nowrap">
+              <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap">Case ID</th>
+              <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap">Reason</th>
+              <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap">Agent action</th>
+              <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap">Outcome</th>
+              <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap">Respond by</th>
+              <th scope="col" className="py-2.5 px-3 font-normal text-right whitespace-nowrap">Amount</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-rule font-sans">
@@ -128,7 +128,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
                   className="h-10 hover:bg-sheet/60 transition-colors"
                 >
                   {/* Case ID */}
-                  <td className="py-2.5 px-3 align-middle font-mono">
+                  <td className="py-2.5 px-3 align-middle font-mono whitespace-nowrap">
                     <button
                       type="button"
                       onClick={() => onSelectDispute ? onSelectDispute(d.id) : undefined}
@@ -140,29 +140,29 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
                   </td>
 
                   {/* Reason (sentence case) */}
-                  <td className="py-2.5 px-3 align-middle text-ink capitalize">
+                  <td className="py-2.5 px-3 align-middle text-ink capitalize whitespace-nowrap">
                     {reasonClean}
                   </td>
 
                   {/* Agent action (sentence case) */}
-                  <td className="py-2.5 px-3 align-middle text-secondary-ink">
+                  <td className="py-2.5 px-3 align-middle text-secondary-ink whitespace-nowrap">
                     {getAgentAction(d)}
                   </td>
 
                   {/* Outcome (small stamp or status) */}
-                  <td className="py-2.5 px-3 align-middle">
+                  <td className="py-2.5 px-3 align-middle whitespace-nowrap">
                     {renderOutcomeStamp(d)}
                   </td>
 
                   {/* Respond by */}
-                  <td className="py-2.5 px-3 align-middle font-mono">
+                  <td className="py-2.5 px-3 align-middle font-mono whitespace-nowrap">
                     <span className={dueInfo.passed ? 'text-decision-red' : 'text-secondary-ink'}>
                       {dueInfo.text}
                     </span>
                   </td>
 
                   {/* Amount (right-aligned, mono, tabular numbers) */}
-                  <td className="py-2.5 px-3 align-middle text-right font-mono tabular-nums text-ink font-medium">
+                  <td className="py-2.5 px-3 align-middle text-right font-mono tabular-nums text-ink font-medium whitespace-nowrap">
                     {amountFormatted}
                   </td>
                 </tr>

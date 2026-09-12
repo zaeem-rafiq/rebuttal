@@ -64,3 +64,7 @@ out/
 
 # AWS SAM CLI
 .aws-sam/
+
+# Agent execution artifacts (preserve rules)
+.agents/*
+!.agents/rules/

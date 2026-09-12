@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-12T05:54:00Z",
+  "title": "Design System: Rebuttal — The Case File",
+  "extensions": {
+    "colorMeta": {
+      "desk": {
+        "role": "neutral",
+        "displayName": "Desk Surface",
+        "canonical": "#EDECE6",
+        "tonalRamp": ["#252420", "#4B4A43", "#727067", "#9A978D", "#C2BFB4", "#DCDAD3", "#EDECE6", "#F7F6F3"]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "File Sheet",
+        "canonical": "#FFFFFF",
+        "tonalRamp": ["#1A1A1A", "#333333", "#666666", "#999999", "#CCCCCC", "#E6E6E6", "#F5F5F5", "#FFFFFF"]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Primary Ink",
+        "canonical": "#111418",
+        "tonalRamp": ["#000000", "#111418", "#22272E", "#3A414D", "#57606F", "#788394", "#A2ACBC", "#D1D8E2"]
+      },
+      "ink-secondary": {
+        "role": "secondary",
+        "displayName": "Secondary Carbon Ink",
+        "canonical": "#5C6370",
+        "tonalRamp": ["#1C1E22", "#2F333A", "#454A54", "#5C6370", "#767E8E", "#959DAE", "#B7BDCC", "#DDE0E8"]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Divider Rule",
+        "canonical": "#D4D4D8",
+        "tonalRamp": ["#2E2E32", "#4D4D53", "#6E6E76", "#93939C", "#B8B8C0", "#D4D4D8", "#E6E6EA", "#F4F4F6"]
+      },
+      "rule-strong": {
+        "role": "primary",
+        "displayName": "Strong Structural Rule",
+        "canonical": "#111418",
+        "tonalRamp": ["#000000", "#111418", "#22272E", "#3A414D", "#57606F", "#788394", "#A2ACBC", "#D1D8E2"]
+      },
+      "highlighter": {
+        "role": "semantic",
+        "displayName": "Action Highlighter",
+        "canonical": "#FFE96B",
+        "tonalRamp": ["#423A00", "#736500", "#A89400", "#D4BB00", "#FFE23D", "#FFE96B", "#FFF099", "#FFF7CC"]
+      },
+      "decision-green": {
+        "role": "semantic",
+        "displayName": "Decision Green",
+        "canonical": "#14713A",
+        "tonalRamp": ["#041D0D", "#0A3B1E", "#105B2E", "#14713A", "#1A944D", "#27BA63", "#55D588", "#97EAB6"]
+      },
+      "decision-red": {
+        "role": "semantic",
+        "displayName": "Decision Red",
+        "canonical": "#B91C1C",
+        "tonalRamp": ["#360505", "#5F0B0B", "#8C1212", "#B91C1C", "#DC2626", "#EF4444", "#F87171", "#FCA5A5"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Headline Amount", "purpose": "Headline dispute monetary sum at top of case file." },
+      "headline": { "displayName": "Quiet State Headline", "purpose": "Quiet state status banner ('Nothing needs you.')." },
+      "title": { "displayName": "Section Heading", "purpose": "Primary section dividers and docket title." },
+      "body": { "displayName": "Case Memo Narrative", "purpose": "Agent paralegal brief, exhibit summaries, and context." },
+      "label": { "displayName": "Tabular Identifier", "purpose": "IDs, tracking codes, reason codes, timestamps." }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "stamp-land",
+        "value": "250ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Stamp landing transition over human-in-the-loop gate upon reply."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Rubber Decision Stamp (Approved / Fought)",
+      "kind": "custom",
+      "refersTo": "stamp-approved",
+      "description": "Indicates confirmed agent or merchant action on a dispute.",
+      "html": "<div class=\"ds-stamp ds-stamp-green\">FOUGHT · 06 SEP 14:07 · BY AGENT</div>",
+      "css": ".ds-stamp { display: inline-block; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 2px; padding: 4px 10px; border: 2px solid #14713A; color: #14713A; transform: rotate(-2deg); user-select: none; }"
+    },
+    {
+      "name": "Rubber Decision Stamp (Conceded / Lost)",
+      "kind": "custom",
+      "refersTo": "stamp-conceded",
+      "description": "Indicates conceded dispute or passed response deadline.",
+      "html": "<div class=\"ds-stamp ds-stamp-red\">CONCEDED · 06 SEP 14:09 · BY OWNER (SMS)</div>",
+      "css": ".ds-stamp-red { border-color: #B91C1C; color: #B91C1C; }"
+    },
+    {
+      "name": "The Open File Sheet",
+      "kind": "card",
+      "refersTo": "file-sheet",
+      "description": "White paper dossier resting directly on the desk canvas.",
+      "html": "<div class=\"ds-sheet\"><div class=\"ds-sheet-title\">DISPUTE #8841</div><div class=\"ds-sheet-amount\">$340.00</div></div>",
+      "css": ".ds-sheet { background-color: #FFFFFF; color: #111418; border-top: 2px solid #111418; border-radius: 0; padding: 32px; font-family: 'Space Grotesk', sans-serif; } .ds-sheet-title { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #5C6370; } .ds-sheet-amount { font-family: 'IBM Plex Mono', monospace; font-size: 43px; font-weight: 700; margin-top: 8px; }"
+    },
+    {
+      "name": "The Action Gate Banner",
+      "kind": "custom",
+      "refersTo": "gate-banner",
+      "description": "Highlighter yellow action band signaling required owner response.",
+      "html": "<div class=\"ds-gate\">Awaiting your reply by SMS · sent 14:02 to +1 ••• 4471</div>",
+      "css": ".ds-gate { background-color: #FFE96B; color: #111418; font-family: 'Space Grotesk', sans-serif; font-size: 14px; padding: 8px 12px; border-radius: 0; font-weight: 500; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Case File",
+    "overview": "Rebuttal rejects generic SaaS dashboards and synthetic gradients. A dispute is a case file, and the screen is that physical file open on the merchant's desk. The AI agent is the paralegal who investigated and assembled the evidentiary dossier overnight; the merchant is the principal who signs off. Everything on screen is evidence, a decision, or a deadline.",
+    "keyCharacteristics": [
+      "Canvas and Ink: Warm paper (#FFFFFF) and desk (#EDECE6) tones with strict zero-blue palette discipline.",
+      "Evidentiary Typography: Space Grotesk narrative pairing with tabular IBM Plex Mono IDs and values.",
+      "Physical Decision Stamps: Rubber outcome stamps (FOUGHT, APPROVED, CONCEDED) replacing decorative status pills.",
+      "Aesthetic Restraint: Rules instead of cards; 0px radius everywhere except 2px on stamps; zero drop shadows, blurs, or gradients."
+    ],
+    "rules": [
+      {
+        "name": "The No-Blue Rule",
+        "body": "Zero blue permitted anywhere in the system. Links are primary ink (#111418) and underlined.",
+        "section": "colors"
+      },
+      {
+        "name": "The Chromatic Meaning Rule",
+        "body": "Chromatic color may only signify a human-in-the-loop gate (#FFE96B) or a verified financial outcome (#14713A, #B91C1C).",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Numbers Rule",
+        "body": "All monetary amounts, dates, percentages, and tracking numbers must enable tabular numerals (tabular-nums).",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-Paper Rule",
+        "body": "Surfaces are strictly flat. Interactive elements never lift or cast shadows on hover. Focus is designated solely by a 2px solid #111418 outline.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep the canvas background strictly desk #EDECE6 and the open file strictly sheet #FFFFFF.",
+      "Do use IBM Plex Mono for all amounts, timestamps, IDs, tracking numbers, and reason codes with tabular-nums.",
+      "Do keep all element radii at 0px except the decision stamp at 2px.",
+      "Do limit chromatic color strictly to highlighter #FFE96B, decision green #14713A, and decision red #B91C1C."
+    ],
+    "donts": [
+      "Don't use blue anywhere in the interface (#0000FF, #2563EB, etc.). Links are ink and underlined.",
+      "Don't use cards, drop shadows, box shadows, gradients, or backdrop blur.",
+      "Don't use icons where plain words will do.",
+      "Don't use hover-lift (translateY) or page scroll animations."
+    ]
+  }
+}

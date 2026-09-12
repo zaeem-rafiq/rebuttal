@@ -2,172 +2,197 @@
 name: Rebuttal
 description: Autonomous chargeback defense command center for independent Stripe merchants
 colors:
-  canvas: "#090a0f"
-  surface: "#0f172a"
-  surface-hover: "#1e293b"
-  border-default: "#1e293b"
-  border-subtle: "rgba(51, 65, 85, 0.4)"
-  text-primary: "#f8fafc"
-  text-secondary: "#94a3b8"
-  text-muted: "#64748b"
-  accent: "#6366f1"
-  accent-subtle: "rgba(99, 102, 241, 0.12)"
-  status-won: "#10b981"
-  status-won-bg: "rgba(6, 78, 59, 0.4)"
-  status-pending: "#f59e0b"
-  status-pending-bg: "rgba(120, 53, 15, 0.4)"
-  status-conceded: "#f43f5e"
-  status-conceded-bg: "rgba(136, 19, 55, 0.4)"
-  status-inquiry: "#eab308"
-  status-inquiry-bg: "rgba(113, 63, 18, 0.4)"
+  desk: "#EDECE6"
+  sheet: "#FFFFFF"
+  ink: "#111418"
+  ink-secondary: "#5C6370"
+  rule: "#D4D4D8"
+  rule-strong: "#111418"
+  highlighter: "#FFE96B"
+  decision-green: "#14713A"
+  decision-red: "#B91C1C"
 typography:
-  fontFamily:
-    sans: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
-    mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace'
-  scale:
-    h1: "24px"
-    h2: "18px"
-    body: "14px"
-    caption: "12px"
-    micro: "10px"
+  display:
+    fontFamily: "IBM Plex Mono, Menlo, monospace"
+    fontSize: "43px"
+    lineHeight: 1.16
+    letterSpacing: "-0.02em"
+  headline:
+    fontFamily: "Space Grotesk, -apple-system, sans-serif"
+    fontSize: "34px"
+    lineHeight: 1.24
+    letterSpacing: "-0.02em"
+  title:
+    fontFamily: "Space Grotesk, -apple-system, sans-serif"
+    fontSize: "27px"
+    lineHeight: 1.26
+    letterSpacing: "-0.02em"
+  body:
+    fontFamily: "Space Grotesk, -apple-system, sans-serif"
+    fontSize: "17.5px"
+    lineHeight: 1.55
+  label:
+    fontFamily: "IBM Plex Mono, Menlo, monospace"
+    fontSize: "14px"
+    lineHeight: 1.43
 rounded:
-  sm: "6px"
-  md: "8px"
-  lg: "12px"
-  xl: "16px"
-  pill: "9999px"
+  none: "0px"
+  stamp: "2px"
 spacing:
   xs: "4px"
   sm: "8px"
-  md: "12px"
-  lg: "16px"
-  xl: "24px"
+  md: "16px"
+  lg: "24px"
+  xl: "32px"
 components:
-  card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.text-primary}"
-    rounded: "{rounded.xl}"
-    padding: "20px"
-  button-primary:
-    backgroundColor: "{colors.accent}"
-    textColor: "#ffffff"
-    rounded: "{rounded.lg}"
-    padding: "8px 16px"
-  status-chip:
-    rounded: "{rounded.pill}"
-    padding: "2px 10px"
+  stamp-approved:
+    backgroundColor: "{colors.sheet}"
+    textColor: "{colors.decision-green}"
+    rounded: "{rounded.stamp}"
+    padding: "4px 10px"
+  stamp-conceded:
+    backgroundColor: "{colors.sheet}"
+    textColor: "{colors.decision-red}"
+    rounded: "{rounded.stamp}"
+    padding: "4px 10px"
+  file-sheet:
+    backgroundColor: "{colors.sheet}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.none}"
+    padding: "32px"
+  gate-banner:
+    backgroundColor: "{colors.highlighter}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.none}"
+    padding: "8px 12px"
 ---
 
-# Design System
+# Design System: Rebuttal
 
 <!-- impeccable:design-schema 1 -->
 
 ## Overview
 
-Rebuttal's visual design system communicates institutional financial authority, speed, and algorithmic rigor. Built for small merchants under dispute stress, the interface balances clear automated actions with high-contrast evidentiary proof.
+**Creative North Star: "The Case File"**
 
-The visual language eschews generic SaaS decoration in favor of dense, information-rich risk surfaces: dark canvas grounding, monospaced financial figures, unambiguous status indicators, and clear distinction between autonomous agent acts and human-in-the-loop decisions.
+Rebuttal rejects generic SaaS dashboards, synthetic gradients, and playful card decks. A dispute is a legal and financial case file, and the screen is that physical file open on the merchant's desk. The autonomous AI agent is the paralegal who investigated, cross-referenced orders and carrier tracking scans, and assembled the evidentiary dossier overnight; the merchant is the principal who signs off.
+
+Everything on screen is evidence, a decision, or a deadline. If an element is none of those, it is excised. Surfaces are physical paper on a wooden desk: canvas desk (`#EDECE6`), open file sheet (`#FFFFFF`), primary ink (`#111418`), and secondary carbon ink (`#5C6370`). Hairline ruled lines structure the docket, replacing cards, elevation shadows, and artificial box boundaries.
+
+**Key Characteristics:**
+- **Canvas and Ink:** Warm paper and desk tones with strict zero-blue palette discipline.
+- **Evidentiary Typography:** Dual font hierarchy pairing proportional Space Grotesk narrative text with tabular IBM Plex Mono financial and cryptographic values.
+- **Physical Decision Stamps:** Rubber outcome stamps (`FOUGHT`, `APPROVED`, `CONCEDED`) replacing decorative status pills.
+- **Aesthetic Restraint:** Rules instead of cards; 0px radius everywhere except 2px on stamps; zero drop shadows, blurs, or gradients.
 
 ## Colors
 
-The color palette is built on a high-contrast dark theme optimized for sustained monitoring and alert legibility.
+Chromatic color is strictly reserved for meaning and appears nowhere else in the interface.
 
-### Canvas & Surfaces
-- **Canvas (`#090a0f`):** Ultra-dark slate background providing high-contrast separation for cards and modals.
-- **Surface (`#0f172a` · `slate-900`):** Primary card and panel surface, rendered with 80-90% opacity and subtle backdrop blur.
-- **Surface Elevated (`#1e293b` · `slate-800`):** Hover states, input backgrounds, and sub-card containers.
-- **Borders (`#1e293b` / `rgba(51, 65, 85, 0.8)`):** Structural hairline borders delineating cards, tables, and headers.
+### Primary
+- **Primary Ink** (`#111418`): Used for primary headlines, claimant names, strong rules, link text, and the top anchor edge of the open dossier.
+- **Secondary Ink** (`#5C6370`): Metadata labels, Stripe evidence field mapping keys, timestamps, and exhibit sources.
 
-### Text Hierarchy
-- **Text Primary (`#f8fafc` · `slate-50`):** High-contrast headlines, monetary values, and active dispute IDs.
-- **Text Secondary (`#94a3b8` · `slate-400`):** Descriptions, labels, and timestamps.
-- **Text Muted (`#64748b` · `slate-500`):** Inactive meta tags, breadcrumbs, and placeholder copy.
+### Neutral
+- **Desk Surface** (`#EDECE6`): Canvas background representing the physical desk upon which the dossier rests.
+- **File Sheet** (`#FFFFFF`): Reserved exclusively for the open case file sheet. No other surface or container may be pure white.
+- **Divider Rule** (`#D4D4D8`): 1px hairline horizontal rules separating docket table rows and exhibit items.
+- **Strong Rule** (`#111418`): 1px rule under section titles and 2px rule anchoring the top edge of the open sheet.
 
-### Semantic Status Indicators
-- **Won / Protected (`#10b981` · `emerald-400`):** Successfully defended disputes and confirmed carrier delivery receipts.
-- **Pending / Action Needed (`#f59e0b` · `amber-400`):** Paused at ApprovalGate or awaiting merchant intervention.
-- **Conceded / Lost (`#f43f5e` · `rose-400`):** Voluntarily conceded disputes (to protect VIP relationships) or lost chargebacks.
-- **Inquiry / Pre-dispute (`#eab308` · `yellow-400`):** Early cancellation or fraud inquiries resolved prior to formal dispute filing.
+### Semantic
+- **Action Highlighter** (`#FFE96B`): Applied as a background highlighter band behind the single pending action line awaiting merchant input.
+- **Decision Green** (`#14713A`): Recorded wins, evidence submissions, and approvals. Passes WCAG AA contrast against both desk and sheet.
+- **Decision Red** (`#B91C1C`): Recorded losses, conceded disputes, and passed deadlines. Passes WCAG AA contrast against both desk and sheet.
+
+### Named Rules
+**The No-Blue Rule.** Zero blue permitted anywhere in the system (`#0000FF`, `#2563EB`, `#3B82F6`, `#38BDF8`). Links are primary ink (`#111418`) and underlined with a 3px text offset.
+
+**The Chromatic Meaning Rule.** Chromatic color may only signify a human-in-the-loop gate (`#FFE96B`) or a verified financial outcome (`#14713A`, `#B91C1C`). It is never decorative.
 
 ## Typography
 
-Typography prioritizes fast numerical parsing and clear evidentiary hierarchy.
+**Display/Headline Font:** Space Grotesk (with system sans fallback)  
+**Body Font:** Space Grotesk (with system sans fallback)  
+**Label/Mono Font:** IBM Plex Mono (with Menlo, monospace fallback)
 
-- **Body & Headings:** System sans-serif stack (`-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`). Clean, legible, with zero web-font rendering latency.
-- **Monospace Elements:** Monospace font stack (`ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`) applied to:
-  - Dispute IDs (`dp_S1`, `du_1UCchu...`)
-  - Order numbers (`ORD-1001`)
-  - Monetary values and cents calculations (`$48.00`, `22%`)
-  - Tracking numbers and cryptographic hashes
-  - Telemetry timestamps and audit log JSON payloads
+**Character:** High-contrast editorial clarity meeting rigorous evidentiary record-keeping. Narrative briefs read as formal paralegal memoranda, while all IDs, monetary sums, tracking numbers, and timestamps are rendered in tabular monospace.
 
-### Typographic Hierarchy
-- **Level 1 (Console Title):** `text-xl font-bold tracking-tight text-white`
-- **Level 2 (Section Headers):** `text-sm font-semibold uppercase tracking-wider text-slate-300`
-- **Level 3 (Card Titles):** `text-base font-semibold text-slate-200`
-- **Body Text:** `text-xs leading-relaxed text-slate-300`
-- **Badges & Meta:** `text-[11px] font-medium`
+### Hierarchy
+- **Display Amount** (IBM Plex Mono, Bold, `43px`, line-height `50px`, letter-spacing `-0.02em`): The headline dispute amount at the top of the open case file.
+- **Headline Title** (Space Grotesk, Regular, `34px`, line-height `42px`, letter-spacing `-0.02em`): Quiet state headline ("Nothing needs you.").
+- **Section Title** (Space Grotesk, Medium, `27px`, line-height `34px`, letter-spacing `-0.02em`): Major section titles and brand heading.
+- **Subheading / Name** (Space Grotesk, Medium, `22px`, line-height `30px`): Customer claimant name and key landmark subtitles.
+- **Body / Brief** (Space Grotesk, Regular, `17.5px`, line-height `27px`): Case memo narrative, exhibit summaries, and explanatory copy. Narrative measure is constrained to $\le 75$ characters.
+- **Label / Metadata** (IBM Plex Mono, Regular, `14px`, line-height `20px`): Dispute IDs, reason codes, respond-by countdowns, table metadata.
+
+### Named Rules
+**The Tabular Numbers Rule.** All monetary amounts, dates, percentages, and tracking numbers must enable tabular numerals (`tabular-nums` / `tnum`) to ensure perfect vertical alignment across docket rows.
+
+**The Sentence Case Rule.** Sentence case is enforced everywhere across headings, labels, and descriptions. All-caps exists exclusively inside the rubber decision stamps.
 
 ## Layout
 
-- **Container:** Centered max-width container (`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6`).
-- **Metric Banners:** 4-column responsive grid (`grid-cols-2 lg:grid-cols-4 gap-4`) summarizing total disputes, win rate, protected revenue, and pending actions.
-- **Case Detail View:** Split-screen layout:
-  - **Left Column (Primary):** Strategy Card, Case Feed, Evidence Packet, and Audit Timeline.
-  - **Right Column (Simulation):** Fixed-width mobile chassis container (`max-w-[340px]`) displaying the interactive two-way SMS approval stream.
-- **Rhythm:** Consistent vertical rhythm using `space-y-6` between major landmarks and `space-y-3` inside card clusters.
+The interface is divided into the active open dossier and the historical docket table:
+
+- **The Open Case File (~65% Viewport):** A pure white sheet (`#FFFFFF`) with a 2px ink top edge sitting on the desk canvas. Contains the case header, headline monetary amount, respond-by deadline, the agent's paralegal brief, lettered evidentiary exhibits (A, B, C...), and the SMS approval block.
+- **The Docket Roster:** Positioned below the open file. A dense ruled table (40px row height) listing every other dispute sorted by respond-by ascending. The currently open case is not duplicated in the roster.
+- **Scenario Switcher:** Positioned in the header's right corner as plain text (`Scenario: S1 · S2 · S3`) with the active item underlined. Never rendered as a pill toolbar or segmented button.
+- **Quiet State:** When no disputes are gated or require merchant intervention, the open file recedes, displaying the quiet headline `"Nothing needs you."` followed by aggregate resolution metrics and the historical docket table.
 
 ## Elevation & Depth
 
-- **Depth Strategy:** Tonal elevation rather than heavy drop shadows. Layering proceeds from `#090a0f` (page body) -> `#0f172a` (card container) -> `#020617` (code blocks and audit payloads).
-- **Edge Definition:** Hairline 1px border (`border-slate-800/80`) on all container cards to maintain sharp boundary definition on OLED and high-DPI screens.
-- **Vignette:** Fixed radial background gradient (`bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.12),rgba(255,255,255,0))]`) provides atmospheric depth without impeding contrast.
+Rebuttal employs zero drop shadows, zero box shadows, zero backdrop blur, and zero elevation gradients.
+
+Depth is communicated entirely through material and tonal contrast: the white sheet (`#FFFFFF`) layered directly over the desk canvas (`#EDECE6`), anchored by hairline and 2px solid ink structural rules.
+
+### Named Rules
+**The Flat-Paper Rule.** Surfaces are strictly flat. Interactive elements never lift, translate in Y-space, or cast shadows on hover. Focus is designated solely by a `2px solid #111418` outline with `2px offset`.
 
 ## Shapes
 
-- **Containers:** `rounded-2xl` (16px) for major cards, scenario toolbar, and feed wrappers.
-- **Interactive Controls:** `rounded-xl` (12px) for primary buttons, input fields, and metric cards.
-- **Badges & Chips:** `rounded-full` pills (`px-2.5 py-1 text-xs`) for status chips.
-- **Phone Hardware Simulation:** `rounded-[44px]` chassis with `rounded-[34px]` inner display screen and centered dynamic island notch.
+- **All Elements:** Border radius is strictly `0px` (`rounded-none`). No rounded cards, badges, inputs, or containers.
+- **The Stamp Exception:** The rubber decision stamp is the sole element permitted a border radius: `2px` (`rounded-[2px]`).
 
 ## Components
 
-### 1. Header (`Header.tsx`)
-- Displays project branding, active environment pill ("Judge Console"), and live agent status indicator ("AgentCore Live" with pulsing green LED).
-- Displays real-time polling countdown (`Polling: Xs`) and manual refresh action with spin feedback.
+### The Open File Sheet
+- **Shape:** Rectangular sheet, `0px` radius, `border-t-2 border-[#111418]`.
+- **Background:** Sheet white (`#FFFFFF`) on desk (`#EDECE6`).
+- **Internal Padding:** `p-6 sm:p-8`.
 
-### 2. Scenario Injector (`InjectToolbar.tsx`)
-- Controls for triggering automated end-to-end test scenarios (`S1 Delivery`, `S2 Fraud`, `S3 Inquiry`).
-- Manages 60-second cooldown states with visual countdown badges and inline execution feedback banners.
+### The Decision Stamp
+- **Shape:** `rounded-[2px]` with a `2px` solid border in decision green (`#14713A`), decision red (`#B91C1C`), or ink (`#111418`).
+- **Typography:** IBM Plex Mono, bold, all-caps, tracking-wider, rotated at $-2^\circ$ to $-3^\circ$.
+- **Content Format:** `[ACTION] · [DD MMM HH:MM] · BY [ACTOR] ([CHANNEL])` (e.g. `FOUGHT · 06 SEP 14:07 · BY AGENT` or `APPROVED · 06 SEP 14:09 · BY OWNER (SMS)`).
+- **Semantics:** Appears only when an immutable, real-world decision has been executed. Never decorative.
 
-### 3. Status Chip (`StatusChip.tsx`)
-- Normalized pill badges combining Lucide icons (`CheckCircle2`, `AlertTriangle`, `XCircle`, `Clock`) with semantic background tints.
+### The Gate (Action Line)
+- **Visual:** Background highlighter band (`#FFE96B`) behind the active instruction: `"Awaiting your reply by SMS · sent 14:02 to +1 ••• 4471"`.
+- **Motion:** When the merchant replies, the stamp lands over the gate (`scale(1.15) -> scale(1)`, `opacity(0) -> opacity(1)`, `250ms ease-out`). This is the only animated transition in the application.
 
-### 4. Strategy Card (`StrategyCard.tsx`)
-- Displays Bedrock AgentCore multi-agent synthesis: Recommended Action, Customer Tier, Win Probability meter, Expected Value, and Executive Summary.
+### Evidentiary Exhibits
+- **Structure:** Lettered sequentially (`Exhibit A`, `Exhibit B`, `Exhibit C`...).
+- **Content:** Title, Stripe evidence field mapping (IBM Plex Mono, secondary ink), source system (Shopify, UPS, Gmail, Stripe Radar), one-line factual summary, and attachment status (`attached` or `missing`).
 
-### 5. Simulated Phone (`SimulatedPhone.tsx`)
-- Interactive smartphone mockup showcasing the Twilio SMS human-in-the-loop approval workflow.
-- Supports instant one-tap quick replies (`1 Fight`, `2 Concede`, `3 Hold`) and custom text input dispatched directly to webhook handlers.
-
-### 6. Evidence Packet (`EvidencePacket.tsx`)
-- Evidentiary dossier displaying linked orders, customer profiles, line items, carrier tracking numbers, and verified delivery signatures.
-
-### 7. Audit Timeline (`AuditTimeline.tsx`)
-- Chronological, vertical timeline tracking every agent tool call, Stripe webhook, SMS dispatch, and Bedrock AgentCore memory update with expandable JSON payloads.
+### The Docket Table
+- **Density:** 40px row height separated by 1px hairline rules (`#D4D4D8`).
+- **Columns:** Dispute ID (mono), Amount (mono, right-aligned), Reason Code, Agent Action, Outcome Stamp, Respond-by date.
 
 ## Do's and Don'ts
 
-### Do's
-- **DO** use monospaced fonts for all currencies, IDs, tracking numbers, and timestamps.
-- **DO** maintain strict WCAG AA contrast (≥ 4.5:1 for body copy against `#090a0f` and `#0f172a`).
-- **DO** keep semantic status colors consistent across all cards, chips, and phone alert bubbles.
-- **DO** ensure touch targets on mobile and the phone chassis meet minimum 44x44px requirements.
-- **DO** preserve instant feedback states during API interactions (spinners, countdowns, and alert banners).
+### Do:
+- **Do** keep the canvas background strictly desk `#EDECE6` and the open file strictly sheet `#FFFFFF`.
+- **Do** use IBM Plex Mono for all amounts, timestamps, IDs, tracking numbers, and reason codes with `tabular-nums`.
+- **Do** keep all element radii at `0px` except the decision stamp at `2px`.
+- **Do** limit chromatic color strictly to highlighter `#FFE96B`, decision green `#14713A`, and decision red `#B91C1C`.
+- **Do** format the decision stamp with verified timestamp and actor provenance (e.g. `· BY AGENT`, `· BY OWNER (SMS)`).
+- **Do** provide skeleton loading rows in the docket rather than spinning wheels.
 
-### Don'ts
-- **DON'T** use generic AI purple/violet/pink gradient backgrounds on buttons and cards.
-- **DON'T** use low-contrast gray text (`text-slate-500` or `text-slate-600`) on dark canvas for readable labels.
-- **DON'T** hide evidence or decision rationale behind opaque, unexplained AI scores.
-- **DON'T** introduce heavy animations that fail to respect `prefers-reduced-motion`.
-- **DON'T** disrupt the 3-scenario toolbar (S1, S2, S3) or simulated phone interactive fixtures.
+### Don't:
+- **Don't** use blue anywhere in the interface (`#0000FF`, `#2563EB`, `#3B82F6`, etc.). Links are ink and underlined.
+- **Don't** use cards, drop shadows, box shadows, gradients, or backdrop blur.
+- **Don't** use icons where plain words will do.
+- **Don't** use emoji or "→" on buttons and links.
+- **Don't** use all-caps text outside of the rubber stamp.
+- **Don't** introduce hover-lift (`translateY`) or page scroll animations.
+- **Don't** add artificial paper textures, skeuomorphic brass fasteners, perforations, or barcodes.
