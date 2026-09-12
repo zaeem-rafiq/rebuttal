@@ -60,6 +60,9 @@ out/
 *.tsbuildinfo
 !console/src/lib/**
 
+# Media raw artifacts
+docs/media/raw_video/
+
 # Bedrock AgentCore build cache
 .bedrock_agentcore/
 

@@ -1,7 +1,7 @@
 # scripts/record_demo_video.py
 """
 Fully automated 1080p demo video recorder for Rebuttal.
-Uses Playwright to orchestrate an authentic walkthrough of the live Amplify console
+Uses Playwright to orchestrate an authentic walkthrough of the live console
 synchronized to docs/media/demo_narration.mp3 (2m 30s), then muxes audio and video
 via bundled FFmpeg to output docs/media/rebuttal_demo_video.mp4.
 """
@@ -10,14 +10,33 @@ import sys
 import time
 import asyncio
 import subprocess
+import threading
+import http.server
+import socketserver
 import imageio_ffmpeg
 from playwright.async_api import async_playwright
 
-TOTAL_TARGET_DURATION = 150.5
-AMPLIFY_URL = "https://main.dtrewze9hbzeb.amplifyapp.com"
+TOTAL_TARGET_DURATION = 153.0
 AUDIO_PATH = os.path.join("docs", "media", "demo_narration.mp3")
 RAW_VIDEO_DIR = os.path.join("docs", "media", "raw_video")
 FINAL_MP4_PATH = os.path.join("docs", "media", "rebuttal_demo_video.mp4")
+
+class QuietExportHandler(http.server.SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=os.path.join("console", "out"), **kwargs)
+    def log_message(self, format, *args):
+        pass
+
+def start_local_server(port=3005):
+    try:
+        server = socketserver.TCPServer(("127.0.0.1", port), QuietExportHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        print(f"Local static console server active on http://127.0.0.1:{port}")
+        return server
+    except Exception as e:
+        print(f"Note: Local server bind failed or already running on {port}: {e}")
+        return None
 
 INJECT_JS = """
 (() => {
@@ -106,7 +125,7 @@ INJECT_JS = """
 })();
 """
 
-async def record_walkthrough():
+async def record_walkthrough(target_url: str):
     os.makedirs(RAW_VIDEO_DIR, exist_ok=True)
     for f in os.listdir(RAW_VIDEO_DIR):
         try: os.remove(os.path.join(RAW_VIDEO_DIR, f))
@@ -124,8 +143,8 @@ async def record_walkthrough():
             record_video_size={"width": 1920, "height": 1080}
         )
         page = await context.new_page()
-        print(f"Loading {AMPLIFY_URL}...")
-        await page.goto(AMPLIFY_URL, wait_until="networkidle")
+        print(f"Loading {target_url}...")
+        await page.goto(target_url, wait_until="networkidle")
         await page.add_script_tag(content=INJECT_JS)
         await page.wait_for_timeout(1000)
 
@@ -161,34 +180,52 @@ async def record_walkthrough():
         await page.wait_for_timeout(4000)
 
         print(f"[{time.time()-t0:.1f}s] Starting Act 3: Scenario S1 Autonomous Carrier Win (00:45 - 01:14)...")
-        await page.evaluate("window.smoothScrollTo(360, 700)")
-        await page.evaluate("window.moveCursorTo(180, 520, 800)")
-        await page.wait_for_timeout(2000)
+        await page.evaluate("window.smoothScrollTo(0, 600)")
+        await page.evaluate("window.moveCursorTo(1800, 50, 800)")
+        await page.wait_for_timeout(1000)
         await page.evaluate("window.clickCursor()")
-        await page.locator("text=dp_S1").first.click()
-        await page.wait_for_timeout(800)
+        try:
+            await page.locator("button:has-text('S1')").first.click(timeout=3000)
+        except Exception:
+            await page.locator("text=dp_S1").first.click()
+        await page.wait_for_timeout(1000)
         await page.evaluate("window.smoothScrollTo(0, 600)")
         await page.add_script_tag(content=INJECT_JS)
         await page.evaluate("window.moveCursorTo(240, 195, 700)")
-        await page.wait_for_timeout(3500)
-        await page.evaluate("window.smoothScrollTo(280, 700)")
-        await page.evaluate("window.moveCursorTo(420, 430, 800)")
-        await page.wait_for_timeout(4500)
-        await page.evaluate("window.moveCursorTo(420, 540, 700)")
-        await page.wait_for_timeout(4500)
-        await page.evaluate("window.smoothScrollTo(420, 700)")
-        await page.evaluate("window.moveCursorTo(350, 620, 800)")
-        await page.wait_for_timeout(4500)
-        await page.evaluate("window.smoothScrollTo(0, 600)")
-        await page.wait_for_timeout(2000)
-
-        print(f"[{time.time()-t0:.1f}s] Starting Act 4: Scenario S2 Human Gate & Telegram (01:14 - 01:46)...")
-        await page.evaluate("window.smoothScrollTo(360, 600)")
-        await page.evaluate("window.moveCursorTo(180, 520, 800)")
+        await page.wait_for_timeout(2500)
+        
+        # Scroll to exhibits and expand Exhibit B (Carrier Proof)
+        await page.evaluate("window.smoothScrollTo(360, 700)")
+        await page.evaluate("window.moveCursorTo(360, 460, 800)")
         await page.wait_for_timeout(1500)
         await page.evaluate("window.clickCursor()")
-        await page.locator("text=dp_S2").first.click()
-        await page.wait_for_timeout(800)
+        try:
+            await page.locator("button:has-text('Exhibit B')").first.click(timeout=3000)
+        except Exception:
+            pass
+        await page.wait_for_timeout(4500)
+        
+        # Collapse Exhibit B and inspect WON stamp
+        await page.evaluate("window.clickCursor()")
+        try:
+            await page.locator("button:has-text('Exhibit B')").first.click(timeout=3000)
+        except Exception:
+            pass
+        await page.wait_for_timeout(1500)
+        await page.evaluate("window.smoothScrollTo(0, 600)")
+        await page.evaluate("window.moveCursorTo(350, 300, 800)")
+        await page.wait_for_timeout(4000)
+
+        print(f"[{time.time()-t0:.1f}s] Starting Act 4: Scenario S2 Human Gate & Telegram (01:14 - 01:46)...")
+        await page.evaluate("window.smoothScrollTo(0, 600)")
+        await page.evaluate("window.moveCursorTo(1820, 50, 800)")
+        await page.wait_for_timeout(1000)
+        await page.evaluate("window.clickCursor()")
+        try:
+            await page.locator("button:has-text('S2')").first.click(timeout=3000)
+        except Exception:
+            await page.locator("text=dp_S2").first.click()
+        await page.wait_for_timeout(1000)
         await page.evaluate("window.smoothScrollTo(0, 600)")
         await page.add_script_tag(content=INJECT_JS)
         await page.evaluate("window.moveCursorTo(240, 195, 700)")
@@ -213,12 +250,15 @@ async def record_walkthrough():
         await page.wait_for_timeout(2500)
 
         print(f"[{time.time()-t0:.1f}s] Starting Act 5: Scenario S3 Pre-Dispute Inquiry (01:46 - 02:11)...")
-        await page.evaluate("window.smoothScrollTo(360, 600)")
-        await page.evaluate("window.moveCursorTo(180, 570, 800)")
-        await page.wait_for_timeout(1500)
+        await page.evaluate("window.smoothScrollTo(0, 600)")
+        await page.evaluate("window.moveCursorTo(1840, 50, 800)")
+        await page.wait_for_timeout(1000)
         await page.evaluate("window.clickCursor()")
-        await page.locator("text=dp_S3").first.click()
-        await page.wait_for_timeout(800)
+        try:
+            await page.locator("button:has-text('S3')").first.click(timeout=3000)
+        except Exception:
+            await page.locator("text=dp_S3").first.click()
+        await page.wait_for_timeout(1000)
         await page.evaluate("window.smoothScrollTo(0, 600)")
         await page.add_script_tag(content=INJECT_JS)
         await page.evaluate("window.moveCursorTo(240, 195, 700)")
@@ -282,8 +322,19 @@ def mux_final_mp4():
     print(f"Output: {FINAL_MP4_PATH} ({size_mb:.2f} MB)")
 
 async def main():
-    await record_walkthrough()
-    mux_final_mp4()
+    target_url = os.environ.get("DEMO_CONSOLE_URL")
+    server = None
+    if not target_url:
+        target_url = "http://127.0.0.1:3005"
+        server = start_local_server(3005)
+    
+    try:
+        await record_walkthrough(target_url)
+        mux_final_mp4()
+    finally:
+        if server:
+            print("Shutting down local server...")
+            server.shutdown()
 
 if __name__ == "__main__":
     asyncio.run(main())
