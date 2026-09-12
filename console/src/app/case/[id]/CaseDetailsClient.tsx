@@ -7,184 +7,9 @@ import { supabase } from '@/lib/supabase';
 import { Dispute, Decision, AuditLogEntry, Order } from '@/lib/types';
 import { Header } from '@/components/Header';
 import { Stamp } from '@/components/Stamp';
+import { ExhibitInspector } from '@/components/ExhibitInspector';
+import { getCaseFileMemo } from '@/lib/disputes';
 import { TWILIO_WEBHOOK_URL } from '@/lib/config';
-
-interface ExhibitItem {
-  letter: string;
-  title: string;
-  field: string;
-  source: string;
-  summary: string;
-  status: 'attached' | 'missing';
-}
-
-function getCaseMemo(dispute: Dispute): {
-  customerName: string;
-  orderRef: string;
-  headlineAmount: string;
-  respondByDate: string;
-  respondByDays: number;
-  briefNarrative: string;
-  recommendation: string;
-  exhibits: ExhibitItem[];
-  smsText: string | null;
-  smsRecipient: string | null;
-  smsTime: string | null;
-} {
-  const isFraud = dispute.reason === 'fraudulent' || dispute.id.includes('S2');
-  const isPNR = dispute.reason === 'product_not_received' || dispute.id.includes('S1');
-
-  if (isFraud) {
-    return {
-      customerName: 'Sarah Jenkins',
-      orderRef: 'Order #8841',
-      headlineAmount: `$${(dispute.amount_cents / 100).toFixed(2)}`,
-      respondByDate: '22 Sep 2026',
-      respondByDays: 16,
-      briefNarrative:
-        'Cardholder Sarah Jenkins disputes transaction of $340.00 citing unauthorized fraud. Internal ledger verification demonstrates an established commercial relationship spanning 14 prior completed orders totaling $4,820.00 lifetime spend, all delivered to the identical verified cardholder address with zero historical disputes. Stripe Radar score was 12/100 (low risk) and AVS postal code returned a full match. Rebuttal recommends defending this claim with high confidence, subject to owner authorization to confirm customer relationship preservation.',
-      recommendation: 'Recommend: fight (confidence 92%)',
-      exhibits: [
-        {
-          letter: 'A',
-          title: 'Prior order ledger and customer history',
-          field: 'prior_undisputed_transaction_description',
-          source: 'Shopify customer ledger',
-          summary: '14 prior orders ($4,820 lifetime spend) delivered to verified address',
-          status: 'attached',
-        },
-        {
-          letter: 'B',
-          title: 'Proof of delivery and cardholder signature',
-          field: 'shipping_documentation',
-          source: 'UPS tracking #1Z9999999999999999',
-          summary: 'Delivered to 880 Harrison St, San Francisco, CA; signed by cardholder',
-          status: 'attached',
-        },
-        {
-          letter: 'C',
-          title: 'Stripe Radar risk evaluation',
-          field: 'customer_communication',
-          source: 'Stripe Radar',
-          summary: 'Risk score 12/100, 3D Secure authenticated, CVC & AVS postal match',
-          status: 'attached',
-        },
-        {
-          letter: 'D',
-          title: 'Merchant checkout terms of service',
-          field: 'cancellation_policy',
-          source: 'Store checkout policy v2.4',
-          summary: 'Accepted by cardholder at checkout with timestamp and IP log',
-          status: 'attached',
-        },
-        {
-          letter: 'E',
-          title: 'Cardholder signature on file',
-          field: 'signature',
-          source: 'Stripe charge object',
-          summary: 'Missing from Stripe charge object',
-          status: 'missing',
-        },
-      ],
-      smsText:
-        'Alert: Dispute #8841 ($340.00) flagged for VIP Sarah Jenkins ($4,820 spend). Reply 1 to authorize evidence submission, or 2 to refund.',
-      smsRecipient: '+1 ••• 4471',
-      smsTime: '14:02',
-    };
-  }
-
-  if (isPNR) {
-    return {
-      customerName: 'Michael Okafor',
-      orderRef: 'Order #8840',
-      headlineAmount: `$${(dispute.amount_cents / 100).toFixed(2)}`,
-      respondByDate: '20 Sep 2026',
-      respondByDays: 14,
-      briefNarrative:
-        'Cardholder claims goods were not received. Carrier tracking scan from UPS confirms physical delivery directly to cardholder documented shipping address in Austin, TX, with direct signature confirmation matching claimant name. Counter-evidence packet assembled and submitted to card scheme automatically under merchant rule threshold (< $100).',
-      recommendation: 'Recommend: fight (confidence 98%)',
-      exhibits: [
-        {
-          letter: 'A',
-          title: 'Carrier proof of delivery and signature',
-          field: 'shipping_documentation',
-          source: 'UPS tracking #1Z88400019283746',
-          summary: 'Physical delivery confirmed to 1424 Elm St with recipient signature',
-          status: 'attached',
-        },
-        {
-          letter: 'B',
-          title: 'Order fulfillment and dispatch record',
-          field: 'receipt',
-          source: 'Shopify fulfillment service',
-          summary: 'Order ORD-1001 fulfilled within 24 hours of checkout',
-          status: 'attached',
-        },
-        {
-          letter: 'C',
-          title: 'Customer delivery notification log',
-          field: 'customer_communication',
-          source: 'Gmail support thread',
-          summary: 'Delivery notice emailed to m.okafor@example.com with carrier tracking link',
-          status: 'attached',
-        },
-        {
-          letter: 'D',
-          title: 'Cardholder non-receipt declaration',
-          field: 'customer_communication',
-          source: 'Stripe charge object',
-          summary: 'Missing from Stripe charge object',
-          status: 'missing',
-        },
-      ],
-      smsText: null,
-      smsRecipient: null,
-      smsTime: null,
-    };
-  }
-
-  // Subscription canceled or inquiry scenario (S3)
-  return {
-    customerName: 'Roberto Alvarez',
-    orderRef: 'Order #ORD-1003',
-    headlineAmount: `$${(dispute.amount_cents / 100).toFixed(2)}`,
-    respondByDate: '25 Sep 2026',
-    respondByDays: 19,
-    briefNarrative:
-      'Pre-chargeback inquiry for $129.00 coffee subscription renewal. Support inbox shows customer Roberto Alvarez submitted cancellation request prior to billing cycle renewal. Contesting this claim violates card brand rules and risks a statutory $15.00 chargeback loss fee. Rebuttal recommends issuing an immediate inquiry refund to close the case with $15 fee avoided.',
-    recommendation: 'Recommend: refund inquiry ($15 fee avoided)',
-    exhibits: [
-      {
-        letter: 'A',
-        title: 'Customer cancellation request',
-        field: 'customer_communication',
-        source: 'Email inbox MSG-005',
-        summary: 'Customer requested cancellation prior to renewal charge',
-        status: 'attached',
-      },
-      {
-        letter: 'B',
-        title: 'Merchant subscription terms',
-        field: 'cancellation_policy',
-        source: 'Merchant TOS § 4.2',
-        summary: 'Terms permit cancellation prior to recurring billing date',
-        status: 'attached',
-      },
-      {
-        letter: 'C',
-        title: 'Pre-chargeback inquiry disclosure',
-        field: 'uncategorized_text',
-        source: 'Stripe warning_needs_response',
-        summary: 'Card scheme inquiry; full refund resolves claim with zero chargeback fee',
-        status: 'attached',
-      },
-    ],
-    smsText:
-      'Pre-chargeback inquiry: Roberto Alvarez ($129.00). Customer emailed to cancel before renewal. Reply 1 Fight, 2 Refund ($15 fee avoided), 3 Hold.',
-    smsRecipient: '+1 ••• 4471',
-    smsTime: '14:04',
-  };
-}
 
 export default function CaseDetailsPage() {
   const params = useParams();
@@ -327,7 +152,7 @@ export default function CaseDetailsPage() {
     );
   }
 
-  const memo = getCaseMemo(dispute);
+  const memo = getCaseFileMemo(dispute);
   const isAwaitingReply =
     !localDecision &&
     dispute.status !== 'won' &&
@@ -362,7 +187,7 @@ export default function CaseDetailsPage() {
       {/* Nav breadcrumb */}
       <div className="mb-2">
         <Link href="/" className="underline text-ink font-mono text-xs hover:text-ink">
-          ← Return to docket
+          Return to docket
         </Link>
       </div>
 
@@ -419,33 +244,7 @@ export default function CaseDetailsPage() {
           <div className="text-xs font-mono text-secondary-ink mb-3">
             Evidentiary exhibits
           </div>
-          <div className="divide-y divide-rule border-t border-b border-rule font-sans">
-            {memo.exhibits.map((ex) => (
-              <div
-                key={ex.letter}
-                className="py-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs"
-              >
-                <div className="flex-1 max-w-[65ch]">
-                  <span className="font-medium text-ink mr-2">
-                    Exhibit {ex.letter}: {ex.title}
-                  </span>
-                  <span className="font-mono text-secondary-ink mr-2">
-                    [{ex.field}]
-                  </span>
-                  <span className="text-secondary-ink">
-                    — {ex.source}: {ex.summary}
-                  </span>
-                </div>
-                <div className="font-mono text-right shrink-0">
-                  {ex.status === 'attached' ? (
-                    <span className="text-secondary-ink">attached</span>
-                  ) : (
-                    <span className="text-decision-red font-medium">missing</span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+          <ExhibitInspector exhibits={memo.exhibits} />
 
           {/* Fulfillment details if order exists */}
           {order && (

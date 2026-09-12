@@ -14,6 +14,11 @@
   --decision-red: #B91C1C;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 body {
   color: var(--ink);
   background-color: var(--desk);

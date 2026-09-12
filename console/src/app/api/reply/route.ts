@@ -22,9 +22,10 @@ export async function POST(req: NextRequest) {
 
     const text = await resp.text();
     return NextResponse.json({ success: true, response: text }, { status: resp.status });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json(
-      { error: err.message || 'Failed to send reply' },
+      { error: message || 'Failed to send reply' },
       { status: 500 }
     );
   }

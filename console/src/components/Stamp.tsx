@@ -114,7 +114,7 @@ export const Stamp: React.FC<StampProps> = ({
 
 
   const sizeClasses = {
-    sm: 'text-[11px] px-1.5 py-0.5 border-[1.5px]',
+    sm: 'text-[11px] px-1.5 py-0.5 border-2',
     md: 'text-xs px-2.5 py-1 border-2',
     lg: 'text-sm px-3.5 py-1.5 border-2',
   }[size];

@@ -7,186 +7,9 @@ import { Dispute } from '@/lib/types';
 import { Header } from '@/components/Header';
 import { CaseFeed } from '@/components/CaseFeed';
 import { Stamp } from '@/components/Stamp';
+import { ExhibitInspector } from '@/components/ExhibitInspector';
+import { getCaseFileMemo } from '@/lib/disputes';
 import { TWILIO_WEBHOOK_URL, INJECT_URL, CONSOLE_KEY } from '@/lib/config';
-
-interface ExhibitItem {
-  letter: string;
-  title: string;
-  field: string;
-  source: string;
-  summary: string;
-  status: 'attached' | 'missing';
-}
-
-interface CaseFileMemo {
-  customerName: string;
-  orderRef: string;
-  headlineAmount: string;
-  respondByDate: string;
-  respondByDays: number;
-  briefNarrative: string;
-  recommendation: string;
-  exhibits: ExhibitItem[];
-  smsText: string | null;
-  smsRecipient: string | null;
-  smsTime: string | null;
-}
-
-function getCaseFileMemo(dispute: Dispute): CaseFileMemo {
-  const isFraud = dispute.reason === 'fraudulent' || dispute.id.includes('S2');
-  const isPNR = dispute.reason === 'product_not_received' || dispute.id.includes('S1');
-
-  if (isFraud) {
-    return {
-      customerName: 'Sarah Jenkins',
-      orderRef: 'Order #8841',
-      headlineAmount: `$${(dispute.amount_cents / 100).toFixed(2)}`,
-      respondByDate: '22 Sep 2026',
-      respondByDays: 16,
-      briefNarrative:
-        'Cardholder Sarah Jenkins disputes transaction of $340.00 citing unauthorized fraud. Internal ledger verification demonstrates an established commercial relationship spanning 14 prior completed orders totaling $4,820.00 lifetime spend, all delivered to the identical verified cardholder address with zero historical disputes. Stripe Radar score was 12/100 (low risk) and AVS postal code returned a full match. Rebuttal recommends defending this claim with high confidence, subject to owner authorization to confirm customer relationship preservation.',
-      recommendation: 'Recommend: fight (confidence 92%)',
-      exhibits: [
-        {
-          letter: 'A',
-          title: 'Prior order ledger and customer history',
-          field: 'prior_undisputed_transaction_description',
-          source: 'Shopify customer ledger',
-          summary: '14 prior orders ($4,820 lifetime spend) delivered to verified address',
-          status: 'attached',
-        },
-        {
-          letter: 'B',
-          title: 'Proof of delivery and cardholder signature',
-          field: 'shipping_documentation',
-          source: 'UPS tracking #1Z9999999999999999',
-          summary: 'Delivered to 880 Harrison St, San Francisco, CA; signed by cardholder',
-          status: 'attached',
-        },
-        {
-          letter: 'C',
-          title: 'Stripe Radar risk evaluation',
-          field: 'customer_communication',
-          source: 'Stripe Radar',
-          summary: 'Risk score 12/100, 3D Secure authenticated, CVC & AVS postal match',
-          status: 'attached',
-        },
-        {
-          letter: 'D',
-          title: 'Merchant checkout terms of service',
-          field: 'cancellation_policy',
-          source: 'Store checkout policy v2.4',
-          summary: 'Accepted by cardholder at checkout with timestamp and IP log',
-          status: 'attached',
-        },
-        {
-          letter: 'E',
-          title: 'Cardholder signature on file',
-          field: 'signature',
-          source: 'Stripe charge object',
-          summary: 'Missing from Stripe charge object',
-          status: 'missing',
-        },
-      ],
-      smsText:
-        'Alert: Dispute #8841 ($340.00) flagged for VIP Sarah Jenkins ($4,820 spend). Reply 1 to authorize evidence submission, or 2 to refund.',
-      smsRecipient: '+1 ••• 4471',
-      smsTime: '14:02',
-    };
-  }
-
-  if (isPNR) {
-    return {
-      customerName: 'Michael Okafor',
-      orderRef: 'Order #8840',
-      headlineAmount: `$${(dispute.amount_cents / 100).toFixed(2)}`,
-      respondByDate: '20 Sep 2026',
-      respondByDays: 14,
-      briefNarrative:
-        'Cardholder claims goods were not received. Carrier tracking scan from UPS confirms physical delivery directly to cardholder documented shipping address in Austin, TX, with direct signature confirmation matching claimant name. Counter-evidence packet assembled and submitted to card scheme automatically under merchant rule threshold (< $100).',
-      recommendation: 'Recommend: fight (confidence 98%)',
-      exhibits: [
-        {
-          letter: 'A',
-          title: 'Carrier proof of delivery and signature',
-          field: 'shipping_documentation',
-          source: 'UPS tracking #1Z88400019283746',
-          summary: 'Physical delivery confirmed to 1424 Elm St with recipient signature',
-          status: 'attached',
-        },
-        {
-          letter: 'B',
-          title: 'Order fulfillment and dispatch record',
-          field: 'receipt',
-          source: 'Shopify fulfillment service',
-          summary: 'Order ORD-1001 fulfilled within 24 hours of checkout',
-          status: 'attached',
-        },
-        {
-          letter: 'C',
-          title: 'Customer delivery notification log',
-          field: 'customer_communication',
-          source: 'Gmail support thread',
-          summary: 'Delivery notice emailed to m.okafor@example.com with carrier tracking link',
-          status: 'attached',
-        },
-        {
-          letter: 'D',
-          title: 'Cardholder non-receipt declaration',
-          field: 'customer_communication',
-          source: 'Stripe charge object',
-          summary: 'Missing from Stripe charge object',
-          status: 'missing',
-        },
-      ],
-      smsText: null,
-      smsRecipient: null,
-      smsTime: null,
-    };
-  }
-
-  // Subscription canceled or inquiry scenario (S3)
-  return {
-    customerName: 'Roberto Alvarez',
-    orderRef: 'Order #ORD-1003',
-    headlineAmount: `$${(dispute.amount_cents / 100).toFixed(2)}`,
-    respondByDate: '25 Sep 2026',
-    respondByDays: 19,
-    briefNarrative:
-      'Pre-chargeback inquiry for $129.00 coffee subscription renewal. Support inbox shows customer Roberto Alvarez submitted cancellation request prior to billing cycle renewal. Contesting this claim violates card brand rules and risks a statutory $15.00 chargeback loss fee. Rebuttal recommends issuing an immediate inquiry refund to close the case with $15 fee avoided.',
-    recommendation: 'Recommend: refund inquiry ($15 fee avoided)',
-    exhibits: [
-      {
-        letter: 'A',
-        title: 'Customer cancellation request',
-        field: 'customer_communication',
-        source: 'Email inbox MSG-005',
-        summary: 'Customer requested cancellation prior to renewal charge',
-        status: 'attached',
-      },
-      {
-        letter: 'B',
-        title: 'Merchant subscription terms',
-        field: 'cancellation_policy',
-        source: 'Merchant TOS § 4.2',
-        summary: 'Terms permit cancellation prior to recurring billing date',
-        status: 'attached',
-      },
-      {
-        letter: 'C',
-        title: 'Pre-chargeback inquiry disclosure',
-        field: 'uncategorized_text',
-        source: 'Stripe warning_needs_response',
-        summary: 'Card scheme inquiry; full refund resolves claim with zero chargeback fee',
-        status: 'attached',
-      },
-    ],
-    smsText:
-      'Pre-chargeback inquiry: Roberto Alvarez ($129.00). Customer emailed to cancel before renewal. Reply 1 Fight, 2 Refund ($15 fee avoided), 3 Hold.',
-    smsRecipient: '+1 ••• 4471',
-    smsTime: '14:04',
-  };
-}
 
 export default function HomePage() {
   const [disputes, setDisputes] = useState<Dispute[]>([]);
@@ -197,6 +20,7 @@ export default function HomePage() {
   const [forcedState, setForcedState] = useState<'empty' | 'loading' | 'error' | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState<number>(0);
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'reconnecting' | 'offline'>('connected');
   const [replyingId, setReplyingId] = useState<string | null>(null);
   const [localDecisions, setLocalDecisions] = useState<Record<string, {
     action: 'approved' | 'conceded';
@@ -228,9 +52,14 @@ export default function HomePage() {
       if (sbError) throw sbError;
       setDisputes((data as Dispute[]) || []);
       setError(null);
-    } catch (err: any) {
+      if (navigator.onLine) {
+        setConnectionStatus('connected');
+      }
+    } catch (err: unknown) {
       console.error('Failed to fetch disputes:', err);
-      setError(err?.message || 'Stripe API communication timeout (ECONNRESET).');
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || 'Stripe API communication timeout (ECONNRESET).');
+      setConnectionStatus('reconnecting');
     } finally {
       setLoading(false);
     }
@@ -240,12 +69,69 @@ export default function HomePage() {
     fetchDisputes();
   }, [fetchDisputes]);
 
-  // Polling every 5s
+  // Real-time Supabase channel + Network online/offline status
   useEffect(() => {
-    const timer = setInterval(() => {
+    const handleOnline = () => {
+      setConnectionStatus('connected');
       fetchDisputes();
-    }, 5000);
-    return () => clearInterval(timer);
+    };
+    const handleOffline = () => {
+      setConnectionStatus('offline');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    const channel = supabase
+      .channel('public:disputes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'disputes' },
+        () => {
+          fetchDisputes();
+        }
+      )
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          setConnectionStatus('connected');
+        } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          setConnectionStatus('reconnecting');
+        }
+      });
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+      supabase.removeChannel(channel);
+    };
+  }, [fetchDisputes]);
+
+  // Polling fallback every 5s with randomized jitter (5000ms ± 500ms: 4500ms - 5500ms)
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    let isMounted = true;
+
+    const schedulePoll = () => {
+      const jitterMs = 5000 + Math.floor((Math.random() - 0.5) * 1000);
+      timeoutId = setTimeout(async () => {
+        if (!isMounted) return;
+        try {
+          await fetchDisputes();
+        } catch {
+          // Handled within fetchDisputes
+        }
+        if (isMounted) {
+          schedulePoll();
+        }
+      }, jitterMs);
+    };
+
+    schedulePoll();
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
   }, [fetchDisputes]);
 
   // Cooldown timer
@@ -282,7 +168,7 @@ export default function HomePage() {
           setSelectedDisputeId(data.dispute_id);
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Injection failed:', err);
     } finally {
       setLoadingScenario(null);
@@ -322,7 +208,7 @@ export default function HomePage() {
       });
 
       setTimeout(() => fetchDisputes(), 1200);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Quick reply error:', err);
     } finally {
       setReplyingId(null);
@@ -375,7 +261,7 @@ export default function HomePage() {
   if (forcedState === 'loading' || (loading && disputes.length === 0)) {
     return (
       <div className="space-y-6">
-        <Header activeScenario={activeScenario} />
+        <Header activeScenario={activeScenario} connectionStatus={connectionStatus} />
         {/* Loading: skeleton rows in the roster, never spinners */}
         <div className="bg-sheet border-t-2 border-rule-strong p-6 sm:p-8 space-y-4">
           <div className="h-4 bg-rule/50 w-32" />
@@ -411,6 +297,7 @@ export default function HomePage() {
           onSelectScenario={handleSelectScenario}
           loadingScenario={loadingScenario}
           cooldown={cooldown}
+          connectionStatus={connectionStatus}
         />
         {/* Error State: 1px rule #B91C1C above error line, secondary ink, retry as ink link */}
         <div className="border-t border-decision-red pt-3 pb-2 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs font-mono">
@@ -445,6 +332,7 @@ export default function HomePage() {
           onSelectScenario={handleSelectScenario}
           loadingScenario={loadingScenario}
           cooldown={cooldown}
+          connectionStatus={connectionStatus}
         />
         {error && (
           <div className="border-t border-decision-red pt-3 pb-2 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs font-mono">
@@ -478,7 +366,12 @@ export default function HomePage() {
         <CaseFeed
           disputes={disputes}
           openDisputeId={null}
-          onSelectDispute={(id) => setSelectedDisputeId(id)}
+          onSelectDispute={(id) => {
+            setSelectedDisputeId(id);
+            requestAnimationFrame(() => {
+              document.getElementById('open-case-file')?.focus();
+            });
+          }}
         />
       </div>
     );
@@ -524,6 +417,7 @@ export default function HomePage() {
         onSelectScenario={handleSelectScenario}
         loadingScenario={loadingScenario}
         cooldown={cooldown}
+        connectionStatus={connectionStatus}
       />
 
       {/* Error State: 1px rule #B91C1C above error line, secondary ink, retry as ink link */}
@@ -553,7 +447,11 @@ export default function HomePage() {
       )}
 
       {/* OPEN FILE: ~65% of the viewport */}
-      <section className="bg-sheet border-t-2 border-rule-strong p-6 sm:p-8">
+      <section
+        id="open-case-file"
+        tabIndex={-1}
+        className="bg-sheet border-t-2 border-rule-strong p-6 sm:p-8 focus:outline-none"
+      >
         {/* Case Header */}
         <div className="border-b border-rule pb-5 mb-5">
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs font-mono text-secondary-ink mb-2">
@@ -607,33 +505,7 @@ export default function HomePage() {
           <div className="text-xs font-mono text-secondary-ink mb-3">
             Exhibits
           </div>
-          <div className="divide-y divide-rule border-t border-b border-rule font-sans">
-            {memo.exhibits.map((ex) => (
-              <div
-                key={ex.letter}
-                className="py-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs"
-              >
-                <div className="flex-1 max-w-[65ch]">
-                  <span className="font-medium text-ink mr-2">
-                    Exhibit {ex.letter}: {ex.title}
-                  </span>
-                  <span className="font-mono text-secondary-ink mr-2">
-                    [{ex.field}]
-                  </span>
-                  <span className="text-secondary-ink">
-                    — {ex.source}: {ex.summary}
-                  </span>
-                </div>
-                <div className="font-mono text-right shrink-0">
-                  {ex.status === 'attached' ? (
-                    <span className="text-secondary-ink">attached</span>
-                  ) : (
-                    <span className="text-decision-red font-medium">missing</span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+          <ExhibitInspector exhibits={memo.exhibits} />
         </div>
 
         {/* Decision Block */}
@@ -659,7 +531,7 @@ export default function HomePage() {
                   type="button"
                   onClick={() => handleQuickReply(openDispute.id, '1')}
                   disabled={replyingId === openDispute.id}
-                  className="border border-ink px-3 py-1.5 text-xs font-mono text-ink bg-transparent hover:bg-ink hover:text-sheet transition-colors disabled:opacity-50"
+                  className="border border-ink px-3 py-1.5 text-xs font-mono text-ink bg-transparent hover:bg-ink hover:text-sheet transition-colors disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
                 >
                   Reply &quot;1&quot; to fight
                 </button>
@@ -667,7 +539,7 @@ export default function HomePage() {
                   type="button"
                   onClick={() => handleQuickReply(openDispute.id, '2')}
                   disabled={replyingId === openDispute.id}
-                  className="border border-rule px-3 py-1.5 text-xs font-mono text-secondary-ink bg-transparent hover:border-ink hover:text-ink transition-colors disabled:opacity-50"
+                  className="border border-rule px-3 py-1.5 text-xs font-mono text-secondary-ink bg-transparent hover:border-ink hover:text-ink transition-colors disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
                 >
                   {openDispute.status === 'warning_needs_response' || openDispute.id.includes('S3') || openDispute.reason === 'subscription_canceled'
                     ? 'Reply "2" to refund'
@@ -705,28 +577,28 @@ export default function HomePage() {
                     />
                   )
                 ) : openDispute.status === 'refunded_inquiry' || openDispute.decision?.action === 'refund_inquiry' || (openDispute.reason === 'subscription_canceled' && openDispute.status !== 'needs_response' && openDispute.status !== 'warning_needs_response') ? (
-                  <Stamp text="INQUIRY CLOSED · $15 FEE AVOIDED" variant="inquiry_closed" />
+                  <Stamp text="INQUIRY CLOSED · $15 FEE AVOIDED" variant="inquiry_closed" animate={true} />
                 ) : openDispute.status === 'won' ? (
-                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
+                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" animate={true} />
                 ) : openDispute.status === 'lost' ? (
-                  <Stamp text="LOST · 06 SEP 14:07 · ISSUER DECISION" variant="lost" />
+                  <Stamp text="LOST · 06 SEP 14:07 · ISSUER DECISION" variant="lost" animate={true} />
                 ) : openDispute.status === 'charge_refunded' ? (
-                  <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
+                  <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" animate={true} />
                 ) : openDispute.status === 'under_review' || openDispute.decision?.action === 'fight' ? (
-                  <Stamp text="UNDER REVIEW · EVIDENCE SUBMITTED" variant="under_review" />
+                  <Stamp text="UNDER REVIEW · EVIDENCE SUBMITTED" variant="under_review" animate={true} />
                 ) : openDispute.decision?.action === 'concede' ? (
-                  <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
+                  <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" animate={true} />
                 ) : openDispute.reason === 'product_not_received' ? (
-                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
+                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" animate={true} />
                 ) : (
-                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
+                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" animate={true} />
                 )}
               </div>
 
               <div>
                 <Link
                   href={`/case/${openDispute.id}`}
-                  className="underline text-ink font-mono text-xs hover:text-ink"
+                  className="underline text-ink font-mono text-xs hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
                 >
                   Open full case record
                 </Link>
@@ -740,7 +612,12 @@ export default function HomePage() {
       <CaseFeed
         disputes={disputes}
         openDisputeId={openDispute.id}
-        onSelectDispute={(id) => setSelectedDisputeId(id)}
+        onSelectDispute={(id) => {
+          setSelectedDisputeId(id);
+          requestAnimationFrame(() => {
+            document.getElementById('open-case-file')?.focus();
+          });
+        }}
       />
     </div>
   );

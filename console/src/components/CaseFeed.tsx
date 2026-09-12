@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import Link from 'next/link';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { Dispute } from '@/lib/types';
+import { formatSentenceCase } from '@/lib/disputes';
 import { Stamp } from './Stamp';
 
 interface CaseFeedProps {
@@ -16,6 +16,9 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
   openDisputeId,
   onSelectDispute,
 }) => {
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
+
   // Exclude the currently open case from the roster
   const rosterDisputes = useMemo(() => {
     const filtered = disputes.filter((d) => d.id !== openDisputeId);
@@ -27,6 +30,41 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
       return dateA - dateB;
     });
   }, [disputes, openDisputeId]);
+
+  // Keep rowRefs array in sync
+  useEffect(() => {
+    rowRefs.current = rowRefs.current.slice(0, rosterDisputes.length);
+  }, [rosterDisputes.length]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTableSectionElement>) => {
+    if (rosterDisputes.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = focusedIndex < rosterDisputes.length - 1 ? focusedIndex + 1 : 0;
+      setFocusedIndex(nextIndex);
+      rowRefs.current[nextIndex]?.focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = focusedIndex > 0 ? focusedIndex - 1 : rosterDisputes.length - 1;
+      setFocusedIndex(prevIndex);
+      rowRefs.current[prevIndex]?.focus();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      if (focusedIndex >= 0 && focusedIndex < rosterDisputes.length) {
+        e.preventDefault();
+        onSelectDispute?.(rosterDisputes[focusedIndex].id);
+        requestAnimationFrame(() => {
+          document.getElementById('open-case-file')?.focus();
+        });
+      }
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      if (focusedIndex >= 0 && rowRefs.current[focusedIndex]) {
+        rowRefs.current[focusedIndex]?.blur();
+      }
+      setFocusedIndex(-1);
+    }
+  };
 
   const formatRespondBy = (dateStr?: string) => {
     if (!dateStr) return { text: 'No deadline', passed: false };
@@ -82,19 +120,19 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
 
   if (rosterDisputes.length === 0) {
     return (
-      <div className="mt-8 pt-4 border-t border-rule">
+      <section className="mt-8 pt-4 border-t border-rule" aria-label="Dispute roster">
         <h2 className="text-sm font-sans font-medium text-ink border-b border-rule-strong pb-2 mb-3">
           Dispute roster
         </h2>
         <p className="text-xs font-mono text-secondary-ink py-4">
           No other open disputes on docket.
         </p>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="mt-8 pt-4 border-t border-rule">
+    <section className="mt-8 pt-4 border-t border-rule" aria-label="Dispute roster">
       <div className="flex items-baseline justify-between border-b border-rule-strong pb-2 mb-0">
         <h2 className="text-sm font-sans font-medium text-ink">
           Dispute roster
@@ -105,47 +143,62 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-left text-xs" aria-label="Dispute roster">
+        <table className="w-full border-collapse text-left text-xs" aria-label="Dispute roster table">
           <thead>
             <tr className="border-b border-rule text-secondary-ink font-mono text-xs whitespace-nowrap">
               <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap">Case ID</th>
               <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap">Reason</th>
-              <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap">Agent action</th>
+              <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap hidden md:table-cell">Agent action</th>
               <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap">Outcome</th>
-              <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap">Respond by</th>
+              <th scope="col" className="py-2.5 px-3 font-normal whitespace-nowrap hidden sm:table-cell">Respond by</th>
               <th scope="col" className="py-2.5 px-3 font-normal text-right whitespace-nowrap">Amount</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-rule font-sans">
-            {rosterDisputes.map((d) => {
+          <tbody
+            className="divide-y divide-rule font-sans"
+            onKeyDown={handleKeyDown}
+          >
+            {rosterDisputes.map((d, index) => {
               const dueInfo = formatRespondBy(d.evidence_due_by);
               const amountFormatted = `$${(d.amount_cents / 100).toFixed(2)}`;
-              const reasonClean = d.reason.replace(/_/g, ' ');
+              const reasonClean = formatSentenceCase(d.reason);
+              const isFocused = focusedIndex === index;
 
               return (
                 <tr
                   key={d.id}
-                  className="h-10 hover:bg-sheet/60 transition-colors"
+                  ref={(el) => {
+                    rowRefs.current[index] = el;
+                  }}
+                  role="row"
+                  aria-selected={isFocused}
+                  tabIndex={index === 0 && focusedIndex === -1 ? 0 : isFocused ? 0 : -1}
+                  onFocus={() => setFocusedIndex(index)}
+                  onClick={() => {
+                    onSelectDispute?.(d.id);
+                    requestAnimationFrame(() => {
+                      document.getElementById('open-case-file')?.focus();
+                    });
+                  }}
+                  aria-label={`Case ${d.id}, ${reasonClean}, amount ${amountFormatted}`}
+                  className={`h-10 min-h-[40px] cursor-pointer hover:bg-sheet/60 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2 ${
+                    isFocused ? 'bg-sheet/70' : ''
+                  }`}
                 >
                   {/* Case ID */}
                   <td className="py-2.5 px-3 align-middle font-mono whitespace-nowrap">
-                    <button
-                      type="button"
-                      onClick={() => onSelectDispute ? onSelectDispute(d.id) : undefined}
-                      aria-label={`Select case ${d.id}`}
-                      className="underline text-ink hover:text-ink font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
-                    >
+                    <span className="underline text-ink font-medium">
                       {d.id}
-                    </button>
+                    </span>
                   </td>
 
-                  {/* Reason (sentence case) */}
-                  <td className="py-2.5 px-3 align-middle text-ink capitalize whitespace-nowrap">
+                  {/* Reason (strict sentence case) */}
+                  <td className="py-2.5 px-3 align-middle text-ink whitespace-nowrap">
                     {reasonClean}
                   </td>
 
-                  {/* Agent action (sentence case) */}
-                  <td className="py-2.5 px-3 align-middle text-secondary-ink whitespace-nowrap">
+                  {/* Agent action (hidden on mobile to prevent overflow) */}
+                  <td className="py-2.5 px-3 align-middle text-secondary-ink whitespace-nowrap hidden md:table-cell">
                     {getAgentAction(d)}
                   </td>
 
@@ -154,8 +207,8 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
                     {renderOutcomeStamp(d)}
                   </td>
 
-                  {/* Respond by */}
-                  <td className="py-2.5 px-3 align-middle font-mono whitespace-nowrap">
+                  {/* Respond by (hidden on narrow mobile <640px) */}
+                  <td className="py-2.5 px-3 align-middle font-mono whitespace-nowrap hidden sm:table-cell">
                     <span className={dueInfo.passed ? 'text-decision-red' : 'text-secondary-ink'}>
                       {dueInfo.text}
                     </span>
@@ -171,7 +224,6 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
           </tbody>
         </table>
       </div>
-    </div>
+    </section>
   );
 };
-

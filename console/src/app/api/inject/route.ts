@@ -17,9 +17,10 @@ export async function POST(req: NextRequest) {
 
     const data = await resp.json();
     return NextResponse.json(data, { status: resp.status });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json(
-      { error: err.message || 'Failed to inject scenario' },
+      { error: message || 'Failed to inject scenario' },
       { status: 500 }
     );
   }

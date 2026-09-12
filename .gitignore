@@ -57,6 +57,7 @@ Thumbs.db
 node_modules/
 .next/
 out/
+*.tsbuildinfo
 !console/src/lib/**
 
 # Bedrock AgentCore build cache
