@@ -129,8 +129,10 @@ dated_dispute['dispute']['created_at'] = '2026-08-15T10:00:00Z'
 cases.append(('refund_ordering_with_both_event_times', chronology, None, [], dated_dispute))
 
 wrong_policy = copy.deepcopy(clean)
-wrong_policy['evidence_packet']['cancellation_policy_disclosure'] = facts['history_and_policy']['policy']['return_policy']
-cases.append(('return_policy_is_not_cancellation_policy', wrong_policy, 'no_hallucination_pass', []))
+return_only_facts = copy.deepcopy(facts)
+return_only_facts['history_and_policy']['policy']['return_policy'] = 'Return requests are accepted within 30 days of delivery.'
+wrong_policy['evidence_packet']['cancellation_policy_disclosure'] = return_only_facts['history_and_policy']['policy']['return_policy']
+cases.append(('return_policy_is_not_cancellation_policy', wrong_policy, 'no_hallucination_pass', [], return_only_facts))
 cancellation_facts = copy.deepcopy(facts)
 cancellation_facts['history_and_policy']['policy']['cancellation_policy'] = 'Cancel a subscription before its next renewal date.'
 right_policy = copy.deepcopy(clean)

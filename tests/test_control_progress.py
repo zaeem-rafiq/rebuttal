@@ -14,7 +14,7 @@ def test_control_interruption_preserves_completed_results(monkeypatch, tmp_path)
     monkeypatch.setattr(evidence, 'get_shipping_evidence', lambda _: {'shipping_address': {}})
     monkeypatch.setattr(evidence, 'get_customer_comms', lambda *args: {'messages': []})
     monkeypatch.setattr(evidence, 'get_merchant_history_and_policy', lambda _: {
-        'policy': {'return_policy': 'Return within 30 days.'}})
+        'policy': {}})
     monkeypatch.setattr(runner, 'get_llm_judge_client', lambda: object())
     first = {'overall_pass': True, 'reason_code_pass': True, 'must_cite_pass': True,
              'no_hallucination_pass': True, 'word_count_pass': True,
