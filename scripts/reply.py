@@ -45,7 +45,7 @@ from agent.tools.stripe_tools import (
     submit_evidence,
     resolve_stripe_dispute_id,
 )
-from agent.tools.case_tools import record_case
+from agent.tools.case_tools import record_case, get_latest_decision, update_decision_status
 from agent.hooks import send_owner_sms
 
 
@@ -61,6 +61,8 @@ def process_reply(
     ans_clean = str(answer).strip()
     answer_map = {"1": "fight", "2": "concede", "3": "hold"}
     chosen_action = answer_map.get(ans_clean, ans_clean)
+    if chosen_action not in {"fight", "concede", "hold"}:
+        raise ValueError("Owner reply must be fight, concede, or hold")
     now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     if not LOCAL_DB_PATH.exists():
@@ -77,25 +79,22 @@ def process_reply(
         if not LOCAL_DB_PATH.exists():
             raise FileNotFoundError(f"Database not found at {LOCAL_DB_PATH}")
 
+    # Select one decision across stores before resuming or acting.
+    dec_row = get_latest_decision(clean_dispute_id, db_path=LOCAL_DB_PATH)
+    if dec_row is None:
+        raise LookupError(f"No decision found for dispute {clean_dispute_id}")
+
     conn = sqlite3.connect(LOCAL_DB_PATH)
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
+    try:
+        conn.row_factory = sqlite3.Row
+        disp_row = conn.execute(
+            "SELECT * FROM disputes WHERE id = ? OR order_id = ?",
+            (clean_dispute_id, clean_dispute_id),
+        ).fetchone()
+    finally:
+        conn.close()
 
-    # Find the latest pending decision for this dispute
-    dec_row = cur.execute(
-        """SELECT * FROM decisions 
-           WHERE dispute_id = ? 
-           ORDER BY created_at DESC LIMIT 1""",
-        (clean_dispute_id,),
-    ).fetchone()
-
-    disp_row = cur.execute(
-        "SELECT * FROM disputes WHERE id = ? OR order_id = ?",
-        (clean_dispute_id, clean_dispute_id),
-    ).fetchone()
-    conn.close()
-
-    decision_id = dec_row["id"] if dec_row else None
+    decision_id = dec_row["id"]
     target_stripe_id = resolve_stripe_dispute_id(clean_dispute_id)
     final_status = "unknown"
     conf_sms_sid = ""
@@ -129,15 +128,9 @@ def process_reply(
             except Exception:
                 pass
 
-        # Update decision status to held
-        conn = sqlite3.connect(LOCAL_DB_PATH)
-        cur = conn.cursor()
-        cur.execute(
-            "UPDATE decisions SET status = 'held', answered_at = ? WHERE dispute_id = ?",
-            (now_iso, clean_dispute_id),
+        decision_update = update_decision_status(
+            decision_id, 'held', answered_at=now_iso, db_path=LOCAL_DB_PATH,
         )
-        conn.commit()
-        conn.close()
 
         record_case(
             dispute_id=clean_dispute_id,
@@ -173,14 +166,9 @@ def process_reply(
                 else:
                     raise
 
-            conn = sqlite3.connect(LOCAL_DB_PATH)
-            cur = conn.cursor()
-            cur.execute(
-                "UPDATE decisions SET status = 'approved', action = 'refund_inquiry', answered_at = ? WHERE dispute_id = ?",
-                (now_iso, clean_dispute_id),
+            decision_update = update_decision_status(
+                decision_id, 'approved', action='refund_inquiry', answered_at=now_iso, db_path=LOCAL_DB_PATH,
             )
-            conn.commit()
-            conn.close()
 
             record_case(
                 dispute_id=clean_dispute_id,
@@ -204,15 +192,9 @@ def process_reply(
                 else:
                     raise
 
-            # Update decision in database
-            conn = sqlite3.connect(LOCAL_DB_PATH)
-            cur = conn.cursor()
-            cur.execute(
-                "UPDATE decisions SET status = 'approved', action = 'concede', answered_at = ? WHERE dispute_id = ?",
-                (now_iso, clean_dispute_id),
+            decision_update = update_decision_status(
+                decision_id, 'approved', action='concede', answered_at=now_iso, db_path=LOCAL_DB_PATH,
             )
-            conn.commit()
-            conn.close()
 
             record_case(
                 dispute_id=clean_dispute_id,
@@ -226,15 +208,9 @@ def process_reply(
             conf_sms_sid = send_owner_sms(conf_msg)
 
     elif chosen_action == "fight":
-        # Update decision in database
-        conn = sqlite3.connect(LOCAL_DB_PATH)
-        cur = conn.cursor()
-        cur.execute(
-            "UPDATE decisions SET status = 'approved', action = 'fight', answered_at = ? WHERE dispute_id = ?",
-            (now_iso, clean_dispute_id),
+        decision_update = update_decision_status(
+            decision_id, 'approved', action='fight', answered_at=now_iso, db_path=LOCAL_DB_PATH,
         )
-        conn.commit()
-        conn.close()
 
         record_case(
             dispute_id=clean_dispute_id,
@@ -252,17 +228,9 @@ def process_reply(
     stripe_disp = get_dispute(clean_dispute_id)
     retrieved_status = stripe_disp.get("status", final_status)
 
-    # Check decisions.answered_at
-    conn = sqlite3.connect(LOCAL_DB_PATH)
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
-    dec_check = cur.execute(
-        "SELECT answered_at, status FROM decisions WHERE dispute_id = ? ORDER BY created_at DESC LIMIT 1",
-        (clean_dispute_id,),
-    ).fetchone()
-    conn.close()
-
-    has_answered_at = bool(dec_check and dec_check["answered_at"])
+    # The shared writer returns the exact persisted decision, including cloud-only rows.
+    dec_check = decision_update
+    has_answered_at = bool(dec_check.get("answered_at"))
 
     # Output Proof for R-04
     is_conceded_lost = (retrieved_status == "lost")

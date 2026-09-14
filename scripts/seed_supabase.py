@@ -146,6 +146,7 @@ CREATE TABLE IF NOT EXISTS decisions (
     status TEXT NOT NULL DEFAULT 'pending',
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     approved_at TEXT,
+    answered_at TEXT,
     executed_at TEXT
 );
 
@@ -189,6 +190,8 @@ def init_local_db(db_path: Path = LOCAL_DB_PATH) -> sqlite3.Connection:
     conn = sqlite3.connect(db_path)
     conn.execute("PRAGMA foreign_keys = ON;")
     conn.executescript(SQLITE_SCHEMA)
+    if "answered_at" not in {row[1] for row in conn.execute("PRAGMA table_info(decisions)")}:
+        conn.execute("ALTER TABLE decisions ADD COLUMN answered_at TEXT")
     conn.commit()
     return conn
 

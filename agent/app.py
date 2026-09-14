@@ -14,6 +14,8 @@ import uuid
 import asyncio
 import logging
 import shutil
+import sqlite3
+from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -258,6 +260,48 @@ async def process_case_async(dispute_id: str, scenario: Optional[str] = None):
         print(f"Error processing dispute {dispute_id}: {e}", file=sys.stderr, flush=True)
 
 
+def _resolve_executed_action(dispute_id: str):
+    """Attribute closure only to recorded execution, never approval or outcome."""
+    from agent.tools.case_tools import _get_supabase_client
+
+    action_map = {
+        "submit_evidence": "fight",
+        "concede_dispute": "concede",
+        "refund_inquiry": "refund_inquiry",
+    }
+    actions = set()
+    try:
+        if LOCAL_DB_PATH.exists():
+            with closing(sqlite3.connect(LOCAL_DB_PATH)) as conn:
+                rows = conn.execute(
+                    "SELECT DISTINCT action FROM audit_log WHERE dispute_id = ? "
+                    "AND actor IN ('owner', 'executor') "
+                    "AND action IN ('submit_evidence', 'concede_dispute', 'refund_inquiry')",
+                    (dispute_id,),
+                ).fetchall()
+                actions.update(action_map[row[0]] for row in rows)
+
+        sb = _get_supabase_client()
+        if sb is None and (os.getenv("SUPABASE_URL") or os.getenv("SUPABASE_SERVICE_KEY")):
+            return None, "execution_audit_unavailable"
+        if sb is not None:
+            # Check each action separately so a page of duplicate audits cannot hide a conflict.
+            for audit_action, action in action_map.items():
+                rows = (sb.table("audit_log").select("action")
+                        .eq("dispute_id", dispute_id).eq("action", audit_action)
+                        .in_("actor", ["owner", "executor"]).limit(1).execute()).data
+                if rows:
+                    actions.add(action)
+    except Exception:
+        return None, "execution_audit_unavailable"
+
+    if len(actions) > 1:
+        return None, "conflicting_execution_actions"
+    if not actions:
+        return None, "no_confirmed_execution_action"
+    return actions.pop(), None
+
+
 @app.entrypoint
 def main(payload: Any, context: Optional[Any] = None) -> Dict[str, Any]:
     """AgentCore entrypoint dispatching payload['type']."""
@@ -331,26 +375,33 @@ def main(payload: Any, context: Optional[Any] = None) -> Dict[str, Any]:
         from agent.tools.memory_tools import store_dispute_outcome
 
         reason = payload.get("reason", "product_not_received")
-        action = payload.get("action", "fight")
+        action, attribution_reason = _resolve_executed_action(dispute_id)
         outcome = payload.get("outcome", payload.get("status", "won"))
         amount = int(payload.get("amount", payload.get("amount_cents", 4800)))
         merchant_id = payload.get("merchant_id", "default")
 
-        mem_event = store_dispute_outcome(
-            dispute_id=dispute_id,
-            reason=reason,
-            action=action,
-            outcome=outcome,
-            amount=amount,
-            merchant_id=merchant_id,
-        )
+        if action is None:
+            mem_event = {"status": "skipped", "reason": attribution_reason, "dispute_id": dispute_id}
+        else:
+            mem_event = store_dispute_outcome(
+                dispute_id=dispute_id,
+                reason=reason,
+                action=action,
+                outcome=outcome,
+                amount=amount,
+                merchant_id=merchant_id,
+            )
+
+        closure_details = payload.get("details")
+        if not isinstance(closure_details, dict):
+            closure_details = {}
 
         record_case(
             dispute_id=dispute_id,
             status=payload.get("status", "closed"),
             action="dispute_closed_webhook",
             actor="webhook",
-            details={"memory_event": mem_event, **payload.get("details", {})},
+            details={**closure_details, "memory_event": mem_event},
         )
         logger.info("dispute.closed processed for %s: status=%s", dispute_id, outcome)
         print(f"dispute.closed processed for {dispute_id}: status={outcome}", flush=True)

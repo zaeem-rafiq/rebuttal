@@ -10,6 +10,7 @@ import os
 import json
 import uuid
 import sqlite3
+from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -54,6 +55,91 @@ def _get_supabase_client():
         except Exception:
             return None
     return None
+
+
+def _decision_cloud_client():
+    client = _get_supabase_client()
+    if client is None and (os.getenv("SUPABASE_URL") or os.getenv("SUPABASE_SERVICE_KEY")):
+        raise RuntimeError("Configured cloud decision store is unavailable")
+    return client
+
+
+def get_latest_decision(dispute_id: str, db_path: Optional[Path] = None) -> Optional[Dict[str, Any]]:
+    """Select one current decision across stores before processing an owner reply."""
+    rows = []
+    path = Path(db_path) if db_path is not None else LOCAL_DB_PATH
+    if path.exists():
+        with closing(sqlite3.connect(path)) as conn, conn:
+            conn.row_factory = sqlite3.Row
+            row = conn.execute(
+                "SELECT * FROM decisions WHERE dispute_id = ? ORDER BY created_at DESC, id DESC LIMIT 1",
+                (dispute_id.strip(),),
+            ).fetchone()
+            if row:
+                rows.append(dict(row))
+    sb = _decision_cloud_client()
+    if sb is not None:
+        rows.extend(sb.table("decisions").select("*").eq("dispute_id", dispute_id.strip())
+                    .order("created_at", desc=True).order("id", desc=True).limit(1).execute().data or [])
+    if not rows:
+        return None
+
+    def ordering(row):
+        created = datetime.fromisoformat(row["created_at"].replace("Z", "+00:00"))
+        if created.tzinfo is None:
+            created = created.replace(tzinfo=timezone.utc)
+        return created, row["id"]
+
+    return max(rows, key=ordering)
+
+
+def update_decision_status(
+    decision_id: str,
+    status: str,
+    action: Optional[str] = None,
+    answered_at: Optional[str] = None,
+    db_path: Optional[Path] = None,
+) -> Dict[str, Any]:
+    """Update exactly one decision in both stores; surface incomplete replication."""
+    if not decision_id or status not in {"approved", "overridden", "held"}:
+        raise ValueError("A decision ID and valid owner decision status are required")
+    if action is not None and action not in {"fight", "concede", "refund_inquiry"}:
+        raise ValueError("Invalid owner decision action")
+    values = {"status": status}
+    if action is not None:
+        values["action"] = action
+    if answered_at is not None:
+        values["answered_at"] = answered_at
+    sb = _decision_cloud_client()
+    path = Path(db_path) if db_path is not None else LOCAL_DB_PATH
+    local_row = None
+    if path.exists():
+        with closing(sqlite3.connect(path)) as conn, conn:
+            conn.row_factory = sqlite3.Row
+            conn.execute(
+                "UPDATE decisions SET " + ", ".join(f"{key} = ?" for key in values) + " WHERE id = ?",
+                (*values.values(), decision_id),
+            )
+            row = conn.execute("SELECT * FROM decisions WHERE id = ?", (decision_id,)).fetchone()
+            local_row = dict(row) if row else None
+    cloud_row = None
+    if sb is not None:
+        try:
+            rows = sb.table("decisions").update(values).eq("id", decision_id).execute().data or []
+            cloud_row = next((row for row in rows if row.get("id") == decision_id), None)
+            if cloud_row is None or any(cloud_row.get(key) != value for key, value in values.items() if key != "answered_at"):
+                raise RuntimeError("Cloud decision row was not updated")
+            if answered_at is not None:
+                actual = datetime.fromisoformat((cloud_row.get("answered_at") or "").replace("Z", "+00:00"))
+                expected = datetime.fromisoformat(answered_at.replace("Z", "+00:00"))
+                if actual != expected:
+                    raise RuntimeError("Cloud decision answer timestamp was not updated")
+        except Exception as exc:
+            raise RuntimeError("Decision cloud synchronization failed; a local update or Stripe action may already have completed") from exc
+    result = cloud_row or local_row
+    if result is None:
+        raise LookupError(f"Decision not found: {decision_id}")
+    return result
 
 
 @tool

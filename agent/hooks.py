@@ -24,7 +24,7 @@ from strands.hooks import (
     AfterToolCallEvent,
 )
 
-from agent.tools.case_tools import record_case
+from agent.tools.case_tools import record_case, update_decision_status
 
 load_dotenv()
 
@@ -347,8 +347,8 @@ class ApprovalGate(HookProvider):
         expected_tool = action_tool_map.get(chosen_action)
         if tool_name == expected_tool:
             # Action approved by owner
+            self._update_decision_status(decision_id, status="approved", action=chosen_action, answered_at=answered_iso)
             set_agent_state(agent, "approval", chosen_action)
-            self._update_decision_status(decision_id, status="approved", answered_at=answered_iso)
             record_case(
                 dispute_id=dispute_id,
                 action="approve_decision",
@@ -373,26 +373,10 @@ class ApprovalGate(HookProvider):
         action: Optional[str] = None,
         answered_at: Optional[str] = None,
     ):
-        """Update decision record status and answered timestamp in local database."""
-        if not LOCAL_DB_PATH.exists():
-            return
-        try:
-            conn = sqlite3.connect(LOCAL_DB_PATH)
-            cur = conn.cursor()
-            if action:
-                cur.execute(
-                    "UPDATE decisions SET status = ?, action = ?, answered_at = COALESCE(?, answered_at) WHERE id = ?",
-                    (status, action, answered_at, decision_id),
-                )
-            else:
-                cur.execute(
-                    "UPDATE decisions SET status = ?, answered_at = COALESCE(?, answered_at) WHERE id = ?",
-                    (status, answered_at, decision_id),
-                )
-            conn.commit()
-            conn.close()
-        except Exception:
-            pass
+        """Persist the owner decision before allowing a guarded action."""
+        return update_decision_status(
+            decision_id, status, action=action, answered_at=answered_at, db_path=LOCAL_DB_PATH,
+        )
 
 
 class AuditHook(HookProvider):

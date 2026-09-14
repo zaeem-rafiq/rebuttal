@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS decisions (
     customer_value TEXT NOT NULL DEFAULT 'new' CHECK (customer_value IN ('new', 'repeat', 'vip')),
     rationale TEXT,
     owner_summary TEXT,
-    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'executed', 'overridden')),
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'executed', 'overridden', 'held')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     approved_at TIMESTAMPTZ,
     answered_at TIMESTAMPTZ,
