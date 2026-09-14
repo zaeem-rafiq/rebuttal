@@ -23,13 +23,18 @@ def test_judge_cannot_turn_failure_into_pass(response):
     assert result['overall_pass'] is False
 
 
-def test_judge_accepts_grounded_verdict_and_rejects_empty_or_long_text():
+def test_judge_accepts_grounded_verdict_and_rejects_empty_or_long_text(monkeypatch):
+    monkeypatch.setenv('BEDROCK_MODEL_ID', 'generator-model')
+    monkeypatch.setenv('BEDROCK_JUDGE_MODEL_ID', 'judge-model')
     client = MagicMock()
-    client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
+    client.converse.return_value = {'usage': {'inputTokens': 100, 'outputTokens': 25}, 'output': {'message': {'content': [{'text': json.dumps({
         'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': True,
     })}]}}}
     for narrative, expected in [('Delivery recorded.', True), ('', False), ('word ' * 251, False)]:
-        assert judge_narrative(client, narrative, 'product_not_received', [], '{}')['overall_pass'] is expected
+        result = judge_narrative(client, narrative, 'product_not_received', [], '{}')
+        assert result['overall_pass'] is expected
+        assert result['model_id'] == client.converse.call_args.kwargs['modelId'] == 'judge-model'
+        assert result['usage'] == {'inputTokens': 100, 'outputTokens': 25}
 
 
 @pytest.mark.parametrize('amount,probability,action,expected', [
@@ -155,13 +160,13 @@ def test_judge_prompt_contains_equivalence_and_grounding_rules():
     )
 
     call_args = client.converse.call_args[1]
-    prompt_text = call_args["messages"][0]["content"][0]["text"]
+    prompt_text = call_args["system"][0]["text"]
 
-    assert "Currency equivalence" in prompt_text
-    assert "Timestamps and timezones" in prompt_text
-    assert "Attributed customer statements" in prompt_text
-    assert "Absence of records" in prompt_text
-    assert "Recommendations must be clearly prospective" in prompt_text
+    assert "100 cents equals $1" in prompt_text
+    assert "UTC/ISO date reformattings are equivalent" in prompt_text
+    assert "A quoted report establishes what was reported, not its independent truth" in prompt_text
+    assert "No X documented/in merchant records" in prompt_text
+    assert "Current recommendations must be prospective" in prompt_text
 
 
 def test_keyword_presence_cannot_override_negative_judge_verdict():
@@ -302,7 +307,7 @@ def test_supporting_output_failure_cannot_hide_behind_passing_narrative(tainted_
                              'fraudulent', [], '{}', supporting_output=output)
 
     prompt = client.converse.call_args.kwargs['messages'][0]['content'][0]['text']
-    assert json.dumps(output, indent=2) in prompt
+    assert json.loads(prompt)['supporting_output'] == output
     assert result['reason_code_pass'] and result['must_cite_pass'] and result['word_count_pass']
     assert result['overall_pass'] is False
     client.converse.assert_called_once()
@@ -371,8 +376,7 @@ def test_eval_rejection_continues_suite_and_persists_complete_output(monkeypatch
     assert rows[1]['supporting_output'] == expected_output
     assert rows[1]['case_facts']['dispute']['id'] == case['dispute_id']
     prompt = judge.converse.call_args.kwargs['messages'][0]['content'][0]['text']
-    assert json.dumps(expected_output, indent=2) in prompt
+    assert json.loads(prompt)['supporting_output'] == expected_output
     assert json.dumps(expected_output, indent=2) in report.read_text()
     assert (runner.agent.graph.get_dispute, runner.agent.graph.get_charge_context) == original_tools
     assert runner.agent.tools.evidence_tools.LOCAL_DB_PATH == original_db
-

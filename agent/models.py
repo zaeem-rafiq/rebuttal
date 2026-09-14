@@ -22,7 +22,7 @@ class DisputeStrategy(BaseModel):
     )
     expected_value_cents: int = Field(
         ...,
-        description="Calculated expected dollar value in cents (win_prob * amount - loss_prob * fee)."
+        description="Internal expected value estimate in cents. Use only documented fee amounts; when fees are unknown, use zero as a calculation assumption, never claim fees are zero. Concession and inquiry recommendations use zero."
     )
     customer_value: Literal["new", "repeat", "vip"] = Field(
         ...,
@@ -75,7 +75,7 @@ class EvidencePacket(BaseModel):
     uncategorized_file: Optional[str] = Field(None, description="Additional file upload ID.")
     narrative: str = Field(
         ...,
-        description="Structured dispute narrative explaining why the dispute is invalid with timeline of events."
+        description="Source-grounded narrative explaining the proposed response to the stated dispute reason. A concession or inquiry refund need not argue that the dispute is invalid."
     )
     files: List[str] = Field(
         default_factory=list,
