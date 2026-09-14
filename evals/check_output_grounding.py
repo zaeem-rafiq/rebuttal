@@ -181,6 +181,24 @@ cases.append(('record_domain_qualifies_exists', record_domain, None, [], empty_m
 world_absence = copy.deepcopy(clean)
 world_absence['evidence_packet']['narrative'] += ' No customer ever contacted merchant support.'
 cases.append(('no_records_do_not_prove_no_contact', world_absence, 'no_hallucination_pass', [], empty_messages))
+# Missing values describe records; explicit source statements can establish events.
+unsigned_facts = copy.deepcopy(facts)
+unsigned_facts['shipment']['signed_by'] = None
+unsigned_record = copy.deepcopy(clean)
+unsigned_record['evidence_packet']['narrative'] += ' No signature is recorded in the shipment record.'
+cases.append(('null_signature_record_scope', unsigned_record, None, [], unsigned_facts))
+unsigned_event = copy.deepcopy(clean)
+unsigned_event['evidence_packet']['narrative'] += ' No signature was obtained at delivery.'
+cases.append(('null_signature_is_not_event_absence', unsigned_event, 'no_hallucination_pass', [], unsigned_facts))
+explicit_unsigned = copy.deepcopy(unsigned_facts)
+explicit_unsigned['shipment']['delivery_note'] = 'No signature was obtained at delivery.'
+cases.append(('explicit_unsigned_delivery', unsigned_event, None, [], explicit_unsigned))
+policy_inference = copy.deepcopy(clean)
+policy_inference['evidence_packet']['narrative'] += ' The amount falls within merchant operational parameters for concession when delivery cannot be confirmed.'
+cases.append(('approval_threshold_is_not_concession_rule', policy_inference, 'no_hallucination_pass', []))
+bare_concession = copy.deepcopy(clean)
+bare_concession['evidence_packet']['narrative'] += ' Recommendation: Concede the dispute based on the recorded repeat customer tier.'
+cases.append(('bare_concession_with_reason', bare_concession, None, []))
 requested = os.getenv('CONTROL_CASES', '').split(',') if os.getenv('CONTROL_CASES') else []
 if requested:
     unknown = set(requested) - {case[0] for case in cases}
@@ -197,6 +215,14 @@ code_revision = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'],
 # Mirror the raw-record envelope used by the live benchmark, without exposing a
 # fixture-only policy interpretation to the judge.
 def source_records(values):
+    values = copy.deepcopy(values)
+    # Keep edited controls consistent with the real tool's derived summary fields.
+    comms = values['communications']
+    messages = comms['messages']
+    comms.update(message_count=len(messages),
+                 has_cancellation_request=any('cancel' in (m.get('subject', '') + m.get('body', '')).lower() for m in messages),
+                 has_address_change_request=any(m.get('has_shipping_change', 0) == 1 for m in messages),
+                 has_inquiry=bool(messages))
     return {'source_tool_records': [
         {'collector': key, 'tool': 'control_' + key, 'status': 'success', 'content': [value]}
         for key, value in values.items() if key != 'produced_artifacts'

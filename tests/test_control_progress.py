@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 import pytest
 
 
-@pytest.mark.parametrize('selected', ['', 'grounded_control,retention_outcome_alone'])
+@pytest.mark.parametrize('selected', ['', 'grounded_control,retention_outcome_alone', 'grounded_control,attributed_prior_event'])
 def test_control_interruption_preserves_completed_results(monkeypatch, tmp_path, selected):
     import evals.run as runner
     import agent.tools.evidence_tools as evidence
@@ -39,3 +39,11 @@ def test_control_interruption_preserves_completed_results(monkeypatch, tmp_path,
     assert saved['results'][0]['facts']['source_tool_records']
     assert saved['code_revision'] and set(saved['source_manifest']) == {
         'evals/run.py', 'evals/check_output_grounding.py'}
+
+    for call in judge.call_args_list:
+        records = json.loads(call.args[4])['source_tool_records']
+        comms = next(record['content'][0] for record in records if record['collector'] == 'communications')
+        assert comms['message_count'] == len(comms['messages'])
+        assert comms['has_cancellation_request'] == any(
+            'cancel' in (message.get('subject', '') + message.get('body', '')).lower()
+            for message in comms['messages'])
