@@ -8,7 +8,7 @@ The evaluator now checks the complete generated output:
 |---|---|---|
 | Action match | Proposed action equals the case label | Real dispute success or calibrated probabilities |
 | Gate match | Production `ApprovalGate.before_tool_call` requests an interrupt; notification, cloud access, and local persistence are isolated | SDK suspension, phone delivery, session resume, or downstream execution |
-| Output judge | Bedrock checks narrative reason/citations and factual grounding in every strategy and evidence field; code enforces 1–250 narrative words | Infallible factual validation |
+| Output judge | Separate Bedrock calls check narrative reason/citations and grounding in every strategy/evidence field; code enforces 1–250 narrative words and rejects unproduced attachments | Infallible factual validation |
 | EV sign | Sign agrees with the proposed action | Correct economic assumptions or measured savings |
 
 Judge request errors, invalid JSON, non-object responses, missing verdict fields, and non-boolean values fail. There is no success fallback. A negative citation verdict cannot be overridden by a keyword match. The `missing_items` field lists literal omissions for diagnosis; semantic citation coverage remains the judge's verdict.
@@ -48,6 +48,15 @@ Each saved judgment includes model ID and token usage. Complete inputs and
 outputs are saved beside the Markdown report in JSON, with source hashes taken
 before inference. `EVAL_REPORT_PATH` selects a fresh report filename.
 
+Rubric grounded-v4 isolates citation scoring from supporting fields so an order
+reference outside the narrative cannot satisfy it. The grounding judge receives
+structured facts and identical canonical dollar formatting on both sides;
+original output stays unchanged in reports. The production attachment validator
+can force failure even when the model misses an invalid file reference. Raw
+tool records forwarded to strategy/drafter are also saved for the judge, alongside
+normalized fixture facts. Numeric estimates remain assessments, not measured
+win rates or permission to invent supporting facts.
+
 Run explicit positive and negative controls before trusting a judge:
 
 ```bash
@@ -59,7 +68,10 @@ Controls assert each expected criterion separately: dollar/cents equivalence,
 quoted citations, narrative-only citation coverage, scoped record absence,
 card-check equivalence versus authorization inference, invented action/fee and
 fraud claims, and unproduced attachments. A false verdict for the wrong reason
-cannot count as a successful control. Current Haiku controls fail; evaluator
-accuracy remains unverified pending a reliable judge and a full benchmark.
+cannot count as a successful control. Historical Haiku and early Sonnet controls
+failed. Revised controls additionally check total versus prior orders and owner
+summary authorization inferences. Review the latest saved control run and full
+benchmark before making an accuracy claim; small controls do not establish a
+population error rate.
 
 Before calling the approval path end-to-end verified, separately observe real alert delivery, owner response, runtime resume, and the resulting Stripe test-mode action. That verification is outside this evaluator.

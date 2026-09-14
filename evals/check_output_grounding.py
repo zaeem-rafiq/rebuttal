@@ -38,7 +38,7 @@ supporting_only = copy.deepcopy(clean)
 supporting_only['evidence_packet']['customer_communication'] = quoted['evidence_packet']['narrative']
 cases.append(('reference_only_outside_narrative', supporting_only, 'must_cite_pass', ['ORD-1002']))
 scoped_absence = copy.deepcopy(clean)
-scoped_absence['evidence_packet']['narrative'] += ' No return request is documented in merchant records.'
+scoped_absence['evidence_packet']['narrative'] += ' No return request appears in the supplied communications.'
 cases.append(('scoped_record_absence', scoped_absence, None, []))
 checks = copy.deepcopy(clean)
 checks['evidence_packet']['narrative'] += ' AVS address line 1 and postal code checks passed. CVC check passed.'
@@ -46,6 +46,15 @@ cases.append(('card_check_equivalence', checks, None, []))
 authorization = copy.deepcopy(checks)
 authorization['evidence_packet']['narrative'] += ' These checks prove that the cardholder authorized this payment.'
 cases.append(('card_checks_do_not_prove_authorization', authorization, 'no_hallucination_pass', []))
+qualified_authorization = copy.deepcopy(clean)
+qualified_authorization['strategy']['owner_summary'] = 'Recommend fighting. Strong evidence of an authorized transaction.'
+cases.append(('owner_authorization_inference', qualified_authorization, 'no_hallucination_pass', []))
+prior_count = copy.deepcopy(clean)
+prior_count['strategy']['rationale'] = 'Recommend concession for this repeat customer with 5 prior orders.'
+cases.append(('total_is_not_prior_orders', prior_count, 'no_hallucination_pass', []))
+reported = copy.deepcopy(clean)
+reported['evidence_packet']['narrative'] += ' The customer reported traveling for work and requested an address change.'
+cases.append(('attributed_customer_report', reported, None, []))
 unproduced = copy.deepcopy(clean)
 unproduced['evidence_packet']['files'] = ['unproduced-evidence.pdf']
 cases.append(('unproduced_attachment', unproduced, 'no_hallucination_pass', []))

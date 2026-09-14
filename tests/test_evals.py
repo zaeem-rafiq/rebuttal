@@ -3,7 +3,7 @@ import json
 from unittest.mock import MagicMock
 
 import pytest
-from evals.run import judge_narrative, observe_gate
+from evals.run import judge_narrative, observe_gate, normalize_currency_text
 
 
 @pytest.mark.parametrize('response', [None, 'not json', '[]', '{}', json.dumps({
@@ -34,7 +34,7 @@ def test_judge_accepts_grounded_verdict_and_rejects_empty_or_long_text(monkeypat
         result = judge_narrative(client, narrative, 'product_not_received', [], '{}')
         assert result['overall_pass'] is expected
         assert result['model_id'] == client.converse.call_args.kwargs['modelId'] == 'judge-model'
-        assert result['usage'] == {'inputTokens': 100, 'outputTokens': 25}
+        assert result['usage'] == {'inputTokens': 200, 'outputTokens': 50}
 
 
 @pytest.mark.parametrize('amount,probability,action,expected', [
@@ -60,6 +60,8 @@ def test_currency_and_timestamp_normalization():
     c3400 = format_currency_cents(340000)
     assert c3400["dollars_formatted"] == "$3,400.00"
     assert c3400["dollars_short"] == "$3400"
+    assert normalize_currency_text({'text': ['$340', '$340.00', '$340.01', '$1,120', '$1.005']}) == {
+        'text': ['$340.00', '$340.00', '$340.01', '$1,120.00', '$1.005']}
 
     c240 = format_currency_cents(24000)
     assert c240["dollars"] == "$240.00"
@@ -161,6 +163,7 @@ def test_judge_prompt_contains_equivalence_and_grounding_rules():
 
     call_args = client.converse.call_args[1]
     prompt_text = call_args["system"][0]["text"]
+    assert json.loads(call_args['messages'][0]['content'][0]['text'])['source_records'] == {'test': 'facts'}
 
     assert "100 cents equals $1" in prompt_text
     assert "UTC/ISO date reformattings are equivalent" in prompt_text
@@ -307,10 +310,13 @@ def test_supporting_output_failure_cannot_hide_behind_passing_narrative(tainted_
                              'fraudulent', [], '{}', supporting_output=output)
 
     prompt = client.converse.call_args.kwargs['messages'][0]['content'][0]['text']
-    assert json.loads(prompt)['supporting_output'] == output
+    assert json.loads(prompt)['output_to_audit']['supporting_output'] == normalize_currency_text(output)
     assert result['reason_code_pass'] and result['must_cite_pass'] and result['word_count_pass']
     assert result['overall_pass'] is False
-    client.converse.assert_called_once()
+    assert client.converse.call_count == 2
+    citation_input = json.loads(client.converse.call_args_list[0].kwargs["messages"][0]["content"][0]["text"])
+    assert set(citation_input) == {"narrative", "required_reason", "required_narrative_references"}
+    assert output[group][tainted_field] not in json.dumps(citation_input)
 
 
 def test_supporting_text_does_not_change_narrative_word_count_or_missing_items():
@@ -326,6 +332,21 @@ def test_supporting_text_does_not_change_narrative_word_count_or_missing_items()
     assert result['word_count_pass'] is True
     assert result['missing_items'] == ['tracking-123']
     assert result['overall_pass'] is False
+
+
+def test_attachment_guard_overrides_a_false_positive_model_verdict():
+    client = MagicMock()
+    client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
+        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': True,
+    })}]}}}
+    result = judge_narrative(client, 'Dispute Reason: fraudulent.', 'fraudulent', [], '{}', {
+        'evidence_packet': {'files': ['unproduced.pdf']},
+    })
+    assert result['grounding_judge']['no_hallucination_pass'] is True
+    assert result['artifact_pass'] is False
+    assert result['no_hallucination_pass'] is False
+    assert result['overall_pass'] is False
+    assert 'unproduced attachment' in result['explanation']
 
 
 def test_eval_rejection_continues_suite_and_persists_complete_output(monkeypatch, tmp_path):
@@ -368,7 +389,7 @@ def test_eval_rejection_continues_suite_and_persists_complete_output(monkeypatch
 
     assert exc.value.code == 1
     assert pipeline.call_count == 2
-    judge.converse.assert_called_once()  # Rejected output needs no judge call.
+    assert judge.converse.call_count == 2  # Two isolated criteria calls for accepted output; none for rejected output.
     rows = json.loads(report.with_suffix('.json').read_text())['results']
     assert rows[0]['pipeline_error'] == 'ValueError: Unverified attachment reference'
     assert not any(rows[0][key] for key in ('overall_pass', 'action_match', 'gate_match', 'judge_pass', 'ev_sign'))
@@ -378,7 +399,7 @@ def test_eval_rejection_continues_suite_and_persists_complete_output(monkeypatch
     assert 'scenario_description' not in rows[1]['case_facts']
     assert rows[1]['case_facts']['merchant_policy']['vip_concede_max_cents'] == 50000
     prompt = judge.converse.call_args.kwargs['messages'][0]['content'][0]['text']
-    assert json.loads(prompt)['supporting_output'] == expected_output
+    assert json.loads(prompt)['output_to_audit']['supporting_output'] == expected_output
     assert json.dumps(expected_output, indent=2) in report.read_text()
     assert (runner.agent.graph.get_dispute, runner.agent.graph.get_charge_context) == original_tools
     assert runner.agent.tools.evidence_tools.LOCAL_DB_PATH == original_db

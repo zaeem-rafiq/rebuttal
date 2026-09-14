@@ -22,8 +22,9 @@ Shared uncommitted preflight work is untouched. Test-mode provider objects are
 retained as evidence. A failed check prevents a completion or demo-success claim.
 
 Current state: implementation and verification in progress. Do not label the
-expanded evaluator accurate yet: its live controls currently expose false
-positives. No new Stripe payload disclosure or Sonnet access is assumed.
+expanded evaluator accurate until the current control and benchmark runs finish.
+The owner approved the limited Sonnet policy, up to $5 additional inference,
+and sanitized Stripe test-record use in verification and the final demo.
 
 ## Observed verification
 
@@ -99,10 +100,26 @@ search; none contained client_secret or receipt_url. Earlier model invocations
 used the old unfiltered tool response; no provider-side deletion or credential
 rotation is claimed. The recording harness refuses an unsanitized revision.
 
-Pending owner decisions in the current task: (1) narrowly scoped Sonnet evaluator
-access and a $5 verification budget; (2) sanitized Stripe test-record use in the
-Bedrock verification/final demo. Automatic approval review rejected the additional
-full-payload disclosure; it was not retried. No new permission was applied.
+Both owner decisions are now approved. RebuttalEvaluationJudge was applied to
+rebuttal-local and read back equal to the proposal; RebuttalPreflight remains
+untouched. Automatic approval review rejected the earlier full-payload disclosure;
+it was not retried. Only sanitized records are authorized for the new run.
+
+The next repair forwards original sanitized tool results to both strategy and
+drafter through the installed SDK's BeforeInvocationEvent hook. Previously they
+received only collector summaries. The same extraction supplies evaluation facts.
+Specific prompts that required identity/receipt, subscription compliance, and
+absolute shipment-count conclusions were corrected. The schema is unchanged.
+Offline suite with this repair: 110 passed, 2 warnings, exit 0.
+
+Sonnet alone did not solve evaluator errors. The initial controls and a replay of
+5552395 outputs remain saved. Rubric grounded-v4 now separates narrative-only
+citation inputs from whole-output grounding, asks for evidence before a verdict,
+normalizes equivalent dollar spellings without rounding values, and reuses the
+production attachment validator as a deterministic failure check. Source output
+and model verdicts remain preserved. Twelve positive/negative controls include
+the observed owner-summary and prior-order errors. Current live control results
+and the full benchmark are pending; no score is manually corrected.
 
 Next: qualify the evaluator on all per-criterion positive/negative controls;
 adjudicate saved outputs and repair remaining actual generation defects; repeat
