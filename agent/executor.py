@@ -56,9 +56,9 @@ EXECUTOR_SYSTEM_PROMPT = (
     "Execution rules:\n"
     "1. When action is 'fight':\n"
     "   - Log strategy acceptance with `record_case`.\n"
-    "   - Upload the evidence narrative using `upload_evidence_file` to obtain a file ID.\n"
+    "   - Upload the evidence narrative and any supplementary evidence text using `upload_evidence_file` to obtain a file ID.\n"
     "   - Log file upload with `record_case`.\n"
-    "   - Prepare evidence dictionary: set uncategorized_file to the file ID; in DEMO_MODE with win_probability >= 0.70 set uncategorized_text='winning_evidence', else narrative; attach tracking and shipping details.\n"
+    "   - Prepare evidence dictionary: set uncategorized_file to the file ID; in DEMO_MODE with win_probability >= 0.70 set uncategorized_text='winning_evidence', else the combined narrative and supplementary text; attach tracking and shipping details.\n"
     "   - Call `submit_evidence(dispute_id, evidence=evidence, submit=True)`.\n"
     "   - Record submission and status updates with `record_case`.\n"
     "   - If needed, record outbound email to customer via `send_customer_email`.\n"
@@ -169,6 +169,22 @@ def execute_strategy(
     Returns:
         Summary dictionary containing execution outcome, file_id, audit rows count, and final status.
     """
+    evidence_text = None
+    if strategy.action == "fight":
+        if evidence_packet is None:
+            raise ValueError("A fight strategy requires an evidence packet")
+        # Revalidate mutable model instances before any audit, upload, or Stripe lookup.
+        evidence_packet = EvidencePacket.model_validate(evidence_packet.model_dump())
+        if evidence_packet.files:
+            raise ValueError("Evidence packet files are not supported by this executor")
+        if not evidence_packet.narrative.strip():
+            raise ValueError("A fight strategy requires a nonempty evidence narrative")
+        evidence_text = "\n\n".join(part for part in (
+            evidence_packet.narrative, evidence_packet.uncategorized_text,
+        ) if part)
+        if len(evidence_text) > 20000:
+            raise ValueError("Combined narrative and supplementary evidence exceeds 20000 characters")
+
     verify_live_key_guard()
 
     demo_mode = (
@@ -225,15 +241,13 @@ def execute_strategy(
     )
 
     if action == "fight":
-        narrative = evidence_packet.narrative if evidence_packet else "Evidence proving valid transaction and fulfillment."
-
         # Step 2: Upload narrative file
         with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".txt", encoding="utf-8") as tf:
             tf.write(f"REBUTTAL DISPUTE EVIDENCE DOSSIER\n")
             tf.write(f"Dispute ID: {clean_dispute_id}\n")
             tf.write(f"Order ID: {order_id}\n")
             tf.write(f"Customer ID: {customer_id}\n\n")
-            tf.write(f"NARRATIVE & TIMELINE:\n{narrative}\n")
+            tf.write(f"NARRATIVE & TIMELINE:\n{evidence_text}\n")
             narrative_file_path = tf.name
 
         try:
@@ -266,7 +280,7 @@ def execute_strategy(
         if demo_mode and strategy.win_probability >= 0.70:
             evidence_dict["uncategorized_text"] = "winning_evidence"
         else:
-            evidence_dict["uncategorized_text"] = narrative
+            evidence_dict["uncategorized_text"] = evidence_text
 
         # Map structured fields from EvidencePacket
         if evidence_packet:

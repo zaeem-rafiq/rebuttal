@@ -23,6 +23,7 @@ from typing import Any, Dict, List, Optional
 import stripe
 from dotenv import load_dotenv
 from strands import tool
+from agent.models import validate_stripe_file_references
 
 load_dotenv()
 
@@ -311,12 +312,20 @@ def submit_evidence(dispute_id: str, evidence: Dict[str, Any], submit: bool = Fa
 
     Parameters:
         dispute_id: ID of the dispute (e.g. dp_1... or alias dp_S1).
-        evidence: Evidence dictionary (e.g. tracking_number, customer_communication, uncategorized_file).
+        evidence: Stripe evidence fields (e.g. shipping_tracking_number, uncategorized_text).
+            File fields, including customer_communication, require uploaded Stripe file IDs,
+            never transcripts or local paths. Policy disclosure fields describe how/when
+            the policy was shown before purchase, not merely the policy's contents.
         submit: If True, evidence is submitted to the card network and cannot be changed. Default False.
 
     Returns:
         Dictionary of the updated dispute.
     """
+    validate_stripe_file_references(evidence)
+    for field in ("refund_policy_disclosure", "cancellation_policy_disclosure", "uncategorized_text"):
+        value = evidence.get(field)
+        if value is not None and (not isinstance(value, str) or len(value) > 20000):
+            raise ValueError(f"{field} must be text of at most 20000 characters")
     verify_live_key_guard()
     target_id = resolve_stripe_dispute_id(dispute_id)
     updated = stripe.Dispute.modify(target_id, evidence=evidence, submit=submit)
@@ -346,7 +355,7 @@ def refund_inquiry(dispute_id_or_charge: str) -> Dict[str, Any]:
     """Issue a refund for an inquiry (pre-chargeback stage).
 
     Only valid when dispute status is 'warning_needs_response'.
-    Refunding during the inquiry stage resolves the dispute without incurring chargeback fees.
+    Returns the recorded refund result. This does not establish future dispute resolution or fee avoidance.
 
     Parameters:
         dispute_id_or_charge: Dispute ID (dp_...) or Charge ID (ch_...) with an active inquiry.

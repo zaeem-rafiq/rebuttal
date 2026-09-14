@@ -8,12 +8,12 @@ from agent.models import EvidencePacket
 
 
 @pytest.mark.parametrize("fallback", [False, True])
-@pytest.mark.parametrize("field", ["files", "shipping_documentation", "service_documentation", "uncategorized_file"])
+@pytest.mark.parametrize("field", ["files", "shipping_documentation", "service_documentation", "customer_communication", "uncategorized_file"])
 def test_pipeline_rejects_unproduced_attachments(monkeypatch, tmp_path, fallback, field):
     # Even an existing local file is not evidence authorized by a collector.
     unrelated = tmp_path / "not-case-evidence.pdf"
     unrelated.write_text("unrelated file")
-    value = [str(unrelated)] if field == "files" else str(unrelated)
+    value = [str(unrelated)] if field == "files" else "file_unproduced"
     packet = EvidencePacket(narrative="Recommendation: Concede dispute.", **{field: value})
     graph = MagicMock()
     drafter = MagicMock()

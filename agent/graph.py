@@ -19,6 +19,7 @@ import json
 from typing import Optional, Dict, Any, Tuple
 
 import boto3
+from pydantic import ValidationError
 from dotenv import load_dotenv
 from strands import Agent
 from strands.hooks import BeforeInvocationEvent, HookProvider, HookRegistry
@@ -26,7 +27,7 @@ from strands.models import BedrockModel
 from strands.multiagent import GraphBuilder
 from strands.multiagent.graph import Graph
 
-from agent.models import DisputeStrategy, EvidencePacket
+from agent.models import DisputeStrategy, EvidencePacket, STRIPE_FILE_FIELDS
 from agent.tools.stripe_tools import get_dispute, get_charge_context, serialize_stripe_object
 from agent.tools.evidence_tools import (
     get_order_evidence,
@@ -47,7 +48,7 @@ GROUNDING_RULES = (
     "- This applies to rationale, owner_summary, narrative, uncategorized_text, customer_communication, policy disclosures, and every other text field.\n"
     "- Missing records do not establish that an event never occurred. Explicitly scope negative findings to the supplied records, for example no return request appears in the supplied communications. Do not turn that into no return was initiated.\n"
     "- Before/after event ordering needs recorded times for both events or an explicit source statement. A deadline is not a dispute creation date, and an identifier is not chronology.\n"
-    "- Field labels carry meaning: return/refund policy is not cancellation policy. Set cancellation_policy_disclosure to null unless an explicit cancellation policy is supplied.\n"
+    "- Policy disclosure fields require recorded evidence that this customer was shown that policy before purchase, not just its contents. Set refund_policy_disclosure and cancellation_policy_disclosure to null without that evidence. Put relevant policy contents in narrative or uncategorized_text; do not turn return/refund terms into cancellation terms.\n"
     "- The proposed response awaits execution. Use 'Recommend' or 'Proposed'; do not imply it is approved or completed. Historical actions explicitly documented in retrieved records may be described as past events.\n"
     "- Concede means accept a formal dispute by closing it, with NO separate refund. Only refund_inquiry issues a refund for an inquiry. Never add follow-up actions or deadlines absent from policy.\n"
     "- Do not invent fees, savings, retention outcomes, external rules, inspection results, or explanations for missing/conflicting data. A fee mentioned by a customer is only an attributed customer statement. Recorded balance-transaction fees have already occurred; concession does not avoid or save them. Retention is a goal, never an established effect of concession.\n"
@@ -60,7 +61,7 @@ GROUNDING_RULES = (
     "- A customer's acknowledgment of subscription terms and cancellation timing are reports, not proof that a specific charge was authorized or complied with unseen terms. Quote those observations without an authorization/compliance conclusion.\n"
     "- Attribute message authorship only when sender/direction or an unambiguous first-person request/report in the linked message subject or body supports it. Otherwise call it a communications record, not a customer statement or admission. The customer_communication field name does not establish authorship.\n"
     "- Win probability and expected value are internal estimates. Keep them in the strategy's numeric fields; never repeat them as facts in evidence text or owner_summary.\n"
-    "- No evidence collection tool creates attachments or returns artifact references. files MUST be [], and shipping_documentation, service_documentation, and uncategorized_file MUST be null. Never invent a filename or file ID.\n"
+    "- No evidence collection tool creates attachments or returns artifact references. files MUST be [], and shipping_documentation, service_documentation, customer_communication, and uncategorized_file MUST be null. These Stripe attachment fields require uploaded file IDs, not transcripts or local paths. Put relevant message excerpts in narrative or uncategorized_text. Never invent a filename or file ID.\n"
     "- Optional fields with no supporting data MUST be null. Keep uncategorized_text null unless it adds necessary source-backed facts absent from narrative.\n\n"
 )
 
@@ -424,11 +425,18 @@ def build_evidence_graph(
     return graph, agents
 
 
+class InvalidStructuredOutput(ValueError):
+    def __init__(self, error, raw):
+        super().__init__(str(error))
+        self.raw = raw
+
+
 def _extract_structured_output(node_result: Any, model_cls: Any) -> Any:
     """Extract and validate structured output from a Strands NodeResult."""
     if not node_result:
         return None
     agent_results = node_result.get_agent_results() if hasattr(node_result, "get_agent_results") else []
+    invalid = None
     for ar in agent_results:
         st = getattr(ar, "structured_output", None)
         if st is not None:
@@ -437,8 +445,8 @@ def _extract_structured_output(node_result: Any, model_cls: Any) -> Any:
             if isinstance(st, dict):
                 try:
                     return model_cls.model_validate(st)
-                except Exception:
-                    pass
+                except ValidationError as exc:
+                    invalid = InvalidStructuredOutput(exc, st)
         msg_str = str(ar)
         if msg_str:
             clean = msg_str.strip()
@@ -447,18 +455,22 @@ def _extract_structured_output(node_result: Any, model_cls: Any) -> Any:
             elif "```" in clean:
                 clean = clean.split("```")[1].split("```")[0].strip()
             try:
-                import json
                 data = json.loads(clean)
+            except json.JSONDecodeError:
+                continue
+            try:
                 return model_cls.model_validate(data)
-            except Exception:
-                pass
+            except ValidationError as exc:
+                invalid = InvalidStructuredOutput(exc, data)
+    if invalid is not None:
+        raise invalid
     return None
 
 
 def validate_evidence_attachments(packet: EvidencePacket) -> None:
     """Reject file references because the current collectors produce records only."""
     invalid = [
-        name for name in ("files", "shipping_documentation", "service_documentation", "uncategorized_file")
+        name for name in ("files", *STRIPE_FILE_FIELDS)
         if getattr(packet, name, None)
     ]
     if invalid:
@@ -468,9 +480,10 @@ def validate_evidence_attachments(packet: EvidencePacket) -> None:
 class InvalidEvidencePacket(ValueError):
     """A rejected output retained for diagnostics, never authorized for execution."""
 
-    def __init__(self, message, strategy, packet, graph):
+    def __init__(self, message, strategy, packet, graph, raw_output=None):
         super().__init__(message)
         self.strategy, self.packet, self.graph = strategy, packet, graph
+        self.raw_output = raw_output or {}
 
 
 def run_evidence_pipeline(
@@ -482,11 +495,15 @@ def run_evidence_pipeline(
     result = graph(task_description)
 
     # Extract structured outputs from node results
-    strategy_node = graph.state.results.get("strategy")
-    strategy_out = _extract_structured_output(strategy_node, DisputeStrategy)
-
-    drafter_node = graph.state.results.get("drafter")
-    drafter_out = _extract_structured_output(drafter_node, EvidencePacket)
+    outputs = {}
+    for name, model_cls in (("strategy", DisputeStrategy), ("drafter", EvidencePacket)):
+        try:
+            outputs[name] = _extract_structured_output(graph.state.results.get(name), model_cls)
+        except InvalidStructuredOutput as exc:
+            field = "evidence_packet" if name == "drafter" else "strategy"
+            raise InvalidEvidencePacket(str(exc), outputs.get("strategy"), None, graph,
+                                        raw_output={field: exc.raw}) from exc
+    strategy_out, drafter_out = outputs["strategy"], outputs["drafter"]
 
     # Fallback to agent.structured_output(model_cls) if needed
     if strategy_out is None and hasattr(agents.get("strategy"), "structured_output"):

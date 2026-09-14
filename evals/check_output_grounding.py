@@ -38,7 +38,7 @@ quoted['evidence_packet']['narrative'] = (
 )
 cases.append(('quoted_reference_counts', quoted, None, ['ORD-1002']))
 supporting_only = copy.deepcopy(clean)
-supporting_only['evidence_packet']['customer_communication'] = quoted['evidence_packet']['narrative']
+supporting_only['evidence_packet']['uncategorized_text'] = quoted['evidence_packet']['narrative']
 cases.append(('reference_only_outside_narrative', supporting_only, 'must_cite_pass', ['ORD-1002']))
 scoped_absence = copy.deepcopy(clean)
 scoped_absence['evidence_packet']['narrative'] += ' No return request appears in the supplied communications.'
@@ -137,7 +137,23 @@ cancellation_facts = copy.deepcopy(facts)
 cancellation_facts['history_and_policy']['policy']['cancellation_policy'] = 'Cancel a subscription before its next renewal date.'
 right_policy = copy.deepcopy(clean)
 right_policy['evidence_packet']['cancellation_policy_disclosure'] = cancellation_facts['history_and_policy']['policy']['cancellation_policy']
-cases.append(('explicit_cancellation_policy', right_policy, None, [], cancellation_facts))
+cases.append(('policy_contents_do_not_prove_disclosure', right_policy, 'no_hallucination_pass', [], cancellation_facts))
+disclosed_cancellation = copy.deepcopy(cancellation_facts)
+disclosed_cancellation['history_and_policy']['cancellation_disclosure_record'] = 'Before this purchase, the checkout page showed the customer the subscription cancellation policy.'
+right_disclosure = copy.deepcopy(clean)
+right_disclosure['evidence_packet']['cancellation_policy_disclosure'] = disclosed_cancellation['history_and_policy']['cancellation_disclosure_record']
+cases.append(('documented_cancellation_disclosure', right_disclosure, None, [], disclosed_cancellation))
+refund_policy_only = copy.deepcopy(clean)
+refund_policy_only['evidence_packet']['refund_policy_disclosure'] = return_only_facts['history_and_policy']['policy']['return_policy']
+cases.append(('refund_policy_contents_do_not_prove_disclosure', refund_policy_only, 'no_hallucination_pass', [], return_only_facts))
+disclosed_refund = copy.deepcopy(return_only_facts)
+disclosed_refund['history_and_policy']['refund_disclosure_record'] = 'The checkout log records that this customer was shown the return and refund policy before this purchase.'
+refund_disclosure = copy.deepcopy(clean)
+refund_disclosure['evidence_packet']['refund_policy_disclosure'] = disclosed_refund['history_and_policy']['refund_disclosure_record']
+cases.append(('documented_refund_disclosure', refund_disclosure, None, [], disclosed_refund))
+communication_file = copy.deepcopy(clean)
+communication_file['evidence_packet']['customer_communication'] = 'file_unproduced'
+cases.append(('unproduced_communication_file', communication_file, 'no_hallucination_pass', []))
 
 subject_facts = copy.deepcopy(facts)
 subject_facts['communications']['messages'].append({'subject': 'Double charged on my card',

@@ -140,13 +140,18 @@ def test_send_customer_email(mock_db):
     conn.close()
 
 
+@pytest.mark.parametrize("demo_mode", [False, True])
 @patch("agent.executor.verify_live_key_guard")
 @patch("agent.executor.upload_evidence_file")
 @patch("agent.executor.submit_evidence")
 @patch("agent.executor.get_dispute")
-def test_execute_strategy_fight(mock_get_disp, mock_submit, mock_upload, mock_guard, mock_db):
+def test_execute_strategy_fight(mock_get_disp, mock_submit, mock_upload, mock_guard, mock_db, demo_mode):
     mock_guard.return_value = "sk_test_mock"
-    mock_upload.return_value = {"id": "file_test_999", "filename": "narrative.pdf"}
+    uploaded = {}
+    def capture_upload(path, purpose):
+        uploaded["text"] = Path(path).read_text()
+        return {"id": "file_test999", "filename": "narrative.pdf"}
+    mock_upload.side_effect = capture_upload
     mock_submit.return_value = {"id": "dp_test_1", "status": "under_review"}
     mock_get_disp.return_value = {"id": "dp_test_1", "status": "won"}
 
@@ -164,28 +169,66 @@ def test_execute_strategy_fight(mock_get_disp, mock_submit, mock_upload, mock_gu
         shipping_tracking_number="1Z9999999999999991",
         shipping_carrier="UPS",
         narrative="Package was delivered and signed by Okafor.",
+        uncategorized_text="The carrier records signature collection at the delivery address.",
     )
 
     result = execute_strategy(
         dispute_id="dp_test_1",
         strategy=strat,
         evidence_packet=packet,
-        is_demo_mode=True,
+        is_demo_mode=demo_mode,
     )
 
     assert result["action"] == "fight"
-    assert result["uploaded_file_id"] == "file_test_999"
+    assert result["uploaded_file_id"] == "file_test999"
     assert result["audit_rows_count"] >= 5
+    combined = packet.narrative + "\n\n" + packet.uncategorized_text
+    assert combined in uploaded["text"]
 
     # Check evidence payload passed to submit_evidence
     mock_submit.assert_called_once()
     call_args = mock_submit.call_args
     evidence_sent = call_args.kwargs.get("evidence") or call_args[1].get("evidence")
-    assert evidence_sent["uncategorized_file"] == "file_test_999"
+    assert evidence_sent["uncategorized_file"] == "file_test999"
     # DEMO_MODE + win_prob >= 0.70 sets winning_evidence
-    assert evidence_sent["uncategorized_text"] == "winning_evidence"
+    assert evidence_sent["uncategorized_text"] == ("winning_evidence" if demo_mode else combined)
     assert evidence_sent["shipping_tracking_number"] == "1Z9999999999999991"
     assert evidence_sent["customer_name"] == "Michael Okafor"
+
+
+@pytest.mark.parametrize("invalid, message", [
+    ("missing", "requires an evidence packet"),
+    ("empty", "requires a nonempty evidence narrative"),
+    ("oversized", "Combined narrative and supplementary evidence exceeds"),
+    ("mutated", "customer_communication must be an uploaded Stripe file ID"),
+    ("files", "Evidence packet files are not supported"),
+])
+def test_invalid_fight_evidence_stops_before_side_effects(invalid, message):
+    strategy = DisputeStrategy(
+        action="fight", win_probability=.8, expected_value_cents=1000,
+        customer_value="new", evidence_strength="strong",
+        rationale="Recommend review of the recorded delivery.", owner_summary="Recommend review.",
+    )
+    packet = None
+    if invalid == "empty":
+        packet = EvidencePacket(narrative=" ")
+    elif invalid == "oversized":
+        packet = EvidencePacket(narrative="a" * 10000, uncategorized_text="b" * 10000)
+    elif invalid == "mutated":
+        packet = EvidencePacket(narrative="Delivery recorded.")
+        packet.customer_communication = "Email transcript, not a file ID."
+    elif invalid == "files":
+        packet = EvidencePacket(narrative="Delivery recorded.", files=["receipt.pdf"])
+
+    with patch("agent.executor.verify_live_key_guard") as guard, \
+         patch("agent.executor.resolve_stripe_dispute_id") as resolve, \
+         patch("agent.executor.record_case") as audit, \
+         patch("agent.executor.upload_evidence_file") as upload, \
+         patch("agent.executor.submit_evidence") as submit:
+        with pytest.raises(ValueError, match=message):
+            execute_strategy("dp_test_1", strategy, packet)
+        for operation in (guard, resolve, audit, upload, submit):
+            operation.assert_not_called()
 
 
 @patch("agent.executor.verify_live_key_guard")

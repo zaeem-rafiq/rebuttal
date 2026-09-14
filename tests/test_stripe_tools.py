@@ -165,10 +165,36 @@ def test_submit_evidence(mock_modify, mock_guard):
     mock_disp.to_dict.return_value = {"id": "dp_1001", "status": "under_review"}
     mock_modify.return_value = mock_disp
 
-    evidence = {"shipping_tracking_number": "1Z9999999999999991"}
+    evidence = {"shipping_tracking_number": "1Z9999999999999991", "uncategorized_text": "x" * 20000,
+                "customer_communication": "file_ABC123", "shipping_documentation": "file_DEF456",
+                "service_documentation": "file_GHI789", "uncategorized_file": "file_JKL012"}
     res = submit_evidence("dp_1001", evidence=evidence, submit=True)
     assert res["status"] == "under_review"
     mock_modify.assert_called_once_with("dp_1001", evidence=evidence, submit=True)
+
+
+@pytest.mark.parametrize("field", ["shipping_documentation", "service_documentation",
+                                    "customer_communication", "uncategorized_file"])
+@pytest.mark.parametrize("value", ["Email transcript text.", "/tmp/evidence.pdf"])
+def test_submit_rejects_text_or_paths_in_file_fields_before_stripe(field, value):
+    with patch("agent.tools.stripe_tools.verify_live_key_guard") as guard, \
+         patch("agent.tools.stripe_tools.resolve_stripe_dispute_id") as resolve, \
+         patch("agent.tools.stripe_tools.stripe.Dispute.modify") as modify:
+        with pytest.raises(ValueError, match=field + " must be an uploaded Stripe file ID"):
+            submit_evidence("dp_1001", {field: value}, submit=True)
+        for operation in (guard, resolve, modify):
+            operation.assert_not_called()
+
+
+@pytest.mark.parametrize("field", ["refund_policy_disclosure", "cancellation_policy_disclosure", "uncategorized_text"])
+def test_submit_rejects_oversized_text_before_stripe(field):
+    with patch("agent.tools.stripe_tools.verify_live_key_guard") as guard, \
+         patch("agent.tools.stripe_tools.resolve_stripe_dispute_id") as resolve, \
+         patch("agent.tools.stripe_tools.stripe.Dispute.modify") as modify:
+        with pytest.raises(ValueError, match=field + " must be text of at most 20000 characters"):
+            submit_evidence("dp_1001", {field: "x" * 20001}, submit=True)
+        for operation in (guard, resolve, modify):
+            operation.assert_not_called()
 
 
 @patch("agent.tools.stripe_tools.verify_live_key_guard")

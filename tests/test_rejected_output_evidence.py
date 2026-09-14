@@ -1,5 +1,6 @@
 """Rejected packets remain reviewable without invoking the model judge."""
 import json
+import pytest
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
@@ -7,7 +8,8 @@ import evals.run as runner
 from agent.models import DisputeStrategy, EvidencePacket
 
 
-def test_pipeline_rejection_retains_outputs_and_source_records(monkeypatch):
+@pytest.mark.parametrize("malformed", [False, True])
+def test_pipeline_rejection_retains_outputs_and_source_records(monkeypatch, malformed):
     case_path = runner.CASES_DIR / "case_01.json"
     case = json.loads(case_path.read_text())
     strategy = DisputeStrategy(
@@ -21,6 +23,11 @@ def test_pipeline_rejection_retains_outputs_and_source_records(monkeypatch):
         uncategorized_text="Retain this sibling claim for review too.",
         files=["never-produced-evidence.pdf"],
     )
+    packet_data = packet.model_dump()
+    if malformed:
+        packet = {"narrative": packet_data["narrative"],
+                  "customer_communication": "Raw transcript text that is not a file ID."}
+        packet_data = packet
     graph = MagicMock()
     graph.state = SimpleNamespace(
         results={
@@ -56,13 +63,17 @@ def test_pipeline_rejection_retains_outputs_and_source_records(monkeypatch):
 
     graph.assert_called_once()
     judge.converse.assert_not_called()
-    assert result["pipeline_error"] == (
-        "InvalidEvidencePacket: Evidence packet contains unproduced attachment references: files"
-    )
+    if malformed:
+        assert result["pipeline_error"].startswith("InvalidEvidencePacket:")
+        assert "customer_communication must be an uploaded Stripe file ID" in result["pipeline_error"]
+    else:
+        assert result["pipeline_error"] == (
+            "InvalidEvidencePacket: Evidence packet contains unproduced attachment references: files"
+        )
     assert result["supporting_output"] == {
-        "strategy": strategy.model_dump(), "evidence_packet": packet.model_dump(),
+        "strategy": strategy.model_dump(), "evidence_packet": packet_data,
     }
-    assert result["narrative"] == packet.narrative
+    assert result["narrative"] == packet_data["narrative"]
     assert result["rationale"] == strategy.rationale
     assert result["case_facts"] == {
         "source_tool_records": expected_records, "produced_artifacts": [],

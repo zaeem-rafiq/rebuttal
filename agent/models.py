@@ -6,6 +6,18 @@ Any future changes require an Architectural Decision Record in docs/decisions/.
 
 from typing import Literal, Optional, List, Dict, Any
 from pydantic import BaseModel, Field, field_validator
+import re
+
+
+STRIPE_FILE_FIELDS = ("shipping_documentation", "service_documentation", "customer_communication", "uncategorized_file")
+
+
+def validate_stripe_file_references(evidence):
+    """Stripe attachment fields accept uploaded file IDs, never text or paths."""
+    for field in STRIPE_FILE_FIELDS:
+        value = evidence.get(field)
+        if value is not None and (not isinstance(value, str) or not re.fullmatch(r"file_[A-Za-z0-9]+", value)):
+            raise ValueError(f"{field} must be an uploaded Stripe file ID")
 
 
 class DisputeStrategy(BaseModel):
@@ -64,14 +76,14 @@ class EvidencePacket(BaseModel):
     billing_address: Optional[str] = Field(None, description="Billing address string.")
     shipping_address: Optional[str] = Field(None, description="Shipping destination address.")
     shipping_carrier: Optional[str] = Field(None, description="Carrier name (e.g. UPS, FedEx, USPS).")
-    shipping_tracking_number: Optional[str] = Field(None, description="Tracking number with carrier.")
+    shipping_tracking_number: Optional[str] = Field(None, description="Tracking number; put the carrier in shipping_carrier.")
     shipping_date: Optional[str] = Field(None, description="Date shipped (YYYY-MM-DD).")
-    shipping_documentation: Optional[str] = Field(None, description="File ID or path for proof of delivery.")
-    service_documentation: Optional[str] = Field(None, description="File ID or path for service documentation.")
-    customer_communication: Optional[str] = Field(None, description="Communication threads or transcripts.")
-    refund_policy_disclosure: Optional[str] = Field(None, description="Copy of merchant return/refund policy.")
-    cancellation_policy_disclosure: Optional[str] = Field(None, description="Explicit cancellation policy from the supplied records, otherwise null. A return/refund policy is not a cancellation policy.")
-    uncategorized_text: Optional[str] = Field(None, description="Supplementary evidence notes.")
+    shipping_documentation: Optional[str] = Field(None, description="Uploaded Stripe file ID for proof of delivery, otherwise null.")
+    service_documentation: Optional[str] = Field(None, description="Uploaded Stripe file ID for service documentation, otherwise null.")
+    customer_communication: Optional[str] = Field(None, description="Uploaded Stripe file ID for communications, otherwise null. Put supported message excerpts in narrative or uncategorized_text.")
+    refund_policy_disclosure: Optional[str] = Field(None, max_length=20000, description="Recorded evidence that this customer was shown the refund policy before purchase, otherwise null. Policy contents alone do not establish disclosure.")
+    cancellation_policy_disclosure: Optional[str] = Field(None, max_length=20000, description="Recorded explanation of how and when this customer was shown the cancellation policy before purchase, otherwise null. Policy contents alone do not establish disclosure.")
+    uncategorized_text: Optional[str] = Field(None, max_length=20000, description="Supplementary evidence notes.")
     uncategorized_file: Optional[str] = Field(None, description="Additional file upload ID.")
     narrative: str = Field(
         ...,
@@ -81,6 +93,12 @@ class EvidencePacket(BaseModel):
         default_factory=list,
         description="List of file paths or Stripe file IDs included in the evidence packet."
     )
+
+    @field_validator(*STRIPE_FILE_FIELDS)
+    @classmethod
+    def validate_file_reference(cls, value, info):
+        validate_stripe_file_references({info.field_name: value})
+        return value
 
 
 class OrderEvidence(BaseModel):
