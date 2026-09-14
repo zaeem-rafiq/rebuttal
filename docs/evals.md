@@ -48,7 +48,7 @@ Each saved judgment includes model ID and token usage. Complete inputs and
 outputs are saved beside the Markdown report in JSON, with source hashes taken
 before inference. `EVAL_REPORT_PATH` selects a fresh report filename.
 
-Rubric grounded-v6 isolates citation scoring from supporting fields so an order
+Rubric grounded-v7 isolates citation scoring from supporting fields so an order
 reference outside the narrative cannot satisfy it. The grounding judge receives
 structured facts and identical canonical dollar formatting on both sides;
 original output stays unchanged in reports. The production attachment validator
@@ -59,8 +59,9 @@ Numeric estimates remain assessments, not measured
 win rates or permission to invent supporting facts.
 Factual text fields are presented individually by path. Numeric estimates,
 evidence-strength assessments, and the selected action are excluded from this
-text audit and checked by the corresponding existing metrics; customer tier,
-rationale, owner summary, and every evidence field remain in the factual audit.
+text audit. Action and EV sign retain their separate checks; probability and
+evidence strength are internal assessments with no calibration claim. Customer
+tier, rationale, owner summary, and every evidence field remain in the audit.
 
 Run explicit positive and negative controls before trusting a judge:
 
@@ -86,3 +87,6 @@ ambiguous "no return" reference now asks for the absence of communications in
 the supplied merchant records; its action/gate labels and thresholds are unchanged.
 
 Before calling the approval path end-to-end verified, separately observe real alert delivery, owner response, runtime resume, and the resulting Stripe test-mode action. That verification is outside this evaluator.
+
+Synthetic intake tools use production tool metadata and reject unknown dispute,
+charge, or payment-intent IDs. An order ID cannot satisfy a charge lookup.

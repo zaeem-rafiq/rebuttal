@@ -108,7 +108,7 @@ def get_runtime_bedrock_model():
     else:
         session = boto3.Session(region_name=region)
 
-    return BedrockModel(model_id=model_id, boto_session=session)
+    return BedrockModel(model_id=model_id, boto_session=session, temperature=0.0)
 
 
 def ensure_db():

@@ -51,6 +51,8 @@ GROUNDING_RULES = (
     "- Distinguish strategy decision rules from retrieved merchant policy. Reason-specific instructions guide your recommendation; do not call them merchant policy unless the retrieved policy actually states that rule. Cite only supplied policy text or thresholds.\n"
     "- Passing card checks, network approval, delivery, and address-change messages do not establish cardholder authorization, customer intent, or absence of fraud. Describe each observation without that inference.\n"
     "- Report order_count as total orders, not prior orders. The legacy prior_orders list contains recorded orders, including the current order; its name does not establish a count of earlier orders. Retain conflicting dates as conflicting records; never invent a reconciliation.\n"
+    "- A record's created_at is its creation date, not the date its current status began. Refund, cancellation, fulfillment, and delivery dates each need their own recorded event or attributed message.\n"
+    "- A customer's acknowledgment of subscription terms and cancellation timing are reports, not proof that a specific charge was authorized or complied with unseen terms. Quote those observations without an authorization/compliance conclusion.\n"
     "- Attribute message authorship only when sender or direction identifies it. Otherwise call it a communications record, not a customer statement or admission. The customer_communication field name does not establish authorship.\n"
     "- Win probability and expected value are internal estimates. Keep them in the strategy's numeric fields; never repeat them as facts in evidence text or owner_summary.\n"
     "- No evidence collection tool creates attachments or returns artifact references. files MUST be [], and shipping_documentation, service_documentation, and uncategorized_file MUST be null. Never invent a filename or file ID.\n"
@@ -148,8 +150,7 @@ def build_evidence_graph(
         tools=[get_dispute, get_charge_context],
         system_prompt=(
             GROUNDING_RULES + "You are the Dispute Intake Agent for Rebuttal, an autonomous chargeback defense system.\n"
-            "Your job is to analyze the incoming dispute task. If a dispute ID or charge ID is provided, "
-            "use your tools `get_dispute` and/or `get_charge_context` to extract:\n"
+            "Your job is to analyze the incoming dispute task. When a dispute ID is provided, first call `get_dispute`, then call `get_charge_context` with the returned charge ID (ch_...) or payment intent ID (pi_...). If only a charge/payment-intent ID is supplied, call `get_charge_context` directly. If expanded objects are returned, use their id. Never pass an order ID to the charge tool. Extract:\n"
             "- dispute_id\n"
             "- amount_cents and currency\n"
             "- dispute reason (e.g. 'product_not_received', 'fraudulent', 'canceled_recurring_billing', 'subscription_canceled')\n"
@@ -219,7 +220,7 @@ def build_evidence_graph(
         model=model,
         tools=[get_customer_comms],
         system_prompt=(
-            GROUNDING_RULES + "You are the Customer Communications Evidence Agent. Your role is to retrieve and analyze customer messages using `get_customer_comms(customer_id, order_id)`. You MUST call it now with the IDs from intake before reporting evidence.\n"
+            GROUNDING_RULES + "You are the Customer Communications Evidence Agent. Retrieve communications records using `get_customer_comms(customer_id, order_id)`. The tool returns both merchant and customer records; its name is not authorship evidence. You MUST call it now with the IDs from intake before reporting evidence.\n"
             "Report:\n"
             "- All relevant messages exchanged between customer and merchant, including timestamps, subjects, and text quotes\n"
             "- Note specifically if the customer mentions specific reference numbers (e.g. return tracking numbers, support ticket IDs, or prior refund transaction references)\n"
@@ -288,7 +289,7 @@ def build_evidence_graph(
             "     * If customer communications report return tracking or return delivery to warehouse and report an outstanding refund -> action='concede', win_probability=0.15, expected_value_cents=0, evidence_strength='weak'. In rationale: Attribute the returned item and outstanding refund to the customer report. This rule does not require independent proof of a payment failure.\n"
             "     * The reported-return rule takes precedence over delivery. Only if delivery is confirmed AND supplied records contain no return request, return report, or outstanding-refund complaint -> action='fight', win_probability=0.80, evidence_strength='strong'. In rationale: Describe the supplied return records. Do not infer that the customer never requested a return elsewhere. Do NOT claim QA checks or inspection standards.\n"
             "   - 'credit_not_processed':\n"
-            "     * If customer communications, charge metadata, or order status show a refund was already processed prior to dispute (e.g. refund reference exists or prior refund documented) -> action='fight', win_probability=0.85, evidence_strength='strong'. DO NOT concede; conceding when refund was already processed causes an improper double refund. In rationale: Prior refund was already issued under documented reference.\n"
+            "     * If customer communications, charge metadata, or order status show a refund was already processed prior to dispute (e.g. refund reference exists or prior refund documented) -> action='fight', win_probability=0.85, evidence_strength='strong'. In rationale: Cite the recorded refund and its reference. Duplicate reimbursement is a risk, not a proven consequence of a future concession.\n"
             "     * If merchant support promised a refund in communications and the customer disputes the credit as not processed, without a documented processed refund -> action='concede', win_probability=0.15, expected_value_cents=0, evidence_strength='weak'. In rationale: Support promised a refund and the customer disputes the credit as not processed. Attribute both observations; absence of refund records is not proof of a payment failure.\n"
             "   - 'subscription_canceled':\n"
             "     * If customer sent cancellation request on or before renewal date -> action='concede', win_probability=0.15, expected_value_cents=0, evidence_strength='weak'. In rationale: Describe whether the recorded cancellation request was before or on the renewal date.\n"
@@ -323,6 +324,7 @@ def build_evidence_graph(
             "   - For inquiry refunds: State 'Recommendation: Resolve pre-chargeback inquiry by issuing refund to customer to [reasons]'.\n"
             "   - For fighting: State 'The merchant disputes this <reason> claim' (e.g. 'The merchant disputes this fraudulent claim', 'The merchant disputes this product_not_received claim') or 'Recommendation: Submit evidence to contest dispute'.\n"
             "4. FACTUAL GROUNDING & REQUIRED EVIDENCE CITATIONS BY DISPUTE REASON:\n"
+            "   - Put relevant support ticket identifiers from message subjects/bodies in the narrative alongside the attributed message. When describing shipment/delivery, include the retrieved tracking number in the narrative. Identifiers appearing only in optional evidence fields do not cite the narrative. Use only retrieved identifiers.\n"
             "   - For 'product_not_received':\n"
             "     * If fighting: ALWAYS cite carrier name (e.g. 'UPS', 'FedEx', 'USPS'), tracking number, delivery status ('delivered'), delivery date, and recipient signature name if signed (or mailbox delivery if delivered to mailbox without signature).\n"
             "     * If conceding due to delay or non-delivery: Cite carrier name, tracking number, and the recorded status. Do not add delay or non-delivery facts absent from the records.\n"

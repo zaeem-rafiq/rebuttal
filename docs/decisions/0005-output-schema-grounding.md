@@ -18,3 +18,8 @@ the system prompt. The rationale/owner-summary schema descriptions now carry
 the same observation-only contract at the structured-output tool boundary. The
 narrative description also prohibits unsupported outcome and policy promises.
 This changes model guidance, not the serialized fields or runtime guarantees.
+
+Further observed errors confused record creation with refund timing, omitted a
+support ticket from the narrative, and inferred authorization from an acknowledgment
+of unseen terms. The narrative description now requests recorded observations,
+event-specific dates, narrative citations, and source-attributed messages.

@@ -75,7 +75,7 @@ class EvidencePacket(BaseModel):
     uncategorized_file: Optional[str] = Field(None, description="Additional file upload ID.")
     narrative: str = Field(
         ...,
-        description="Source-grounded narrative explaining the proposed response to the stated dispute reason. A concession or inquiry refund need not argue that the dispute is invalid. State only retrieved facts and attributed reports; no retention or savings promises. Scope policy claims to rules actually present in retrieved policy."
+        description="Narrative of recorded observations and a separately labeled proposed response. Include relevant support ticket and shipment tracking identifiers in this narrative. Dates must describe their recorded event, not a current status inferred from created_at. Quote messages as communications records unless sender/direction identifies the author. Do not conclude authorization, identity, or agreement compliance from checks, delivery, timing, or an acknowledgment of unseen terms. No retention or savings promises. Scope policy claims to retrieved rules."
     )
     files: List[str] = Field(
         default_factory=list,

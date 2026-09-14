@@ -1,170 +1,131 @@
-# Output grounding repair
+# Output grounding verification
 
-The e54a489 benchmark rerun passed its original thresholds (19/20 narrative,
-20/20 action, gate selection, and EV sign), but a separate Stripe-test input
-produced unsupported owner instructions and nonexistent attachment filenames.
-The original evaluator only scored narrative prose.
+Status: implemented locally; final model verification is pending. No deployment,
+publication, video upload, or submission is claimed. The owner approved the
+limited Sonnet evaluator policy and raised the total verification inference cap
+to $8. Sanitized Stripe TEST records are authorized for verification and the demo.
 
-Impact: evidence collectors -> strategy/rationale/owner summary -> drafter packet
--> approval notification and executor -> Stripe. The repair applies grounding
-instructions at every agent, rejects attachment references the collectors did
-not produce, and expands the evaluator to all consumer-facing generated text.
-The narrative-only length/reason/citation checks and original thresholds stay.
+## Impact and acceptance
 
-Verification sequence: offline regressions; replay the captured bad output
-against the expanded judge; full 20-case Bedrock benchmark; isolated real
-Strands pause/resume with a Stripe test dispute. Record the current revision,
-report names, and observed results below. Preserve the original recording and
-all older evaluation reports. No deployment or publication is part of this fix.
+Intake -> four evidence collectors -> strategy and owner summary -> evidence
+packet -> approval notification and executor -> Stripe. All consumer-facing
+factual fields require grounding. Raw sanitized tool records now reach strategy
+and drafter and supply the evaluator's facts. Collector summaries and fixture-only
+interpretations cannot establish facts. The graph waits for all prerequisites;
+attachments the tools never produced are rejected before execution.
 
-Recovery: changes are isolated on codex/output-grounding, based on e54a489.
-Shared uncommitted preflight work is untouched. Test-mode provider objects are
-retained as evidence. A failed check prevents a completion or demo-success claim.
+Acceptance: offline regressions; explicit positive/negative evaluator controls;
+20 fixed synthetic cases (action >=18, gate 20, output judge >=18, EV sign 20);
+separate local Strands suspension/resume and Stripe test readback. Scores must
+come from executed checks. Manual adjudication never overwrites raw verdicts.
+Small synthetic controls do not establish a population error rate.
 
-Current state: implementation and verification in progress. Do not label the
-expanded evaluator accurate until the current control and benchmark runs finish.
-The owner approved the limited Sonnet policy, up to $5 additional inference,
-and sanitized Stripe test-record use in verification and the final demo.
+Recovery: isolated branch codex/output-grounding starts at e54a489. Main's dirty
+preflight work is preserved. Local commits provide recovery history; nothing is
+pushed or deployed. Failed candidates and original recordings remain available.
 
-## Observed verification
+## Latest observed results
 
-- e54a489 original rubric rerun: action 20/20, gate 20/20, narrative 19/20,
-  EV sign 20/20, exit 0. This scored narrative, not complete output.
-- eb83ad5 complete-output run: action 19/20, gate 19/20, judge 16/20,
-  EV sign 20/20, exit 1. Full inputs and outputs are preserved in
-  evals/results/2026-09-14-eb83ad5-full.json and its Markdown companion.
-- Return rule follow-up: targeted cases 08/09/14 produced correct actions and
-  gates (3/3). Only 1/3 judge checks passed; the report is preserved as
-  2026-09-14-output-targeted-v4. The returned-item case incorrectly attributed
-  application decision logic to merchant policy. The duplicate case was a
-  judge false positive: its required IDs appeared in an attributed quote.
-- Offline suite: PYTHON_DOTENV_DISABLED=1 USE_GATEWAY_MCP=false
-  .venv/bin/python -m pytest -q -> 107 passed, 2 deprecation warnings, exit 0.
-  The final evaluator model override and metadata changes were separately
-  checked with tests/test_evals.py -> 29 passed, exit 0.
-- Live local eb83ad5 test reached a Strands interrupt with all seven graph nodes
-  executing once and zero guarded financial tool calls. Developer chose hold;
-  Stripe readback remained needs_response, livemode=false, zero guarded calls.
-  Phone delivery and deployment were not exercised.
+| Revision/check | Action | Gate | Output judge | EV sign | Result |
+|---|---:|---:|---:|---:|---|
+| e54a489, original narrative-only rubric | 20/20 | 20/20 | 19/20 | 20/20 | Exit 0; does not cover sibling fields |
+| eb83ad5, expanded output audit | 19/20 | 19/20 | 16/20 | 20/20 | Exit 1 |
+| 5552395, Haiku judge | 20/20 | 20/20 | 13/20 | 20/20 | Exit 1 |
+| 616db5e, Sonnet exact-source audit | 20/20 | 20/20 | 14/20 | 20/20 | Exit 1 |
 
-## Adjudication corrections
+Reports are retained under evals/results with those revision names. The 98a7313
+run was stopped when review found fixture-only policy statements in judge inputs
+(exit 130). The 970ff0a run encountered a Bedrock internalServerException after
+one case (exit 1). Their logs/partial JSON are not complete benchmarks.
 
-Case 08 had a real action defect: a returned-item report and no earlier return
-request could activate conflicting rules. Reported returns now take precedence.
-Case 09's judge cited a false positive about scoped absence, but the actual
-rationale also said 12 prior orders instead of the supplied 12 total orders.
-Case 14's first output assigned customer authorship without a sender field;
-its later quoted-ID citation failure was an evaluator false positive.
-Case 18's judge incorrectly treated a repeat/VIP policy field name as a VIP-only
-rule, while the output also used insufficiently prospective concession wording.
-Original report verdicts remain intact; these observations do not overwrite scores.
+Offline suite after the latest implementation:
+`PYTHON_DOTENV_DISABLED=1 USE_GATEWAY_MCP=false .venv/bin/python -m pytest -q`
+-> 112 passed, two deprecation warnings, exit 0. A runtime-model factory check
+also observed temperature=0.0 with a mocked model/session; no cloud runtime call.
+The final source manifest and model results remain pending.
 
-The live Stripe test dispute actually supplied a $15 fee and $355 net debit in
-balance_transactions. The compact recorder omitted those fields, so the initial
-unsupported-fee diagnosis was wrong. Full capture now retains the dispute and
-model-visible messages. Historical replay with abbreviated current facts cannot
-establish fee grounding; controls now use explicit synthetic mutations and assert
-each expected criterion, rather than accepting a failure for any reason.
+## Review of all 20 outputs from 616db5e
 
-Current Haiku judge controls still reject simple dollar/cents equivalence and
-misread quoted citations. A separate, narrowly scoped Sonnet judge access proposal
-is prepared in the main checkout under docs/proofs/evaluation-judge; it has not
-been applied. BEDROCK_JUDGE_MODEL_ID can select a judge independently of the
-application model, and reports retain judge model ID and token usage. The latest
-implementation still needs a complete run with a judge that passes these controls.
+Reviewed against source_tool_records, not fixture_context:
 
+| Case | Finding | Classification |
+|---|---|---|
+| 03 | Billing/shipping addresses are identical; judge rejects the billing label for the same destination | False positive |
+| 10 | Order created_at is used as refund-status date; concession is said to guarantee a double refund | Generation defects |
+| 11 | MSG-11 appears in optional communication field, but not narrative | Citation omission |
+| 12 | Prior subscription acknowledgment/timing is treated as specific-charge authorization under unseen terms | Generation defect missed by judge |
+| 14 | Neutral receipt with no sender/direction is called customer-authored | Generation defect missed by judge |
+| 16 | Correctly attributed "Customer reports" is rejected in favor of "claims" | False positive |
+| 19 | Tracking identifier absent from narrative; equivalent address-check wording also rejected | Citation omission plus false-positive AVS explanation |
+| 20 | Prospective recommendations are rejected; carrier-recorded delivery is strengthened into personal possession by the judge | False positive |
 
-## Latest checkpoint
+No additional definite unsupported claims were found in the remaining outputs.
+This manual review is separate from the raw 14/20 model score.
 
-Revision 5552395 completed the 20-case benchmark: action 20/20, gate 20/20,
-EV sign 20/20, Haiku judge 13/20, exit 1. Results and complete source/output
-records are preserved in evals/results/2026-09-14-5552395-full.{md,json}.
-The action regression is repaired. The grounding work is not complete.
+All 20 intake mocks accepted an order ID as a charge lookup argument. Production
+Stripe lookup would not. The corrected mocks copy production tool metadata and
+reject wrong dispute/charge/payment-intent IDs; one focused regression exercises
+valid and invalid calls inside the actual evaluation patch scope. Intake guidance
+now requires the charge/payment-intent ID returned by the dispute lookup.
 
-Independent review found false-positive explanations alongside actual errors:
-prior-versus-total counts, unsupported receipt/authorization implications,
-undocumented agreement compliance, and invented fulfillment/payment processing
-claims. Passing Haiku verdicts also missed authorization implications in owner
-summaries. No manually adjusted passing score is claimed. The saved scenario
-description is broader than agent-visible tool records and must not be used to
-justify claims the agent could not ground in retrieved evidence.
+The final generation repair keeps the same output fields/types and records its
+schema-description decision in docs/decisions/0005-output-schema-grounding.md.
+It separates creation/status dates, observations/authorization, source text/author,
+and proposed action/guaranteed effects, and requires narrative tracking/ticket IDs.
 
-The shared Stripe serialization boundary now excludes client_secret and
-receipt_url recursively. Expanded test responses included these unused fields;
-they are unnecessary for dispute evidence. Fee and balance-transaction evidence
-is retained. Regression checks cover nested objects/lists and preserve the input
-object. Full offline suite after this repair: 107 passed, 2 warnings, exit 0.
-The local response capture was sanitized and restricted to mode 0600. Eight
-JSON files in this task's recorded executor sessions were checked by field-name
-search; none contained client_secret or receipt_url. Earlier model invocations
-used the old unfiltered tool response; no provider-side deletion or credential
-rotation is claimed. The recording harness refuses an unsanitized revision.
+## Evaluator controls and provenance
 
-Both owner decisions are now approved. RebuttalEvaluationJudge was applied to
-rebuttal-local and read back equal to the proposal; RebuttalPreflight remains
-untouched. Automatic approval review rejected the earlier full-payload disclosure;
-it was not retried. Only sanitized records are authorized for the new run.
+Haiku controls and early Sonnet controls failed. All historical outputs remain.
+Sonnet v7 controls matched 13/13 expected per-criterion results, but expanded v8
+matched only 17/20: neutral receipt authorship and promised fee/retention effects
+were missed. A passing verdict for the wrong criterion is not a passing control.
+Final expanded controls and benchmark must be observed before an accuracy claim.
 
-The next repair forwards original sanitized tool results to both strategy and
-drafter through the installed SDK's BeforeInvocationEvent hook. Previously they
-received only collector summaries. The same extraction supplies evaluation facts.
-Specific prompts that required identity/receipt, subscription compliance, and
-absolute shipment-count conclusions were corrected. The schema is unchanged.
-Offline suite with this repair: 110 passed, 2 warnings, exit 0.
+The evaluator separates narrative-only reason/citations from exact-source factual
+fields. Canonical dollar formatting preserves value/precision. Word count and
+unproduced-attachment failure are deterministic. Numeric probability/evidence-
+strength assessments are not calibrated facts; action and EV have separate checks.
+Every factual rationale, owner summary, customer tier, and packet field is audited.
+Malformed/unavailable judge responses fail. There is no keyword success override.
 
-Sonnet alone did not solve evaluator errors. The initial controls and a replay of
-5552395 outputs remain saved. Rubric grounded-v4 now separates narrative-only
-citation inputs from whole-output grounding, asks for evidence before a verdict,
-normalizes equivalent dollar spellings without rounding values, and reuses the
-production attachment validator as a deterministic failure check. Source output
-and model verdicts remain preserved. Twelve positive/negative controls include
-the observed owner-summary and prior-order errors. Current live control results
-and the full benchmark are pending; no score is manually corrected.
+Reports retain source hashes captured before inference, raw inputs/outputs,
+generation/judge usage, rejected packets, model IDs, and completed markers. A
+rejected packet cannot reach the normal executor. Existing report paths are refused.
+Case07's ambiguous "no return" citation was corrected to absence of communications
+in supplied merchant records; action/gate labels and thresholds did not change.
 
-Next: qualify the evaluator on all per-criterion positive/negative controls;
-adjudicate saved outputs and repair remaining actual generation defects; repeat
-required checks; record the sanitized test flow; integrate the isolated commits
-without disturbing main's unrelated preflight work; finish the video and verify
-it against the official rules. The 49.954-second opening prototype is in the main
-checkout at docs/media/edit/submission-v3/opening-proof/. It is not a final demo.
+## Local runtime and media evidence
 
-## Exact-source follow-up
+The final recorded 616db5e run is in the main checkout at
+`docs/media/edit/submission-v3/final-verified-run/`. It uses synthetic merchant
+records, sanitized Stripe TEST objects, local FileSessionManager, and an isolated
+SQLite copy. Seven graph nodes executed once. Strands interrupted at owner approval
+with zero guarded calls and Stripe needs_response. Developer CLI response 2 selected
+concession; resume made exactly one guarded call. Fresh Stripe readback returned
+lost and livemode=false; recorder assertions passed, exit 0. Lost here means the
+test dispute was conceded, not won or recovered. No separate refund is claimed.
+The recorded output passed the Sonnet exact-source judge and attachment check.
 
-The twelve grounded-v4 controls passed in sonnet-controls-v5.json. A separate
-review then found that normalized fixture facts still included policy clauses
-that the tools never returned. The 98a7313 benchmark was stopped (exit 130;
-partial stdout retained in 2026-09-14-98a7313-aborted.log). It is not a complete
-benchmark or an accepted score. The new judge input contains only captured tool
-records and an empty produced-artifacts list; fixture context is saved separately.
-The JSON report now persists after each case and declares whether the run finished.
-Generation usage is recorded as well as judge usage.
+Earlier fee-avoidance/relationship-preservation candidates were held with zero
+action calls and are retained under candidate-98a7313-held and candidate-970ff0a-held.
+The original Stripe test record did include a $15 fee; an earlier abbreviated
+capture omitted it. Claiming that fee was invented was incorrect. Claiming that
+concession avoids an already-incurred fee remains unsupported.
 
-The separate 98a7313 Stripe-test run reached the real approval interrupt, but
-asserted that concession would avoid an already-incurred fee and preserve the
-relationship. The developer selected hold; readback stayed needs_response with
-zero guarded calls. Its records are retained under submission-v3/candidate-98a7313-held.
-Those claims are not accepted evidence. Prompts now distinguish recorded fees
-from future costs and retention goals from outcomes, omit invented merchant-policy
-wording, and use temperature zero with brief collector summaries. An explicit
-negative control covers fee avoidance and retention claims when a fee is recorded.
+Stripe serialization recursively removes client_secret and receipt_url while
+preserving fee evidence. Regression checks preserve source objects and cover nested
+lists/objects. Earlier model calls used the old unfiltered payload; no provider-side
+deletion or rotation is claimed. The recorder refuses unsanitized source revisions.
 
-Case 07's required citation "no return" was ambiguous: the judge interpreted it
-as a no-returns policy even though the actual policy permits a return procedure.
-The case supplies no communications. Its reference now requires scoped absence
-of pre-dispute communications in merchant records, matching those records rather
-than a claim that the customer never requested a return. No action/gate labels or
-thresholds changed. The original case description is not passed as ground truth.
+Phone delivery, cloud deployment, real merchant outcomes, and production Stripe
+submission remain unverified. The nine-scene storyboard preserves actual CLI/test
+readback and labels edited playback. Final video export awaits final scores and
+explicit Microsoft Edge TTS approval for the prepared narration. The original
+video remains intact; local files are not a public hackathon submission.
 
-Attachment rejection now retains the generated strategy, packet, and raw records
-in an InvalidEvidencePacket exception. The harness records that output while
-failing validation and skipping paid judgment; it cannot reach execution through
-the normal pipeline. A focused regression exercises that complete failure path.
+## Next actions
 
-970ff0a's full run failed on a Bedrock internalServerException after case 01;
-the incomplete JSON and log are retained. The local run again selected hold
-after owner-summary retention claims were observed. A follow-up puts the same
-contract in the structured-output field descriptions. The exact-source controls
-also showed the judge treating factual strategy prose as an exempt assessment.
-Rubric grounded-v6 presents factual fields individually and excludes only the
-separately evaluated action and internal numeric/evidence-strength assessments.
-Customer tier and all explanatory text remain scored. Current controls are pending.
+Finish final controls and the stricter 20-case run within the approved cap;
+review new failures against exact records; update this checkpoint and cost ledger;
+integrate verified local commits while preserving main's unrelated dirty work;
+run the combined suite; render and inspect the final video after narration approval.
