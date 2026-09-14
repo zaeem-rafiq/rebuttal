@@ -199,6 +199,14 @@ cases.append(('approval_threshold_is_not_concession_rule', policy_inference, 'no
 bare_concession = copy.deepcopy(clean)
 bare_concession['evidence_packet']['narrative'] += ' Recommendation: Concede the dispute based on the recorded repeat customer tier.'
 cases.append(('bare_concession_with_reason', bare_concession, None, []))
+order_date_facts = copy.deepcopy(facts)
+order_date_facts['order']['created_at'] = '2026-08-25T10:00:00Z'
+order_date = copy.deepcopy(clean)
+order_date['evidence_packet']['narrative'] += ' The order was placed on August 25, 2026.'
+cases.append(('order_creation_date', order_date, None, [], order_date_facts))
+charge_date = copy.deepcopy(clean)
+charge_date['evidence_packet']['narrative'] += ' The disputed charge was placed on August 25, 2026.'
+cases.append(('order_date_is_not_charge_date', charge_date, 'no_hallucination_pass', [], order_date_facts))
 requested = os.getenv('CONTROL_CASES', '').split(',') if os.getenv('CONTROL_CASES') else []
 if requested:
     unknown = set(requested) - {case[0] for case in cases}
