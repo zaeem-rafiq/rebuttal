@@ -169,7 +169,8 @@ def test_judge_prompt_contains_equivalence_and_grounding_rules():
     assert "UTC/ISO date reformattings are equivalent" in prompt_text
     assert "A quoted report establishes what was reported, not its independent truth" in prompt_text
     assert "No X documented/in merchant records" in prompt_text
-    assert "Current recommendations must be prospective" in prompt_text
+    assert "Proposed actions must not be presented as completed" in prompt_text
+    assert "Audit every truth-assessable assertion in past, present, future, or conditional tense" in prompt_text
 
 
 def test_keyword_presence_cannot_override_negative_judge_verdict():
