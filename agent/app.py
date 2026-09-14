@@ -183,19 +183,20 @@ async def process_case_async(dispute_id: str, scenario: Optional[str] = None):
 
         from agent.graph import run_evidence_pipeline
         from agent.executor import build_executor_agent, execute_strategy
-        from agent.tools.stripe_tools import get_dispute, resolve_stripe_dispute_id
+        from agent.tools.stripe_tools import get_dispute
+        from agent.tools.case_tools import _get_supabase_client
+        from agent.ingress import ingest_stripe_dispute
         from agent.tools.memory_tools import patch_history_tool_with_memory
         from agent.hooks import get_agent_state, set_agent_state
-        from scripts.run_local import resolve_scenario_context
-
-        # Enhance history agent with Bedrock AgentCore long-term memory
-        patch_history_tool_with_memory()
 
         clean_dispute_id = dispute_id.strip()
-        scen = scenario or ("S1" if "S1" in clean_dispute_id else ("S2" if "S2" in clean_dispute_id else "S1"))
-        ctx = resolve_scenario_context(scen)
-        if clean_dispute_id and clean_dispute_id != ctx.get("dispute_id"):
-            ctx["dispute_id"] = clean_dispute_id
+        sb = _get_supabase_client()
+        if (os.getenv("SUPABASE_URL") or os.getenv("SUPABASE_SERVICE_KEY")) and sb is None:
+            raise RuntimeError("Configured Supabase client is unavailable for dispute ingress")
+        ctx = ingest_stripe_dispute(get_dispute(clean_dispute_id), LOCAL_DB_PATH, supabase_client=sb)
+
+        # Enhance history agent only after the case is available to the gate.
+        patch_history_tool_with_memory()
 
         task = (
             f"Investigate dispute {ctx['dispute_id']}. Use get_dispute and get_charge_context "
@@ -235,7 +236,7 @@ async def process_case_async(dispute_id: str, scenario: Optional[str] = None):
         stop_reason = getattr(exec_agent_result, "stop_reason", None)
         logger.info("Executor finished: stop_reason=%s, gate_status=%s", stop_reason, gate_status)
 
-        if scen == "S1" or gate_status == "skipped":
+        if gate_status == "skipped" and stop_reason != "interrupt":
             exec_result = execute_strategy(
                 dispute_id=ctx["dispute_id"],
                 strategy=strategy,
@@ -248,9 +249,9 @@ async def process_case_async(dispute_id: str, scenario: Optional[str] = None):
             logger.info("case complete %s status=%s", ctx["dispute_id"], final_status)
             print(f"case complete {ctx['dispute_id']} status={final_status}", flush=True)
         else:
-            # Gated / interrupted execution: state persisted in AgentCore Memory
-            logger.info("dispute %s held at gate: %s stop_reason=interrupt", ctx["dispute_id"], gate_status)
-            print(f"dispute {ctx['dispute_id']} held at gate: {gate_status} stop_reason=interrupt", flush=True)
+            # Do not dispatch without a completed gate skip.
+            logger.info("dispute %s held without execution: gate_status=%s stop_reason=%s", ctx["dispute_id"], gate_status, stop_reason)
+            print(f"dispute {ctx['dispute_id']} held without execution: gate_status={gate_status} stop_reason={stop_reason}", flush=True)
 
     except Exception as e:
         logger.exception("Error processing dispute %s: %s", dispute_id, e)

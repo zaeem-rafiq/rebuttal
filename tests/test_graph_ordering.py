@@ -36,6 +36,14 @@ def run_graph(monkeypatch, *, remove_conditions=False):
 
     monkeypatch.setenv('USE_GATEWAY_MCP', 'false')
     monkeypatch.setattr(graph_module, 'Agent', make_agent)
+    if remove_conditions:
+        # Reconstruct the original all-intake fan-out for the historical failure.
+        add_edge = graph_module.GraphBuilder.add_edge
+        def historical_edge(builder, from_node, to_node, condition=None):
+            if from_node == 'orders' and to_node in {'comms', 'history'}:
+                from_node = 'intake'
+            return add_edge(builder, from_node, to_node, condition)
+        monkeypatch.setattr(graph_module.GraphBuilder, 'add_edge', historical_edge)
     graph, _ = graph_module.build_evidence_graph(model=MagicMock())
     if remove_conditions:
         for edge in graph.edges:
@@ -58,6 +66,17 @@ def assert_complete_flow(calls):
 
 def test_scheduler_waits_for_complete_inputs_and_drafts_once(monkeypatch):
     assert_complete_flow(run_graph(monkeypatch))
+
+
+def test_customer_collectors_receive_order_lookup_before_running(monkeypatch):
+    calls = run_graph(monkeypatch)
+    for collector in ("comms", "history"):
+        invocations = [call for call in calls if call[0] == collector]
+        assert len(invocations) == 1
+        _, completed, prompt = invocations[0]
+        assert "orders" in completed
+        assert "From orders:" in prompt
+        assert "orders-result" in prompt
 
 
 def test_unguarded_edges_reproduce_premature_repeated_drafting(monkeypatch):

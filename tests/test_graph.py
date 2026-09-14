@@ -56,11 +56,13 @@ def test_graph_topology_nodes_and_edges():
     # Check edges
     edge_pairs = {(e.from_node.node_id, e.to_node.node_id) for e in graph.edges}
     
-    # Fan-out from intake
+    # Stripe identifies the order; that order supplies merchant customer IDs.
     assert ("intake", "orders") in edge_pairs
     assert ("intake", "shipping") in edge_pairs
-    assert ("intake", "comms") in edge_pairs
-    assert ("intake", "history") in edge_pairs
+    assert ("orders", "comms") in edge_pairs
+    assert ("orders", "history") in edge_pairs
+    assert ("intake", "comms") not in edge_pairs
+    assert ("intake", "history") not in edge_pairs
 
     # Fan-in to strategy
     assert ("orders", "strategy") in edge_pairs

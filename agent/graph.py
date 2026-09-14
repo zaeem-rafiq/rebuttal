@@ -228,7 +228,7 @@ def build_evidence_graph(
         model=model,
         tools=[get_customer_comms],
         system_prompt=(
-            GROUNDING_RULES + "You are the Customer Communications Evidence Agent. Retrieve communications records using `get_customer_comms(customer_id, order_id)`. The tool returns both merchant and customer records; its name is not authorship evidence. You MUST call it now with the IDs from intake before reporting evidence.\n"
+            GROUNDING_RULES + "You are the Customer Communications Evidence Agent. Retrieve communications records using `get_customer_comms(customer_id, order_id)`. The tool returns both merchant and customer records; its name is not authorship evidence. You MUST call it now with the customer_id and order id from the completed order lookup before reporting evidence.\n"
             "Report:\n"
             "- All relevant messages exchanged between customer and merchant, including timestamps, subjects, and text quotes\n"
             "- Note specifically if the customer mentions specific reference numbers (e.g. return tracking numbers, support ticket IDs, or prior refund transaction references)\n"
@@ -244,7 +244,7 @@ def build_evidence_graph(
         model=model,
         tools=[get_merchant_history_and_policy],
         system_prompt=(
-            GROUNDING_RULES + "You are the Customer History & Merchant Policy Agent. Your role is to check customer standing and merchant policy using `get_merchant_history_and_policy(customer_id)`. You MUST call it now with the customer ID from intake before reporting evidence.\n"
+            GROUNDING_RULES + "You are the Customer History & Merchant Policy Agent. Your role is to check customer standing and merchant policy using `get_merchant_history_and_policy(customer_id)`. You MUST call it now with the customer_id from the completed order lookup before reporting evidence.\n"
             "Report:\n"
             "- Customer relationship tier: 'new', 'repeat', or 'vip'\n"
             "- Customer total order count (order_count) and lifetime spend in cents and dollars (e.g. order count 3, 45000 cents = $450.00). State as total orders / order count, not 'prior orders'.\n"
@@ -390,11 +390,11 @@ def build_evidence_graph(
     gb.add_node(strategy_agent, "strategy")
     gb.add_node(drafter_agent, "drafter")
 
-    # Fan-out from intake to evidence nodes
+    # Stripe metadata identifies the order; merchant customer IDs come from orders.
     gb.add_edge("intake", "orders")
     gb.add_edge("intake", "shipping")
-    gb.add_edge("intake", "comms")
-    gb.add_edge("intake", "history")
+    gb.add_edge("orders", "comms")
+    gb.add_edge("orders", "history")
 
     # Fan-in from evidence nodes to strategy
     # Strands schedules on any incoming edge. Guard every edge so direct

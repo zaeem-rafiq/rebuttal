@@ -183,7 +183,7 @@ def get_charge_context(charge_id_or_payment_intent: str) -> Dict[str, Any]:
                 charge_obj = payment_intent_obj.latest_charge
     else:
         charge_obj = stripe.Charge.retrieve(
-            target_id, expand=["payment_intent", "payment_method"]
+            target_id, expand=["payment_intent"]
         )
         if charge_obj.payment_intent:
             if isinstance(charge_obj.payment_intent, str):

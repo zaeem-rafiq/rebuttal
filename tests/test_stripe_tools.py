@@ -11,6 +11,7 @@ Unit tests for agent/tools/stripe_tools.py:
 
 import os
 import pytest
+import stripe
 from unittest.mock import MagicMock, patch
 from pathlib import Path
 
@@ -107,6 +108,47 @@ def test_get_charge_context_payment_intent(mock_pi_retrieve, mock_guard):
     assert ctx["card_checks"]["address_postal_code_check"] == "pass"
     assert ctx["payment_intent_id"] == "pi_12345"
     assert ctx["charge_id"] == "ch_12345"
+
+
+@pytest.mark.parametrize("expanded_payment_intent", [True, False])
+def test_charge_context_uses_supported_charge_expansion_and_retains_card_checks(monkeypatch, expanded_payment_intent):
+    """Stripe rejects Charge.payment_method expansion; checks are already inline."""
+    payment_intent = stripe.PaymentIntent.construct_from({
+        "object": "payment_intent", "id": "pi_contract", "amount": 34000,
+        "currency": "usd", "metadata": {"order_id": "ORDER-CONTRACT", "scenario": "S2"},
+    }, "sk_test_mock")
+    charge = stripe.Charge.construct_from({
+        "object": "charge", "id": "ch_contract", "amount": 34000, "currency": "usd",
+        "payment_intent": payment_intent if expanded_payment_intent else "pi_contract",
+        "payment_method": "pm_contract", "metadata": {"order_id": "ORDER-CONTRACT"},
+        "payment_method_details": {"card": {"checks": {
+            "address_line1_check": "pass", "address_postal_code_check": "pass", "cvc_check": "pass",
+        }}},
+        "billing_details": {"name": "Contract fixture", "email": "fixture@example.test"},
+    }, "sk_test_mock")
+    def retrieve_charge(identifier, *, expand):
+        assert identifier == "ch_contract"
+        if "payment_method" in expand:
+            raise stripe.InvalidRequestError("This property cannot be expanded (payment_method).", "expand")
+        assert expand == ["payment_intent"]
+        return charge
+    monkeypatch.setattr("agent.tools.stripe_tools.verify_live_key_guard", lambda: "sk_test_mock")
+    monkeypatch.setattr(stripe.Charge, "retrieve", retrieve_charge)
+    retrieve_pi = MagicMock(return_value=payment_intent)
+    monkeypatch.setattr(stripe.PaymentIntent, "retrieve", retrieve_pi)
+
+    context = get_charge_context("ch_contract")
+
+    assert context["amount"] == 34000
+    assert context["charge_id"] == "ch_contract"
+    assert context["payment_intent_id"] == "pi_contract"
+    assert context["card_checks"] == {"address_line1_check": "pass", "address_postal_code_check": "pass", "cvc_check": "pass"}
+    assert context["customer_email"] == "fixture@example.test"
+    assert context["metadata"] == {"order_id": "ORDER-CONTRACT", "scenario": "S2"}
+    if expanded_payment_intent:
+        retrieve_pi.assert_not_called()
+    else:
+        retrieve_pi.assert_called_once_with("pi_contract")
 
 
 @patch("agent.tools.stripe_tools.verify_live_key_guard")
