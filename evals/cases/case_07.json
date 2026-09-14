@@ -13,7 +13,7 @@
   "expected_gate": false,
   "must_cite": [
     "return policy",
-    "no return"
+    "no pre-dispute customer communications in merchant records"
   ],
   "description": "Product unacceptable claim where customer did not initiate return under return policy.",
   "customer": {

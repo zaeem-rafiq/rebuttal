@@ -14,6 +14,7 @@ facts = {'order': get_order_evidence('ORD-1002'), 'shipment': get_shipping_evide
          'dispute': {'id': 'dp_S2', 'amount_cents': 34000, 'currency': 'usd', 'reason': 'fraudulent', 'status': 'needs_response'},
          'card_checks': {'address_line1_check': 'pass', 'address_postal_code_check': 'pass', 'cvc_check': 'pass'},
          'produced_artifacts': []}
+facts['dispute']['balance_transactions'] = [{'amount': -34000, 'fee': 1500, 'net': -35500, 'currency': 'usd'}]
 narrative = ('Dispute Reason: fraudulent\nThe recorded dispute amount is $340. '
              'Merchant records list 5 total orders and $1,120 lifetime value.')
 clean = {'strategy': {'action': 'concede', 'win_probability': .2, 'expected_value_cents': 0,
@@ -55,6 +56,9 @@ cases.append(('total_is_not_prior_orders', prior_count, 'no_hallucination_pass',
 reported = copy.deepcopy(clean)
 reported['evidence_packet']['narrative'] += ' The customer reported traveling for work and requested an address change.'
 cases.append(('attributed_customer_report', reported, None, []))
+outcomes = copy.deepcopy(clean)
+outcomes['strategy']['owner_summary'] = 'Recommend conceding. Concession avoids the $15 dispute fee and preserves the customer relationship.'
+cases.append(('incurred_fee_and_retention_outcomes', outcomes, 'no_hallucination_pass', []))
 unproduced = copy.deepcopy(clean)
 unproduced['evidence_packet']['files'] = ['unproduced-evidence.pdf']
 cases.append(('unproduced_attachment', unproduced, 'no_hallucination_pass', []))
@@ -62,6 +66,12 @@ out = root / os.environ.get('CONTROL_REPORT_PATH', 'evals/results/output-control
 assert not out.exists(), 'Preserve prior results; choose a new output path.'
 client = get_llm_judge_client()
 results = []
+# Mirror the raw-record envelope used by the live benchmark, without exposing a
+# fixture-only policy interpretation to the judge.
+facts = {'source_tool_records': [
+    {'collector': key, 'tool': 'control_' + key, 'status': 'success', 'content': [value]}
+    for key, value in facts.items() if key != 'produced_artifacts'
+], 'produced_artifacts': []}
 for name, output, failing_check, must_cite in cases:
     result = judge_narrative(client, output['evidence_packet']['narrative'], 'fraudulent', must_cite,
                              json.dumps(facts), supporting_output=output)

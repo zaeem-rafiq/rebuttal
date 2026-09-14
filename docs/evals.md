@@ -48,13 +48,14 @@ Each saved judgment includes model ID and token usage. Complete inputs and
 outputs are saved beside the Markdown report in JSON, with source hashes taken
 before inference. `EVAL_REPORT_PATH` selects a fresh report filename.
 
-Rubric grounded-v4 isolates citation scoring from supporting fields so an order
+Rubric grounded-v5 isolates citation scoring from supporting fields so an order
 reference outside the narrative cannot satisfy it. The grounding judge receives
 structured facts and identical canonical dollar formatting on both sides;
 original output stays unchanged in reports. The production attachment validator
 can force failure even when the model misses an invalid file reference. Raw
-tool records forwarded to strategy/drafter are also saved for the judge, alongside
-normalized fixture facts. Numeric estimates remain assessments, not measured
+tool records forwarded to strategy/drafter are the judge's factual input.
+Normalized fixture context is saved separately and cannot ground a model claim.
+Numeric estimates remain assessments, not measured
 win rates or permission to invent supporting facts.
 
 Run explicit positive and negative controls before trusting a judge:
@@ -73,5 +74,11 @@ failed. Revised controls additionally check total versus prior orders and owner
 summary authorization inferences. Review the latest saved control run and full
 benchmark before making an accuracy claim; small controls do not establish a
 population error rate.
+
+JSON reports persist after each case with a `completed` marker, including rejected
+packets and raw records when output validation fails. A partial report is not a
+completed benchmark. Existing paths are refused before inference. Case 07's
+ambiguous "no return" reference now asks for the absence of communications in
+the supplied merchant records; its action/gate labels and thresholds are unchanged.
 
 Before calling the approval path end-to-end verified, separately observe real alert delivery, owner response, runtime resume, and the resulting Stripe test-mode action. That verification is outside this evaluator.

@@ -127,3 +127,35 @@ required checks; record the sanitized test flow; integrate the isolated commits
 without disturbing main's unrelated preflight work; finish the video and verify
 it against the official rules. The 49.954-second opening prototype is in the main
 checkout at docs/media/edit/submission-v3/opening-proof/. It is not a final demo.
+
+## Exact-source follow-up
+
+The twelve grounded-v4 controls passed in sonnet-controls-v5.json. A separate
+review then found that normalized fixture facts still included policy clauses
+that the tools never returned. The 98a7313 benchmark was stopped (exit 130;
+partial stdout retained in 2026-09-14-98a7313-aborted.log). It is not a complete
+benchmark or an accepted score. The new judge input contains only captured tool
+records and an empty produced-artifacts list; fixture context is saved separately.
+The JSON report now persists after each case and declares whether the run finished.
+Generation usage is recorded as well as judge usage.
+
+The separate 98a7313 Stripe-test run reached the real approval interrupt, but
+asserted that concession would avoid an already-incurred fee and preserve the
+relationship. The developer selected hold; readback stayed needs_response with
+zero guarded calls. Its records are retained under submission-v3/candidate-98a7313-held.
+Those claims are not accepted evidence. Prompts now distinguish recorded fees
+from future costs and retention goals from outcomes, omit invented merchant-policy
+wording, and use temperature zero with brief collector summaries. An explicit
+negative control covers fee avoidance and retention claims when a fee is recorded.
+
+Case 07's required citation "no return" was ambiguous: the judge interpreted it
+as a no-returns policy even though the actual policy permits a return procedure.
+The case supplies no communications. Its reference now requires scoped absence
+of pre-dispute communications in merchant records, matching those records rather
+than a claim that the customer never requested a return. No action/gate labels or
+thresholds changed. The original case description is not passed as ground truth.
+
+Attachment rejection now retains the generated strategy, packet, and raw records
+in an InvalidEvidencePacket exception. The harness records that output while
+failing validation and skipping paid judgment; it cannot reach execution through
+the normal pipeline. A focused regression exercises that complete failure path.
