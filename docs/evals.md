@@ -8,7 +8,7 @@ The evaluator now checks the complete generated output:
 |---|---|---|
 | Action match | Proposed action equals the case label | Real dispute success or calibrated probabilities |
 | Gate match | Production `ApprovalGate.before_tool_call` requests an interrupt; notification, cloud access, and local persistence are isolated | SDK suspension, phone delivery, session resume, or downstream execution |
-| Output judge | Separate Bedrock calls check narrative reason/citations and grounding in every strategy/evidence field; code enforces 1–250 narrative words and rejects unproduced attachments | Infallible factual validation |
+| Output judge | Three separate Bedrock calls check narrative reason/citations, factual grounding in every strategy/evidence field, and asserted outcomes; code enforces 1–250 narrative words and rejects unproduced attachments | Infallible factual validation |
 | EV sign | Sign agrees with the proposed action | Correct economic assumptions or measured savings |
 
 Judge request errors, invalid JSON, non-object responses, missing verdict fields, and non-boolean values fail. There is no success fallback. A negative citation verdict cannot be overridden by a keyword match. The `missing_items` field lists literal omissions for diagnosis; semantic citation coverage remains the judge's verdict.
@@ -48,7 +48,7 @@ Each saved judgment includes model ID and token usage. Complete inputs and
 outputs are saved beside the Markdown report in JSON, with source hashes taken
 before inference. `EVAL_REPORT_PATH` selects a fresh report filename.
 
-Rubric grounded-v7 isolates citation scoring from supporting fields so an order
+Rubric grounded-v9 isolates citation scoring from supporting fields so an order
 reference outside the narrative cannot satisfy it. The grounding judge receives
 structured facts and identical canonical dollar formatting on both sides;
 original output stays unchanged in reports. The production attachment validator
@@ -90,3 +90,9 @@ Before calling the approval path end-to-end verified, separately observe real al
 
 Synthetic intake tools use production tool metadata and reject unknown dispute,
 charge, or payment-intent IDs. An order ID cannot satisfy a charge lookup.
+
+The outcome audit extracts an exact output field/quote and source path/quote (or
+null). Unsupported or malformed assertions fail regardless of the broad verdict.
+Source citation existence is checked in code; semantic support and extraction
+remain model judgments. The three raw responses and summed usage are preserved.
+The current three-call rubric has offline coverage but has not been run on Bedrock.

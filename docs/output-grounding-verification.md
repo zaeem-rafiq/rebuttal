@@ -5,6 +5,36 @@ publication, video upload, or submission is claimed. The owner approved the
 limited Sonnet evaluator policy and raised the total verification inference cap
 to $8. Sanitized Stripe TEST records are authorized for verification and the demo.
 
+## Current stopping point after the authorized $8 verification
+
+The fbaf06f full run completed: action 20/20, gate 20/20, EV 20/20, output judge 9/20
+(exit 1). Its overly restrictive authorship rubric caused false positives. The same
+unchanged outputs were rejudged with d494d4e/grounded-v8: output judge 16/20,
+other metrics 20/20, exit 1. Both raw reports and source hashes remain preserved.
+The latest control run matched 21/23 expected results, exit 1. It missed a prior-order
+count error and misclassified a bare recommendation as an unsupported outcome.
+
+Manual review still finds a missing return-policy citation (case07), a 100x
+lifetime-value error in rationale (case09), and promised inquiry-resolution/
+escalation-prevention effects (cases16/17). Case09's latest grounding verdict
+missed the monetary error, while the overall case failed citation scoring.
+No manual score override is applied. The output-grounding gap remains open.
+
+The prepared follow-up separates outcome extraction from the broad factual audit
+in a third call, adds controls for cents/dollars and inquiry promises, and reinforces
+the generation contract. It has not received paid model verification. A Sonnet
+generation trial uses the existing BEDROCK_MODEL_ID setting; adoption is conditional
+on observed results. Approval to raise the total inference cap from $8 to $15 is pending.
+The current recorded token estimate is $6.945951; an interrupted run and executor
+usage are not fully metered. A $1 planning reserve is not a verified upper bound.
+No more model calls are authorized under this checkpoint without that decision.
+
+Original-checkout integration through f48000c passed 143 offline tests, exit 0.
+The final prepared follow-up will receive its own combined-suite result before
+commit/integration. The Stripe test runtime proof remains the recorded 616db5e run.
+Final video voice generation still awaits explicit Microsoft Edge TTS destination
+approval; automatic approval review rejected that upload before execution.
+
 ## Impact and acceptance
 
 Intake -> four evidence collectors -> strategy and owner summary -> evidence

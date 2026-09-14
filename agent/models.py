@@ -34,11 +34,11 @@ class DisputeStrategy(BaseModel):
     )
     rationale: str = Field(
         ...,
-        description="Source-backed observations explaining the proposed action, max 80 words. Recommendations are not completed actions. Do not claim concession retains the customer, preserves a relationship, saves costs, or avoids an incurred fee. Cite merchant policy only when the retrieved policy states that rule."
+        description="Source-backed observations explaining the proposed action, max 80 words. Convert source cents to dollars by dividing by 100. Recommendations are not completed actions or guarantees of resolution, prevention of escalation, retention, savings, or fee avoidance. Cite merchant policy only when the retrieved policy states that rule."
     )
     owner_summary: str = Field(
         ...,
-        description="Begin with Recommend; state the proposed action and its recorded factual basis only, max 320 characters. No promises of retention, relationship preservation, savings, fee avoidance, or completed execution."
+        description="Begin with Recommend; state the proposed action and its recorded factual basis only, max 320 characters. No promises of resolution, prevention of escalation, retention, relationship preservation, savings, fee avoidance, or completed execution."
     )
 
     @field_validator("rationale")

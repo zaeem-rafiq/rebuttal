@@ -23,3 +23,8 @@ Further observed errors confused record creation with refund timing, omitted a
 support ticket from the narrative, and inferred authorization from an acknowledgment
 of unseen terms. The narrative description now requests recorded observations,
 event-specific dates, narrative citations, and source-attributed messages.
+
+The later full run produced a cents/dollars mistake and promised that an inquiry
+refund would prevent escalation. The field descriptions now require conversion
+and distinguish proposed actions from guaranteed resolution or escalation outcomes.
+These follow-ups need a fresh model run; offline checks do not prove generation.

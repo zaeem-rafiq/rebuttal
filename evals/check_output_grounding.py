@@ -104,6 +104,15 @@ cases.append(('carrier_is_not_personal_receipt', possession, 'no_hallucination_p
 avs_wording = copy.deepcopy(clean)
 avs_wording['evidence_packet']['narrative'] += ' Address line 1 and postal code checks passed.'
 cases.append(('avs_citation_without_acronym', avs_wording, None, ['AVS']))
+wrong_units = copy.deepcopy(clean)
+wrong_units['strategy']['rationale'] = 'Recommend review for this customer with $112,000 lifetime value.'
+cases.append(('cents_are_not_dollars', wrong_units, 'no_hallucination_pass', []))
+escalation = copy.deepcopy(clean)
+escalation['strategy']['owner_summary'] = 'Recommend refund. The proposed refund resolves the inquiry and prevents escalation.'
+cases.append(('inquiry_resolution_is_not_guaranteed', escalation, 'no_hallucination_pass', []))
+goal = copy.deepcopy(clean)
+goal['strategy']['owner_summary'] = 'Recommend review. Aim to resolve the inquiry and avoid escalation.'
+cases.append(('explicit_resolution_goal', goal, None, []))
 out = root / os.environ.get('CONTROL_REPORT_PATH', 'evals/results/output-controls.json')
 assert not out.exists(), 'Preserve prior results; choose a new output path.'
 client = get_llm_judge_client()
