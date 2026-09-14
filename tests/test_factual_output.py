@@ -74,7 +74,17 @@ def test_final_text_uses_sources_and_preserves_assessments(raw_strategy):
     assert packet.customer_communication is None
     assert packet.files == []
     assert 'Returns accepted within 30 days.' in packet.narrative
-    assert 'Recorded VIP concession limit (vip_concede_max_cents): $500.00.' in packet.narrative
+    assert 'vip_concede_max_cents=$500.00. This limit alone does not establish eligibility.' in packet.narrative
+
+
+def test_new_customer_omits_vip_limit_and_preserves_delivery_notation(raw_strategy):
+    records = source_records()
+    records[5]['content'][0]['customer_tier'] = 'new'
+    records[3]['content'][0]['signed_by'] = 'Delivered in Mailbox'
+    _, packet = render_factual_output(raw_strategy, records)
+    assert 'vip_concede_max_cents' not in packet.narrative
+    assert 'signature or delivery notation: Delivered in Mailbox' in packet.narrative
+    assert 'recorded signature: Delivered in Mailbox' not in packet.narrative
 
 
 def test_rejects_other_cases_evidence_under_dispute(raw_strategy):

@@ -173,7 +173,7 @@ def render_factual_output(strategy: DisputeStrategy, records: list[dict]):
     digital = str(shipment.get('carrier', '')).casefold() == 'digital'
     labels = {'carrier': 'carrier', 'tracking_number': 'access reference' if digital else 'tracking',
               'status': 'recorded status', 'shipped_at': 'access dispatch recorded' if digital else 'shipped',
-              'delivered_at': 'access delivery recorded' if digital else 'delivered', 'signed_by': 'recorded signature'}
+              'delivered_at': 'access delivery recorded' if digital else 'delivered', 'signed_by': 'signature or delivery notation'}
     parts = [f'{label}: {status(shipment[key]) if key == "status" else shipment[key]}'
              for key, label in labels.items() if shipment.get(key) is not None]
     lines.append(('Digital access record: ' if digital else 'Carrier shipment record: ') + '; '.join(parts) + '.')
@@ -200,8 +200,8 @@ def render_factual_output(strategy: DisputeStrategy, records: list[dict]):
         customer_facts.append(f"LTV: {money(history['lifetime_value_cents'])}")
     lines.append('Merchant records: ' + '; '.join(customer_facts) + '.')
     policy = history.get('policy') or {}
-    if policy.get('vip_concede_max_cents') is not None:
-        lines.append(f"Recorded VIP concession limit (vip_concede_max_cents): {money(policy['vip_concede_max_cents'])}.")
+    if tier in ('repeat', 'vip') and policy.get('vip_concede_max_cents') is not None:
+        lines.append(f"Recorded policy parameter: vip_concede_max_cents={money(policy['vip_concede_max_cents'])}. This limit alone does not establish eligibility.")
     if reason == 'product_unacceptable' and policy.get('return_policy'):
         lines.append('Recorded return policy: ' + json.dumps(policy['return_policy'], ensure_ascii=False))
     messages = comms['messages']
