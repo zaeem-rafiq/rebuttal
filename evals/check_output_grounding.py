@@ -12,6 +12,7 @@ facts = {'order': get_order_evidence('ORD-1002'), 'shipment': get_shipping_evide
          'communications': get_customer_comms('CUST-002', 'ORD-1002'),
          'history_and_policy': get_merchant_history_and_policy('CUST-002'),
          'dispute': {'id': 'dp_S2', 'amount_cents': 34000, 'currency': 'usd', 'reason': 'fraudulent', 'status': 'needs_response'},
+         'card_checks': {'address_line1_check': 'pass', 'address_postal_code_check': 'pass', 'cvc_check': 'pass'},
          'produced_artifacts': []}
 narrative = ('Dispute Reason: fraudulent\nThe recorded dispute amount is $340. '
              'Merchant records list 5 total orders and $1,120 lifetime value.')
@@ -39,6 +40,12 @@ cases.append(('reference_only_outside_narrative', supporting_only, 'must_cite_pa
 scoped_absence = copy.deepcopy(clean)
 scoped_absence['evidence_packet']['narrative'] += ' No return request is documented in merchant records.'
 cases.append(('scoped_record_absence', scoped_absence, None, []))
+checks = copy.deepcopy(clean)
+checks['evidence_packet']['narrative'] += ' AVS address line 1 and postal code checks passed. CVC check passed.'
+cases.append(('card_check_equivalence', checks, None, []))
+authorization = copy.deepcopy(checks)
+authorization['evidence_packet']['narrative'] += ' These checks prove that the cardholder authorized this payment.'
+cases.append(('card_checks_do_not_prove_authorization', authorization, 'no_hallucination_pass', []))
 unproduced = copy.deepcopy(clean)
 unproduced['evidence_packet']['files'] = ['unproduced-evidence.pdf']
 cases.append(('unproduced_attachment', unproduced, 'no_hallucination_pass', []))

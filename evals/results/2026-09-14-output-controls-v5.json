@@ -1,0 +1,481 @@
+{
+  "facts": {
+    "order": {
+      "id": "ORD-1002",
+      "customer_id": "CUST-002",
+      "amount_cents": 34000,
+      "currency": "usd",
+      "status": "delivered",
+      "payment_intent_id": "pi_mock_s2_1789392569",
+      "charge_id": "ch_mock_s2_1789392569",
+      "card_brand": "mastercard",
+      "card_last4": "5555",
+      "avs_postal_match": "match",
+      "cvc_match": "match",
+      "shipping_address": {
+        "line1": "880 Harrison St",
+        "city": "San Francisco",
+        "state": "CA",
+        "postal_code": "94107",
+        "country": "US"
+      },
+      "billing_address": {
+        "line1": "742 Evergreen Terrace",
+        "city": "Springfield",
+        "state": "OR",
+        "postal_code": "97477",
+        "country": "US"
+      },
+      "created_at": "2026-08-25T09:15:00Z",
+      "updated_at": "2026-09-05T18:44:34Z",
+      "items": [
+        {
+          "id": "ITEM-1002-1",
+          "order_id": "ORD-1002",
+          "product_name": "Ceramic pour-over set",
+          "sku": "CPS-340",
+          "quantity": 1,
+          "unit_price_cents": 34000,
+          "total_price_cents": 34000,
+          "created_at": "2026-08-25T09:15:00Z"
+        }
+      ],
+      "customer_name": "Jessica Lee",
+      "customer_email": "j.lee@example.com",
+      "customer_phone": "+15553456789",
+      "customer_value": "repeat",
+      "order_count": 5,
+      "lifetime_value_cents": 112000
+    },
+    "shipment": {
+      "id": "SHIP-1002",
+      "order_id": "ORD-1002",
+      "carrier": "FedEx",
+      "tracking_number": "449044301542",
+      "status": "delivered",
+      "shipped_at": "2026-08-26T11:00:00Z",
+      "delivered_at": "2026-08-29T11:20:00Z",
+      "signed_by": null,
+      "shipping_address": {
+        "line1": "880 Harrison St",
+        "city": "San Francisco",
+        "state": "CA",
+        "postal_code": "94107",
+        "country": "US"
+      },
+      "created_at": "2026-08-26T10:00:00Z",
+      "events": [
+        {
+          "id": "EVT-1002-1",
+          "shipment_id": "SHIP-1002",
+          "timestamp": "2026-08-26T11:00:00Z",
+          "status": "label_created",
+          "location": "Springfield, OR",
+          "details": "Shipping label created with alternate destination 880 Harrison St, San Francisco, CA",
+          "created_at": "2026-08-26T11:00:00Z"
+        },
+        {
+          "id": "EVT-1002-2",
+          "shipment_id": "SHIP-1002",
+          "timestamp": "2026-08-27T18:30:00Z",
+          "status": "in_transit",
+          "location": "Oakland, CA",
+          "details": "In transit at FedEx sorting facility",
+          "created_at": "2026-08-27T18:30:00Z"
+        },
+        {
+          "id": "EVT-1002-3",
+          "shipment_id": "SHIP-1002",
+          "timestamp": "2026-08-29T11:20:00Z",
+          "status": "delivered",
+          "location": "San Francisco, CA",
+          "details": "Delivered - Left at front door, no signature required",
+          "created_at": "2026-08-29T11:20:00Z"
+        }
+      ]
+    },
+    "communications": {
+      "customer_id": "CUST-002",
+      "order_id": "ORD-1002",
+      "messages": [
+        {
+          "id": "MSG-003",
+          "customer_id": "CUST-002",
+          "order_id": "ORD-1002",
+          "direction": "inbound",
+          "channel": "email",
+          "subject": "Address change for ORD-1002",
+          "body": "Hello, I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead? Thanks! Jessica Lee",
+          "has_shipping_change": 1,
+          "created_at": "2026-08-25T14:10:00Z"
+        },
+        {
+          "id": "MSG-004",
+          "customer_id": "CUST-002",
+          "order_id": "ORD-1002",
+          "direction": "outbound",
+          "channel": "email",
+          "subject": "Re: Address change for ORD-1002",
+          "body": "Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!",
+          "has_shipping_change": 1,
+          "created_at": "2026-08-25T15:00:00Z"
+        }
+      ],
+      "message_count": 2,
+      "has_cancellation_request": false,
+      "has_address_change_request": true,
+      "has_inquiry": true
+    },
+    "history_and_policy": {
+      "policy": {
+        "id": "POL-001",
+        "merchant_name": "Acme Specialty Goods",
+        "approval_amount_cents": 20000,
+        "min_win_probability_to_fight": 0.5,
+        "always_concede_under_cents": 1500,
+        "vip_concede_max_cents": 50000,
+        "silence_action": "fight",
+        "created_at": "2026-01-01T00:00:00Z",
+        "updated_at": "2026-01-01T00:00:00Z"
+      },
+      "customer_tier": "repeat",
+      "order_count": 5,
+      "lifetime_value_cents": 112000,
+      "prior_disputes_count": 1,
+      "prior_orders": [
+        {
+          "id": "ORD-1002",
+          "amount_cents": 34000,
+          "status": "delivered",
+          "created_at": "2026-08-25T09:15:00Z"
+        },
+        {
+          "id": "ORD-1011",
+          "amount_cents": 18000,
+          "status": "delivered",
+          "created_at": "2026-07-15T10:00:00Z"
+        }
+      ]
+    },
+    "dispute": {
+      "id": "dp_S2",
+      "amount_cents": 34000,
+      "currency": "usd",
+      "reason": "fraudulent",
+      "status": "needs_response"
+    },
+    "produced_artifacts": []
+  },
+  "results": [
+    {
+      "name": "grounded_control",
+      "expected_pass": true,
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "NARRATIVE contains unsupported factual claim: 'The recorded dispute amount is $340.' The facts show dispute.amount_cents = 34000 (which equals $340.00), but the narrative states '$340' without cents notation, creating ambiguity. More critically, the narrative omits the dispute reason 'fraudulent' entirely in the opening sentence, only naming it in the header. The strategy.action 'concede' and strategy.win_probability 0.2 are assessments (supported), but the narrative fails to address the core dispute reason as required by reason_code_pass intent."
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "owner_summary_unsupported",
+      "expected_pass": false,
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "NARRATIVE passes reason_code and must_cite checks. HALLUCINATION FAILURE in strategy.owner_summary: claims 'Refund completed and $15 fee saved.' The facts contain no record of a completed refund, no $15 fee in the policy or records, and no prior refund action. The strategy.action is 'concede' (prospective), not a documented historical refund. This invents unsupported outcomes."
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Refund completed and $15 fee saved."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "uncategorized_text_unsupported",
+      "expected_pass": false,
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "NARRATIVE passes reason_code and must_cite checks. HALLUCINATION FAILURE in evidence_packet.uncategorized_text: 'The customer admitted deliberately committing fraud.' No such admission appears in the supplied communications. MSG-003 requests a shipping address change; MSG-004 confirms it. Neither message contains any fraud admission or confession. This claim is unsupported by the facts."
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": "The customer admitted deliberately committing fraud.",
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "quoted_reference_counts",
+      "expected_pass": true,
+      "result": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 18,
+        "missing_items": [],
+        "explanation": "The narrative names the dispute reason 'fraudulent' and cites the required order 'ORD-1002' within an attributed customer quote. All factual claims are supported: the dispute reason matches the supplied dispute record; the email quote is verbatim from MSG-003. The strategy recommendation (concede) is prospective and does not assert execution. No unsupported factual claims detected."
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent. The inbound email states: \"I just placed order ORD-1002 but I am traveling for work.\"",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "reference_only_outside_narrative",
+      "expected_pass": false,
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [
+          "ORD-1002"
+        ],
+        "explanation": "NARRATIVE contains unsupported factual claim: 'The recorded dispute amount is $340.' The facts show dispute.amount_cents = 34000 (which equals $340.00), but the narrative states '$340' without cents notation while the field name explicitly indicates cents. More critically, the narrative claims '$1,120 lifetime value' when facts show lifetime_value_cents = 112000 (which equals $1,120.00). The narrative omits the cents unit entirely, creating ambiguity. The core issue: narrative states amounts in dollars without the required precision markers present in source data."
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": "Dispute Reason: fraudulent. The inbound email states: \"I just placed order ORD-1002 but I am traveling for work.\"",
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "scoped_record_absence",
+      "expected_pass": true,
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 27,
+        "missing_items": [],
+        "explanation": "NARRATIVE contains unsupported factual claim: 'The recorded dispute amount is $340.' The facts show dispute.amount_cents = 34000 (which equals $340.00), but the narrative states it as '$340' without the cents designation used elsewhere in the facts. More critically, the narrative claims 'Merchant records list 5 total orders' when the facts show order_count: 5 for this customer, but only 2 prior_orders are listed in history_and_policy.prior_orders. The lifetime_value_cents of 112000 cents ($1,120) is correctly stated. The 'No return request' claim is supported (no return in communications)."
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value. No return request is documented in merchant records.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "captured_bad_output",
+      "expected_pass": false,
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 109,
+        "missing_items": [],
+        "explanation": "NARRATIVE and evidence_packet contain unsupported claims: (1) 'delivered on September 5, 2026' contradicts shipment.delivered_at '2026-08-29T11:20:00Z' (August 29). (2) 'order.updated_at' is September 5, not delivery date. (3) Evidence_packet claims 'technical defense probability is 75-85%' and 'Concession cost: $355.00 (charge $340.00 + chargeback fee $15.00)' with no policy or fact support. Chargeback fees are not supplied. Strategy.win_probability=0.2 contradicts the 75-85% prose claim."
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "customer_value": "repeat",
+          "evidence_strength": "weak",
+          "rationale": "Repeat customer (5 orders, $1,120 LTV) with disputed amount ($340) within vip_concede_max_cents threshold ($500). Policy mandates concession to protect customer lifetime value despite technical defense strength. Preserving repeat customer relationship has greater strategic value than pursuing marginal dispute win.",
+          "owner_summary": "Conceding dp_S2 ($340) for repeat customer Jessica Lee per policy. Protecting $1,120 LTV relationship. Issue full refund + absorb $15 fee. Contact customer proactively within 24hrs. Status: Execute concession immediately."
+        },
+        "evidence_packet": {
+          "customer_name": "Jessica Lee",
+          "customer_email_address": "j.lee@example.com",
+          "billing_address": "742 Evergreen Terrace, Springfield, OR 97477, US",
+          "shipping_address": "880 Harrison St, San Francisco, CA 94107, US",
+          "shipping_carrier": "FedEx",
+          "shipping_tracking_number": "449044301542",
+          "shipping_date": "2026-08-26",
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": "Customer communication (MSG-003, Aug 25 2026 14:10 UTC): \"Hello, I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead? Thanks! Jessica Lee\" | Merchant confirmation (MSG-004, Aug 25 2026 15:00 UTC): \"Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!\"",
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": "DISPUTE SUMMARY: Dispute ID: dp_S2 | Order ID: ORD-1002 | Customer ID: CUST-002 | Disputed Amount: $340.00 USD (34,000 cents) | Dispute Reason: fraudulent | Decision: CONCEDE | Customer Tier: REPEAT | Total Orders: 5 | Lifetime Value: $1,120.00 | Prior Disputes: 1 | Card Brand: MasterCard | Card Last 4: 5555 | Authorization Status: APPROVED | CVC Verification: PASS | AVS Postal Code Verification: PASS | Order Created: August 25, 2026 09:15:00 UTC | Order Updated: September 5, 2026 18:44:34 UTC | Product: Ceramic pour-over set | SKU: CPS-340 | Quantity: 1 unit | Unit Price: $340.00 | Delivery Status: DELIVERED | Delivery Date: September 5, 2026 11:20:00 UTC | Fulfillment Timeline: 11 days (normal for ceramic product) | Shipping Status: Complete | Carrier: FedEx | Tracking Number: 449044301542 | Label Created: August 26, 2026 11:00:00 UTC | In Transit: August 27, 2026 18:30:00 UTC | Delivered: August 29, 2026 11:20:00 UTC | Delivery Address: 880 Harrison St, San Francisco, CA 94107 | Signature Status: No signature required (left at front door) | POLICY MANDATE: Merchant Policy POL-001 directs concession for repeat/VIP customers under vip_concede_max_cents threshold ($500.00) | Disputed Amount ($340.00) is BELOW policy threshold | Concession Cost: $355.00 (charge $340.00 + chargeback fee $15.00) | LTV Protection Calculation: Concession cost ($355) represents 32% of customer lifetime value ($1,120) \u2014 justified investment for retention | Risk Mitigation: Prior dispute history (1 prior) suggests friction-prone account; concession prevents escalation | STRATEGIC RATIONALE: While technical defense probability is 75-85% (CVC passed, network approved, delivery confirmed, repeat customer, customer engagement documented), merchant policy compliance mandates concession for repeat customers under $500 threshold to prioritize long-term relationship value over single dispute win | CONCESSION RECOMMENDATION: Issue full refund ($340.00) and absorb chargeback fee ($15.00) as goodwill gesture to preserve $1,120 customer lifetime value and demonstrate customer-first approach",
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\n\nJessica Lee (CUST-002) is an established repeat customer with 5 prior orders and $1,120 lifetime value. On August 25, 2026, Ms. Lee authorized a $340.00 charge for a ceramic pour-over set. The transaction passed all security verification: CVC matched, AVS postal code matched, and MasterCard approved. Ms. Lee requested an address change to 880 Harrison St, San Francisco, CA 94107 on the same day, demonstrating full knowledge and ownership of the order. The order was fulfilled and delivered on September 5, 2026. Recommendation: Concede dispute based on merchant policy for repeat customers under vip_concede_max_cents threshold ($500.00) to protect customer lifetime value ($1,120) and preserve customer relationship.",
+          "files": [
+            "ORD-1002_order_confirmation.pdf",
+            "SHIP-1002_fedex_tracking_449044301542.pdf",
+            "MSG-003_MSG-004_customer_communications.eml",
+            "CUST-002_customer_profile_5_orders_1120_ltv.csv",
+            "ch_3UFZKDEmho7ai02f15hut2fu_transaction_authorization.pdf",
+            "AVS_CVC_verification_results_pass.pdf"
+          ]
+        }
+      }
+    }
+  ]
+}

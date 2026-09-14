@@ -1,0 +1,726 @@
+{
+  "code_revision": "eb83ad5",
+  "source_manifest": {
+    "agent/__init__.py": "35c7b3d297145aaf353e58a2e4e40a351783acfb26108051f9fdaede4e6b806d",
+    "agent/app.py": "96664135b11ded715ae4cd68b73be3274abc6cc100455ff6fa3b38079c6a73da",
+    "agent/executor.py": "388d01cee4f1ea2842ee316f0cfe1264908ffce7580bf8b0cb2e9bf1711dc24b",
+    "agent/graph.py": "d61036c9320a0f87d1755ca91dff7c22f507533c9df113308852a1ad09f10179",
+    "agent/hooks.py": "18e0b0df73b1c9bfbdb93a1deb9e5b9ec95e5e589e94400c0683053582f5056b",
+    "agent/models.py": "463d28c23acb34302add813bf7ead2f490461f9ed1970bc96ec271a7b584d196",
+    "agent/sweep.py": "9c88bcf42cc96a189edf7f29f308b0d0d727daaea6cdb3804873c4bb98214de6",
+    "agent/tools/__init__.py": "10eeb1e7c67ff14ddcb6826048c12393cc69f6e9794b593d69cab54fda30b95f",
+    "agent/tools/case_tools.py": "5267515a3cf29c906b53ba957894c158b374a7ff441863be6b62a445e82e26f1",
+    "agent/tools/evidence_tools.py": "8f24f313b2bc6534717ff02e2b88244bbcc4129fe4be62c0d257abb1712274c6",
+    "agent/tools/gateway_client.py": "8b23f84036fb35264f0d5f67a349ea009df915d423b06cf1283352abcc7a39bf",
+    "agent/tools/memory_tools.py": "a93e83c0b79637ac49544910258d0577834d4326b485d991fbd31a485660ad8b",
+    "agent/tools/stripe_tools.py": "6d217462606a425845fa0003ad802642b83fb7dd8f0e5fa802621c0f78229aef",
+    "data/merchant_policy.yaml": "86cd71992483723dc7123bf72be13d2a05d975bda138ac522c1e46a52642dcc4",
+    "evals/cases/case_01.json": "82fcac4824864906b460489a1a6cc74f6dec697a35008ca0ed2bf92d0810034b",
+    "evals/cases/case_02.json": "7364b325ba883f0adad0de1a2a30abef0e369cd663f1fbf8873de07e7a25cdb3",
+    "evals/cases/case_03.json": "e93e26d053d0bf764744023c04fc937b2f53838c74e7ba7ef3e392522ce22331",
+    "evals/cases/case_04.json": "2789bbdd84addac6ba52c32fdf6dd193e708c828296177bd202f876e0cdbf65c",
+    "evals/cases/case_05.json": "8643f05b615b13da171ec5407ca54e969917529ab887376074f059386482cc90",
+    "evals/cases/case_06.json": "487bf639afb29b222cfc85968c8545f290c08adf1e07f42bbc6a7b65f59964ee",
+    "evals/cases/case_07.json": "9935721ee43e723959e7c18465318a6f11a8c6fe8fb65f08a0689b075447f83e",
+    "evals/cases/case_08.json": "ee5f7433a8c8613262340bbea64922b50ea899f5a98eb7696452937b343ed30c",
+    "evals/cases/case_09.json": "8b566b9cd7180c418869c1322d2f38629b2c8c18369cae2a6fa31d20bf601aa0",
+    "evals/cases/case_10.json": "02f718874109b1e4197de9f02bcc89eea4d33a02b0bf369180a9a3feaec11135",
+    "evals/cases/case_11.json": "8f683171691762d86b00fcf79de46470a36875bd189c70890b205237ed1a0539",
+    "evals/cases/case_12.json": "69e07aecda60b57c28267ce4ec6ee706cbd23f1c926f73352e097b21c80b836a",
+    "evals/cases/case_13.json": "2f93e483c32a0b826198eeb09ac73bc4aaeebc3097977c3cb0ca3f326f0b0be2",
+    "evals/cases/case_14.json": "b787c3b131e9045e78430cffa59ca2eab3d073969b8e4053eec7ca275273607a",
+    "evals/cases/case_15.json": "909d53fb584d66d2b946225f370c7a9b007717ec9fedfd9646b6cb740de8e3be",
+    "evals/cases/case_16.json": "73463e896c232e0b929c2a823387b6f528dadd5768becb4794d8ced80eb3518e",
+    "evals/cases/case_17.json": "ebb7d069cf725c3bc46c7826c7849bde602da56b33544fb9e38a1ca46a1cb327",
+    "evals/cases/case_18.json": "8b68b676b35a1bda5eec528138b2fee8990f5520915057df8a08f515a53236fe",
+    "evals/cases/case_19.json": "a1b62f387cf0d530d8dd395bcbf9abb97791edd0e05f225f76fb6ae29a92d0c1",
+    "evals/cases/case_20.json": "d135bf52fa9e28299b8d228000e42109ef002506dc3e8480aad5742905d628c9",
+    "evals/run.py": "22658c642107d5db04f26ec37f2ceec2d7235e687f1b49607c5bad5041185171"
+  },
+  "source_snapshot_sha256": "bba841de8d7c3e5dbe126d9a96e7aee02fa3f6151743bfc3bce37fa374af8875",
+  "source_dirty": true,
+  "rubric": "grounded-v3",
+  "results": [
+    {
+      "case_id": "case_08",
+      "reason": "product_unacceptable",
+      "amount_cents": 11500,
+      "expected_action": "concede",
+      "actual_action": "concede",
+      "action_match": true,
+      "expected_gate": true,
+      "computed_gate": true,
+      "gate_match": true,
+      "judge_pass": false,
+      "judge_details": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 148,
+        "missing_items": [],
+        "explanation": "reason_code_pass: NARRATIVE explicitly names 'product_unacceptable' as the dispute reason and recommends concession. must_cite_pass: NARRATIVE meaningfully references all three required items: 'RET-88008' (return tracking), 'warehouse' (delivery destination), and 'return delivered' (delivery status). no_hallucination_pass: FAILED. The NARRATIVE states 'Per merchant product_unacceptable policy, customer return reports and refund claims are prioritized to resolve disputes and prevent escalation.' This claim is unsupported. The supplied merchant_policy contains no rule prioritizing product_unacceptable returns or refund claims. The policy_rules address human_approval_threshold, low_value_auto_concede, vip_repeat_concession, pre_chargeback_inquiry, silence_action, and return_policy_rule\u2014none of which establish a prioritization rule for product_unacceptable disputes. This is an invented policy justification."
+      },
+      "ev_cents": 0,
+      "ev_sign": true,
+      "overall_pass": false,
+      "win_probability": 0.15,
+      "narrative": "Dispute Reason: product_unacceptable\n\nCustomer James Wilson reported via message dated August 16, 2026, that he returned the Thermal Travel Mug Set using return tracking RET-88008, with the return delivered to the merchant's warehouse on August 15, 2026. The customer states that no refund has been issued as of the dispute date.\n\nThe original order (ORD-EVAL-008) was fulfilled and delivered via USPS tracking 940008 to the customer's billing address (808 Spruce Ct, Chicago, IL 60601) on August 4, 2026. All card verification checks (AVS line 1, postal code, and CVC) passed at transaction time.\n\nThe customer's communication documents a reported return delivery to the warehouse and an outstanding refund expectation. Per merchant product_unacceptable policy, customer return reports and refund claims are prioritized to resolve disputes and prevent escalation.\n\nRecommendation: Concede dispute dp_eval_08 based on customer reported return delivery (RET-88008) to warehouse on August 15, 2026, with outstanding refund complaint.",
+      "rationale": "Customer reported item returned via tracking RET-88008 to warehouse on August 15, 2026, with outstanding refund complaint. Per product_unacceptable policy, customer return reports and refund claims take precedence to resolve dispute and prevent escalation.",
+      "supporting_output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.15,
+          "expected_value_cents": 0,
+          "customer_value": "new",
+          "evidence_strength": "weak",
+          "rationale": "Customer reported item returned via tracking RET-88008 to warehouse on August 15, 2026, with outstanding refund complaint. Per product_unacceptable policy, customer return reports and refund claims take precedence to resolve dispute and prevent escalation.",
+          "owner_summary": "Recommend concede: Customer reported return delivery (RET-88008) to warehouse with outstanding refund. Resolves product_unacceptable dispute and addresses customer concern."
+        },
+        "evidence_packet": {
+          "customer_name": "James Wilson",
+          "customer_email_address": "j.wilson@example.com",
+          "billing_address": "808 Spruce Ct, Chicago, IL 60601, United States",
+          "shipping_address": "808 Spruce Ct, Chicago, IL 60601, United States",
+          "shipping_carrier": "USPS",
+          "shipping_tracking_number": "940008",
+          "shipping_date": "2026-08-01",
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: product_unacceptable\n\nCustomer James Wilson reported via message dated August 16, 2026, that he returned the Thermal Travel Mug Set using return tracking RET-88008, with the return delivered to the merchant's warehouse on August 15, 2026. The customer states that no refund has been issued as of the dispute date.\n\nThe original order (ORD-EVAL-008) was fulfilled and delivered via USPS tracking 940008 to the customer's billing address (808 Spruce Ct, Chicago, IL 60601) on August 4, 2026. All card verification checks (AVS line 1, postal code, and CVC) passed at transaction time.\n\nThe customer's communication documents a reported return delivery to the warehouse and an outstanding refund expectation. Per merchant product_unacceptable policy, customer return reports and refund claims are prioritized to resolve disputes and prevent escalation.\n\nRecommendation: Concede dispute dp_eval_08 based on customer reported return delivery (RET-88008) to warehouse on August 15, 2026, with outstanding refund complaint.",
+          "files": []
+        }
+      },
+      "case_facts": {
+        "scenario_description": "Product unacceptable where customer returned merchandise and return was delivered to warehouse.",
+        "dispute": {
+          "id": "dp_eval_08",
+          "amount": {
+            "cents": 11500,
+            "dollars": "$115.00",
+            "dollars_short": "$115",
+            "dollars_formatted": "$115.00"
+          },
+          "reason": "product_unacceptable",
+          "status": "needs_response",
+          "evidence_due_by": {
+            "iso": "2026-09-20T00:00:00Z",
+            "utc_formatted": "September 20, 2026 at 12:00 AM UTC",
+            "date_long": "September 20, 2026",
+            "date_short": "Sep 20, 2026",
+            "time_utc": "12:00 AM UTC"
+          }
+        },
+        "customer": {
+          "id": "CUST-EVAL-008",
+          "name": "James Wilson",
+          "email": "j.wilson@example.com",
+          "phone": "+1555010008",
+          "customer_tier": "new",
+          "order_count": 1,
+          "lifetime_value": {
+            "cents": 11500,
+            "dollars": "$115.00",
+            "dollars_short": "$115",
+            "dollars_formatted": "$115.00"
+          },
+          "prior_disputes_count": 0
+        },
+        "merchant_policy": {
+          "approval_amount": {
+            "cents": 20000,
+            "dollars": "$200.00",
+            "dollars_short": "$200",
+            "dollars_formatted": "$200.00"
+          },
+          "min_win_probability_to_fight": 0.5,
+          "always_concede_under": {
+            "cents": 1500,
+            "dollars": "$15.00",
+            "dollars_short": "$15",
+            "dollars_formatted": "$15.00"
+          },
+          "vip_concede_max": {
+            "cents": 50000,
+            "dollars": "$500.00",
+            "dollars_short": "$500",
+            "dollars_formatted": "$500.00"
+          },
+          "silence_action": "fight",
+          "return_policy": "30-day return policy; customer must initiate return through merchant support prior to dispute",
+          "policy_rules": {
+            "human_approval_threshold": "Disputes >= $200 require merchant owner approval before execution.",
+            "low_value_auto_concede": "Disputes under $15 are automatically conceded.",
+            "vip_repeat_concession": "Concessions for repeat or VIP customers up to $500 (vip_concede_max_cents) are authorized to protect customer lifetime value (LTV), even when carrier delivery records exist.",
+            "pre_chargeback_inquiry": "Pre-chargeback inquiries (status warning_needs_response or reason inquiry) represent cardholder questions before a formal dispute is initiated. Resolving pre-chargeback inquiries via refund is authorized under merchant policy to prevent formal dispute escalation.",
+            "silence_action": "If the merchant owner does not respond to an approval request, default action is fight.",
+            "return_policy_rule": "30-day return policy; customer must initiate return through merchant support prior to dispute."
+          }
+        },
+        "order": {
+          "id": "ORD-EVAL-008",
+          "amount": {
+            "cents": 11500,
+            "dollars": "$115.00",
+            "dollars_short": "$115",
+            "dollars_formatted": "$115.00"
+          },
+          "created_at": {
+            "iso": "2026-08-01T00:00:00Z",
+            "utc_formatted": "August 1, 2026 at 12:00 AM UTC",
+            "date_long": "August 1, 2026",
+            "date_short": "Aug 1, 2026",
+            "time_utc": "12:00 AM UTC"
+          },
+          "status": "fulfilled",
+          "items": [
+            {
+              "name": "Thermal Travel Mug Set",
+              "quantity": 1,
+              "price_cents": 11500
+            }
+          ],
+          "shipping_address": {
+            "line1": "808 Spruce Ct",
+            "city": "Chicago",
+            "state": "IL",
+            "postal_code": "60601",
+            "country": "US"
+          },
+          "billing_address": {
+            "line1": "808 Spruce Ct",
+            "city": "Chicago",
+            "state": "IL",
+            "postal_code": "60601",
+            "country": "US"
+          }
+        },
+        "shipment": {
+          "id": "shp_eval_08",
+          "carrier": "USPS",
+          "tracking_number": "940008",
+          "status": "delivered",
+          "shipped_at": {
+            "iso": "2026-08-01T10:00:00Z",
+            "utc_formatted": "August 1, 2026 at 10:00 AM UTC",
+            "date_long": "August 1, 2026",
+            "date_short": "Aug 1, 2026",
+            "time_utc": "10:00 AM UTC"
+          },
+          "delivered_at": {
+            "iso": "2026-08-04T11:00:00Z",
+            "utc_formatted": "August 4, 2026 at 11:00 AM UTC",
+            "date_long": "August 4, 2026",
+            "date_short": "Aug 4, 2026",
+            "time_utc": "11:00 AM UTC"
+          },
+          "signed_by": null,
+          "shipping_address": {
+            "line1": "808 Spruce Ct",
+            "city": "Chicago",
+            "state": "IL",
+            "postal_code": "60601",
+            "country": "US"
+          },
+          "events": []
+        },
+        "communications": [
+          {
+            "id": "msg_0",
+            "subject": "Return tracking RET-88008",
+            "body": "I returned the item using RET-88008. The return delivered to your warehouse on Aug 15. Still no refund.",
+            "has_shipping_change": 0,
+            "created_at": {
+              "iso": "2026-08-16T10:00:00Z",
+              "utc_formatted": "August 16, 2026 at 10:00 AM UTC",
+              "date_long": "August 16, 2026",
+              "date_short": "Aug 16, 2026",
+              "time_utc": "10:00 AM UTC"
+            }
+          }
+        ],
+        "charge": {
+          "amount": 11500,
+          "currency": "usd",
+          "card_checks": {
+            "address_line1_check": "pass",
+            "address_postal_code_check": "pass",
+            "cvc_check": "pass"
+          },
+          "billing_details": {
+            "name": "James Wilson",
+            "email": "j.wilson@example.com"
+          },
+          "metadata": {
+            "order_id": "ORD-EVAL-008",
+            "customer_id": "CUST-EVAL-008"
+          },
+          "payment_intent": "pi_case_08",
+          "charge_id": "ch_case_08"
+        }
+      },
+      "pipeline_error": null
+    },
+    {
+      "case_id": "case_09",
+      "reason": "product_unacceptable",
+      "amount_cents": 19500,
+      "expected_action": "concede",
+      "actual_action": "concede",
+      "action_match": true,
+      "expected_gate": true,
+      "computed_gate": true,
+      "gate_match": true,
+      "judge_pass": true,
+      "judge_details": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 110,
+        "missing_items": [
+          "LTV"
+        ],
+        "explanation": "All checks pass. (1) The narrative explicitly names 'product_unacceptable' as the dispute reason in the opening line. (2) The narrative meaningfully references all three required items: 'VIP customer' (customer tier), '$3,400 lifetime value' (LTV), and 'merchant policy vip_concede_max_cents threshold' (policy). (3) All factual claims are supported by the case facts: Amanda Ross is VIP with 12 orders, $3,400 LTV, 0 prior disputes; disputed amount is $195.00; vip_concede_max is $500.00; the August 14 communication reports the glaze color complaint; FedEx tracking 794909 confirms delivery on August 13, 2026 to the stated address, signed by A. Ross. The strategy assessment fields (win_probability 0.2, evidence_strength 'weak') are stated as assessments, not empirical claims. The recommendation to concede is prospective and supported by the policy rule 'vip_repeat_concession' authorizing concessions up to $500 for VIP customers to protect LTV."
+      },
+      "ev_cents": 0,
+      "ev_sign": true,
+      "overall_pass": true,
+      "win_probability": 0.2,
+      "narrative": "Dispute Reason: product_unacceptable\n\nAmanda Ross is a VIP customer with 12 total orders and $3,400 lifetime value, with 0 prior disputes. The disputed amount of $195.00 falls within merchant policy vip_concede_max_cents threshold of $500.00. \n\nOn August 14, 2026, customer Amanda Ross submitted an inquiry reporting that the Handmade Ceramic Vase glaze color was \"much darker than pictured\" and expressed disappointment with the product appearance.\n\nFedEx tracking 794909 confirms the order was delivered on August 13, 2026 to 909 Walnut St, Boston, MA 02108, and signed by A. Ross.\n\nRecommendation: Concede dispute based on VIP customer status, clean dispute history, and disputed amount within merchant policy threshold for VIP customer retention.",
+      "rationale": "VIP customer with $3,400 lifetime value and clean dispute history. Disputed amount of $195.00 falls within merchant policy vip_concede_max_cents threshold of $500.00. Proposed concession protects repeat/VIP customer lifetime value per merchant policy directive.",
+      "supporting_output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "customer_value": "vip",
+          "evidence_strength": "weak",
+          "rationale": "VIP customer with $3,400 lifetime value and clean dispute history. Disputed amount of $195.00 falls within merchant policy vip_concede_max_cents threshold of $500.00. Proposed concession protects repeat/VIP customer lifetime value per merchant policy directive.",
+          "owner_summary": "Recommend conceding dispute for VIP customer Amanda Ross ($3,400 LTV, 12 orders, 0 prior disputes). Disputed amount $195.00 is within policy threshold. Concession protects customer relationship and lifetime value."
+        },
+        "evidence_packet": {
+          "customer_name": "Amanda Ross",
+          "customer_email_address": "a.ross@example.com",
+          "billing_address": "909 Walnut St, Boston, MA 02108, US",
+          "shipping_address": "909 Walnut St, Boston, MA 02108, US",
+          "shipping_carrier": "FedEx",
+          "shipping_tracking_number": "794909",
+          "shipping_date": "2026-08-10",
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: product_unacceptable\n\nAmanda Ross is a VIP customer with 12 total orders and $3,400 lifetime value, with 0 prior disputes. The disputed amount of $195.00 falls within merchant policy vip_concede_max_cents threshold of $500.00. \n\nOn August 14, 2026, customer Amanda Ross submitted an inquiry reporting that the Handmade Ceramic Vase glaze color was \"much darker than pictured\" and expressed disappointment with the product appearance.\n\nFedEx tracking 794909 confirms the order was delivered on August 13, 2026 to 909 Walnut St, Boston, MA 02108, and signed by A. Ross.\n\nRecommendation: Concede dispute based on VIP customer status, clean dispute history, and disputed amount within merchant policy threshold for VIP customer retention.",
+          "files": []
+        }
+      },
+      "case_facts": {
+        "scenario_description": "VIP customer concession under $500 policy limit to preserve relationship.",
+        "dispute": {
+          "id": "dp_eval_09",
+          "amount": {
+            "cents": 19500,
+            "dollars": "$195.00",
+            "dollars_short": "$195",
+            "dollars_formatted": "$195.00"
+          },
+          "reason": "product_unacceptable",
+          "status": "needs_response",
+          "evidence_due_by": {
+            "iso": "2026-09-20T00:00:00Z",
+            "utc_formatted": "September 20, 2026 at 12:00 AM UTC",
+            "date_long": "September 20, 2026",
+            "date_short": "Sep 20, 2026",
+            "time_utc": "12:00 AM UTC"
+          }
+        },
+        "customer": {
+          "id": "CUST-EVAL-009",
+          "name": "Amanda Ross",
+          "email": "a.ross@example.com",
+          "phone": "+1555010009",
+          "customer_tier": "vip",
+          "order_count": 12,
+          "lifetime_value": {
+            "cents": 340000,
+            "dollars": "$3400.00",
+            "dollars_short": "$3400",
+            "dollars_formatted": "$3,400.00"
+          },
+          "prior_disputes_count": 0
+        },
+        "merchant_policy": {
+          "approval_amount": {
+            "cents": 20000,
+            "dollars": "$200.00",
+            "dollars_short": "$200",
+            "dollars_formatted": "$200.00"
+          },
+          "min_win_probability_to_fight": 0.5,
+          "always_concede_under": {
+            "cents": 1500,
+            "dollars": "$15.00",
+            "dollars_short": "$15",
+            "dollars_formatted": "$15.00"
+          },
+          "vip_concede_max": {
+            "cents": 50000,
+            "dollars": "$500.00",
+            "dollars_short": "$500",
+            "dollars_formatted": "$500.00"
+          },
+          "silence_action": "fight",
+          "return_policy": "30-day return policy; customer must initiate return through merchant support prior to dispute",
+          "policy_rules": {
+            "human_approval_threshold": "Disputes >= $200 require merchant owner approval before execution.",
+            "low_value_auto_concede": "Disputes under $15 are automatically conceded.",
+            "vip_repeat_concession": "Concessions for repeat or VIP customers up to $500 (vip_concede_max_cents) are authorized to protect customer lifetime value (LTV), even when carrier delivery records exist.",
+            "pre_chargeback_inquiry": "Pre-chargeback inquiries (status warning_needs_response or reason inquiry) represent cardholder questions before a formal dispute is initiated. Resolving pre-chargeback inquiries via refund is authorized under merchant policy to prevent formal dispute escalation.",
+            "silence_action": "If the merchant owner does not respond to an approval request, default action is fight.",
+            "return_policy_rule": "30-day return policy; customer must initiate return through merchant support prior to dispute."
+          }
+        },
+        "order": {
+          "id": "ORD-EVAL-009",
+          "amount": {
+            "cents": 19500,
+            "dollars": "$195.00",
+            "dollars_short": "$195",
+            "dollars_formatted": "$195.00"
+          },
+          "created_at": {
+            "iso": "2026-08-01T00:00:00Z",
+            "utc_formatted": "August 1, 2026 at 12:00 AM UTC",
+            "date_long": "August 1, 2026",
+            "date_short": "Aug 1, 2026",
+            "time_utc": "12:00 AM UTC"
+          },
+          "status": "fulfilled",
+          "items": [
+            {
+              "name": "Handmade Ceramic Vase",
+              "quantity": 1,
+              "price_cents": 19500
+            }
+          ],
+          "shipping_address": {
+            "line1": "909 Walnut St",
+            "city": "Boston",
+            "state": "MA",
+            "postal_code": "02108",
+            "country": "US"
+          },
+          "billing_address": {
+            "line1": "909 Walnut St",
+            "city": "Boston",
+            "state": "MA",
+            "postal_code": "02108",
+            "country": "US"
+          }
+        },
+        "shipment": {
+          "id": "shp_eval_09",
+          "carrier": "FedEx",
+          "tracking_number": "794909",
+          "status": "delivered",
+          "shipped_at": {
+            "iso": "2026-08-10T10:00:00Z",
+            "utc_formatted": "August 10, 2026 at 10:00 AM UTC",
+            "date_long": "August 10, 2026",
+            "date_short": "Aug 10, 2026",
+            "time_utc": "10:00 AM UTC"
+          },
+          "delivered_at": {
+            "iso": "2026-08-13T14:00:00Z",
+            "utc_formatted": "August 13, 2026 at 2:00 PM UTC",
+            "date_long": "August 13, 2026",
+            "date_short": "Aug 13, 2026",
+            "time_utc": "2:00 PM UTC"
+          },
+          "signed_by": "A. Ross",
+          "shipping_address": {
+            "line1": "909 Walnut St",
+            "city": "Boston",
+            "state": "MA",
+            "postal_code": "02108",
+            "country": "US"
+          },
+          "events": []
+        },
+        "communications": [
+          {
+            "id": "msg_0",
+            "subject": "Vase color differs from online photo",
+            "body": "The glaze is much darker than pictured. Disappointed.",
+            "has_shipping_change": 0,
+            "created_at": {
+              "iso": "2026-08-14T09:00:00Z",
+              "utc_formatted": "August 14, 2026 at 9:00 AM UTC",
+              "date_long": "August 14, 2026",
+              "date_short": "Aug 14, 2026",
+              "time_utc": "9:00 AM UTC"
+            }
+          }
+        ],
+        "charge": {
+          "amount": 19500,
+          "currency": "usd",
+          "card_checks": {
+            "address_line1_check": "pass",
+            "address_postal_code_check": "pass",
+            "cvc_check": "pass"
+          },
+          "billing_details": {
+            "name": "Amanda Ross",
+            "email": "a.ross@example.com"
+          },
+          "metadata": {
+            "order_id": "ORD-EVAL-009",
+            "customer_id": "CUST-EVAL-009"
+          },
+          "payment_intent": "pi_case_09",
+          "charge_id": "ch_case_09"
+        }
+      },
+      "pipeline_error": null
+    },
+    {
+      "case_id": "case_14",
+      "reason": "duplicate",
+      "amount_cents": 12000,
+      "expected_action": "fight",
+      "actual_action": "fight",
+      "action_match": true,
+      "expected_gate": false,
+      "computed_gate": false,
+      "gate_match": true,
+      "judge_pass": false,
+      "judge_details": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": false,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 95,
+        "missing_items": [],
+        "explanation": "reason_code_pass: TRUE. The narrative explicitly names 'duplicate' as the dispute reason in the opening sentence. must_cite_pass: FALSE. The required items are ['ORD-14A', 'ORD-14B', 'distinct items']. The narrative cites 'distinct items' and references 'ORD-14A' and 'ORD-14B' only indirectly through the quoted customer communication ('ORD-14A and ORD-14B contained distinct items ordered separately'), but does not independently name these order IDs outside the quotation. The facts show metadata 'related_orders: ORD-14A,ORD-14B' and the communication body states the comparison, but the narrative does not directly cite ORD-14A and ORD-14B as standalone factual references\u2014only as part of the attributed message. This fails the requirement to 'meaningfully reference' these items. no_hallucination_pass: TRUE. All factual claims in the narrative are supported: card checks passed (charge.card_checks), order delivered (shipment.status, shipment.delivered_at), recipient signature from M. Reid (shipment.signed_by), billing address match (order.billing_address and shipment.shipping_address match), communication dated August 10, 2026 (communications[0].created_at), and the quoted message content (communications[0].body). Strategy assessments (win_probability 0.85, expected_value_cents 10200, evidence_strength 'strong') are labeled as assessments and not contradicted by facts."
+      },
+      "ev_cents": 10200,
+      "ev_sign": true,
+      "overall_pass": false,
+      "win_probability": 0.85,
+      "narrative": "Dispute Reason: duplicate\n\nThe merchant disputes this duplicate charge claim. Card verification checks (AVS address line 1, postal code, and CVC) all passed. Order ORD-EVAL-014 for a Leather Laptop Briefcase was delivered via UPS tracking 1Z99914 on August 13, 2026, to 150 Poplar Ave, Indianapolis, IN 46201, with recipient signature from M. Reid matching the cardholder. Customer communication dated August 10, 2026, documents an Order receipt message: \"Comparison shows ORD-14A and ORD-14B contained distinct items ordered separately,\" confirming that the related orders were separate legitimate transactions with distinct items. Recommendation: Submit evidence to contest dispute.",
+      "rationale": "Records confirm separate orders contained distinct items ordered separately. Customer communication documents that ORD-14A and ORD-14B were distinct transactions. Card verification passed all checks. Package delivered to verified billing address with recipient signature.",
+      "supporting_output": {
+        "strategy": {
+          "action": "fight",
+          "win_probability": 0.85,
+          "expected_value_cents": 10200,
+          "customer_value": "new",
+          "evidence_strength": "strong",
+          "rationale": "Records confirm separate orders contained distinct items ordered separately. Customer communication documents that ORD-14A and ORD-14B were distinct transactions. Card verification passed all checks. Package delivered to verified billing address with recipient signature.",
+          "owner_summary": "Recommend fighting duplicate dispute. Records confirm ORD-14A and ORD-14B contained distinct items ordered separately per customer communication. Delivery confirmed to verified address with signature."
+        },
+        "evidence_packet": {
+          "customer_name": "Marcus Reid",
+          "customer_email_address": "m.reid@example.com",
+          "billing_address": "150 Poplar Ave, Indianapolis, IN 46201, US",
+          "shipping_address": "150 Poplar Ave, Indianapolis, IN 46201, US",
+          "shipping_carrier": "UPS",
+          "shipping_tracking_number": "1Z99914",
+          "shipping_date": "2026-08-10",
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: duplicate\n\nThe merchant disputes this duplicate charge claim. Card verification checks (AVS address line 1, postal code, and CVC) all passed. Order ORD-EVAL-014 for a Leather Laptop Briefcase was delivered via UPS tracking 1Z99914 on August 13, 2026, to 150 Poplar Ave, Indianapolis, IN 46201, with recipient signature from M. Reid matching the cardholder. Customer communication dated August 10, 2026, documents an Order receipt message: \"Comparison shows ORD-14A and ORD-14B contained distinct items ordered separately,\" confirming that the related orders were separate legitimate transactions with distinct items. Recommendation: Submit evidence to contest dispute.",
+          "files": []
+        }
+      },
+      "case_facts": {
+        "scenario_description": "Duplicate dispute where orders ORD-14A and ORD-14B represent distinct items placed hours apart.",
+        "dispute": {
+          "id": "dp_eval_14",
+          "amount": {
+            "cents": 12000,
+            "dollars": "$120.00",
+            "dollars_short": "$120",
+            "dollars_formatted": "$120.00"
+          },
+          "reason": "duplicate",
+          "status": "needs_response",
+          "evidence_due_by": {
+            "iso": "2026-09-20T00:00:00Z",
+            "utc_formatted": "September 20, 2026 at 12:00 AM UTC",
+            "date_long": "September 20, 2026",
+            "date_short": "Sep 20, 2026",
+            "time_utc": "12:00 AM UTC"
+          }
+        },
+        "customer": {
+          "id": "CUST-EVAL-014",
+          "name": "Marcus Reid",
+          "email": "m.reid@example.com",
+          "phone": "+1555010014",
+          "customer_tier": "new",
+          "order_count": 2,
+          "lifetime_value": {
+            "cents": 24000,
+            "dollars": "$240.00",
+            "dollars_short": "$240",
+            "dollars_formatted": "$240.00"
+          },
+          "prior_disputes_count": 0
+        },
+        "merchant_policy": {
+          "approval_amount": {
+            "cents": 20000,
+            "dollars": "$200.00",
+            "dollars_short": "$200",
+            "dollars_formatted": "$200.00"
+          },
+          "min_win_probability_to_fight": 0.5,
+          "always_concede_under": {
+            "cents": 1500,
+            "dollars": "$15.00",
+            "dollars_short": "$15",
+            "dollars_formatted": "$15.00"
+          },
+          "vip_concede_max": {
+            "cents": 50000,
+            "dollars": "$500.00",
+            "dollars_short": "$500",
+            "dollars_formatted": "$500.00"
+          },
+          "silence_action": "fight",
+          "return_policy": "30-day return policy; customer must initiate return through merchant support prior to dispute",
+          "policy_rules": {
+            "human_approval_threshold": "Disputes >= $200 require merchant owner approval before execution.",
+            "low_value_auto_concede": "Disputes under $15 are automatically conceded.",
+            "vip_repeat_concession": "Concessions for repeat or VIP customers up to $500 (vip_concede_max_cents) are authorized to protect customer lifetime value (LTV), even when carrier delivery records exist.",
+            "pre_chargeback_inquiry": "Pre-chargeback inquiries (status warning_needs_response or reason inquiry) represent cardholder questions before a formal dispute is initiated. Resolving pre-chargeback inquiries via refund is authorized under merchant policy to prevent formal dispute escalation.",
+            "silence_action": "If the merchant owner does not respond to an approval request, default action is fight.",
+            "return_policy_rule": "30-day return policy; customer must initiate return through merchant support prior to dispute."
+          }
+        },
+        "order": {
+          "id": "ORD-EVAL-014",
+          "amount": {
+            "cents": 12000,
+            "dollars": "$120.00",
+            "dollars_short": "$120",
+            "dollars_formatted": "$120.00"
+          },
+          "created_at": {
+            "iso": "2026-08-01T00:00:00Z",
+            "utc_formatted": "August 1, 2026 at 12:00 AM UTC",
+            "date_long": "August 1, 2026",
+            "date_short": "Aug 1, 2026",
+            "time_utc": "12:00 AM UTC"
+          },
+          "status": "fulfilled",
+          "items": [
+            {
+              "name": "Leather Laptop Briefcase",
+              "quantity": 1,
+              "price_cents": 12000
+            }
+          ],
+          "shipping_address": {
+            "line1": "150 Poplar Ave",
+            "city": "Indianapolis",
+            "state": "IN",
+            "postal_code": "46201",
+            "country": "US"
+          },
+          "billing_address": {
+            "line1": "150 Poplar Ave",
+            "city": "Indianapolis",
+            "state": "IN",
+            "postal_code": "46201",
+            "country": "US"
+          }
+        },
+        "shipment": {
+          "id": "shp_eval_14",
+          "carrier": "UPS",
+          "tracking_number": "1Z99914",
+          "status": "delivered",
+          "shipped_at": {
+            "iso": "2026-08-10T10:00:00Z",
+            "utc_formatted": "August 10, 2026 at 10:00 AM UTC",
+            "date_long": "August 10, 2026",
+            "date_short": "Aug 10, 2026",
+            "time_utc": "10:00 AM UTC"
+          },
+          "delivered_at": {
+            "iso": "2026-08-13T14:00:00Z",
+            "utc_formatted": "August 13, 2026 at 2:00 PM UTC",
+            "date_long": "August 13, 2026",
+            "date_short": "Aug 13, 2026",
+            "time_utc": "2:00 PM UTC"
+          },
+          "signed_by": "M. Reid",
+          "shipping_address": {
+            "line1": "150 Poplar Ave",
+            "city": "Indianapolis",
+            "state": "IN",
+            "postal_code": "46201",
+            "country": "US"
+          },
+          "events": []
+        },
+        "communications": [
+          {
+            "id": "msg_0",
+            "subject": "Order receipt",
+            "body": "Comparison shows ORD-14A and ORD-14B contained distinct items ordered separately.",
+            "has_shipping_change": 0,
+            "created_at": {
+              "iso": "2026-08-10T11:00:00Z",
+              "utc_formatted": "August 10, 2026 at 11:00 AM UTC",
+              "date_long": "August 10, 2026",
+              "date_short": "Aug 10, 2026",
+              "time_utc": "11:00 AM UTC"
+            }
+          }
+        ],
+        "charge": {
+          "amount": 12000,
+          "currency": "usd",
+          "card_checks": {
+            "address_line1_check": "pass",
+            "address_postal_code_check": "pass",
+            "cvc_check": "pass"
+          },
+          "billing_details": {
+            "name": "Marcus Reid",
+            "email": "m.reid@example.com"
+          },
+          "metadata": {
+            "order_id": "ORD-EVAL-014",
+            "related_orders": "ORD-14A,ORD-14B",
+            "customer_id": "CUST-EVAL-014"
+          },
+          "payment_intent": "pi_case_14",
+          "charge_id": "ch_case_14"
+        }
+      },
+      "pipeline_error": null
+    }
+  ]
+}

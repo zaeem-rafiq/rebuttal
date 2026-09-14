@@ -123,12 +123,21 @@ def test_get_dispute(mock_retrieve, mock_guard):
         "amount": 4800,
         "reason": "product_not_received",
         "status": "needs_response",
+        "client_secret": "test-secret-sentinel",
+        "payment_intent": {"id": "pi_test", "client_secret": "nested-secret-sentinel"},
+        "charge": {"id": "ch_test", "receipt_url": "https://example.invalid/private-receipt"},
+        "balance_transactions": [{"fee": 1500, "net": -6300, "client_secret": "list-secret-sentinel"}],
     }
     mock_retrieve.return_value = mock_disp
 
     result = get_dispute("dp_1001")
     assert result["id"] == "dp_1001"
     assert result["reason"] == "product_not_received"
+    assert "client_secret" not in result
+    assert result["payment_intent"] == {"id": "pi_test"}
+    assert result["charge"] == {"id": "ch_test"}
+    assert result["balance_transactions"] == [{"fee": 1500, "net": -6300}]
+    assert mock_disp.to_dict.return_value["payment_intent"]["client_secret"] == "nested-secret-sentinel"
 
 
 @patch("agent.tools.stripe_tools.verify_live_key_guard")

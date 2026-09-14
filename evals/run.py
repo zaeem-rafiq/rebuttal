@@ -368,7 +368,6 @@ def run_single_eval_case(case_path: Path, judge_client: Any) -> Dict[str, Any]:
     }
 
     fixture_records = {
-        "scenario_description": case.get("description", ""),
         "dispute": {
             "id": case["dispute_id"],
             "amount": format_currency_cents(case["amount_cents"]),

@@ -375,6 +375,8 @@ def test_eval_rejection_continues_suite_and_persists_complete_output(monkeypatch
     expected_output = {'strategy': strategy.model_dump(), 'evidence_packet': packet.model_dump()}
     assert rows[1]['supporting_output'] == expected_output
     assert rows[1]['case_facts']['dispute']['id'] == case['dispute_id']
+    assert 'scenario_description' not in rows[1]['case_facts']
+    assert rows[1]['case_facts']['merchant_policy']['vip_concede_max_cents'] == 50000
     prompt = judge.converse.call_args.kwargs['messages'][0]['content'][0]['text']
     assert json.loads(prompt)['supporting_output'] == expected_output
     assert json.dumps(expected_output, indent=2) in report.read_text()

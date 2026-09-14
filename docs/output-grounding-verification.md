@@ -71,3 +71,42 @@ is prepared in the main checkout under docs/proofs/evaluation-judge; it has not
 been applied. BEDROCK_JUDGE_MODEL_ID can select a judge independently of the
 application model, and reports retain judge model ID and token usage. The latest
 implementation still needs a complete run with a judge that passes these controls.
+
+
+## Latest checkpoint
+
+Revision 5552395 completed the 20-case benchmark: action 20/20, gate 20/20,
+EV sign 20/20, Haiku judge 13/20, exit 1. Results and complete source/output
+records are preserved in evals/results/2026-09-14-5552395-full.{md,json}.
+The action regression is repaired. The grounding work is not complete.
+
+Independent review found false-positive explanations alongside actual errors:
+prior-versus-total counts, unsupported receipt/authorization implications,
+undocumented agreement compliance, and invented fulfillment/payment processing
+claims. Passing Haiku verdicts also missed authorization implications in owner
+summaries. No manually adjusted passing score is claimed. The saved scenario
+description is broader than agent-visible tool records and must not be used to
+justify claims the agent could not ground in retrieved evidence.
+
+The shared Stripe serialization boundary now excludes client_secret and
+receipt_url recursively. Expanded test responses included these unused fields;
+they are unnecessary for dispute evidence. Fee and balance-transaction evidence
+is retained. Regression checks cover nested objects/lists and preserve the input
+object. Full offline suite after this repair: 107 passed, 2 warnings, exit 0.
+The local response capture was sanitized and restricted to mode 0600. Eight
+JSON files in this task's recorded executor sessions were checked by field-name
+search; none contained client_secret or receipt_url. Earlier model invocations
+used the old unfiltered tool response; no provider-side deletion or credential
+rotation is claimed. The recording harness refuses an unsanitized revision.
+
+Pending owner decisions in the current task: (1) narrowly scoped Sonnet evaluator
+access and a $5 verification budget; (2) sanitized Stripe test-record use in the
+Bedrock verification/final demo. Automatic approval review rejected the additional
+full-payload disclosure; it was not retried. No new permission was applied.
+
+Next: qualify the evaluator on all per-criterion positive/negative controls;
+adjudicate saved outputs and repair remaining actual generation defects; repeat
+required checks; record the sanitized test flow; integrate the isolated commits
+without disturbing main's unrelated preflight work; finish the video and verify
+it against the official rules. The 49.954-second opening prototype is in the main
+checkout at docs/media/edit/submission-v3/opening-proof/. It is not a final demo.

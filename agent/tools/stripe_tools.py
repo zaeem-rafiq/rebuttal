@@ -43,15 +43,16 @@ def verify_live_key_guard(api_key: Optional[str] = None) -> str:
 
 
 def serialize_stripe_object(obj: Any) -> Any:
-    """Recursively convert Stripe objects or dictionaries to standard Python dicts."""
+    """Convert tool results to records, excluding client credentials and receipt access URLs."""
     if isinstance(obj, dict):
-        return {k: serialize_stripe_object(v) for k, v in obj.items()}
+        return {k: serialize_stripe_object(v) for k, v in obj.items()
+                if k not in {"client_secret", "receipt_url"}}
     elif isinstance(obj, list):
         return [serialize_stripe_object(item) for item in obj]
     elif hasattr(obj, "to_dict") and callable(getattr(obj, "to_dict")):
         d = obj.to_dict()
         if isinstance(d, dict):
-            return {k: serialize_stripe_object(v) for k, v in d.items()}
+            return serialize_stripe_object(d)
     return obj
 
 
