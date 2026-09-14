@@ -1,0 +1,30 @@
+{
+    "UserName": "rebuttal-local",
+    "PolicyName": "RebuttalEvaluationJudge",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "InvokeEvaluationJudge",
+                "Effect": "Allow",
+                "Action": "bedrock:InvokeModel",
+                "Resource": "arn:aws:bedrock:us-east-1:292341338711:inference-profile/us.anthropic.claude-sonnet-4-5-20250929-v1:0"
+            },
+            {
+                "Sid": "InvokeEvaluationJudgeDestinations",
+                "Effect": "Allow",
+                "Action": "bedrock:InvokeModel",
+                "Resource": [
+                    "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-5-20250929-v1:0",
+                    "arn:aws:bedrock:us-east-2::foundation-model/anthropic.claude-sonnet-4-5-20250929-v1:0",
+                    "arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-sonnet-4-5-20250929-v1:0"
+                ],
+                "Condition": {
+                    "StringEquals": {
+                        "bedrock:InferenceProfileArn": "arn:aws:bedrock:us-east-1:292341338711:inference-profile/us.anthropic.claude-sonnet-4-5-20250929-v1:0"
+                    }
+                }
+            }
+        ]
+    }
+}

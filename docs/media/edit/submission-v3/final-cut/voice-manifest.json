@@ -1,0 +1,14 @@
+[
+  {
+    "index": 0,
+    "speech_sha256": "277d8a49d1c5f000ceb51c098a473b3ae995195a39ef899cb96c523e277afa88",
+    "audio_sha256": "359d0e50312e701760b185d261d22d0747836010bbd47e37a3482de03efede33",
+    "source": "reused opening-proof audio"
+  },
+  {
+    "index": 1,
+    "speech_sha256": "76feeb8a2c3022d616ddf1942320706703fd1369db7c4a290aa0ff07644c39c2",
+    "audio_sha256": "d36e5f02bc888c5904a065388c2ffd2edc595f95a8bc5c3dda7eb400dc9c9ad2",
+    "source": "reused opening-proof audio"
+  }
+]

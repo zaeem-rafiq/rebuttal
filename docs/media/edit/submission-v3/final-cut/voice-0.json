@@ -1,0 +1,320 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 1432500,
+    "duration": 781250,
+    "text": "For"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 2213750,
+    "duration": 3906250,
+    "text": "small"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 6250000,
+    "duration": 4557500,
+    "text": "online"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 10807500,
+    "duration": 5208330,
+    "text": "merchants"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 20052080,
+    "duration": 390830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 20572910,
+    "duration": 6250000,
+    "text": "chargeback"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 26822910,
+    "duration": 3645830,
+    "text": "starts"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 30468750,
+    "duration": 520830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 30989580,
+    "duration": 4557500,
+    "text": "race"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 35677080,
+    "duration": 1302080,
+    "text": "to"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 37109580,
+    "duration": 5077910,
+    "text": "assemble"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 42187500,
+    "duration": 6120000,
+    "text": "records"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 52604160,
+    "duration": 1041660,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 53776250,
+    "duration": 4817910,
+    "text": "order"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 60807500,
+    "duration": 4427080,
+    "text": "delivery"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 65364580,
+    "duration": 6770830,
+    "text": "history"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 73958330,
+    "duration": 3776250,
+    "text": "customer"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 77734580,
+    "duration": 6901250,
+    "text": "messages"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 86849160,
+    "duration": 1172080,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 88151250,
+    "duration": 4557080,
+    "text": "response"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 92708330,
+    "duration": 5208330,
+    "text": "policy"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 97916660,
+    "duration": 3776250,
+    "text": "sit"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 102474160,
+    "duration": 1302080,
+    "text": "in"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 103906250,
+    "duration": 3255410,
+    "text": "different"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 107291660,
+    "duration": 5989580,
+    "text": "places"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 117187500,
+    "duration": 4687500,
+    "text": "Rebuttal"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 121875000,
+    "duration": 4297080,
+    "text": "brings"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 126172080,
+    "duration": 2604160,
+    "text": "those"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 128776250,
+    "duration": 4557080,
+    "text": "records"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 133333330,
+    "duration": 5078330,
+    "text": "together"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 142578330,
+    "duration": 4296660,
+    "text": "recommends"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 146875000,
+    "duration": 390830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 147265830,
+    "duration": 8333330,
+    "text": "response"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 157942910,
+    "duration": 911660,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 158984580,
+    "duration": 5729160,
+    "text": "drafts"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 166276250,
+    "duration": 4036250,
+    "text": "evidence"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 170312500,
+    "duration": 1562500,
+    "text": "for"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 172005410,
+    "duration": 4036660,
+    "text": "review"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 180208330,
+    "duration": 781250,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 180989580,
+    "duration": 4036660,
+    "text": "goal"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 186588750,
+    "duration": 1432080,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 188020830,
+    "duration": 3906250,
+    "text": "less"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 192057500,
+    "duration": 5989580,
+    "text": "manual"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 198047080,
+    "duration": 4427080,
+    "text": "case"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 203515830,
+    "duration": 6770830,
+    "text": "assembly"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 214322910,
+    "duration": 1172080,
+    "text": "with"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 215495000,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 216406250,
+    "duration": 4947910,
+    "text": "merchant"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 221484580,
+    "duration": 5338330,
+    "text": "retaining"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 226822910,
+    "duration": 6770830,
+    "text": "control"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 234375000,
+    "duration": 911660,
+    "text": "of"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 235416660,
+    "duration": 6380410,
+    "text": "consequential"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 241927080,
+    "duration": 7552080,
+    "text": "decisions"
+  }
+]

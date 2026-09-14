@@ -1,0 +1,48 @@
+[
+  {
+    "label": "01 / THE PROBLEM",
+    "title": "A chargeback. A pile of records.",
+    "tag": "REBUTTAL / STRIPE MERCHANT PROTOTYPE",
+    "panel_label": "THE MERCHANT WORKFLOW",
+    "lines": [
+      "Order details",
+      "Carrier delivery records",
+      "Customer messages",
+      "Merchant response policy",
+      "Proposed response and evidence for review",
+      "Merchant retains control"
+    ],
+    "note": "Goal: less manual case assembly, with merchant control.",
+    "speech": "For small online merchants, a chargeback starts a race to assemble records. The order, delivery history, customer messages, and response policy sit in different places. Rebuttal brings those records together, recommends a response, and drafts evidence for review. The goal is less manual case assembly, with the merchant retaining control of consequential decisions.",
+    "reveal_at": [
+      0.65,
+      6.15,
+      7.45,
+      8.85,
+      14.4,
+      21.7
+    ]
+  },
+  {
+    "label": "02 / HOW IT WORKS",
+    "title": "Evidence first. Then a decision.",
+    "tag": "AWS STRANDS AGENTS SDK / APPLICATION DESIGN",
+    "panel_label": "IMPLEMENTED EXECUTION FLOW",
+    "lines": [
+      "Intake retrieves the dispute",
+      "Orders / Shipping / Communications / History",
+      "Strategy waits for all four collectors",
+      "Drafter receives evidence and strategy",
+      "Executor pauses when approval is required"
+    ],
+    "note": "Seven evidence graph nodes, plus a separate executor.",
+    "speech": "Rebuttal uses the AWS Strands Agents SDK. After intake, four agents collect evidence in parallel. Strategy waits for all four. The drafter then receives both the evidence and the proposed response. A separate executor uses an approval hook before taking a guarded action.",
+    "reveal_at": [
+      0.65,
+      5.8,
+      9.0,
+      11.6,
+      16.9
+    ]
+  }
+]

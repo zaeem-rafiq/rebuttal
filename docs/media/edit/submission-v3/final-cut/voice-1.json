@@ -1,0 +1,260 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 781250,
+    "duration": 5338750,
+    "text": "Rebuttal"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 6250000,
+    "duration": 3776250,
+    "text": "uses"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 10026250,
+    "duration": 1041660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 11979160,
+    "duration": 6901250,
+    "text": "AWS"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 19010410,
+    "duration": 6770830,
+    "text": "Strands"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 26953330,
+    "duration": 5078330,
+    "text": "Agents"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 32942910,
+    "duration": 7552080,
+    "text": "SDK"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 44661660,
+    "duration": 3515830,
+    "text": "After"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 48307500,
+    "duration": 6120000,
+    "text": "intake"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 56770830,
+    "duration": 2343750,
+    "text": "four"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 60026250,
+    "duration": 3645830,
+    "text": "agents"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 63802080,
+    "duration": 4947910,
+    "text": "collect"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 70182500,
+    "duration": 6120000,
+    "text": "evidence"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 77604160,
+    "duration": 1041660,
+    "text": "in"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 78645830,
+    "duration": 6380410,
+    "text": "parallel"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 89192910,
+    "duration": 5598750,
+    "text": "Strategy"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 94791660,
+    "duration": 4427080,
+    "text": "waits"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 100390830,
+    "duration": 2343750,
+    "text": "for"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 103906250,
+    "duration": 1953330,
+    "text": "all"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 105859580,
+    "duration": 4557500,
+    "text": "four"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 114583330,
+    "duration": 781250,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 115364580,
+    "duration": 4817910,
+    "text": "drafter"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 120182500,
+    "duration": 2343750,
+    "text": "then"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 122526250,
+    "duration": 6901250,
+    "text": "receives"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 132031250,
+    "duration": 3125000,
+    "text": "both"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 135286660,
+    "duration": 1432500,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 137890830,
+    "duration": 6380410,
+    "text": "evidence"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 145833330,
+    "duration": 1041660,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 146875000,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 147656250,
+    "duration": 4557500,
+    "text": "proposed"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 152213750,
+    "duration": 7552080,
+    "text": "response"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 163932500,
+    "duration": 390830,
+    "text": "A"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 164453330,
+    "duration": 3906250,
+    "text": "separate"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 168359580,
+    "duration": 6250000,
+    "text": "executor"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 176302080,
+    "duration": 3385410,
+    "text": "uses"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 179687500,
+    "duration": 651250,
+    "text": "an"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 180338750,
+    "duration": 5208330,
+    "text": "approval"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 185547080,
+    "duration": 2864580,
+    "text": "hook"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 190885410,
+    "duration": 5989580,
+    "text": "before"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 197005410,
+    "duration": 4036660,
+    "text": "taking"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 201172080,
+    "duration": 520830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 201692910,
+    "duration": 3125000,
+    "text": "guarded"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 204817910,
+    "duration": 4687500,
+    "text": "action"
+  }
+]

@@ -1,0 +1,275 @@
+{
+  "id": "du_1UFZKEEmho7ai02ftdSLjoQN",
+  "object": "dispute",
+  "amount": 34000,
+  "balance_transaction": "txn_1UFZKEEmho7ai02fhsEFJkhI",
+  "balance_transactions": [
+    {
+      "id": "txn_1UFZKEEmho7ai02fhsEFJkhI",
+      "object": "balance_transaction",
+      "amount": -34000,
+      "available_on": 1789390174,
+      "balance_type": "payments",
+      "created": 1789390174,
+      "currency": "usd",
+      "description": "Chargeback withdrawal for ch_3UFZKDEmho7ai02f15hut2fu",
+      "exchange_rate": null,
+      "fee": 1500,
+      "fee_details": [
+        {
+          "amount": 1500,
+          "application": null,
+          "currency": "usd",
+          "description": "Dispute fee",
+          "type": "stripe_fee"
+        }
+      ],
+      "net": -35500,
+      "reporting_category": "dispute",
+      "source": "du_1UFZKEEmho7ai02ftdSLjoQN",
+      "status": "available",
+      "type": "adjustment"
+    }
+  ],
+  "charge": {
+    "id": "ch_3UFZKDEmho7ai02f15hut2fu",
+    "object": "charge",
+    "amount": 34000,
+    "amount_captured": 34000,
+    "amount_refunded": 0,
+    "application": null,
+    "application_fee": null,
+    "application_fee_amount": null,
+    "balance_transaction": "txn_3UFZKDEmho7ai02f1rQD4EqX",
+    "billing_details": {
+      "address": {
+        "city": null,
+        "country": null,
+        "line1": null,
+        "line2": null,
+        "postal_code": null,
+        "state": null
+      },
+      "email": null,
+      "name": null,
+      "phone": null,
+      "tax_id": null
+    },
+    "calculated_statement_descriptor": "Stripe",
+    "captured": true,
+    "created": 1789390173,
+    "currency": "usd",
+    "customer": null,
+    "description": null,
+    "destination": null,
+    "dispute": "du_1UFZKEEmho7ai02ftdSLjoQN",
+    "disputed": true,
+    "failure_balance_transaction": null,
+    "failure_code": null,
+    "failure_message": null,
+    "fraud_details": {},
+    "livemode": false,
+    "metadata": {
+      "order_id": "ORD-1002",
+      "scenario": "S2"
+    },
+    "on_behalf_of": null,
+    "order": null,
+    "outcome": {
+      "advice_code": null,
+      "network_advice_code": null,
+      "network_decline_code": null,
+      "network_status": "approved_by_network",
+      "reason": null,
+      "risk_level": "normal",
+      "risk_score": 58,
+      "seller_message": "Payment complete.",
+      "type": "authorized"
+    },
+    "paid": true,
+    "payment_intent": "pi_3UFZKDEmho7ai02f1kLPGjYN",
+    "payment_method": "pm_1UFZKDEmho7ai02fKwETrMuG",
+    "payment_method_details": {
+      "card": {
+        "amount_authorized": 34000,
+        "authorization_code": "419682",
+        "brand": "visa",
+        "checks": {
+          "address_line1_check": null,
+          "address_postal_code_check": null,
+          "cvc_check": "pass"
+        },
+        "country": "US",
+        "exp_month": 9,
+        "exp_year": 2027,
+        "extended_authorization": {
+          "status": "disabled"
+        },
+        "fingerprint": "DuFce5JxjR4I4Msd",
+        "funding": "credit",
+        "incremental_authorization": {
+          "status": "unavailable"
+        },
+        "installments": null,
+        "last4": "0259",
+        "mandate": null,
+        "multicapture": {
+          "status": "unavailable"
+        },
+        "network": "visa",
+        "network_token": {
+          "used": false
+        },
+        "network_transaction_id": "681177099101537",
+        "overcapture": {
+          "maximum_amount_capturable": 34000,
+          "status": "unavailable"
+        },
+        "regulated_status": "unregulated",
+        "three_d_secure": null,
+        "transaction_link_id": null,
+        "wallet": null
+      },
+      "type": "card"
+    },
+    "radar_options": {},
+    "receipt_email": null,
+    "receipt_number": null,
+    "refunded": false,
+    "review": null,
+    "shipping": null,
+    "source": null,
+    "source_transfer": null,
+    "statement_descriptor": null,
+    "statement_descriptor_suffix": null,
+    "status": "succeeded",
+    "transfer_data": null,
+    "transfer_group": null
+  },
+  "created": 1789390174,
+  "currency": "usd",
+  "enhanced_eligibility_types": [],
+  "evidence": {
+    "access_activity_log": null,
+    "billing_address": null,
+    "cancellation_policy": null,
+    "cancellation_policy_disclosure": null,
+    "cancellation_rebuttal": null,
+    "customer_communication": null,
+    "customer_email_address": null,
+    "customer_name": null,
+    "customer_purchase_ip": null,
+    "customer_signature": null,
+    "duplicate_charge_documentation": null,
+    "duplicate_charge_explanation": null,
+    "duplicate_charge_id": null,
+    "enhanced_evidence": {},
+    "product_description": null,
+    "receipt": null,
+    "refund_policy": null,
+    "refund_policy_disclosure": null,
+    "refund_refusal_explanation": null,
+    "service_date": null,
+    "service_documentation": null,
+    "shipping_address": null,
+    "shipping_carrier": null,
+    "shipping_date": null,
+    "shipping_documentation": null,
+    "shipping_tracking_number": null,
+    "uncategorized_file": null,
+    "uncategorized_text": null
+  },
+  "evidence_details": {
+    "due_by": 1790121599,
+    "enhanced_eligibility": {},
+    "has_evidence": false,
+    "past_due": false,
+    "submission_count": 0
+  },
+  "is_charge_refundable": false,
+  "livemode": false,
+  "metadata": {},
+  "payment_intent": {
+    "id": "pi_3UFZKDEmho7ai02f1kLPGjYN",
+    "object": "payment_intent",
+    "allowed_payment_method_types": null,
+    "amount": 34000,
+    "amount_capturable": 0,
+    "amount_details": {
+      "tip": {}
+    },
+    "amount_received": 34000,
+    "application": null,
+    "application_fee_amount": null,
+    "automatic_payment_methods": {
+      "allow_redirects": "never",
+      "enabled": true
+    },
+    "canceled_at": null,
+    "cancellation_reason": null,
+    "capture_method": "automatic_async",
+    "confirmation_method": "automatic",
+    "created": 1789390173,
+    "currency": "usd",
+    "customer": null,
+    "customer_account": null,
+    "description": null,
+    "excluded_payment_method_types": null,
+    "last_payment_error": null,
+    "latest_charge": "ch_3UFZKDEmho7ai02f15hut2fu",
+    "livemode": false,
+    "managed_payments": {
+      "enabled": false
+    },
+    "metadata": {
+      "order_id": "ORD-1002",
+      "scenario": "S2"
+    },
+    "next_action": null,
+    "on_behalf_of": null,
+    "payment_method": "pm_1UFZKDEmho7ai02fKwETrMuG",
+    "payment_method_configuration_details": {
+      "id": "pmc_1UCPO2Emho7ai02fVjqHo2LH",
+      "parent": null
+    },
+    "payment_method_options": {
+      "card": {
+        "installments": null,
+        "mandate_options": null,
+        "network": null,
+        "request_three_d_secure": "automatic"
+      },
+      "link": {
+        "persistent_token": null
+      }
+    },
+    "payment_method_types": [
+      "card",
+      "link"
+    ],
+    "payment_record": null,
+    "processing": null,
+    "receipt_email": null,
+    "review": null,
+    "setup_future_usage": null,
+    "shared_payment_granted_token": null,
+    "shipping": null,
+    "source": null,
+    "statement_descriptor": null,
+    "statement_descriptor_suffix": null,
+    "status": "succeeded",
+    "transfer_data": null,
+    "transfer_group": null
+  },
+  "payment_method_details": {
+    "card": {
+      "brand": "visa",
+      "case_type": "chargeback",
+      "network": "visa",
+      "network_reason_code": "10.4"
+    },
+    "type": "card"
+  },
+  "reason": "fraudulent",
+  "status": "needs_response"
+}

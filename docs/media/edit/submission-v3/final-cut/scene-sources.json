@@ -1,0 +1,168 @@
+{
+  "revision": "616db5e",
+  "workflow": "../final-verified-run/workflow.json",
+  "workflow_sha256": "d7bdcd176beea74774c6907c078fe481013e627883d752331508b6b0fd399167",
+  "completed_assertions": "passed",
+  "selection_note": "Selected JSON fields are reserialized without changing values; a narrative sentence is preserved verbatim. Display reveal timing is editorial.",
+  "scenes": {
+    "3": [
+      {
+        "display": "{\"amount\": 34000, \"currency\": \"usd\", \"reason\": \"fraudulent\"}",
+        "stage": "dispute arrived",
+        "path": "",
+        "fields": [
+          "amount",
+          "currency",
+          "reason"
+        ]
+      },
+      {
+        "display": "order: {\"id\": \"ORD-1002\", \"customer_value\": \"repeat\"}",
+        "stage": "retrieved facts",
+        "path": "order",
+        "fields": [
+          "id",
+          "customer_value"
+        ]
+      },
+      {
+        "display": "shipment: {\"carrier\": \"FedEx\", \"status\": \"delivered\"}",
+        "stage": "retrieved facts",
+        "path": "shipment",
+        "fields": [
+          "carrier",
+          "status"
+        ]
+      },
+      {
+        "display": "comms: {\"message_count\": 2, \"has_address_change_request\": true}",
+        "stage": "retrieved facts",
+        "path": "communications",
+        "fields": [
+          "message_count",
+          "has_address_change_request"
+        ]
+      },
+      {
+        "display": "policy: {\"vip_concede_max_cents\": 50000}",
+        "stage": "retrieved facts",
+        "path": "history_and_policy.policy",
+        "fields": [
+          "vip_concede_max_cents"
+        ]
+      },
+      {
+        "display": "graph: {\"intake\": 1, \"orders\": 1, \"shipping\": 1, \"history\": 1, \"comms\": 1, \"strategy\": 1, \"drafter\": 1}",
+        "stage": "graph execution",
+        "path": "",
+        "fields": [
+          "intake",
+          "orders",
+          "shipping",
+          "history",
+          "comms",
+          "strategy",
+          "drafter"
+        ]
+      }
+    ],
+    "4": [
+      {
+        "display": "strategy: {\"action\": \"concede\", \"evidence_strength\": \"weak\"}",
+        "stage": "strategy",
+        "path": "",
+        "fields": [
+          "action",
+          "evidence_strength"
+        ]
+      },
+      {
+        "display": "{\"owner_summary\": \"Recommend concession. Repeat customer, $340 disputed amount within vip_concede_max_cents ($500) policy threshold.\"}",
+        "stage": "strategy",
+        "path": "",
+        "fields": [
+          "owner_summary"
+        ]
+      },
+      {
+        "display": "{\"shipping_documentation\": null, \"service_documentation\": null}",
+        "stage": "evidence",
+        "path": "",
+        "fields": [
+          "shipping_documentation",
+          "service_documentation"
+        ]
+      },
+      {
+        "display": "{\"uncategorized_text\": null, \"files\": []}",
+        "stage": "evidence",
+        "path": "",
+        "fields": [
+          "uncategorized_text",
+          "files"
+        ]
+      },
+      {
+        "display": "Evidence narrative: Customer is repeat tier with 5 total orders and $1,120 lifetime value.",
+        "stage": "evidence",
+        "path": "narrative",
+        "literal_substring": "Customer is repeat tier with 5 total orders and $1,120 lifetime value."
+      }
+    ],
+    "6": [
+      {
+        "display": "pause: {\"stop_reason\": \"interrupt\", \"interrupt_names\": [\"owner-approval\"]}",
+        "stage": "approval pause",
+        "path": "",
+        "fields": [
+          "stop_reason",
+          "interrupt_names"
+        ]
+      },
+      {
+        "display": "before: {\"stripe_status\": \"needs_response\", \"gated_action_calls\": 0}",
+        "stage": "approval pause",
+        "path": "",
+        "fields": [
+          "stripe_status",
+          "gated_action_calls"
+        ]
+      },
+      {
+        "display": "CLI reply: {\"answer\": \"2\", \"action\": \"concede\"}",
+        "stage": "CLI approval",
+        "path": "",
+        "fields": [
+          "answer",
+          "action"
+        ]
+      },
+      {
+        "display": "Stripe readback: {\"status\": \"lost\", \"livemode\": false}",
+        "stage": "Stripe readback",
+        "path": "",
+        "fields": [
+          "status",
+          "livemode"
+        ]
+      },
+      {
+        "display": "executor: {\"executor_stop_reason\": \"end_turn\", \"gated_action_calls\": 1}",
+        "stage": "Stripe readback",
+        "path": "",
+        "fields": [
+          "executor_stop_reason",
+          "gated_action_calls"
+        ]
+      },
+      {
+        "display": "{\"assertions\": \"passed\"}",
+        "stage": "completed",
+        "path": "",
+        "fields": [
+          "assertions"
+        ]
+      }
+    ]
+  }
+}

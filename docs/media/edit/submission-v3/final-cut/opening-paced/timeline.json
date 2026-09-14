@@ -1,0 +1,78 @@
+{
+  "duration_seconds": 49.954362,
+  "scenes_sha256": "765f89f65e15f43ca3b29bb9b1fda993e580aef28121fff1995f1e2a2e44d240",
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0,
+      "end": 26.966666666666665,
+      "label": "01 / THE PROBLEM",
+      "tag": "REBUTTAL / STRIPE MERCHANT PROTOTYPE",
+      "panel_label": "THE MERCHANT WORKFLOW",
+      "speech": "For small online merchants, a chargeback starts a race to assemble records. The order, delivery history, customer messages, and response policy sit in different places. Rebuttal brings those records together, recommends a response, and drafts evidence for review. The goal is less manual case assembly, with the merchant retaining control of consequential decisions.",
+      "output_lines": [
+        {
+          "text": "Order details",
+          "visual_reveal_seconds": 0.65
+        },
+        {
+          "text": "Carrier delivery records",
+          "visual_reveal_seconds": 6.15
+        },
+        {
+          "text": "Customer messages",
+          "visual_reveal_seconds": 7.45
+        },
+        {
+          "text": "Merchant response policy",
+          "visual_reveal_seconds": 8.85
+        },
+        {
+          "text": "Proposed response and evidence for review",
+          "visual_reveal_seconds": 14.4
+        },
+        {
+          "text": "Merchant retains control",
+          "visual_reveal_seconds": 21.7
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "359d0e50312e701760b185d261d22d0747836010bbd47e37a3482de03efede33",
+      "timings_sha256": "1b3031b7e89948acc09fd3619ae68f886a8c1b01349d77996918acf47815a7cd"
+    },
+    {
+      "scene": 2,
+      "start": 26.966666666666665,
+      "end": 49.93333333333333,
+      "label": "02 / HOW IT WORKS",
+      "tag": "AWS STRANDS AGENTS SDK / APPLICATION DESIGN",
+      "panel_label": "IMPLEMENTED EXECUTION FLOW",
+      "speech": "Rebuttal uses the AWS Strands Agents SDK. After intake, four agents collect evidence in parallel. Strategy waits for all four. The drafter then receives both the evidence and the proposed response. A separate executor uses an approval hook before taking a guarded action.",
+      "output_lines": [
+        {
+          "text": "Intake retrieves the dispute",
+          "visual_reveal_seconds": 0.65
+        },
+        {
+          "text": "Orders / Shipping / Communications / History",
+          "visual_reveal_seconds": 5.8
+        },
+        {
+          "text": "Strategy waits for all four collectors",
+          "visual_reveal_seconds": 9.0
+        },
+        {
+          "text": "Drafter receives evidence and strategy",
+          "visual_reveal_seconds": 11.6
+        },
+        {
+          "text": "Executor pauses when approval is required",
+          "visual_reveal_seconds": 16.9
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "d36e5f02bc888c5904a065388c2ffd2edc595f95a8bc5c3dda7eb400dc9c9ad2",
+      "timings_sha256": "ddd5df20714cbca98ab15c448f2400f11868318992c182fefefb3e8a12d9f72d"
+    }
+  ]
+}

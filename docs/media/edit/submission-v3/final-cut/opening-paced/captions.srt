@@ -1,0 +1,67 @@
+1
+00:00:00,543 --> 00:00:03,447
+For small online merchants, a chargeback starts
+
+2
+00:00:03,447 --> 00:00:05,231
+a race to assemble records.
+
+3
+00:00:05,660 --> 00:00:09,202
+The order, delivery history, customer messages, and
+
+4
+00:00:09,215 --> 00:00:11,728
+response policy sit in different places.
+
+5
+00:00:12,119 --> 00:00:15,127
+Rebuttal brings those records together, recommends a
+
+6
+00:00:15,127 --> 00:00:18,004
+response, and drafts evidence for review.
+
+7
+00:00:18,421 --> 00:00:21,429
+The goal is less manual case assembly,
+
+8
+00:00:21,832 --> 00:00:24,580
+with the merchant retaining control of consequential
+
+9
+00:00:24,593 --> 00:00:25,348
+decisions.
+
+10
+00:00:27,445 --> 00:00:31,416
+Rebuttal uses the AWS Strands Agents SDK.
+
+11
+00:00:31,833 --> 00:00:35,231
+After intake, four agents collect evidence in
+
+12
+00:00:35,231 --> 00:00:35,869
+parallel.
+
+13
+00:00:36,286 --> 00:00:38,408
+Strategy waits for all four.
+
+14
+00:00:38,825 --> 00:00:41,794
+The drafter then receives both the evidence
+
+15
+00:00:41,950 --> 00:00:43,343
+and the proposed response.
+
+16
+00:00:43,760 --> 00:00:46,208
+A separate executor uses an approval hook
+
+17
+00:00:46,455 --> 00:00:48,317
+before taking a guarded action.

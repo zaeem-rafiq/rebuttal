@@ -1,0 +1,300 @@
+{
+  "status": "Validation remains open: fbaf06f outputs rejudged by d494d4e are 16/20 below 18 required; controls v10 are 21/23. Recorded runtime remains the separate 616db5e run. New paid trial and Edge narration await approval.",
+  "target_seconds": "approximately 225\u2013240 seconds; final measured export must stay under 300 seconds",
+  "render_note": "Do not render placeholders. Once all entries are verified and ready, write their scene objects in index order to scenes.json.",
+  "scenes": [
+    {
+      "index": 0,
+      "status": "ready",
+      "scene": {
+        "label": "01 / THE PROBLEM",
+        "title": "A chargeback. A pile of records.",
+        "tag": "REBUTTAL / STRIPE MERCHANT PROTOTYPE",
+        "panel_label": "THE MERCHANT WORKFLOW",
+        "lines": [
+          "Order details",
+          "Carrier delivery records",
+          "Customer messages",
+          "Merchant response policy",
+          "Proposed response and evidence for review",
+          "Merchant retains control"
+        ],
+        "note": "Goal: less manual case assembly, with merchant control.",
+        "speech": "For small online merchants, a chargeback starts a race to assemble records. The order, delivery history, customer messages, and response policy sit in different places. Rebuttal brings those records together, recommends a response, and drafts evidence for review. The goal is less manual case assembly, with the merchant retaining control of consequential decisions.",
+        "reveal_at": [
+          0.65,
+          6.15,
+          7.45,
+          8.85,
+          14.4,
+          21.7
+        ]
+      },
+      "narration_status": "audio ready, reused from opening-proof",
+      "narration_words": 53
+    },
+    {
+      "index": 1,
+      "status": "ready",
+      "scene": {
+        "label": "02 / HOW IT WORKS",
+        "title": "Evidence first. Then a decision.",
+        "tag": "AWS STRANDS AGENTS SDK / APPLICATION DESIGN",
+        "panel_label": "IMPLEMENTED EXECUTION FLOW",
+        "lines": [
+          "Intake retrieves the dispute",
+          "Orders / Shipping / Communications / History",
+          "Strategy waits for all four collectors",
+          "Drafter receives evidence and strategy",
+          "Executor pauses when approval is required"
+        ],
+        "note": "Seven evidence graph nodes, plus a separate executor.",
+        "speech": "Rebuttal uses the AWS Strands Agents SDK. After intake, four agents collect evidence in parallel. Strategy waits for all four. The drafter then receives both the evidence and the proposed response. A separate executor uses an approval hook before taking a guarded action.",
+        "reveal_at": [
+          0.65,
+          5.8,
+          9.0,
+          11.6,
+          16.9
+        ]
+      },
+      "narration_status": "audio ready, reused from opening-proof",
+      "narration_words": 43
+    },
+    {
+      "index": 2,
+      "status": "ready",
+      "scene": {
+        "label": "03 / RECORDING SETUP",
+        "title": "A local run. A test environment.",
+        "tag": "EDITED PLAYBACK / LOCAL TEST EXECUTION",
+        "panel_label": "DEMONSTRATION BOUNDARIES",
+        "lines": [
+          "Execution: local AWS Strands graph",
+          "Merchant records: synthetic",
+          "Stripe objects: TEST mode",
+          "Playback: edited from captured output",
+          "Owner response: developer command line"
+        ],
+        "note": "Reveals follow the narration; waiting time is compressed.",
+        "speech": "The next scenes replay a recorded local run. The merchant records are synthetic, and the Stripe objects are in test mode. The screen is an edited presentation of captured output, so reveals follow the narration rather than the original wait times. The owner response comes through the developer command line.",
+        "reveal_cues": [
+          "recorded local run",
+          "merchant records",
+          "Stripe objects",
+          "edited presentation",
+          "owner response"
+        ]
+      },
+      "narration_status": "complete public-intended script; voice pending destination approval",
+      "narration_words": 50
+    },
+    {
+      "index": 3,
+      "status": "ready",
+      "target_seconds": 25,
+      "label": "04 / RETRIEVED FACTS",
+      "title": "The run starts with the records.",
+      "required_evidence": [
+        "Final source revision and sanitized dispute arrival event",
+        "Exact retrieved order, shipment, communication, and policy facts",
+        "Graph execution count readback"
+      ],
+      "narration_status": "complete public-intended script; voice pending destination approval",
+      "contingency": "Final local run completed on 616db5e; exact excerpts preserved in scene-sources.json.",
+      "narration_words": 48,
+      "scene": {
+        "label": "04 / RETRIEVED FACTS",
+        "title": "The run starts with the records.",
+        "tag": "RECORDED LOCAL EXECUTION / STRIPE TEST MODE",
+        "panel_label": "SELECTED SOURCE FIELDS / EXECUTION COUNTS",
+        "lines": [
+          "{\"amount\": 34000, \"currency\": \"usd\", \"reason\": \"fraudulent\"}",
+          "order: {\"id\": \"ORD-1002\", \"customer_value\": \"repeat\"}",
+          "shipment: {\"carrier\": \"FedEx\", \"status\": \"delivered\"}",
+          "comms: {\"message_count\": 2, \"has_address_change_request\": true}",
+          "policy: {\"vip_concede_max_cents\": 50000}",
+          "graph: {\"intake\": 1, \"orders\": 1, \"shipping\": 1, \"history\": 1, \"comms\": 1, \"strategy\": 1, \"drafter\": 1}"
+        ],
+        "note": "Edited playback from revision 616db5e; amounts are integer US cents.",
+        "reveal_cues": [
+          "recorded run",
+          "the order",
+          "delivery record",
+          "customer communications",
+          "merchant policy",
+          "execution trace"
+        ],
+        "speech": "The recorded run begins with a Stripe test dispute. The panel shows selected facts retrieved for that case: the order, delivery record, customer communications, and merchant policy. The execution trace shows the Strands graph moving through collection, strategy, and drafting. These excerpts come from the captured local run."
+      },
+      "reveal_timing_status": "Cue phrases prepared; exact reveal_at awaits the approved voice WordBoundary timings."
+    },
+    {
+      "index": 4,
+      "status": "ready",
+      "target_seconds": 25,
+      "label": "05 / STRATEGY AND DRAFT",
+      "title": "A response grounded in this case.",
+      "required_evidence": [
+        "Exact final strategy action and rationale",
+        "One short evidence narrative excerpt",
+        "Observed evidence gaps or uncertainty from the same run"
+      ],
+      "narration_status": "complete public-intended script; voice pending destination approval",
+      "contingency": "Final local run completed on 616db5e; exact excerpts preserved in scene-sources.json.",
+      "narration_words": 44,
+      "scene": {
+        "label": "05 / STRATEGY AND DRAFT",
+        "title": "A response grounded in this case.",
+        "tag": "RECORDED OUTPUT / EDITED PLAYBACK / STRIPE TEST MODE",
+        "panel_label": "STRATEGY AND EVIDENCE EXCERPTS",
+        "lines": [
+          "strategy: {\"action\": \"concede\", \"evidence_strength\": \"weak\"}",
+          "{\"owner_summary\": \"Recommend concession. Repeat customer, $340 disputed amount within vip_concede_max_cents ($500) policy threshold.\"}",
+          "Evidence narrative: Customer is repeat tier with 5 total orders and $1,120 lifetime value.",
+          "{\"shipping_documentation\": null, \"service_documentation\": null}",
+          "{\"uncategorized_text\": null, \"files\": []}"
+        ],
+        "note": "Recommendation precedes action; absent documents remain null.",
+        "reveal_cues": [
+          "proposed strategy",
+          "recommendation and draft",
+          "evidence excerpt",
+          "Missing evidence",
+          "proposed action"
+        ],
+        "speech": "Next, compare the proposed strategy with the records that support it. The recommendation and draft are shown separately. Read the evidence excerpt alongside the retrieved facts. Missing evidence and uncertainty must remain visible, and a proposed action must stay distinct from a completed action."
+      },
+      "reveal_timing_status": "Cue phrases prepared; exact reveal_at awaits the approved voice WordBoundary timings."
+    },
+    {
+      "index": 5,
+      "status": "ready",
+      "scene": {
+        "label": "06 / THE OWNER DECISION",
+        "title": "The executor waits for a decision.",
+        "tag": "DEVELOPER CLI / APPROVAL DESIGN",
+        "panel_label": "AVAILABLE OWNER RESPONSES",
+        "lines": [
+          "1 / Fight",
+          "2 / Concede",
+          "3 / Hold",
+          "Selected response resumes the Strands interrupt",
+          "The recorder then checks Stripe again"
+        ],
+        "note": "Developer command line; phone notification delivery is disabled.",
+        "speech": "The approval step is a deliberate decision point. In this recording, the developer command line stands in for the merchant interface. Fight, concede, and hold are the three available responses. The selected response is passed back to the Strands interrupt, after which the recorder checks Stripe again. Phone notification delivery is disabled for this local demonstration.",
+        "reveal_cues": [
+          "approval step",
+          "concede",
+          "hold",
+          "selected response",
+          "checks Stripe again"
+        ]
+      },
+      "narration_status": "complete public-intended script; voice pending destination approval",
+      "narration_words": 56
+    },
+    {
+      "index": 6,
+      "status": "ready",
+      "target_seconds": 20,
+      "label": "07 / APPROVAL AND READBACK",
+      "title": "The decision and the resulting state.",
+      "required_evidence": [
+        "Actual approval interrupt name and gated call count before decision",
+        "Exact developer CLI choice entered for the recorded run",
+        "Final Stripe TEST readback and actual guarded action count"
+      ],
+      "narration_status": "complete public-intended script; voice pending destination approval",
+      "contingency": "Final local run completed on 616db5e; exact excerpts preserved in scene-sources.json.",
+      "narration_words": 46,
+      "scene": {
+        "label": "07 / APPROVAL AND READBACK",
+        "title": "The CLI choice: concede.",
+        "tag": "RECORDED LOCAL EXECUTION / STRIPE TEST MODE",
+        "panel_label": "DEVELOPER CLI / BEFORE AND AFTER",
+        "lines": [
+          "pause: {\"stop_reason\": \"interrupt\", \"interrupt_names\": [\"owner-approval\"]}",
+          "before: {\"stripe_status\": \"needs_response\", \"gated_action_calls\": 0}",
+          "CLI reply: {\"answer\": \"2\", \"action\": \"concede\"}",
+          "Stripe readback: {\"status\": \"lost\", \"livemode\": false}",
+          "executor: {\"executor_stop_reason\": \"end_turn\", \"gated_action_calls\": 1}",
+          "{\"assertions\": \"passed\"}"
+        ],
+        "note": "Edited playback: the test concession ended in lost; phone delivery was disabled.",
+        "reveal_cues": [
+          "Here",
+          "approval interrupt",
+          "command line response",
+          "reads Stripe again",
+          "after states",
+          "test result"
+        ],
+        "speech": "Here is the approval interrupt and the developer command line response. The display preserves the recorded choice and the guarded action count. After resuming, the recorder reads Stripe again. Compare the before and after states. That readback establishes the test result, not a real-world dispute outcome."
+      },
+      "reveal_timing_status": "Cue phrases prepared; exact reveal_at awaits the approved voice WordBoundary timings."
+    },
+    {
+      "index": 7,
+      "status": "validation_open",
+      "target_seconds": 20,
+      "label": "08 / VALIDATION OPEN",
+      "title": "Validation remains open.",
+      "required_evidence": [
+        "Accepted final generation/evaluator result with both revisions identified; current unchanged outputs are 16/20 under d494d4e, below 18 required",
+        "Passing evaluator controls; current v10 matched 21/23 with exit 1",
+        "Observed paid model verification for any new generation approach; the prepared three-call follow-up has not run"
+      ],
+      "narration_status": "complete public-intended script; voice pending destination approval",
+      "contingency": "Do not treat failed benchmark or control results as accepted validation. Sonnet generation trial under a $15 cap and Microsoft Edge narration remain awaiting approval.",
+      "narration_words": 48,
+      "scene": {
+        "label": "08 / VALIDATION OPEN",
+        "title": "Validation remains open.",
+        "tag": "VALIDATION OPEN / DO NOT EXPORT",
+        "panel_label": "OBSERVED RESULTS / NO ACCEPTED FINAL SCORE",
+        "lines": [
+          "Recorded runtime: 616db5e (separate from this benchmark)",
+          "Generation fbaf06f: output judge 9/20",
+          "Evaluator d494d4e: same outputs 16/20; required 18/20",
+          "Action / approval gate / EV: 20/20 each",
+          "Controls v10: 21/23 matched; exit 1",
+          "Offline 6a756ed: 146 tests passed; exit 0",
+          "Prepared three-call follow-up: paid model verification NOT RUN"
+        ],
+        "note": "The follow-up is prepared only. No accepted final score; video export remains blocked.",
+        "pending_evidence": true,
+        "speech": "The validation panel identifies the source revision and the checks that ran against it. It shows the unit test result alongside the fixed synthetic-case evaluation, covering action, approval, expected value, and grounding. Read the observed results and thresholds together. This benchmark does not measure real merchant recovery rates."
+      },
+      "reveal_timing_status": "Cue phrases prepared; exact reveal_at awaits the approved voice WordBoundary timings."
+    },
+    {
+      "index": 8,
+      "status": "ready",
+      "scene": {
+        "label": "09 / WHAT THIS DEMONSTRATES",
+        "title": "A clearer dispute response workflow.",
+        "tag": "PROTOTYPE / OBSERVED SCOPE",
+        "panel_label": "PURPOSE AND LIMITS",
+        "lines": [
+          "Evidence collected for merchant review",
+          "A proposed strategy and draft response",
+          "An explicit owner decision before guarded actions",
+          "Synthetic merchant data and Stripe TEST objects"
+        ],
+        "note": "Real merchant outcomes and live phone delivery remain unverified.",
+        "speech": "Rebuttal gives small merchants a place to review the facts, the proposed response, and the next action. This prototype runs locally with synthetic merchant data and Stripe test objects. Real merchant outcomes and live phone delivery remain outside this demonstration. The goal is a clearer, more controlled dispute workflow.",
+        "reveal_cues": [
+          "review the facts",
+          "proposed response",
+          "next action",
+          "synthetic merchant data"
+        ]
+      },
+      "narration_status": "complete public-intended script; voice pending destination approval",
+      "narration_words": 49
+    }
+  ],
+  "voice_payload": "The nine narration paragraphs in narration-for-approval.md only; no raw records, person names, addresses, object IDs, or exact pending evaluation scores."
+}

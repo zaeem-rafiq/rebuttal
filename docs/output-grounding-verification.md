@@ -62,15 +62,18 @@ pushed or deployed. Failed candidates and original recordings remain available.
 | eb83ad5, expanded output audit | 19/20 | 19/20 | 16/20 | 20/20 | Exit 1 |
 | 5552395, Haiku judge | 20/20 | 20/20 | 13/20 | 20/20 | Exit 1 |
 | 616db5e, Sonnet exact-source audit | 20/20 | 20/20 | 14/20 | 20/20 | Exit 1 |
+| fbaf06f, full generation run | 20/20 | 20/20 | 9/20 | 20/20 | Exit 1; authorship false positives found |
+| Same fbaf06f outputs, d494d4e rejudgment | 20/20 | 20/20 | 16/20 | 20/20 | Exit 1; unchanged generation outputs |
 
 Reports are retained under evals/results with those revision names. The 98a7313
 run was stopped when review found fixture-only policy statements in judge inputs
 (exit 130). The 970ff0a run encountered a Bedrock internalServerException after
 one case (exit 1). Their logs/partial JSON are not complete benchmarks.
 
-Offline suite after the latest implementation:
+Offline suite after integration of the current implementation through 6a756ed:
 `PYTHON_DOTENV_DISABLED=1 USE_GATEWAY_MCP=false .venv/bin/python -m pytest -q`
--> 112 passed, two deprecation warnings, exit 0. A runtime-model factory check
+-> 146 passed, two deprecation warnings, exit 0. Full output is retained in
+`docs/proofs/output-grounding/final-local-tests.txt`. A runtime-model factory check
 also observed temperature=0.0 with a mocked model/session; no cloud runtime call.
 The final source manifest and model results remain pending.
 
@@ -155,7 +158,14 @@ video remains intact; local files are not a public hackathon submission.
 
 ## Next actions
 
-Finish final controls and the stricter 20-case run within the approved cap;
-review new failures against exact records; update this checkpoint and cost ledger;
-integrate verified local commits while preserving main's unrelated dirty work;
-run the combined suite; render and inspect the final video after narration approval.
+Local integration and the combined offline suite are complete. Await the owner's
+decision on the Sonnet generation trial and $15 total inference cap before running
+the prepared 26 controls and stricter 20-case benchmark. Review all new outputs
+against exact records, preserve failures, and update this checkpoint and cost
+ledger. The exact prepared commands are in
+`docs/proofs/output-grounding/next-verification.md`.
+
+Separately, await Microsoft Edge TTS approval for the prepared narration before
+generating the seven missing tracks. Update the validation scene only from observed
+results, then render and inspect the complete video and check its duration and
+intelligibility. Publishing and submission remain separate owner-authorized actions.

@@ -1,0 +1,309 @@
+[
+  {
+    "seconds": 0.89,
+    "stage": "environment",
+    "data": {
+      "revision": "eb83ad5",
+      "merchant_records": "synthetic",
+      "model": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "stripe": "test mode",
+      "approval_interface": "developer CLI",
+      "notification_delivery": "disabled",
+      "session_storage": "local FileSessionManager",
+      "database": "isolated copy"
+    }
+  },
+  {
+    "seconds": 1.96,
+    "stage": "dispute arrived",
+    "data": {
+      "id": "du_1UFZKEEmho7ai02ftdSLjoQN",
+      "amount": 34000,
+      "currency": "usd",
+      "reason": "fraudulent",
+      "status": "needs_response",
+      "livemode": false
+    }
+  },
+  {
+    "seconds": 2.47,
+    "stage": "retrieved facts",
+    "data": {
+      "order": {
+        "id": "ORD-1002",
+        "customer_id": "CUST-002",
+        "amount_cents": 34000,
+        "currency": "usd",
+        "status": "delivered",
+        "payment_intent_id": "pi_3UFZKDEmho7ai02f1kLPGjYN",
+        "charge_id": "ch_3UFZKDEmho7ai02f15hut2fu",
+        "card_brand": "mastercard",
+        "card_last4": "5555",
+        "avs_postal_match": "match",
+        "cvc_match": "match",
+        "shipping_address": {
+          "line1": "880 Harrison St",
+          "city": "San Francisco",
+          "state": "CA",
+          "postal_code": "94107",
+          "country": "US"
+        },
+        "billing_address": {
+          "line1": "742 Evergreen Terrace",
+          "city": "Springfield",
+          "state": "OR",
+          "postal_code": "97477",
+          "country": "US"
+        },
+        "created_at": "2026-08-25T09:15:00Z",
+        "updated_at": "2026-09-05T18:44:34Z",
+        "items": [
+          {
+            "id": "ITEM-1002-1",
+            "order_id": "ORD-1002",
+            "product_name": "Ceramic pour-over set",
+            "sku": "CPS-340",
+            "quantity": 1,
+            "unit_price_cents": 34000,
+            "total_price_cents": 34000,
+            "created_at": "2026-08-25T09:15:00Z"
+          }
+        ],
+        "customer_name": "Jessica Lee",
+        "customer_email": "j.lee@example.com",
+        "customer_phone": "+15553456789",
+        "customer_value": "repeat",
+        "order_count": 5,
+        "lifetime_value_cents": 112000
+      },
+      "shipment": {
+        "id": "SHIP-1002",
+        "order_id": "ORD-1002",
+        "carrier": "FedEx",
+        "tracking_number": "449044301542",
+        "status": "delivered",
+        "shipped_at": "2026-08-26T11:00:00Z",
+        "delivered_at": "2026-08-29T11:20:00Z",
+        "signed_by": null,
+        "shipping_address": {
+          "line1": "880 Harrison St",
+          "city": "San Francisco",
+          "state": "CA",
+          "postal_code": "94107",
+          "country": "US"
+        },
+        "created_at": "2026-08-26T10:00:00Z",
+        "events": [
+          {
+            "id": "EVT-1002-1",
+            "shipment_id": "SHIP-1002",
+            "timestamp": "2026-08-26T11:00:00Z",
+            "status": "label_created",
+            "location": "Springfield, OR",
+            "details": "Shipping label created with alternate destination 880 Harrison St, San Francisco, CA",
+            "created_at": "2026-08-26T11:00:00Z"
+          },
+          {
+            "id": "EVT-1002-2",
+            "shipment_id": "SHIP-1002",
+            "timestamp": "2026-08-27T18:30:00Z",
+            "status": "in_transit",
+            "location": "Oakland, CA",
+            "details": "In transit at FedEx sorting facility",
+            "created_at": "2026-08-27T18:30:00Z"
+          },
+          {
+            "id": "EVT-1002-3",
+            "shipment_id": "SHIP-1002",
+            "timestamp": "2026-08-29T11:20:00Z",
+            "status": "delivered",
+            "location": "San Francisco, CA",
+            "details": "Delivered - Left at front door, no signature required",
+            "created_at": "2026-08-29T11:20:00Z"
+          }
+        ]
+      },
+      "communications": {
+        "customer_id": "CUST-002",
+        "order_id": "ORD-1002",
+        "messages": [
+          {
+            "id": "MSG-003",
+            "customer_id": "CUST-002",
+            "order_id": "ORD-1002",
+            "direction": "inbound",
+            "channel": "email",
+            "subject": "Address change for ORD-1002",
+            "body": "Hello, I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead? Thanks! Jessica Lee",
+            "has_shipping_change": 1,
+            "created_at": "2026-08-25T14:10:00Z"
+          },
+          {
+            "id": "MSG-004",
+            "customer_id": "CUST-002",
+            "order_id": "ORD-1002",
+            "direction": "outbound",
+            "channel": "email",
+            "subject": "Re: Address change for ORD-1002",
+            "body": "Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!",
+            "has_shipping_change": 1,
+            "created_at": "2026-08-25T15:00:00Z"
+          }
+        ],
+        "message_count": 2,
+        "has_cancellation_request": false,
+        "has_address_change_request": true,
+        "has_inquiry": true
+      },
+      "history_and_policy": {
+        "policy": {
+          "id": "POL-001",
+          "merchant_name": "Acme Specialty Goods",
+          "approval_amount_cents": 20000,
+          "min_win_probability_to_fight": 0.5,
+          "always_concede_under_cents": 1500,
+          "vip_concede_max_cents": 50000,
+          "silence_action": "fight",
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z"
+        },
+        "customer_tier": "repeat",
+        "order_count": 5,
+        "lifetime_value_cents": 112000,
+        "prior_disputes_count": 1,
+        "prior_orders": [
+          {
+            "id": "ORD-1002",
+            "amount_cents": 34000,
+            "status": "delivered",
+            "created_at": "2026-08-25T09:15:00Z"
+          },
+          {
+            "id": "ORD-1011",
+            "amount_cents": 18000,
+            "status": "delivered",
+            "created_at": "2026-07-15T10:00:00Z"
+          }
+        ]
+      },
+      "charge": {
+        "amount": 34000,
+        "currency": "usd",
+        "card_checks": {
+          "address_line1_check": null,
+          "address_postal_code_check": null,
+          "cvc_check": "pass"
+        },
+        "billing_details": {
+          "address": {
+            "city": null,
+            "country": null,
+            "line1": null,
+            "line2": null,
+            "postal_code": null,
+            "state": null
+          },
+          "email": null,
+          "name": null,
+          "phone": null,
+          "tax_id": null
+        },
+        "metadata": {
+          "order_id": "ORD-1002",
+          "scenario": "S2"
+        },
+        "customer_email": null,
+        "payment_intent_id": "pi_3UFZKDEmho7ai02f1kLPGjYN",
+        "charge_id": "ch_3UFZKDEmho7ai02f15hut2fu"
+      }
+    }
+  },
+  {
+    "seconds": 66.81,
+    "stage": "graph execution",
+    "data": {
+      "intake": 1,
+      "shipping": 1,
+      "comms": 1,
+      "history": 1,
+      "orders": 1,
+      "strategy": 1,
+      "drafter": 1
+    }
+  },
+  {
+    "seconds": 66.821,
+    "stage": "strategy",
+    "data": {
+      "action": "concede",
+      "win_probability": 0.2,
+      "expected_value_cents": 0,
+      "customer_value": "repeat",
+      "evidence_strength": "weak",
+      "rationale": "Customer is repeat tier with $1,120.00 lifetime value. Disputed amount of $340.00 is below vip_concede_max_cents ($500.00) threshold per merchant policy. Concession protects established customer relationship against immediate net loss of $355.00 (dispute + $15.00 chargeback fee).",
+      "owner_summary": "Recommend conceding dispute dp_S2 to protect repeat customer (CUST-002) with $1,120.00 lifetime value. Disputed amount $340.00 is within protective concession policy threshold of $500.00. Net impact: $355.00 loss vs. risk of losing repeat customer relationship."
+    }
+  },
+  {
+    "seconds": 66.821,
+    "stage": "evidence",
+    "data": {
+      "customer_name": "Jessica Lee",
+      "customer_email_address": "j.lee@example.com",
+      "billing_address": "742 Evergreen Terrace, Springfield, OR 97477, US",
+      "shipping_address": "880 Harrison St, San Francisco, CA 94107, US",
+      "shipping_carrier": "FedEx",
+      "shipping_tracking_number": "449044301542",
+      "shipping_date": "2026-08-26",
+      "shipping_documentation": null,
+      "service_documentation": null,
+      "customer_communication": "Customer initiated contact on August 25, 2026 (MSG-003) requesting address change: \"I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead?\" Merchant responded (MSG-004) confirming: \"Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!\"",
+      "refund_policy_disclosure": null,
+      "cancellation_policy_disclosure": null,
+      "uncategorized_text": null,
+      "uncategorized_file": null,
+      "narrative": "Dispute Reason: fraudulent\n\nCUST-002 (Jessica Lee) is a repeat customer with 5 total orders and $1,120.00 lifetime value. Disputed amount is 34,000 cents ($340.00 USD). Merchant records confirm customer initiated contact via email on August 25, 2026, requesting address change for ORD-1002 to 880 Harrison St, San Francisco, CA 94107 due to work travel. Merchant acknowledged and confirmed the address update and order fulfillment. FedEx tracking confirms delivery to the requested address on August 29, 2026 (tracking 449044301542).\n\nPayment authorization passed network validation (CVC validation passed, AVS postal code match). Order status recorded as delivered.\n\nPer merchant policy (POL-001), the disputed amount of 34,000 cents ($340.00) falls within the vip_concede_max_cents threshold of 50,000 cents ($500.00) for repeat customers. Recommendation: Concede dispute dp_S2 to protect established customer relationship and retain $1,120.00 lifetime value against immediate net loss of $355.00 (dispute amount plus $15.00 chargeback fee).",
+      "files": []
+    }
+  },
+  {
+    "seconds": 70.136,
+    "stage": "approval pause",
+    "data": {
+      "stop_reason": "interrupt",
+      "interrupt_names": [
+        "owner-approval"
+      ],
+      "stripe_status": "needs_response",
+      "gated_action_calls": 0,
+      "notification_delivery": "disabled; CLI approval only"
+    }
+  },
+  {
+    "seconds": 297.69,
+    "stage": "CLI approval",
+    "data": {
+      "answer": "3",
+      "action": "hold"
+    }
+  },
+  {
+    "seconds": 301.393,
+    "stage": "Stripe readback",
+    "data": {
+      "id": "du_1UFZKEEmho7ai02ftdSLjoQN",
+      "status": "needs_response",
+      "livemode": false,
+      "executor_stop_reason": "end_turn",
+      "gated_action_calls": 0
+    }
+  },
+  {
+    "seconds": 301.395,
+    "stage": "completed",
+    "data": {
+      "assertions": "passed",
+      "scope": "local Strands and Stripe test API; no production recovery or phone delivery claimed"
+    }
+  }
+]
