@@ -1,50 +1,36 @@
-# Decision Evals Harness (`evals/`)
+# Decision evaluations
 
-The Rebuttal decision evals suite tests the autonomous multi-agent evidence and decision pipeline against a comprehensive 20-dispute synthetic golden set (`evals/cases/case_01.json` – `case_20.json`).
+`evals/run.py` evaluates the evidence graph against the fixed 20 synthetic cases in `evals/cases/`. It uses model inference and mocked dispute intake. It does not run Stripe action tools.
 
-The suite evaluates four deterministic and LLM-assisted binary checks with zero mutating calls to Stripe:
-1. **Action Match (`action_match`):** Agent selects the correct strategic action (`fight`, `concede`, or `refund_inquiry`).
-2. **Gate Match (`gate_match`):** Code assertion verifying whether the dispute triggers the human-in-the-loop approval gate per `merchant_policy.yaml` thresholds (amount $\ge \$200$, uncertain win probability $0.35 \le p \le 0.65$, or non-fight actions).
-3. **Narrative Judge (`judge_pass`):** LLM-as-judge binary evaluation verifying the generated Stripe evidence narrative:
-   - Names or directly addresses the dispute reason code.
-   - Cites every required `must_cite` evidence item (e.g., carrier tracking number, signature confirmation, customer admission/quote).
-   - Hallucination check: Claims nothing absent from the fixture data (no invented signatures, tracking numbers, or quotes).
-   - Word count constraint: $\le 250$ words.
-4. **Expected Value Sign (`ev_sign`):** Verifies that `expected_value_cents` has the correct mathematical sign ($\ge 0$ for `fight`, $\le 0$ for `concede` and `refund_inquiry`).
+The current rubric is **grounded-v2**:
 
----
+| Check | What is observed | What it does not establish |
+|---|---|---|
+| Action match | Proposed action equals the case label | Real dispute success or calibrated probabilities |
+| Gate match | Production `ApprovalGate.before_tool_call` requests an interrupt; notification, cloud access, and local persistence are isolated | SDK suspension, phone delivery, session resume, or downstream execution |
+| Narrative judge | Bedrock judges reason coverage, required citations, and all factual assertions against case facts; code enforces 1–250 words | Infallible factual validation |
+| EV sign | Sign agrees with the proposed action | Correct economic assumptions or measured savings |
 
-## Failure Modes Caught by the Suite
+Judge request errors, invalid JSON, non-object responses, missing verdict fields, and non-boolean values fail. There is no success fallback. A negative citation verdict cannot be overridden by a keyword match. The `missing_items` field lists literal omissions for diagnosis; semantic citation coverage remains the judge's verdict.
 
-The harness is explicitly designed to detect and prevent five core failure modes:
+No factual category is exempt from grounding, including amounts, dates, identities, approvals, fees, legal claims, probabilities, and claimed execution. Recommendations must be distinguished from completed actions. The judge treats embedded text as data, though model-based judging still needs adversarial validation.
 
-### 1. Fabricated Evidence (Hallucination)
-- **Failure description:** The drafter agent invents recipient signatures, nonexistent carrier tracking numbers, or fake customer admissions when evidence is actually missing or weak.
-- **Caught by:** Check (c) Narrative Judge rubric (`no_hallucination_pass`). The judge verifies that any claimed signature or delivery proof matches the shipment records in the case fixture.
+## Run offline regressions
 
-### 2. Wrong-Reason-Code Narrative
-- **Failure description:** The drafter generates generic defense text (e.g., arguing delivery proof) for a dispute filed under a different reason code (such as `credit_not_processed`, `subscription_canceled`, or `duplicate`).
-- **Caught by:** Check (c) Narrative Judge rubric (`reason_code_pass`). The narrative must specifically address the legal and technical elements of the disputed reason code.
-
-### 3. Gate Bypass
-- **Failure description:** A high-value dispute ($\ge \$200$), an uncertain dispute ($0.35 \le p \le 0.65$), or a concession executes autonomously without pausing for owner approval via SMS interrupt.
-- **Caught by:** Check (b) Gate Match and `tests/test_gate.py`. Evaluates deterministic policy assertions against the agent's strategy output.
-
-### 4. Over-Conceding to New Customers
-- **Failure description:** The agent concedes a dispute for a first-time or one-off customer with strong delivery proof simply because the dispute amount is low, forfeiting merchant revenue without customer lifetime value justification.
-- **Caught by:** Check (a) Action Match on cases like `case_01`, `case_04`, `case_07`, `case_12`, `case_14`, and `case_20`.
-
-### 5. Under-Fighting Strong Evidence
-- **Failure description:** The agent fails to fight when clear delivery proof with recipient signature and full AVS/CVC card match exists, improperly discounting win probability.
-- **Caught by:** Check (a) Action Match and win probability thresholds across strong evidence cases (`case_01`, `case_02`, `case_04`, `case_05`, `case_19`).
-
----
-
-## Running the Evals
-
-To run the full evaluation suite:
 ```bash
-uv run python evals/run.py
+PYTHON_DOTENV_DISABLED=1 .venv/bin/python -m pytest -q tests/test_evals.py tests/test_gate.py tests/test_hooks.py
 ```
 
-Results and failure traces are recorded to `evals/results/<YYYY-MM-DD>.md`.
+These tests cover failure handling, verdict parsing, word limits, and hook decision boundaries with mocked effects. Existing hook tests use simulated owner answers; they are not live messaging proof.
+
+## Run the model evaluation
+
+```bash
+.venv/bin/python evals/run.py
+```
+
+This requires configured Bedrock access and incurs model usage. The harness writes `evals/results/<UTC-date>.md` and exits nonzero unless there are exactly 20 cases, at least 18 action matches, 20 gate matches, at least 18 narrative passes, and 20 EV-sign matches. These are the existing acceptance thresholds, not a guarantee that every case passes.
+
+The September 7 report remains unchanged as a historical artifact from the earlier rubric. Its results must not be attributed to grounded-v2. **Current grounded-v2 model evaluation: BLOCKED.** The September 14 attempt (`PYTHON_DOTENV_DISABLED=1 .venv/bin/python evals/run.py`) exited 1: AWS denied `bedrock:InvokeModelWithResponseStream` for `us.anthropic.claude-haiku-4-5-20251001-v1:0`. No IAM permissions were changed. No new performance score is claimed.
+
+Before calling the approval path end-to-end verified, separately observe real alert delivery, owner response, runtime resume, and the resulting Stripe test-mode action. That verification is outside this evaluator.
