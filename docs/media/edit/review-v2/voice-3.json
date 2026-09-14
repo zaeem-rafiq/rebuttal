@@ -1,0 +1,200 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 1041660,
+    "duration": 390830,
+    "text": "A"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 1432500,
+    "duration": 2343750,
+    "text": "high"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 3776250,
+    "duration": 3906250,
+    "text": "value"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 7812500,
+    "duration": 4036660,
+    "text": "case"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 13932500,
+    "duration": 4036250,
+    "text": "calls"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 17968750,
+    "duration": 1432500,
+    "text": "for"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 19531250,
+    "duration": 2995000,
+    "text": "human"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 22526250,
+    "duration": 5468750,
+    "text": "judgment"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 32161660,
+    "duration": 1822910,
+    "text": "This"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 34114580,
+    "duration": 4817910,
+    "text": "recorded"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 38932500,
+    "duration": 5078330,
+    "text": "case"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 45833330,
+    "duration": 911660,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 46875000,
+    "duration": 5078330,
+    "text": "awaiting"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 52083330,
+    "duration": 1172080,
+    "text": "an"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 53385410,
+    "duration": 2864580,
+    "text": "owner"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 56380410,
+    "duration": 5729160,
+    "text": "reply"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 66406250,
+    "duration": 911660,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 67317910,
+    "duration": 3906250,
+    "text": "visible"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 71224160,
+    "duration": 5208330,
+    "text": "screen"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 77343750,
+    "duration": 1041660,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 78515830,
+    "duration": 1302080,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 80599160,
+    "duration": 4687500,
+    "text": "earlier"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 85416660,
+    "duration": 4947910,
+    "text": "SMS"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 90495000,
+    "duration": 7031250,
+    "text": "interface"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 101822910,
+    "duration": 2995000,
+    "text": "live"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 104947910,
+    "duration": 5078330,
+    "text": "delivery"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 110156250,
+    "duration": 1302080,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 111458330,
+    "duration": 5338750,
+    "text": "session"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 116927080,
+    "duration": 5208330,
+    "text": "resume"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 125911660,
+    "duration": 1171660,
+    "text": "are"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 127083330,
+    "duration": 2604160,
+    "text": "not"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 129687500,
+    "duration": 2995000,
+    "text": "shown"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 132682500,
+    "duration": 3906250,
+    "text": "here"
+  }
+]

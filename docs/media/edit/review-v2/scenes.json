@@ -1,0 +1,77 @@
+[
+  {
+    "title": "A dispute becomes a case file.",
+    "label": "01 / THE CASE",
+    "source": 2,
+    "crop": [
+      416,
+      104,
+      1088,
+      144
+    ],
+    "point": "One place to review the claim.",
+    "note": "Recorded case: $340 \u00b7 unauthorized-payment claim",
+    "speech": "A chargeback leaves a small merchant with a claim to investigate and evidence to assemble. Rebuttal brings that review into a case file.",
+    "duration": 13
+  },
+  {
+    "title": "Read the evidence.",
+    "label": "02 / AVAILABLE RECORDS",
+    "source": 2,
+    "crop": [
+      435,
+      520,
+      1048,
+      300
+    ],
+    "point": "Order history. Delivery records. Terms.",
+    "note": "Synthetic records shown in the original console recording.",
+    "speech": "This is a recorded prototype using synthetic merchant records. The case groups order history, delivery records, and checkout terms so the reviewer can inspect the supporting material.",
+    "duration": 15
+  },
+  {
+    "title": "See what is missing.",
+    "label": "03 / EVIDENCE GAPS",
+    "source": 2,
+    "crop": [
+      435,
+      755,
+      1048,
+      145
+    ],
+    "point": "An absent signature stays visible.",
+    "note": "Missing evidence is not proof that a claim is false.",
+    "speech": "The same view identifies missing evidence. Here, the signature on file is absent. A missing record is a reason to investigate, not proof that the customer is wrong.",
+    "duration": 15
+  },
+  {
+    "title": "Keep the owner in the loop.",
+    "label": "04 / DECISION POINT",
+    "source": 2,
+    "crop": [
+      435,
+      925,
+      1048,
+      130
+    ],
+    "point": "The recorded case is awaiting a reply.",
+    "note": "Legacy SMS screen \u00b7 no delivery or resume is demonstrated here.",
+    "speech": "A high value case calls for human judgment. This recorded case is awaiting an owner reply. The visible screen is the earlier SMS interface; live delivery and session resume are not shown here.",
+    "duration": 17
+  },
+  {
+    "title": "Evidence first. Then a decision.",
+    "label": "REBUTTAL / PROTOTYPE",
+    "source": 2,
+    "crop": [
+      416,
+      104,
+      1088,
+      144
+    ],
+    "point": "Built with Strands Agents and Bedrock AgentCore.",
+    "note": "Synthetic-data walkthrough \u00b7 no real funds recovered in this demo.",
+    "speech": "Rebuttal uses Strands Agents and Bedrock AgentCore to support evidence gathering and decision review. This walkthrough shows the case review experience, without claiming a real dispute win or measured savings.",
+    "duration": 16
+  }
+]

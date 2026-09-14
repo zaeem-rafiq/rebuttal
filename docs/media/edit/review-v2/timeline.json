@@ -1,0 +1,47 @@
+[
+  {
+    "scene": 1,
+    "start": 0,
+    "end": 11.1,
+    "source_start": 2,
+    "source_duration": 6,
+    "hold_last_frame": 5.1,
+    "speech": "A chargeback leaves a small merchant with a claim to investigate and evidence to assemble. Rebuttal brings that review into a case file."
+  },
+  {
+    "scene": 2,
+    "start": 11.1,
+    "end": 25.133333333333333,
+    "source_start": 2,
+    "source_duration": 6,
+    "hold_last_frame": 8.033333333333333,
+    "speech": "This is a recorded prototype using synthetic merchant records. The case groups order history, delivery records, and checkout terms so the reviewer can inspect the supporting material."
+  },
+  {
+    "scene": 3,
+    "start": 25.133333333333333,
+    "end": 38.233333333333334,
+    "source_start": 2,
+    "source_duration": 6,
+    "hold_last_frame": 7.1,
+    "speech": "The same view identifies missing evidence. Here, the signature on file is absent. A missing record is a reason to investigate, not proof that the customer is wrong."
+  },
+  {
+    "scene": 4,
+    "start": 38.233333333333334,
+    "end": 53.9,
+    "source_start": 2,
+    "source_duration": 6,
+    "hold_last_frame": 9.666666666666666,
+    "speech": "A high value case calls for human judgment. This recorded case is awaiting an owner reply. The visible screen is the earlier SMS interface; live delivery and session resume are not shown here."
+  },
+  {
+    "scene": 5,
+    "start": 53.9,
+    "end": 70.83333333333333,
+    "source_start": 2,
+    "source_duration": 6,
+    "hold_last_frame": 10.933333333333334,
+    "speech": "Rebuttal uses Strands Agents and Bedrock AgentCore to support evidence gathering and decision review. This walkthrough shows the case review experience, without claiming a real dispute win or measured savings."
+  }
+]

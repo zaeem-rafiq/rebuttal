@@ -1,0 +1,111 @@
+1
+00:00:00,491 --> 00:00:02,588
+A chargeback leaves a small merchant with
+
+2
+00:00:02,588 --> 00:00:05,413
+a claim to investigate and evidence to
+
+3
+00:00:05,413 --> 00:00:06,025
+assemble.
+
+4
+00:00:06,429 --> 00:00:09,059
+Rebuttal brings that review into a case
+
+5
+00:00:09,072 --> 00:00:09,515
+file.
+
+6
+00:00:11,604 --> 00:00:14,534
+This is a recorded prototype using synthetic
+
+7
+00:00:14,534 --> 00:00:15,523
+merchant records.
+
+8
+00:00:15,953 --> 00:00:19,091
+The case groups order history, delivery records,
+
+9
+00:00:19,273 --> 00:00:21,786
+and checkout terms so the reviewer can
+
+10
+00:00:21,786 --> 00:00:23,544
+inspect the supporting material.
+
+11
+00:00:25,637 --> 00:00:28,255
+The same view identifies missing evidence.
+
+12
+00:00:28,697 --> 00:00:31,276
+Here, the signature on file is absent.
+
+13
+00:00:31,679 --> 00:00:33,346
+A missing record is a reason to
+
+14
+00:00:33,346 --> 00:00:36,184
+investigate, not proof that the customer is
+
+15
+00:00:36,184 --> 00:00:36,627
+wrong.
+
+16
+00:00:38,737 --> 00:00:40,886
+A high value case calls for human
+
+17
+00:00:40,886 --> 00:00:41,433
+judgment.
+
+18
+00:00:41,849 --> 00:00:44,258
+This recorded case is awaiting an owner
+
+19
+00:00:44,271 --> 00:00:44,844
+reply.
+
+20
+00:00:45,274 --> 00:00:47,670
+The visible screen is the earlier SMS
+
+21
+00:00:47,683 --> 00:00:48,386
+interface;
+
+22
+00:00:48,816 --> 00:00:51,602
+live delivery and session resume are not
+
+23
+00:00:51,602 --> 00:00:52,292
+shown here.
+
+24
+00:00:54,378 --> 00:00:58,584
+Rebuttal uses Strands Agents and Bedrock AgentCore
+
+25
+00:00:58,870 --> 00:01:01,917
+to support evidence gathering and decision review.
+
+26
+00:01:02,347 --> 00:01:05,225
+This walkthrough shows the case review experience,
+
+27
+00:01:05,602 --> 00:01:08,089
+without claiming a real dispute win or
+
+28
+00:01:08,102 --> 00:01:09,235
+measured savings.

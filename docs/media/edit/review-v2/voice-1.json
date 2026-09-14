@@ -1,0 +1,164 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 1041660,
+    "duration": 2213750,
+    "text": "This"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 3385410,
+    "duration": 1172080,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 4557500,
+    "duration": 520830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 5078330,
+    "duration": 5989580,
+    "text": "recorded"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 11067910,
+    "duration": 7291660,
+    "text": "prototype"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 19531250,
+    "duration": 3906250,
+    "text": "using"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 23437500,
+    "duration": 6901250,
+    "text": "synthetic"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 30338750,
+    "duration": 4166660,
+    "text": "merchant"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 34505410,
+    "duration": 5729160,
+    "text": "records"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 44531250,
+    "duration": 911660,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 45572910,
+    "duration": 3125000,
+    "text": "case"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 48697910,
+    "duration": 3776250,
+    "text": "groups"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 53125000,
+    "duration": 2604160,
+    "text": "order"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 55729160,
+    "duration": 6640830,
+    "text": "history"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 64843750,
+    "duration": 4947910,
+    "text": "delivery"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 69791660,
+    "duration": 6120000,
+    "text": "records"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 77734580,
+    "duration": 2864580,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 82552080,
+    "duration": 4817910,
+    "text": "checkout"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 87500000,
+    "duration": 4427080,
+    "text": "terms"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 94140830,
+    "duration": 1432080,
+    "text": "so"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 95572910,
+    "duration": 911660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 96614580,
+    "duration": 5208330,
+    "text": "reviewer"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 101822910,
+    "duration": 1041660,
+    "text": "can"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 102864580,
+    "duration": 5859580,
+    "text": "inspect"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 108854160,
+    "duration": 911660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 109765830,
+    "duration": 4947910,
+    "text": "supporting"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 114713750,
+    "duration": 5729160,
+    "text": "material"
+  }
+]

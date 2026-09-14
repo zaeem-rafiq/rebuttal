@@ -1,0 +1,170 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 1041660,
+    "duration": 520830,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 1562500,
+    "duration": 3125000,
+    "text": "same"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 4687500,
+    "duration": 3645830,
+    "text": "view"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 9505410,
+    "duration": 8202910,
+    "text": "identifies"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 17708330,
+    "duration": 3645830,
+    "text": "missing"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 21354160,
+    "duration": 5859580,
+    "text": "evidence"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 31640830,
+    "duration": 2604160,
+    "text": "Here"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 38411660,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 39322910,
+    "duration": 4817910,
+    "text": "signature"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 44270830,
+    "duration": 1562500,
+    "text": "on"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 45833330,
+    "duration": 4687500,
+    "text": "file"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 50651250,
+    "duration": 1302080,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 52083330,
+    "duration": 5338750,
+    "text": "absent"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 61458330,
+    "duration": 390830,
+    "text": "A"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 61979160,
+    "duration": 3906250,
+    "text": "missing"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 65885410,
+    "duration": 3906250,
+    "text": "record"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 71093750,
+    "duration": 911660,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 72005410,
+    "duration": 520830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 72526250,
+    "duration": 4297080,
+    "text": "reason"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 76953330,
+    "duration": 1171660,
+    "text": "to"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 78125000,
+    "duration": 7552080,
+    "text": "investigate"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 89974160,
+    "duration": 2994580,
+    "text": "not"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 92968750,
+    "duration": 4036660,
+    "text": "proof"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 97005410,
+    "duration": 1041660,
+    "text": "that"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 98047080,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 98958330,
+    "duration": 5468750,
+    "text": "customer"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 105208330,
+    "duration": 1302080,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 106510410,
+    "duration": 4427080,
+    "text": "wrong"
+  }
+]

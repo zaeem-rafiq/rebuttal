@@ -1,0 +1,182 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 781250,
+    "duration": 4817910,
+    "text": "Rebuttal"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 5599160,
+    "duration": 5859580,
+    "text": "uses"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 13541660,
+    "duration": 7682500,
+    "text": "Strands"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 21354160,
+    "duration": 5338750,
+    "text": "Agents"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 26822910,
+    "duration": 1953330,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 30208330,
+    "duration": 4947910,
+    "text": "Bedrock"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 35286660,
+    "duration": 7552080,
+    "text": "AgentCore"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 45703330,
+    "duration": 1041660,
+    "text": "to"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 46875000,
+    "duration": 4817910,
+    "text": "support"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 51822910,
+    "duration": 5468750,
+    "text": "evidence"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 58593750,
+    "duration": 6510410,
+    "text": "gathering"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 66927080,
+    "duration": 520830,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 67447910,
+    "duration": 4557500,
+    "text": "decision"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 72135410,
+    "duration": 4036660,
+    "text": "review"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 80468750,
+    "duration": 2213750,
+    "text": "This"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 82682500,
+    "duration": 6380410,
+    "text": "walkthrough"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 89974160,
+    "duration": 3906250,
+    "text": "shows"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 94010410,
+    "duration": 911660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 94922080,
+    "duration": 3645830,
+    "text": "case"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 98567910,
+    "duration": 2864580,
+    "text": "review"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 101432500,
+    "duration": 7812500,
+    "text": "experience"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 113020830,
+    "duration": 3645830,
+    "text": "without"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 116797080,
+    "duration": 3775830,
+    "text": "claiming"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 120572910,
+    "duration": 520830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 121093750,
+    "duration": 3645830,
+    "text": "real"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 124739580,
+    "duration": 5859580,
+    "text": "dispute"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 130599160,
+    "duration": 4166660,
+    "text": "win"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 136849160,
+    "duration": 1041660,
+    "text": "or"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 138020830,
+    "duration": 4297080,
+    "text": "measured"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 142317910,
+    "duration": 7031250,
+    "text": "savings"
+  }
+]
