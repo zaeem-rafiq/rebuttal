@@ -29,9 +29,9 @@ The current recorded token estimate is $6.945951; an interrupted run and executo
 usage are not fully metered. A $1 planning reserve is not a verified upper bound.
 No more model calls are authorized under this checkpoint without that decision.
 
-Original-checkout integration through f48000c passed 143 offline tests, exit 0.
-The final prepared follow-up will receive its own combined-suite result before
-commit/integration. The Stripe test runtime proof remains the recorded 616db5e run.
+Original-checkout integration through 6a756ed passed 146 offline tests, exit 0
+(5.60 seconds, two deprecation warnings). The isolated follow-up passed 137 tests,
+and its focused evaluator/lookup/rejection checks passed 57. The Stripe test runtime proof remains the recorded 616db5e run.
 Final video voice generation still awaits explicit Microsoft Edge TTS destination
 approval; automatic approval review rejected that upload before execution.
 
