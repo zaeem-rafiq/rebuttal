@@ -149,6 +149,19 @@ cases.append(('first_person_subject_supports_authorship', subject_report, None, 
 purpose = copy.deepcopy(clean)
 purpose['strategy']['rationale'] = 'Recommend refund to address the concern and avoid dispute escalation.'
 cases.append(('infinitive_purpose_is_not_promised_effect', purpose, None, []))
+absence_report_facts = copy.deepcopy(facts)
+absence_report_facts['communications']['messages'].append({
+    'direction': 'inbound', 'subject': 'Refund follow-up',
+    'body': 'The refund never arrived in my account.'})
+absence_report = copy.deepcopy(clean)
+absence_report['evidence_packet']['narrative'] += ' The customer reports that the refund never arrived in their account.'
+cases.append(('attributed_event_absence', absence_report, None, [], absence_report_facts))
+requested = os.getenv('CONTROL_CASES', '').split(',') if os.getenv('CONTROL_CASES') else []
+if requested:
+    unknown = set(requested) - {case[0] for case in cases}
+    if unknown:
+        raise ValueError(f'Unknown controls: {sorted(unknown)}')
+    cases = [case for case in cases if case[0] in requested]
 out = root / os.environ.get('CONTROL_REPORT_PATH', 'evals/results/output-controls.json')
 assert not out.exists(), 'Preserve prior results; choose a new output path.'
 client = get_llm_judge_client()
@@ -167,6 +180,7 @@ def source_records(values):
 
 def save_results(completed):
     out.write_text(json.dumps({'facts': source_records(facts), 'results': results,
+                              'selected_controls': [case[0] for case in cases],
                               'code_revision': code_revision, 'source_manifest': source_manifest,
                               'completed': completed}, indent=2) + '\n')
 

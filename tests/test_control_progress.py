@@ -6,7 +6,8 @@ from unittest.mock import MagicMock
 import pytest
 
 
-def test_control_interruption_preserves_completed_results(monkeypatch, tmp_path):
+@pytest.mark.parametrize('selected', ['', 'grounded_control,retention_outcome_alone'])
+def test_control_interruption_preserves_completed_results(monkeypatch, tmp_path, selected):
     import evals.run as runner
     import agent.tools.evidence_tools as evidence
 
@@ -23,12 +24,15 @@ def test_control_interruption_preserves_completed_results(monkeypatch, tmp_path)
     monkeypatch.setattr(runner, 'judge_narrative', judge)
     report = tmp_path / 'controls.json'
     monkeypatch.setenv('CONTROL_REPORT_PATH', str(report))
+    monkeypatch.setenv('CONTROL_CASES', selected)
 
     with pytest.raises(RuntimeError, match='provider interrupted'):
         runpy.run_path(str(runner.REPO_ROOT / 'evals/check_output_grounding.py'))
 
     saved = json.loads(report.read_text())
     assert saved['completed'] is False
+    if selected:
+        assert saved['selected_controls'] == selected.split(',')
     assert len(saved['results']) == 1
     assert saved['results'][0]['name'] == 'grounded_control'
     assert saved['results'][0]['result']['usage'] == first['usage']

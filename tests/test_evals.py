@@ -11,11 +11,11 @@ def judge_response(payload, usage=None):
 
 
 @pytest.mark.parametrize('response', [None, 'not json', '[]', '{}', json.dumps({
-    'reason_code_pass': 'false', 'must_cite_pass': True, 'no_hallucination_pass': True, 'outcome_assertions': [],
+    'reason_code_pass': 'false', 'must_cite_pass': True, 'no_hallucination_pass': True, 'support_assertions': [],
 }), json.dumps({
-    'reason_code_pass': True, 'must_cite_pass': False, 'no_hallucination_pass': True, 'outcome_assertions': [],
+    'reason_code_pass': True, 'must_cite_pass': False, 'no_hallucination_pass': True, 'support_assertions': [],
 }), json.dumps({
-    'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': False, 'outcome_assertions': [],
+    'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': False, 'support_assertions': [],
 })])
 def test_judge_cannot_turn_failure_into_pass(response):
     client = MagicMock()
@@ -32,7 +32,7 @@ def test_judge_accepts_grounded_verdict_and_rejects_empty_or_long_text(monkeypat
     monkeypatch.setenv('BEDROCK_JUDGE_MODEL_ID', 'judge-model')
     client = MagicMock()
     client.converse.return_value = {'usage': {'inputTokens': 100, 'outputTokens': 25}, 'output': {'message': {'content': [{'text': json.dumps({
-        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': True, 'outcome_assertions': [],
+        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': True, 'support_assertions': [],
     })}]}}}
     for narrative, expected in [('Delivery recorded.', True), ('', False), ('word ' * 251, False)]:
         result = judge_narrative(client, narrative, 'product_not_received', [], '{}')
@@ -154,7 +154,7 @@ def test_judge_prompt_contains_equivalence_and_grounding_rules():
     """Verify prompt passed to Bedrock judge enforces strict factual grounding and equivalence rules."""
     client = MagicMock()
     client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
-        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': True, 'outcome_assertions': [],
+        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': True, 'support_assertions': [],
     })}]}}}
 
     judge_narrative(
@@ -184,7 +184,7 @@ def test_keyword_presence_cannot_override_negative_judge_verdict():
     client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
         'reason_code_pass': True,
         'must_cite_pass': False,
-        'no_hallucination_pass': True, 'outcome_assertions': [],
+        'no_hallucination_pass': True, 'support_assertions': [],
         'explanation': 'Required evidence items were mentioned out of context.',
     })}]}}}
 
@@ -204,7 +204,7 @@ def test_judge_fails_on_unsupported_facts():
     client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
         'reason_code_pass': True,
         'must_cite_pass': True,
-        'no_hallucination_pass': False, 'outcome_assertions': [],
+        'no_hallucination_pass': False, 'support_assertions': [],
         'explanation': 'Unsupported $15 statutory loss fee not in case facts.',
     })}]}}}
     res_fee = judge_narrative(client, "Conceding dispute to avoid $15 fee", "product_not_received", [], "{}")
@@ -215,7 +215,7 @@ def test_judge_fails_on_unsupported_facts():
     client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
         'reason_code_pass': True,
         'must_cite_pass': True,
-        'no_hallucination_pass': False, 'outcome_assertions': [],
+        'no_hallucination_pass': False, 'support_assertions': [],
         'explanation': 'Action presented as completed when status is needs_response.',
     })}]}}}
     res_action = judge_narrative(client, "Merchant concedes dispute and refund is processed", "product_not_received", [], "{}")
@@ -226,7 +226,7 @@ def test_judge_fails_on_unsupported_facts():
     client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
         'reason_code_pass': True,
         'must_cite_pass': True,
-        'no_hallucination_pass': True, 'outcome_assertions': [],
+        'no_hallucination_pass': True, 'support_assertions': [],
         'explanation': 'Fully grounded prospective recommendation.',
     })}]}}}
     res_good = judge_narrative(client, "Recommendation: Concede dispute based on delayed tracking.", "product_not_received", [], "{}")
@@ -234,13 +234,13 @@ def test_judge_fails_on_unsupported_facts():
     assert res_good["no_hallucination_pass"] is True
 
 
-def test_outcome_assertion_overrides_a_passing_model_verdict():
+def test_support_assertion_overrides_a_passing_model_verdict():
     """Independent effect extraction can reject a passing broad factual verdict."""
     quote = 'Concession preserves the customer relationship.'
     client = MagicMock()
     narrative_verdict = {'reason_code_pass': True, 'must_cite_pass': True}
     broad_verdict = {'no_hallucination_pass': True, 'explanation': 'The prediction seems reasonable.'}
-    outcome_verdict = {'outcome_assertions': [
+    outcome_verdict = {'support_assertions': [
         {'field': 'strategy.owner_summary', 'quote': quote, 'support': None},
     ]}
     client.converse.side_effect = [
@@ -253,18 +253,18 @@ def test_outcome_assertion_overrides_a_passing_model_verdict():
     })
     assert result['raw_no_hallucination_pass'] is True
     assert result['grounding_judge']['no_hallucination_pass'] is True
-    assert result['outcome_assertions_pass'] is False
+    assert result['support_assertions_pass'] is False
     assert result['no_hallucination_pass'] is False
     assert result['overall_pass'] is False
-    assert quote in result['outcome_assertion_errors'][0]
+    assert quote in result['support_assertion_errors'][0]
     assert result['narrative_judge'] == narrative_verdict
     assert result['grounding_judge'] == broad_verdict
-    assert result['outcome_judge'] == outcome_verdict
+    assert result['support_judge'] == outcome_verdict
     assert client.converse.call_count == 3
     assert result['usage'] == {'inputTokens': 15, 'outputTokens': 6}
     broad_call, outcome_call = client.converse.call_args_list[1:]
-    assert 'outcome_assertions' not in broad_call.kwargs['system'][0]['text']
-    assert 'outcome_assertions' in outcome_call.kwargs['system'][0]['text']
+    assert 'support_assertions' not in broad_call.kwargs['system'][0]['text']
+    assert 'support_assertions' in outcome_call.kwargs['system'][0]['text']
     assert broad_call.kwargs['messages'] == outcome_call.kwargs['messages']
 
 
@@ -279,15 +279,33 @@ def test_valid_goal_or_source_supported_outcome_preserves_pass(assertions):
     client.converse.side_effect = [
         judge_response({'reason_code_pass': True, 'must_cite_pass': True}),
         judge_response({'no_hallucination_pass': True}),
-        judge_response({'outcome_assertions': assertions}),
+        judge_response({'support_assertions': assertions}),
     ]
     facts = {'records': [{'credit_effect': 'The proposed credit reduces the balance by $25.'}]}
     text = 'The proposed credit reduces the balance by $25.' if assertions else 'Aim to retain the customer.'
     result = judge_narrative(client, 'Dispute Reason: fraudulent.', 'fraudulent', [], json.dumps(facts), {
         'strategy': {'rationale': text},
     })
-    assert result['outcome_assertions_pass'] is True
+    assert result['support_assertions_pass'] is True
     assert result['overall_pass'] is True
+
+
+@pytest.mark.parametrize('support,valid', [
+    ([{'path': ['refund_at'], 'quote': '2026-08-12'},
+      {'path': ['dispute_at'], 'quote': '2026-08-15'}], True),
+    ([{'path': ['refund_at'], 'quote': '2026-08-12'},
+      {'path': ['missing_event_time'], 'quote': '2026-08-15'}], False),
+    ([], False),
+])
+def test_relationship_citations_require_every_reference_to_exist(support, valid):
+    from evals.run import validate_support_assertions
+
+    claim = 'The refund was issued before the dispute.'
+    errors = validate_support_assertions(
+        [{'field': 'narrative', 'quote': claim, 'support': support}],
+        {'narrative': claim}, {'refund_at': '2026-08-12', 'dispute_at': '2026-08-15'},
+    )
+    assert (not errors) is valid
 
 
 @pytest.mark.parametrize('bad_assertions', [
@@ -299,11 +317,11 @@ def test_valid_goal_or_source_supported_outcome_preserves_pass(assertions):
     [{'field': 'strategy.rationale', 'quote': 'A credit reduces the balance.',
       'support': {'path': 'records.0.effect', 'quote': 'A credit reduces the balance.'}}],
 ])
-def test_missing_or_malformed_outcome_assertions_fail_closed(bad_assertions):
+def test_missing_or_malformed_support_assertions_fail_closed(bad_assertions):
     client = MagicMock()
     verdict = {}
     if bad_assertions is not None:
-        verdict['outcome_assertions'] = bad_assertions
+        verdict['support_assertions'] = bad_assertions
     client.converse.side_effect = [
         judge_response({'reason_code_pass': True, 'must_cite_pass': True}),
         judge_response({'no_hallucination_pass': True}),
@@ -313,9 +331,9 @@ def test_missing_or_malformed_outcome_assertions_fail_closed(bad_assertions):
         'strategy': {'rationale': 'A credit reduces the balance.'},
     })
     assert result['raw_no_hallucination_pass'] is True
-    assert result['outcome_assertions_pass'] is False
+    assert result['support_assertions_pass'] is False
     assert result['overall_pass'] is False
-    assert result['outcome_judge'] == verdict
+    assert result['support_judge'] == verdict
 
 
 @pytest.mark.parametrize('path,quote', [
@@ -335,14 +353,14 @@ def test_invalid_outcome_source_citation_fails_closed(path, quote):
     client.converse.side_effect = [
         judge_response({'reason_code_pass': True, 'must_cite_pass': True}),
         judge_response({'no_hallucination_pass': True}),
-        judge_response({'outcome_assertions': [{'field': 'strategy.rationale', 'quote': effect,
+        judge_response({'support_assertions': [{'field': 'strategy.rationale', 'quote': effect,
                                                'support': {'path': path, 'quote': quote}}]}),
     ]
     result = judge_narrative(client, 'Dispute Reason: fraudulent.', 'fraudulent', [],
                              json.dumps({'records': [{'effect': effect, 'absent': None}]}), {
                                  'strategy': {'rationale': effect},
                              })
-    assert result['outcome_assertions_pass'] is False
+    assert result['support_assertions_pass'] is False
     assert result['overall_pass'] is False
 
 
@@ -355,13 +373,13 @@ def test_empty_outcomes_cannot_override_a_broad_factual_failure(claim, facts):
     client.converse.side_effect = [
         judge_response({'reason_code_pass': True, 'must_cite_pass': True}),
         judge_response({'no_hallucination_pass': False, 'explanation': 'The stated value is unsupported.'}),
-        judge_response({'outcome_assertions': []}),
+        judge_response({'support_assertions': []}),
     ]
     result = judge_narrative(client, 'Dispute Reason: fraudulent.', 'fraudulent', [], json.dumps(facts), {
         'strategy': {'rationale': claim},
     })
     assert result['raw_no_hallucination_pass'] is False
-    assert result['outcome_assertions_pass'] is True
+    assert result['support_assertions_pass'] is True
     assert result['no_hallucination_pass'] is False
     assert result['overall_pass'] is False
     broad = client.converse.call_args_list[1].kwargs
@@ -379,9 +397,9 @@ def test_outcome_call_failure_cannot_be_hidden_by_passing_other_judges():
     ]
     result = judge_narrative(client, 'Dispute Reason: fraudulent.', 'fraudulent', [], '{}')
     assert result['raw_no_hallucination_pass'] is True
-    assert result['outcome_assertions_pass'] is False
+    assert result['support_assertions_pass'] is False
     assert result['overall_pass'] is False
-    assert 'RuntimeError' in result['outcome_judge']['explanation']
+    assert 'RuntimeError' in result['support_judge']['explanation']
     assert client.converse.call_count == 3
 
 
@@ -458,7 +476,7 @@ def test_supporting_output_failure_cannot_hide_behind_passing_narrative(tainted_
     output[group][tainted_field] = "Issue a full refund and absorb the $15 fee."
     client = MagicMock()
     client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
-        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': False, 'outcome_assertions': [],
+        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': False, 'support_assertions': [],
         'explanation': f'Unsupported refund and fee in {tainted_field}.',
     })}]}}}
 
@@ -479,7 +497,7 @@ def test_supporting_output_failure_cannot_hide_behind_passing_narrative(tainted_
 def test_supporting_text_does_not_change_narrative_word_count_or_missing_items():
     client = MagicMock()
     client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
-        'reason_code_pass': True, 'must_cite_pass': False, 'no_hallucination_pass': True, 'outcome_assertions': [],
+        'reason_code_pass': True, 'must_cite_pass': False, 'no_hallucination_pass': True, 'support_assertions': [],
     })}]}}}
     result = judge_narrative(client, 'Dispute Reason: fraudulent.', 'fraudulent', ['tracking-123'], '{}', {
         'strategy': {'action': 'fight', 'win_probability': 0.85},
@@ -494,7 +512,7 @@ def test_supporting_text_does_not_change_narrative_word_count_or_missing_items()
 def test_attachment_guard_overrides_a_false_positive_model_verdict():
     client = MagicMock()
     client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
-        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': True, 'outcome_assertions': [],
+        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': True, 'support_assertions': [],
     })}]}}}
     result = judge_narrative(client, 'Dispute Reason: fraudulent.', 'fraudulent', [], '{}', {
         'evidence_packet': {'files': ['unproduced.pdf']},
@@ -524,7 +542,7 @@ def test_eval_rejection_continues_suite_and_persists_complete_output(monkeypatch
     monkeypatch.setattr(runner.agent.graph, 'run_evidence_pipeline', pipeline)
     judge = MagicMock()
     judge.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
-        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': False, 'outcome_assertions': [],
+        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': False, 'support_assertions': [],
         'explanation': 'Sentinel values are unsupported.',
     })}]}}}
     monkeypatch.setattr(runner, 'get_llm_judge_client', lambda: judge)
