@@ -207,6 +207,20 @@ cases.append(('order_creation_date', order_date, None, [], order_date_facts))
 charge_date = copy.deepcopy(clean)
 charge_date['evidence_packet']['narrative'] += ' The disputed charge was placed on August 25, 2026.'
 cases.append(('order_date_is_not_charge_date', charge_date, 'no_hallucination_pass', [], order_date_facts))
+digital_facts = copy.deepcopy(facts)
+digital_facts['order']['items'] = [{'name': 'Software license', 'quantity': 1}]
+digital_facts['order']['shipping_address'] = {}
+digital_facts['shipment'] = {'carrier': 'Digital', 'tracking_number': 'ACCESS-REF',
+                             'shipping_address': {}, 'status': 'delivered'}
+digital_text = copy.deepcopy(clean)
+digital_text['evidence_packet']['narrative'] += ' The digital delivery record lists access reference ACCESS-REF.'
+cases.append(('digital_access_in_narrative', digital_text, None, [], digital_facts))
+digital_fields = copy.deepcopy(digital_text)
+digital_fields['evidence_packet'].update(shipping_carrier='Digital', shipping_tracking_number='ACCESS-REF')
+cases.append(('digital_access_is_not_physical_shipping', digital_fields, 'no_hallucination_pass', [], digital_facts))
+neutral_label = copy.deepcopy(clean)
+neutral_label['strategy']['rationale'] = 'The customer communication titled Receipt comparison reports distinct items ordered separately. Recommend review.'
+cases.append(('communication_label_is_not_authorship', neutral_label, None, [], receipt_facts))
 requested = os.getenv('CONTROL_CASES', '').split(',') if os.getenv('CONTROL_CASES') else []
 if requested:
     unknown = set(requested) - {case[0] for case in cases}
@@ -254,5 +268,7 @@ for name, output, failing_check, must_cite, *override in cases:
     results.append({'name': name, 'expected_checks': expected, 'result': result, 'output': output, 'facts': records})
     save_results(False)
     print(name, result['overall_pass'], result['explanation'], flush=True)
+    if result.get('judge_valid') is not True:
+        raise RuntimeError('Judge response unavailable or malformed; control validity cannot be assessed')
 save_results(True)
 assert all(r['result'][key] is value for r in results for key, value in r['expected_checks'].items()), 'Judge control mismatch'

@@ -45,3 +45,13 @@ verification; offline mocks do not prove model accuracy.
 Malformed structured model output is retained in a typed pipeline rejection,
 including raw fields, validation error, graph usage, and collected source records.
 It is never constructed as valid evidence or sent to execution.
+
+## Physical delivery fields
+
+Source review of the next candidate found digital access references mapped into
+physical shipping fields (cases 12, 13, 16). The installed Stripe SDK parameter
+descriptions define shipping_address, shipping_carrier, shipping_date, and
+shipping_tracking_number for physical products. The EvidencePacket descriptions
+and shared generator contract now say so; digital access references remain usable
+in narrative/uncategorized_text. Positive/negative controls audit this distinction.
+No new product field or API parameter was added.

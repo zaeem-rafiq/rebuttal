@@ -74,10 +74,10 @@ class EvidencePacket(BaseModel):
     customer_name: Optional[str] = Field(None, description="Full customer name.")
     customer_email_address: Optional[str] = Field(None, description="Customer email address.")
     billing_address: Optional[str] = Field(None, description="Billing address string.")
-    shipping_address: Optional[str] = Field(None, description="Shipping destination address.")
-    shipping_carrier: Optional[str] = Field(None, description="Carrier name (e.g. UPS, FedEx, USPS).")
-    shipping_tracking_number: Optional[str] = Field(None, description="Tracking number; put the carrier in shipping_carrier.")
-    shipping_date: Optional[str] = Field(None, description="Date shipped (YYYY-MM-DD).")
+    shipping_address: Optional[str] = Field(None, description="Address to which a physical product was shipped; null for digital goods or services.")
+    shipping_carrier: Optional[str] = Field(None, description="Physical product carrier (e.g. UPS, FedEx, USPS); null for digital goods or services.")
+    shipping_tracking_number: Optional[str] = Field(None, description="Physical product carrier tracking number; null for digital access references. Put the carrier in shipping_carrier.")
+    shipping_date: Optional[str] = Field(None, description="Date a physical product was shipped (YYYY-MM-DD); null for digital access or service dates.")
     shipping_documentation: Optional[str] = Field(None, description="Uploaded Stripe file ID for proof of delivery, otherwise null.")
     service_documentation: Optional[str] = Field(None, description="Uploaded Stripe file ID for service documentation, otherwise null.")
     customer_communication: Optional[str] = Field(None, description="Uploaded Stripe file ID for communications, otherwise null. Put supported message excerpts in narrative or uncategorized_text.")
@@ -87,7 +87,7 @@ class EvidencePacket(BaseModel):
     uncategorized_file: Optional[str] = Field(None, description="Additional file upload ID.")
     narrative: str = Field(
         ...,
-        description="Narrative of recorded observations and a separately labeled proposed response. Include relevant support ticket and shipment tracking identifiers in this narrative. Dates must describe their recorded event, not a current status inferred from created_at. Before/after claims require both event times or an explicit source statement. Scope absence findings to supplied records; missing records do not establish that an event never happened. Quote messages as communications records unless sender/direction or unambiguous first-person subject/body content supports authorship. Do not conclude authorization, identity, or agreement compliance from checks, delivery, timing, or an acknowledgment of unseen terms. No retention or savings promises. Scope policy claims to retrieved rules."
+        description="Narrative of recorded observations and a separately labeled proposed response. Include relevant support ticket and shipment tracking identifiers in this narrative. Dates must describe the recorded entity and event: order creation does not date a charge, and created_at does not date a current status. Before/after claims require both event times or an explicit source statement. Scope absence findings to supplied records; missing records do not establish that an event never happened. Quote messages as communications records unless sender/direction or unambiguous first-person subject/body content supports authorship. Do not conclude authorization, identity, or agreement compliance from checks, delivery, timing, or an acknowledgment of unseen terms. No retention or savings promises. Scope policy claims to retrieved rules."
     )
     files: List[str] = Field(
         default_factory=list,

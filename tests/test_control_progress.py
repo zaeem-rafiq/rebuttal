@@ -6,8 +6,9 @@ from unittest.mock import MagicMock
 import pytest
 
 
+@pytest.mark.parametrize('provider_valid', [True, False])
 @pytest.mark.parametrize('selected', ['', 'grounded_control,retention_outcome_alone', 'grounded_control,attributed_prior_event'])
-def test_control_interruption_preserves_completed_results(monkeypatch, tmp_path, selected):
+def test_control_interruption_preserves_completed_results(monkeypatch, tmp_path, selected, provider_valid):
     import evals.run as runner
     import agent.tools.evidence_tools as evidence
 
@@ -17,7 +18,7 @@ def test_control_interruption_preserves_completed_results(monkeypatch, tmp_path,
     monkeypatch.setattr(evidence, 'get_merchant_history_and_policy', lambda _: {
         'policy': {}})
     monkeypatch.setattr(runner, 'get_llm_judge_client', lambda: object())
-    first = {'overall_pass': True, 'reason_code_pass': True, 'must_cite_pass': True,
+    first = {'judge_valid': provider_valid, 'overall_pass': True, 'reason_code_pass': True, 'must_cite_pass': True,
              'no_hallucination_pass': True, 'word_count_pass': True,
              'explanation': 'Grounded control.', 'usage': {'inputTokens': 123, 'outputTokens': 45}}
     judge = MagicMock(side_effect=[first, RuntimeError('provider interrupted')])
@@ -26,7 +27,8 @@ def test_control_interruption_preserves_completed_results(monkeypatch, tmp_path,
     monkeypatch.setenv('CONTROL_REPORT_PATH', str(report))
     monkeypatch.setenv('CONTROL_CASES', selected)
 
-    with pytest.raises(RuntimeError, match='provider interrupted'):
+    expected_error = 'provider interrupted' if provider_valid else 'control validity cannot be assessed'
+    with pytest.raises(RuntimeError, match=expected_error):
         runpy.run_path(str(runner.REPO_ROOT / 'evals/check_output_grounding.py'))
 
     saved = json.loads(report.read_text())

@@ -25,6 +25,8 @@ def test_judge_cannot_turn_failure_into_pass(response):
         client.converse.return_value = {'output': {'message': {'content': [{'text': response}]}}}
     result = judge_narrative(client, 'product_not_received tracking A123', 'product_not_received', ['A123'], '{}')
     assert result['overall_pass'] is False
+    if response is None:
+        assert result['judge_valid'] is False
 
 
 def test_judge_accepts_grounded_verdict_and_rejects_empty_or_long_text(monkeypatch):
@@ -210,6 +212,7 @@ def test_judge_fails_on_unsupported_facts():
     res_fee = judge_narrative(client, "Conceding dispute to avoid $15 fee", "product_not_received", [], "{}")
     assert res_fee["overall_pass"] is False
     assert res_fee["no_hallucination_pass"] is False
+    assert res_fee["judge_valid"] is True
 
     # Case B: Prospective action claimed as already executed
     client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
