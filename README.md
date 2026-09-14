@@ -2,27 +2,25 @@
 
 Rebuttal is an AWS Agents for Humans hackathon prototype for small Stripe merchants. A Strands graph gathers evidence, proposes a fight, concession, or inquiry refund, and drafts an evidence packet. An approval hook requests human input for high-value, uncertain, and non-fight actions.
 
-**Judge console:** https://main.dtrewze9hbzeb.amplifyapp.com
+**Watch the product demo:** [Rebuttal on YouTube (2:57)](https://www.youtube.com/watch?v=ZlGc15UzTbU)
 
-**Local demo video:** [rebuttal_demo_video.mp4](docs/media/rebuttal_demo_video.mp4)
+**Submission:** [project write-up](devpost-submission.md) · [architecture](docs/architecture-submission.md) · [MIT license](LICENSE)
 
-**Submission draft:** [docs/submission.md](docs/submission.md)
-
-These links identify the intended judging surfaces; their current availability and the final submission state are not established by this README.
+The recording shows the actual console, evidence review, Telegram conversation, and a real owner decision against a Stripe **test-mode** dispute. Merchant evidence is synthetic. The graph and console were run locally; the phone reply reached the cloud callback and closed the test dispute. The hosted console is not the verified judging surface for this release.
 
 ## Implemented flow and evidence boundaries
 
-1. Stripe test-mode webhook ingestion invokes the AgentCore application.
+1. Stripe test-mode webhook ingestion is implemented to invoke the AgentCore application. Automatic ingress was not verified in the final recording: the recorded test case required recovery before local graph execution.
 2. The Strands graph runs intake, evidence investigation, strategy, and drafting nodes. Order, shipment, and communication evidence comes from seeded records through local SQLite tools or configured Gateway tools. Direct UPS/FedEx and Gmail adapters are not present in this checkout.
 3. Model-generated structured outputs contain a proposed action, win-probability estimate, rationale, and evidence narrative. These estimates are not calibrated probabilities of real dispute outcomes.
 4. The executor's `ApprovalGate` requests an interrupt when amount is at least $200, probability is in the inclusive 0.35–0.65 band, or the action is not `fight`.
-5. Telegram alerts and inline replies are implemented. The legacy Twilio path remains and may also send SMS when configured. The helper's returned message identifier alone does not establish delivery. The webhook passes an owner reply to the runtime; current delivery and session resume require a separate live rehearsal.
+5. Telegram alerts and inline replies were exercised with the owner’s real phone. Selecting **Concede** produced a matching owner audit and a Stripe test dispute status of `lost`; the console displayed **CONCEDED · CLOSED**. This verifies the recorded callback outcome, not native SDK session rehydration. The legacy Twilio path remains and may also send SMS when configured.
 6. Execution tools submit evidence, concede, or refund an inquiry using Stripe test keys. A test-mode `won` result does not demonstrate recovery of real merchant funds.
 7. Case and audit records support the console. Memory and observability integrations are implemented; configuration and historical proof files are not fresh runtime verification.
 
-![Architecture](docs/architecture.png)
+![Architecture](docs/architecture-submission.png)
 
-The existing diagram/video may depict the earlier SMS-centered flow. The current channel description above is authoritative for this checkout; media refresh is separate work.
+The [architecture notes](docs/architecture-submission.md) distinguish the recorded path from infrastructure implemented outside that path.
 
 | Responsibility | Source |
 |---|---|
@@ -42,7 +40,7 @@ All three scenarios use synthetic merchant evidence and Stripe test-mode behavio
 | Scenario | Intended demonstration | Boundary |
 |---|---|---|
 | S1: $48 delivery dispute | Strong evidence leads to a fight without owner interruption | Test-mode outcome; no measured real win rate |
-| S2: $340 dispute | Gate requests an owner decision before execution | Current Telegram delivery/resume needs live verification |
+| S2: $340 dispute | Gate requests an owner decision before execution | Real phone Concede and Stripe test closure recorded; automatic ingress and SDK resume remain unverified |
 | S3: $129 inquiry | Proposed inquiry refund | Refund is a non-fight action and requires approval; fee savings are not measured |
 
 The deadline sweep contains a silence-policy path. Therefore, this project does not claim that every high-value action always waits indefinitely for positive owner confirmation. See `agent/sweep.py` for that separate behavior.
@@ -51,13 +49,13 @@ The deadline sweep contains a silence-policy path. Therefore, this project does 
 
 [evals/run.py](evals/run.py) evaluates 20 synthetic cases. It checks action agreement, the production hook's interrupt request with external effects mocked, a Bedrock narrative verdict, and EV sign. The gate metric does not exercise SDK suspension, Telegram delivery, session rehydration, or Stripe execution.
 
-The revised `grounded-v2` narrative rubric requires support for every factual assertion. Judge errors, malformed responses, missing fields, and non-boolean verdicts fail. Required-citation failures cannot be overridden by keyword matches. An LLM verdict remains fallible and is not a guarantee of zero hallucinations.
+The [final grounding acceptance record](docs/proofs/output-grounding/final-acceptance.json) reports **20/20 action, 20/20 gate, 19/20 narrative, and 20/20 EV sign**, with **52/52 evaluator controls**. This reprocessed 20 captured model outputs and obtained new judgments; it was not 20 freshly generated end-to-end executions. Two separate fresh graph cases also passed. One narrative judgment remained a failure, within the predefined threshold. The evaluator is fallible and does not establish zero hallucinations or production dispute success.
 
-The [September 7 report](evals/results/2026-09-07.md) is historical evidence from the earlier rubric, not a benchmark for the revised evaluator. Current grounded-v2 results: **20/20 action, 20/20 gate, 4/20 narrative, 20/20 EV sign; FAIL (exit 1)**. Streaming access was repaired and all cases ran on September 14. The [current report](evals/results/2026-09-14.md) includes unsupported narrative claims and some incorrect judge explanations; its failures need adjudication, not automatic attribution to hallucinations. See [docs/evals.md](docs/evals.md) for checks and limitations.
+The submission source passed **232 tests** in a fresh Git clone after seeding its synthetic SQLite database (September 14, 2026; exit 0). Console checks passed **12 tests**, TypeScript checking, and a production build. These checks are separate from the phone/Stripe test-mode observation. Earlier reports, including the September 14 `grounded-v2` 4/20 result, are retained as historical evidence. See [docs/evals.md](docs/evals.md) for the evaluation method and limitations.
 
 ## Local setup
 
-Use Python 3.12+ and the repository's `requirements.txt`. The console has its own npm dependencies.
+Clone this repository with Git; evaluation provenance requires its Git metadata. Use Python 3.12+ and the repository's `requirements.txt`. The console has its own npm dependencies.
 
 ```bash
 python3 -m venv .venv
@@ -83,8 +81,10 @@ This runs the evidence graph with Bedrock; it is not an offline acceptance test 
 
 ### Offline checks
 
+Run after the local seed command above.
+
 ```bash
-PYTHON_DOTENV_DISABLED=1 python -m pytest -q tests/test_evals.py tests/test_gate.py tests/test_hooks.py
+PYTHON_DOTENV_DISABLED=1 python -m pytest -q
 ```
 
 ### Console
@@ -95,7 +95,7 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:3000. Data availability depends on console configuration; a rendered page alone does not prove the agent loop.
+Open http://localhost:3000. Set the console’s `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` for your own seeded project. The console can open a specific case at `/case?id=<dispute-id>`. Data availability depends on configuration; a rendered page alone does not prove the agent loop. Run `node --test tests/disputes.test.cjs` from `console/` for the focused record-to-UI checks.
 
 ## Deployment and safety
 

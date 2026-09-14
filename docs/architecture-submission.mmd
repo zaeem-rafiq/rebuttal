@@ -1,0 +1,59 @@
+---
+title: Rebuttal | Evidence to an owner decision
+config:
+  theme: base
+  themeCSS: "* { font-family: Arial, sans-serif !important; }"
+  themeVariables:
+    fontFamily: Arial, sans-serif
+    fontSize: 18px
+    primaryColor: '#ffffff'
+    primaryTextColor: '#15283b'
+    lineColor: '#526b7d'
+    clusterBkg: '#f5f8fb'
+    clusterBorder: '#b8c7d4'
+  flowchart:
+    subGraphTitleMargin:
+      top: 14
+      bottom: 32
+    curve: linear
+    nodeSpacing: 28
+    rankSpacing: 38
+    htmlLabels: true
+    wrappingWidth: 320
+---
+flowchart TB
+  subgraph CORE["1. INVESTIGATE AND RECOMMEND | Local Strands graph + Bedrock; synthetic evidence in SQLite"]
+    direction TB
+    Intake["Intake agent<br/>Stripe TEST dispute + payment context"]
+    Orders["Orders agent<br/>Order + merchant customer ID"]
+    Shipping["Shipping agent<br/>Shipment + delivery events"]
+    Comms["Communications agent<br/>Customer and merchant messages"]
+    History["History agent<br/>Customer standing + merchant policy"]
+    Sources["Four completed evidence results"]
+    Strategy["Strategy agent<br/>Fight / concede / inquiry refund"]
+    Drafter["Drafter agent<br/>Structured evidence packet"]
+    Intake --> Orders & Shipping
+    Orders --> Comms & History
+    Orders & Shipping & Comms & History --> Sources
+    Sources -->|"all evidence ready"| Strategy
+    Sources -->|"direct source context"| Drafter
+    Strategy -->|"strategy also required"| Drafter
+  end
+  Executor["Separate execution agent + ApprovalGate hook<br/>Default: amount >= $200 OR estimate 0.35-0.65<br/>OR proposed action is not fight"]
+  Drafter --> Executor
+  Alert["Telegram alert and owner decision<br/>Fight / Concede / Hold<br/>Owner chose Concede on their phone"]
+  Callback["Existing AWS Lambda + AgentCore callback<br/>Applies owner reply"]
+  Stripe["Stripe TEST API<br/>Concession closes dispute<br/>Verified status: lost"]
+  Console["Supabase case + owner audit → local Next.js console<br/>Verified CONCEDED · CLOSED"]
+  Executor -->|"persist proposal; request approval"| Alert
+  Alert --> Callback --> Stripe --> Console
+  Notes["Demo used a recovered test case and local generation.<br/>Automatic cloud ingestion and deployment of local repairs remain unverified.<br/>Separate decision and memory fields still need reconciliation."]
+  Console ~~~ Notes
+  classDef core fill:#e8f3f2,stroke:#297d76,stroke-width:2px,color:#123b38;
+  classDef external fill:#eaf1fa,stroke:#58799d,stroke-width:2px,color:#193752;
+  classDef gate fill:#fff2dc,stroke:#b97d20,stroke-width:2px,color:#583a0e;
+  classDef note fill:#ffffff,stroke:#b8c7d4,color:#3d5264;
+  class Intake,Orders,Shipping,Comms,History,Strategy,Drafter core;
+  class Callback,Stripe,Console external;
+  class Executor,Alert gate;
+  class Sources,Notes note;
