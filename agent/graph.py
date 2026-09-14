@@ -526,4 +526,14 @@ def run_evidence_pipeline(
         except ValueError as exc:
             raise InvalidEvidencePacket(str(exc), strategy_out, drafter_out, graph) from exc
 
+    if strategy_out is not None and drafter_out is not None:
+        from agent.factual_output import render_factual_output
+        raw_output = {"strategy": strategy_out.model_dump(), "evidence_packet": drafter_out.model_dump()}
+        graph.raw_generated_output = raw_output
+        try:
+            sources = {name: graph.nodes[name].executor for name in ("intake", "orders", "shipping", "comms", "history")}
+            strategy_out, drafter_out = render_factual_output(strategy_out, SourceRecordsHook(sources).get_records())
+        except ValueError as exc:
+            raise InvalidEvidencePacket(str(exc), strategy_out, drafter_out, graph, raw_output=raw_output) from exc
+
     return strategy_out, drafter_out, graph
