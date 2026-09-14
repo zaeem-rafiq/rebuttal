@@ -1,42 +1,42 @@
-# Approved verification in progress
+# Verification continuation
 
-Current authorization cap: $15 total additional verification inference. Recorded
-usage estimate: $6.945951, excluding some interrupted-run and executor usage.
-A $1 planning reserve is an estimate, not an invoice or verified upper bound.
-The owner explicitly approved both the Sonnet generation trial under this total cap
-and sending the prepared narration to Microsoft Edge TTS. The commands below are
-authorized; their results must still be observed before any acceptance claim.
+Current code: 22b0178. Captured estimate: $12.843357 plus partly unmetered usage.
+The saved conversation records a $15 approval, but automatic approval review has
+rejected two attempts to launch 12 further controls because it only accepts the
+prior $8 cap from trusted context. Neither attempt started or incurred inference.
+A new explicit $20 total-cap question is pending. Do not retry paid calls through
+another route or treat a timeout as approval.
 
-Use the existing model configuration in the original checkout. BEDROCK_STREAMING=false
-selects the installed SDK non-streaming transport, covered by the existing InvokeModel
-permission; no AWS permission expansion is needed. The default remains streaming:
+Controls v12 completed at a14c5cb: 30/33 expectations, 129/132 criteria, exit 1.
+The three misses were repaired by generalizing the existing focused claim-support
+check. New rubric grounded-v11 uses support_* diagnostic keys. There are now 34
+controls; one new positive case preserves attributed absence reports. No v13 run
+exists. After explicit approval, run the controls first, preserving reports and
+checking captured usage before the full benchmark.
+
+After approval and passing controls, run the fresh full benchmark:
 
 ```bash
 PYTHON_DOTENV_DISABLED=1 USE_GATEWAY_MCP=false AWS_PROFILE=zaeem-khan \
 BEDROCK_MODEL_ID=us.anthropic.claude-sonnet-4-5-20250929-v1:0 BEDROCK_STREAMING=false \
 BEDROCK_JUDGE_MODEL_ID=us.anthropic.claude-sonnet-4-5-20250929-v1:0 \
-EVAL_REPORT_PATH=evals/results/2026-09-14-sonnet-generation-trial.md \
+EVAL_REPORT_PATH=evals/results/2026-09-14-sonnet-final.md \
 PYTHONUNBUFFERED=1 .venv/bin/python evals/run.py
-
-PYTHON_DOTENV_DISABLED=1 USE_GATEWAY_MCP=false AWS_PROFILE=zaeem-khan \
-BEDROCK_JUDGE_MODEL_ID=us.anthropic.claude-sonnet-4-5-20250929-v1:0 \
-CONTROL_REPORT_PATH=evals/results/2026-09-14-sonnet-controls-v11.json \
-PYTHONUNBUFFERED=1 .venv/bin/python -m evals.check_output_grounding
 ```
 
-Choose fresh filenames if these already exist. The fixed benchmark uses isolated
-synthetic records and mocked Stripe intake with production-equivalent tool metadata
-and ID validation. It does not execute Stripe action tools. The control suite now
-contains 26 cases; the three-call evaluator is not yet model-verified. Compare each
-control criterion, not only its overall boolean. Review all benchmark outputs
-against actual tool records, including passing judgments. Preserve failures.
+Use a fresh report path if it exists. This uses only the already granted
+non-streaming InvokeModel permission. Generation source 25bfc30's original trial
+completed 17/20 output judge and has five manually identified defective cases; it
+must not certify the new generator. Rejudgments preserve old outputs and cannot
+be called fresh generation verification. Update the ledger from saved token usage.
 
-Keep the application model unchanged until the trial justifies adoption. Do not
-change production IAM, deploy, publish, upload the video, or submit the hackathon
-entry from this preparation. The existing applied evaluator permission is already
-scoped to the US Sonnet profile; the owner has now approved the generation purpose and budget.
+If explicit approval is withheld, leave paid verification blocked. Explicitly report that a fresh full 20-case run of the
+final generator is NOT RUN. Keep local model adoption conditional on observed quality;
+no production settings, IAM, deployment, publication, upload, or submission changes.
 
-The original video remains intact. Microsoft Edge TTS is now approved for the exact narration at
-`docs/media/edit/submission-v3/final-cut/narration-for-approval.md`. Only that text
-is authorized for transmission. Final listening and artifact approval remain separate
-from the approved narration-generation destination.
+All nine prepared narration tracks are generated following explicit Microsoft
+Edge TTS destination approval. Do not regenerate them; their exact hashes and
+word timings are in docs/media/edit/submission-v3/final-cut/voice-verification.json.
+Update the validation scene from observed evidence, then render and inspect the
+complete local video. Final listening/artifact acceptance and publication are
+separate from narration-generation approval.

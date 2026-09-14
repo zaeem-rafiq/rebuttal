@@ -1,0 +1,19 @@
+{
+  "code_revision": "22b0178a3947d098f4ca895b10b20ce918bd6eb1",
+  "command": "PYTHON_DOTENV_DISABLED=1 USE_GATEWAY_MCP=false .venv/bin/python -m pytest -q",
+  "exit_status": 0,
+  "passed": 157,
+  "warnings": 2,
+  "elapsed_seconds": 21.2,
+  "log": "docs/proofs/output-grounding/22b0178-local-tests.txt",
+  "log_sha256": "06be70010d5c8cc66b5b578c7456e1c7f0f18db67fc06ef19b66f1b711c49bb1",
+  "source_manifest": {
+    "agent/graph.py": "67f6d6780767b43173833af599d455f2cff9e3291d76b5b9afa2e83832041e02",
+    "agent/models.py": "57133b6a97bd8df2ae513f5cc4476ad75826ab0b77b7d79bf33784843da5f041",
+    "evals/run.py": "2851449f0529bb08da4e6532b9bbfe0f533d3227e2d282608194880195e53dac",
+    "evals/check_output_grounding.py": "d98b80b97e2330fc9ef39b16bfbf7f7c10cf73e3e008232dea954347592f90fd",
+    "tests/test_evals.py": "9fbe812a65f5b05e887c8d41a0a635e58a0527b419b8adb3531073e96b3072fb",
+    "tests/test_control_progress.py": "106ae4095287a8b45968cc839cb39e08bf2b5830b2b3e716460802cdb101ab33"
+  },
+  "paid_followup": "NOT RUN; approval review rejected before launch"
+}

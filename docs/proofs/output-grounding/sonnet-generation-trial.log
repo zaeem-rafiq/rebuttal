@@ -1,0 +1,128 @@
+================================================================================
+REBUTTAL DECISION EVALS HARNESS (R-16)
+================================================================================
+Timestamp: 2026-09-14T15:47:00.187909+00:00
+Running multi-agent pipeline against 20 synthetic cases (dry-run mode)...
+
+Case      | Reason                 | Exp Act    | Act Act    | Gate (Exp/Got) | Judge  | EV     | Result
+--------------------------------------------------------------------------------------------------------
+Graph without execution limits may run indefinitely if cycles exist
+case_01   | product_not_received   | fight      | fight      | F/F            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_02   | product_not_received   | fight      | fight      | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_03   | product_not_received   | concede    | concede    | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_04   | fraudulent             | fight      | fight      | F/F            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_05   | fraudulent             | fight      | fight      | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_06   | fraudulent             | concede    | concede    | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_07   | product_unacceptable   | fight      | fight      | F/F            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_08   | product_unacceptable   | concede    | concede    | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_09   | product_unacceptable   | concede    | concede    | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_10   | credit_not_processed   | fight      | fight      | F/F            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_11   | credit_not_processed   | concede    | concede    | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_12   | subscription_canceled  | fight      | fight      | F/F            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_13   | subscription_canceled  | concede    | concede    | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_14   | duplicate              | fight      | fight      | F/F            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_15   | duplicate              | concede    | concede    | T/T            | FAIL   | PASS   | FAIL
+  Judge: This narrative is being evaluated for two criteria: (1) whether it identifies or discusses the required dispute reason 'duplicate', and (2) whether it meaningfully references all three required items: 'double charge', 'identical', and 'single shipment'.
+
+For reason_code_pass: The narrative explicitly states 'Dispute Reason: duplicate' in the opening line, clearly identifying the required reason code. Additionally, the narrative discusses the duplicate charge scenario throughout, including in the customer quote and recommendation. This satisfies the requirement.
+
+For must_cite_pass: Examining each required reference:
+1. 'double charge' - This exact phrase appears twice in the narrative: in the customer quote ("System shows a double charge 2 seconds apart") and in the final recommendation ("based on the reported double charge").
+2. 'identical' - This exact word appears in the customer quote ("double charge 2 seconds apart for identical items") and again in the communications record summary ("a double charge for identical items").
+3. 'single shipment' - This exact phrase appears in the customer quote ("merchant only fulfilled a single shipment") and in the communications record summary ("identical items with a single shipment").
+
+All three required references are meaningfully present in the narrative text, with each phrase appearing multiple times in context that demonstrates understanding of the duplicate charge dispute. | Auditing all factual claims against source records:
+
+1. Dispute reason 'duplicate', amount $60.00, dates, tracking, addresses, customer details, card checks, order status - all supported by source records.
+
+2. Customer communication quote and date (August 8, 2026) - exact match in msg_0.
+
+3. 'The customer reported' - The message body describes a system observation and merchant fulfillment, but lacks first-person indicators or sender/direction metadata establishing customer authorship. The generic label 'customer communication' in evidence_packet describes a communication associated with the customer/order but does not itself assert who wrote it. The message contains no unambiguous first-person customer statement like 'I was charged twice' that would support attribution without metadata.
+
+4. Order details, delivery date, shipping address - all match source records.
+
+5. 'Records do not document separate orders containing distinct items ordered separately' - Correctly scoped to supplied records (only one order present).
+
+6. 'Recommendation: Concede' - This is a prospective recommendation, not a factual claim about completed action.
+
+The critical issue: The output repeatedly asserts 'The customer reported' and 'Customer reported' without evidence establishing customer authorship of msg_0. The message lacks sender/direction metadata or first-person customer language that would support this attribution.
+Graph without execution limits may run indefinitely if cycles exist
+case_16   | inquiry                | refund_inquiry | refund_inquiry | T/T            | FAIL   | PASS   | FAIL
+  Judge: This narrative is evaluated against two criteria: (1) whether it identifies or discusses the required dispute type 'inquiry', and (2) whether it meaningfully references all three required items: 'inquiry', 'cancellation', and '$15 fee'.
+
+For reason_code_pass: The narrative explicitly states 'Dispute Reason: inquiry' in the header and uses the term 'inquiry' multiple times throughout the text ('This is a pre-chargeback inquiry' and 'Resolve pre-chargeback inquiry'), clearly identifying and discussing the required dispute type.
+
+For must_cite_pass: All three required references are present in the narrative: (1) 'inquiry' appears multiple times as noted above, (2) 'cancellation' is explicitly mentioned in the customer communication quote ('I sent a cancellation email before renewal'), and (3) '$15 fee' appears verbatim in the same customer quote ('avoid the $15 fee'). Each required item is meaningfully referenced in context. | Auditing all factual claims against source records:
+
+1. Dispute reason 'inquiry', status, amount $129.00, dates, customer details, order details, addresses, shipping details, card checks - all supported by source records.
+
+2. Customer communication quote and date (2026-08-01T08:00:00Z) - accurately quoted from msg_0 in customer_comms.
+
+3. Policy disclosure text - matches the return_policy field in merchant_history_and_policy.
+
+4. Customer value 'new' - matches customer_tier in merchant_history_and_policy.
+
+5. The narrative and strategy fields describe this as a 'pre-chargeback inquiry' and propose issuing a refund to 'resolve' or 'address' the inquiry. The dispute status is 'warning_needs_response' and reason is 'inquiry', supporting the characterization as a pre-chargeback inquiry.
+
+6. The customer communication reports a prior cancellation email and requests a refund. The output accurately describes what the customer reported without asserting the independent truth of whether a prior cancellation email was actually sent.
+
+7. The recommendation to 'refund_inquiry' and rationale about addressing the customer concern and avoiding escalation are prospective recommendations and strategic assessments, not unsupported factual claims about past events.
+
+All factual assertions in the output are supported by the source records. The output appropriately distinguishes between what was reported in communications versus independently verified facts, and between completed actions versus proposed recommendations. | Unsupported outcome in strategy.rationale: avoid dispute escalation | Unsupported outcome in strategy.owner_summary: Proposed refund addresses inquiry to avoid escalation
+Graph without execution limits may run indefinitely if cycles exist
+case_17   | inquiry                | refund_inquiry | refund_inquiry | T/T            | FAIL   | PASS   | FAIL
+  Judge: This narrative is being evaluated for two criteria: (1) whether it identifies or discusses the required dispute type 'inquiry', and (2) whether it meaningfully references both required items: 'inquiry' and '$15 fee'.
+
+For reason_code_pass: The narrative explicitly identifies the dispute reason as 'inquiry' in the header ('Dispute Reason: inquiry') and refers to it multiple times throughout the text ('Pre-chargeback inquiry', 'pre-chargeback inquiry'). This clearly satisfies the requirement to identify or discuss the inquiry dispute type.
+
+For must_cite_pass: The narrative must meaningfully reference both 'inquiry' and '$15 fee'. The term 'inquiry' appears multiple times as noted above. The '$15 fee' is directly quoted in the customer's message: 'Please refund this inquiry before chargeback to save the $15 fee.' This is a meaningful reference to the $15 fee within the context of the dispute. Both required items are present and meaningfully referenced in the narrative. | Auditing all factual claims against source records:
+
+1. Amounts, dates, tracking, addresses: All verified (7500 cents = $75.00, 32000 cents = $320.00, dates match, tracking 940017, addresses match).
+
+2. Customer authorship: The output states "Customer Patricia Hall sent message" and "customer communication stating delivery was paused." The message record (msg_0) shows customer_id CUST-EVAL-017 (Patricia Hall's ID) and contains the quoted text. This establishes both customer authorship and content.
+
+3. Order count: The output states "4 orders" matching order_count=4 in the order evidence. The output does NOT claim "4 prior orders" - it correctly states "4 orders" which includes the current order.
+
+4. Delivery completion: "delivered 2026-08-08" is supported by delivered_at timestamp in shipping evidence.
+
+5. Customer tier and lifetime value: "repeat" and "$320.00 lifetime value" match customer_value and lifetime_value_cents fields.
+
+6. Recommendations: "Recommend refund_inquiry" and "Proposed refund" are prospective recommendations, not unsupported facts.
+
+7. "Reports paused delivery": The message body states "I had paused my delivery," supporting that the customer reported this.
+
+8. All quoted text matches source records exactly.
+
+No unsupported factual claims found. All assertions are grounded in the supplied source records. | Unsupported outcome in strategy.rationale: avoid dispute escalation
+Graph without execution limits may run indefinitely if cycles exist
+case_18   | product_not_received   | concede    | concede    | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_19   | fraudulent             | fight      | fight      | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_20   | product_not_received   | fight      | fight      | F/F            | PASS   | PASS   | PASS
+
+================================================================================
+EVALUATION SUMMARY:
+  Total Cases:       20
+  (a) Action Match:  20/20 (threshold >= 18)
+  (b) Gate Match:    20/20 (threshold == 20)
+  (c) Judge Pass:    17/20 (threshold >= 18)
+  (d) EV Sign Pass:  20/20 (threshold == 20)
+================================================================================
+
+Detailed evaluation report saved to: evals/results/2026-09-14-sonnet-generation-trial.md
+Complete case inputs and outputs saved to: evals/results/2026-09-14-sonnet-generation-trial.json

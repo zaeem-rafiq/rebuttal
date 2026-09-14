@@ -1,0 +1,11 @@
+{
+  "launched_at_revision": "9840c4a",
+  "source_manifest": {
+    "evals/run.py": "f8f726f9ad07cc46b133edb70a56c6beb7b21d60c128c89d7e8b15f697239266",
+    "evals/check_output_grounding.py": "0d2666f4c6659d92c4c9ca4cf962a9b5d37c610680b0a22ba20dc4ed59984780"
+  },
+  "provenance_note": "Reconstructed from observed launch state; not a pre-inference timestamped manifest. Subsequent25bfc30 only changed generation transport and report metadata, not the judge functions.",
+  "judge_model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+  "report": "evals/results/2026-09-14-sonnet-controls-v11.json",
+  "criterion_count_per_case": 4
+}
