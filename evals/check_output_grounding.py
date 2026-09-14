@@ -172,6 +172,15 @@ absence_report_facts['communications']['messages'].append({
 absence_report = copy.deepcopy(clean)
 absence_report['evidence_packet']['narrative'] += ' The customer reports that the refund never arrived in their account.'
 cases.append(('attributed_event_absence', absence_report, None, [], absence_report_facts))
+empty_messages = copy.deepcopy(facts)
+empty_messages['communications'].update(messages=[], message_count=0, has_cancellation_request=False,
+                                         has_address_change_request=False, has_inquiry=False)
+record_domain = copy.deepcopy(clean)
+record_domain['evidence_packet']['narrative'] += ' No customer communications exist in merchant records.'
+cases.append(('record_domain_qualifies_exists', record_domain, None, [], empty_messages))
+world_absence = copy.deepcopy(clean)
+world_absence['evidence_packet']['narrative'] += ' No customer ever contacted merchant support.'
+cases.append(('no_records_do_not_prove_no_contact', world_absence, 'no_hallucination_pass', [], empty_messages))
 requested = os.getenv('CONTROL_CASES', '').split(',') if os.getenv('CONTROL_CASES') else []
 if requested:
     unknown = set(requested) - {case[0] for case in cases}
