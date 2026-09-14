@@ -18,7 +18,7 @@ Rebuttal assembles a case file from order details, shipping records, customer co
 
 Before a consequential Stripe action, a separate approval hook checks the merchant's policy. Under the default policy, amounts of at least $200, estimates in the 0.35–0.65 uncertainty band, and any non-fight action request an owner decision. Telegram presents **Fight, Concede, or Hold**, so the owner can respond away from the desk.
 
-Our [2:57 demonstration](https://www.youtube.com/watch?v=ZlGc15UzTbU) follows a $340 Stripe test dispute. It shows the actual console, the order and delivery records, the customer's messages, the recommendation, the real Telegram alert, and the confirmation after the owner chooses Concede on their phone. A fresh Stripe readback and the recorded owner audit confirm that the same test dispute closed as `lost`, which is Stripe's status for the concession shown. The console displays **CONCEDED · CLOSED**.
+Our [2:58 demonstration](https://www.youtube.com/watch?v=WRrAUpgRC90) follows a $340 Stripe test dispute. It shows the actual console, the order and delivery records, the customer's messages, the recommendation, the real Telegram alert, and the confirmation after the owner chooses Concede on their phone. A fresh Stripe readback and the recorded owner audit confirm that the same test dispute closed as `lost`, which is Stripe's status for the concession shown. The console displays **CONCEDED · CLOSED**.
 
 ## How we built it
 
@@ -40,11 +40,13 @@ The graph also exposed a real dependency: communications and customer history ca
 
 Finally, a successful chat message is not enough to prove an action happened. We checked the resulting Stripe dispute, matching case status, and owner audit separately before using the completed outcome in the video.
 
+Implementation revision `e2c1cd1` adds a shared writer for the selected owner decision across local/cloud stores. Closure memory now requires consistent execution audits; missing, conflicting, or unavailable evidence produces an explicit skip while preserving terminal case status. These fixes passed local tests, including cloud-only decision scenarios. See the [verification record](docs/proofs/record-consistency-2026-09-14.md).
+
 ## Accomplishments we're proud of
 
 - The demo shows inspectable product evidence and an actual owner decision from their phone.
 - The $340 test case closed through the existing phone callback, with matching Stripe and case-store readbacks.
-- The submission source passed 232 Python tests in a fresh Git clone with local synthetic fixtures; the console passed 12 focused tests, type checking, and a production build.
+- Implementation revision `e2c1cd1` passed 256 Python tests locally with seeded synthetic fixtures and offline provider doubles. The unchanged console previously passed 12 focused tests, type checking, and a production build; those checks were not rerun for this revision.
 - The public video shows the full decision journey in under three minutes, with English captions and clearly disclosed synthetic records and Stripe test mode.
 
 ## What we learned
@@ -53,9 +55,9 @@ The agent's useful output is a decision someone can trust and act on. That requi
 
 ## What's next
 
-Reconcile the remaining cloud state replication issues, verify automatic ingestion with the current source, and deploy the updated console. Then add direct merchant-system adapters and test with consenting merchants to measure review time and decision quality.
+Apply the prepared SQL migration, deploy the locally tested decision and attribution fixes, and verify live synchronization and automatic ingestion with the current source. Deploy the updated console, add direct merchant-system adapters, and test with consenting merchants to measure review time and decision quality.
 
-This is a prototype using synthetic merchant evidence and Stripe test mode. Direct carrier and Gmail adapters are not implemented. Win estimates are not calibrated against real merchant outcomes, and real recovery rates or time savings have not been measured. The completed case's separate decision row remained pending and its closure-memory action label was inconsistent; terminal dispute state and the owner audit establish the demonstrated concession. The deadline sweep has a separate silence policy, so the approval flow is not an indefinite-wait guarantee.
+This is a prototype using synthetic merchant evidence and Stripe test mode. Direct carrier and Gmail adapters are not implemented. Win estimates are not calibrated against real merchant outcomes, and real recovery rates or time savings have not been measured. The recorded case's decision row and closure-memory label remain historically inconsistent; terminal dispute state and the owner audit establish the demonstrated concession. Revision `e2c1cd1` contains locally tested fixes, but no new deployment or historical cloud-record repair was performed. The [PostgreSQL migration](schema/migrations/20260914_owner_decision_sync.sql) is prepared and **not applied**; live synchronization remains unverified. The deadline sweep has a separate silence policy, so the approval flow is not an indefinite-wait guarantee.
 
 ## Built with
 
@@ -63,19 +65,20 @@ AWS Strands Agents SDK, Amazon Bedrock, Amazon Bedrock AgentCore, AWS Lambda, Am
 
 ## Links and architecture
 
-- Demo video: https://www.youtube.com/watch?v=ZlGc15UzTbU
+- Demo video: https://www.youtube.com/watch?v=WRrAUpgRC90
 - Public source repository: https://github.com/zaeem-rafiq/rebuttal
 - Required architecture upload: [architecture-submission.png](docs/architecture-submission.png)
 - Architecture source and scope: [architecture-submission.md](docs/architecture-submission.md)
+- Local decision/attribution verification: [record-consistency-2026-09-14.md](docs/proofs/record-consistency-2026-09-14.md)
 - Optional live-demo field: leave blank; the hosted console has not been verified against this recorded build.
 
 ## Testing instructions for judges
 
-Watch the public video for the recorded product and phone workflow. The repository provides the source and local setup instructions; use Python 3.12+ and install `requirements.txt` in a virtual environment. Clone the Git repository (the evaluator reads Git provenance), then seed the local synthetic database before the offline Python checks:
+Watch the public video for the recorded product and phone workflow. The repository provides the source and local setup instructions; use Python 3.12+ and install `requirements.txt` in a virtual environment. Clone the `codex/record-consistency-20260914` branch with Git (the evaluator reads Git provenance), then seed the local synthetic database before the offline Python checks:
 
 ```sh
-PYTHON_DOTENV_DISABLED=1 .venv/bin/python scripts/seed_supabase.py --local-only --verify
-PYTHON_DOTENV_DISABLED=1 .venv/bin/python -m pytest -q
+PYTHON_DOTENV_DISABLED=1 AWS_EC2_METADATA_DISABLED=true SUPABASE_URL= SUPABASE_SERVICE_KEY= .venv/bin/python scripts/seed_supabase.py --local-only --verify
+PYTHON_DOTENV_DISABLED=1 AWS_EC2_METADATA_DISABLED=true SUPABASE_URL= SUPABASE_SERVICE_KEY= STRIPE_SECRET_KEY=sk_test_mock_for_unit_tests .venv/bin/python -m pytest -q
 ```
 
 For the console's focused checks after installing its locked dependencies:
@@ -104,7 +107,7 @@ Rules checked September 14, 2026: https://agentsforhumans.devpost.com/rules
 | AWS Builder ID | Enter the owner-supplied Builder ID separately; do not publish it in the project story |
 | Optional live demo | Leave blank |
 | Testing instructions | Use the section above |
-| Optional bonus blog post | Leave blank unless a public eligible post has been verified |
-| Demo video | https://www.youtube.com/watch?v=ZlGc15UzTbU |
+| Optional bonus blog post | [Owner approval](https://builder.aws.com/content/3JKulzlCq3EKvf4v5JY56vQbRBu); [Evaluation lessons](https://builder.aws.com/content/3JKv5cydKUnsdDqFMx3fKDXEw3e); [Stripe test webhooks](https://builder.aws.com/content/3JKvYmtVerTCu01RjeNaKNpTn9a) |
+| Demo video | https://www.youtube.com/watch?v=WRrAUpgRC90 |
 
 The repository begins with its initial project commit on September 5, 2026, within the hackathon build period. It uses the standard frameworks and open-source dependencies listed above; no claim is made that these dependencies were created for the event.

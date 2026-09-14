@@ -2,7 +2,7 @@
 
 Rebuttal is an AWS Agents for Humans hackathon prototype for small Stripe merchants. A Strands graph gathers evidence, proposes a fight, concession, or inquiry refund, and drafts an evidence packet. An approval hook requests human input for high-value, uncertain, and non-fight actions.
 
-**Watch the product demo:** [Rebuttal on YouTube (2:57)](https://www.youtube.com/watch?v=ZlGc15UzTbU)
+**Watch the product demo:** [Rebuttal on YouTube (2:58)](https://www.youtube.com/watch?v=WRrAUpgRC90)
 
 **Submission:** [project write-up](devpost-submission.md) · [architecture](docs/architecture-submission.md) · [MIT license](LICENSE)
 
@@ -17,6 +17,8 @@ The recording shows the actual console, evidence review, Telegram conversation, 
 5. Telegram alerts and inline replies were exercised with the owner’s real phone. Selecting **Concede** produced a matching owner audit and a Stripe test dispute status of `lost`; the console displayed **CONCEDED · CLOSED**. This verifies the recorded callback outcome, not native SDK session rehydration. The legacy Twilio path remains and may also send SMS when configured.
 6. Execution tools submit evidence, concede, or refund an inquiry using Stripe test keys. A test-mode `won` result does not demonstrate recovery of real merchant funds.
 7. Case and audit records support the console. Memory and observability integrations are implemented; configuration and historical proof files are not fresh runtime verification.
+
+Implementation revision `e2c1cd1` adds a shared owner-decision writer for local/cloud records and requires consistent execution audits before attributing closure memory. Missing or conflicting evidence produces an explicit skip while preserving terminal case status. These fixes are tested locally; the [cloud SQL migration](schema/migrations/20260914_owner_decision_sync.sql) is prepared and **not applied**. No new deployment or historical cloud-record repair was performed. See the [verification and remaining limits](docs/proofs/record-consistency-2026-09-14.md).
 
 ![Architecture](docs/architecture-submission.png)
 
@@ -51,13 +53,15 @@ The deadline sweep contains a silence-policy path. Therefore, this project does 
 
 The [final grounding acceptance record](docs/proofs/output-grounding/final-acceptance.json) reports **20/20 action, 20/20 gate, 19/20 narrative, and 20/20 EV sign**, with **52/52 evaluator controls**. This reprocessed 20 captured model outputs and obtained new judgments; it was not 20 freshly generated end-to-end executions. Two separate fresh graph cases also passed. One narrative judgment remained a failure, within the predefined threshold. The evaluator is fallible and does not establish zero hallucinations or production dispute success.
 
-The submission source passed **232 tests** in a fresh Git clone after seeding its synthetic SQLite database (September 14, 2026; exit 0). Console checks passed **12 tests**, TypeScript checking, and a production build. These checks are separate from the phone/Stripe test-mode observation. Earlier reports, including the September 14 `grounded-v2` 4/20 result, are retained as historical evidence. See [docs/evals.md](docs/evals.md) for the evaluation method and limitations.
+Implementation revision `e2c1cd1` passed **256 Python tests** locally with seeded synthetic fixtures and offline provider doubles (September 14, 2026; exit 0). The unchanged console previously passed **12 tests**, TypeScript checking, and a production build; those checks were not rerun for this revision. These checks are separate from the phone/Stripe test-mode observation. Earlier reports, including the September 14 `grounded-v2` 4/20 result, are retained as historical evidence. See [docs/evals.md](docs/evals.md) for the evaluation method and limitations.
 
 ## Local setup
 
-Clone this repository with Git; evaluation provenance requires its Git metadata. Use Python 3.12+ and the repository's `requirements.txt`. The console has its own npm dependencies.
+Clone the submission branch with Git; evaluation provenance requires its Git metadata. Use Python 3.12+ and the repository's `requirements.txt`. The console has its own npm dependencies.
 
 ```bash
+git clone --branch codex/record-consistency-20260914 https://github.com/zaeem-rafiq/rebuttal.git
+cd rebuttal
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
@@ -68,7 +72,7 @@ Use `.env.example` as the configuration reference and keep local values out of G
 ### Seed synthetic data locally
 
 ```bash
-python scripts/seed_supabase.py --local-only --verify
+PYTHON_DOTENV_DISABLED=1 AWS_EC2_METADATA_DISABLED=true SUPABASE_URL= SUPABASE_SERVICE_KEY= .venv/bin/python scripts/seed_supabase.py --local-only --verify
 ```
 
 ### Run the evidence graph
@@ -84,7 +88,7 @@ This runs the evidence graph with Bedrock; it is not an offline acceptance test 
 Run after the local seed command above.
 
 ```bash
-PYTHON_DOTENV_DISABLED=1 python -m pytest -q
+PYTHON_DOTENV_DISABLED=1 AWS_EC2_METADATA_DISABLED=true SUPABASE_URL= SUPABASE_SERVICE_KEY= STRIPE_SECRET_KEY=sk_test_mock_for_unit_tests .venv/bin/python -m pytest -q
 ```
 
 ### Console

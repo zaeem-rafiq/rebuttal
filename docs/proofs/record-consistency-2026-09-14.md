@@ -11,11 +11,11 @@ Implemented and verified locally on branch `codex/record-consistency-20260914`, 
 
 ## Verification
 
-All commands ran from `/private/tmp/rebuttal-record-consistency` using the existing Python environment. Cloud configuration was explicitly cleared for offline tests.
+Verification ran from an isolated worktree using the existing Python environment. Cloud configuration was explicitly cleared for offline tests. To repeat it from a Git clone after creating its `.venv` and installing `requirements.txt`, use these portable commands:
 
 ```sh
-PYTHON_DOTENV_DISABLED=1 SUPABASE_URL= SUPABASE_SERVICE_KEY= /Users/zaeemkhan/Documents/Rebuttal/.venv/bin/python scripts/seed_supabase.py --local-only --verify
-PYTHON_DOTENV_DISABLED=1 AWS_EC2_METADATA_DISABLED=true SUPABASE_URL= SUPABASE_SERVICE_KEY= STRIPE_SECRET_KEY=sk_test_mock_for_unit_tests /Users/zaeemkhan/Documents/Rebuttal/.venv/bin/python -m pytest -q
+PYTHON_DOTENV_DISABLED=1 AWS_EC2_METADATA_DISABLED=true SUPABASE_URL= SUPABASE_SERVICE_KEY= .venv/bin/python scripts/seed_supabase.py --local-only --verify
+PYTHON_DOTENV_DISABLED=1 AWS_EC2_METADATA_DISABLED=true SUPABASE_URL= SUPABASE_SERVICE_KEY= STRIPE_SECRET_KEY=sk_test_mock_for_unit_tests .venv/bin/python -m pytest -q
 git diff --check
 ```
 
