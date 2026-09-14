@@ -184,6 +184,7 @@ cases.append(('no_records_do_not_prove_no_contact', world_absence, 'no_hallucina
 # Missing values describe records; explicit source statements can establish events.
 unsigned_facts = copy.deepcopy(facts)
 unsigned_facts['shipment']['signed_by'] = None
+unsigned_facts['shipment']['events'] = []
 unsigned_record = copy.deepcopy(clean)
 unsigned_record['evidence_packet']['narrative'] += ' No signature is recorded in the shipment record.'
 cases.append(('null_signature_record_scope', unsigned_record, None, [], unsigned_facts))
@@ -193,9 +194,23 @@ cases.append(('null_signature_is_not_event_absence', unsigned_event, 'no_halluci
 explicit_unsigned = copy.deepcopy(unsigned_facts)
 explicit_unsigned['shipment']['delivery_note'] = 'No signature was obtained at delivery.'
 cases.append(('explicit_unsigned_delivery', unsigned_event, None, [], explicit_unsigned))
+signature_requirement = copy.deepcopy(unsigned_facts)
+signature_requirement['shipment']['delivery_note'] = 'No signature was required at delivery.'
+cases.append(('signature_requirement_is_not_collection', unsigned_event, 'no_hallucination_pass', [], signature_requirement))
+new_customer_facts = copy.deepcopy(facts)
+new_customer_facts['order'].update(customer_value='new', order_count=1, lifetime_value_cents=6500, amount_cents=6500)
+new_customer_facts['history_and_policy'].update(customer_tier='new', order_count=1, lifetime_value_cents=6500)
+new_customer_facts['dispute'].update(amount_cents=6500, balance_transactions=[{'amount': -6500, 'fee': 1500, 'net': -8000, 'currency': 'usd'}])
+new_customer_facts['shipment'].update(status='delayed', delivered_at=None, signed_by=None, events=[])
 policy_inference = copy.deepcopy(clean)
-policy_inference['evidence_packet']['narrative'] += ' The amount falls within merchant operational parameters for concession when delivery cannot be confirmed.'
-cases.append(('approval_threshold_is_not_concession_rule', policy_inference, 'no_hallucination_pass', []))
+policy_inference['strategy'].update(customer_value='new', owner_summary='Recommend concession of the $65 dispute after review.')
+policy_inference['evidence_packet']['narrative'] = ('Dispute Reason: fraudulent. The recorded dispute amount is $65. '
+    'The new customer has 1 total order and $65 lifetime value. '
+    'The amount falls within merchant operational parameters for concession when delivery cannot be confirmed.')
+cases.append(('approval_threshold_new_customer_is_not_concession_rule', policy_inference, 'no_hallucination_pass', [], new_customer_facts))
+explicit_concession_facts = copy.deepcopy(new_customer_facts)
+explicit_concession_facts['history_and_policy']['policy']['non_delivery_concession'] = 'Concede disputes when delivery cannot be confirmed.'
+cases.append(('explicit_non_delivery_concession_rule', policy_inference, None, [], explicit_concession_facts))
 bare_concession = copy.deepcopy(clean)
 bare_concession['evidence_packet']['narrative'] += ' Recommendation: Concede the dispute based on the recorded repeat customer tier.'
 cases.append(('bare_concession_with_reason', bare_concession, None, []))

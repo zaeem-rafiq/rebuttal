@@ -618,3 +618,36 @@ def test_eval_rejection_continues_suite_and_persists_complete_output(monkeypatch
     assert json.dumps(expected_output, indent=2) in report.read_text()
     assert (runner.agent.graph.get_dispute, runner.agent.graph.get_charge_context) == original_tools
     assert runner.agent.tools.evidence_tools.LOCAL_DB_PATH == original_db
+
+
+@pytest.mark.parametrize('assertion, valid', [
+    ({'field': 'narrative', 'quote': 'Refund saves fees.', 'support': None}, True),
+    ({}, False),
+])
+def test_malformed_support_cannot_count_as_successful_detection(assertion, valid):
+    client = MagicMock()
+    client.converse.side_effect = [
+        judge_response({'reason_code_pass': True, 'must_cite_pass': True}),
+        judge_response({'no_hallucination_pass': True}),
+        judge_response({'support_assertions': [assertion]}),
+        judge_response({'event_absence_pass': True, 'event_order_pass': True, 'policy_disclosure_pass': True}),
+    ]
+    result = judge_narrative(client, 'Refund saves fees.', 'fraudulent', [], '{}')
+    assert result['overall_pass'] is False
+    assert result['no_hallucination_pass'] is False
+    assert result['judge_valid'] is valid
+
+
+@pytest.mark.parametrize('carrier, expected', [('Digital', False), ('UPS', True)])
+def test_physical_shipping_contract_overrides_model_pass(carrier, expected):
+    client = MagicMock()
+    client.converse.return_value = judge_response({
+        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': True,
+        'support_assertions': [], 'event_absence_pass': True, 'event_order_pass': True, 'policy_disclosure_pass': True,
+    })
+    facts = {'source_tool_records': [{'collector': 'shipping', 'status': 'success', 'content': [{'carrier': carrier}]}]}
+    result = judge_narrative(client, 'Delivery recorded.', 'fraudulent', [], json.dumps(facts),
+                             {'evidence_packet': {'shipping_carrier': carrier}})
+    assert result['physical_fields_pass'] is expected
+    assert result['no_hallucination_pass'] is expected
+    assert result['judge_valid'] is True
