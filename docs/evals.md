@@ -2,13 +2,15 @@
 
 `evals/run.py` evaluates the evidence graph against the fixed 20 synthetic cases in `evals/cases/`. It uses model inference and mocked dispute intake. It does not run Stripe action tools.
 
-The evaluator now checks the complete generated output:
+The graph retains raw model drafts, then derives final factual text from linked source records. Model action, probability, expected value, and evidence-strength assessments remain separate. Identity mismatches, invalid attachments, and oversized final text fail before execution.
+
+The evaluator checks the complete final output:
 
 | Check | What is observed | What it does not establish |
 |---|---|---|
 | Action match | Proposed action equals the case label | Real dispute success or calibrated probabilities |
 | Gate match | Production `ApprovalGate.before_tool_call` requests an interrupt; notification, cloud access, and local persistence are isolated | SDK suspension, phone delivery, session resume, or downstream execution |
-| Output judge | Three separate Bedrock calls check narrative reason/citations, factual grounding in every strategy/evidence field, and asserted outcomes; code enforces 1–250 narrative words and rejects unproduced attachments | Infallible factual validation |
+| Output judge | Four separate Bedrock calls check narrative reason/citations, broad factual grounding in every strategy/evidence field, asserted outcomes, and absence/order/disclosure premises; code enforces 1–250 narrative words and rejects unproduced attachments | Infallible factual validation |
 | EV sign | Sign agrees with the proposed action | Correct economic assumptions or measured savings |
 
 Judge request errors, invalid JSON, non-object responses, missing verdict fields, and non-boolean values fail. There is no success fallback. A negative citation verdict cannot be overridden by a keyword match. The `missing_items` field lists literal omissions for diagnosis; semantic citation coverage remains the judge's verdict.
@@ -40,7 +42,7 @@ action, 19/20 gate, 16/20 judge, and 20/20 EV-sign checks.
 Review found both generated defects and false-positive judge verdicts. Preserve
 raw verdicts and separate manual adjudication; do not silently convert them to
 passing scores. [Current verification and adjudication](output-grounding-verification.md)
-records the repair and its unresolved checks.
+records the repair, raw verdicts, and source-review adjudication.
 
 `BEDROCK_JUDGE_MODEL_ID` optionally selects a judge independently of the
 application's `BEDROCK_MODEL_ID`. This setting grants no AWS permission.
@@ -48,7 +50,7 @@ Each saved judgment includes model ID and token usage. Complete inputs and
 outputs are saved beside the Markdown report in JSON, with source hashes taken
 before inference. `EVAL_REPORT_PATH` selects a fresh report filename.
 
-Rubric grounded-v9 isolates citation scoring from supporting fields so an order
+Rubric grounded-v17 isolates citation scoring from supporting fields so an order
 reference outside the narrative cannot satisfy it. The grounding judge receives
 structured facts and identical canonical dollar formatting on both sides;
 original output stays unchanged in reports. The production attachment validator
@@ -94,5 +96,8 @@ charge, or payment-intent IDs. An order ID cannot satisfy a charge lookup.
 The outcome audit extracts an exact output field/quote and source path/quote (or
 null). Unsupported or malformed assertions fail regardless of the broad verdict.
 Source citation existence is checked in code; semantic support and extraction
-remain model judgments. The three raw responses and summed usage are preserved.
-The current three-call rubric has offline coverage but has not been run on Bedrock.
+remain model judgments. All four raw responses and summed usage are preserved. The premise check fails closed unless each independent absence, event-date/order, and policy-premise/disclosure verdict is a literal boolean true. Digital access records cannot populate physical shipping fields. Invalid response structure cannot count as a successful negative control. See the current verification report for live acceptance; offline tests alone do not validate a model rubric.
+
+## Final source-formatting verification
+
+The final formatter is verified against the exact source records and retained model drafts from all 20 ccd5616 cases. `docs/proofs/output-grounding/render-captured.py` applies the current formatter, observes the approval hook again, and requests new judgments. This is not new generation of 20 model drafts. Separate fresh complete-graph cases exercise the final integration. `docs/proofs/output-grounding/aggregate-final.py` checks complete, unique coverage, exact source hashes, the unchanged acceptance thresholds, 52 calibration controls, and the fresh graph results without changing any verdict. The authoritative result is `docs/proofs/output-grounding/final-acceptance.json`.

@@ -1,0 +1,7 @@
+{
+  "revision": "ccd56167013237ad3a373055f0b5ed7812320e1f",
+  "command": "PYTHON_DOTENV_DISABLED=1 USE_GATEWAY_MCP=false .venv/bin/python -m pytest -q",
+  "exit_code": 0,
+  "log": "docs/proofs/output-grounding/ccd5616-tests.log",
+  "log_sha256": "3329d3de352cf84ff792fb39c0a8213e658b509fe1d8df9331745f69cda293a0"
+}

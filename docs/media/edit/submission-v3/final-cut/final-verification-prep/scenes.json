@@ -1,0 +1,263 @@
+[
+  {
+    "label": "01 / THE PROBLEM",
+    "title": "A chargeback. A pile of records.",
+    "tag": "REBUTTAL / STRIPE MERCHANT PROTOTYPE",
+    "panel_label": "THE MERCHANT WORKFLOW",
+    "lines": [
+      "Order details",
+      "Carrier delivery records",
+      "Customer messages",
+      "Merchant response policy",
+      "Proposed response and evidence for review",
+      "Merchant retains control"
+    ],
+    "note": "Goal: less manual case assembly, with merchant control.",
+    "speech": "For small online merchants, a chargeback starts a race to assemble records. The order, delivery history, customer messages, and response policy sit in different places. Rebuttal brings those records together, recommends a response, and drafts evidence for review. The goal is less manual case assembly, with the merchant retaining control of consequential decisions.",
+    "reveal_at": [
+      0.65,
+      6.15,
+      7.45,
+      8.85,
+      14.4,
+      21.7
+    ]
+  },
+  {
+    "label": "02 / HOW IT WORKS",
+    "title": "Evidence first. Then a decision.",
+    "tag": "AWS STRANDS AGENTS SDK / APPLICATION DESIGN",
+    "panel_label": "IMPLEMENTED EXECUTION FLOW",
+    "lines": [
+      "Intake retrieves the dispute",
+      "Orders / Shipping / Communications / History",
+      "Strategy waits for all four collectors",
+      "Drafter receives evidence and strategy",
+      "Executor pauses when approval is required"
+    ],
+    "note": "Seven evidence graph nodes, plus a separate executor.",
+    "speech": "Rebuttal uses the AWS Strands Agents SDK. After intake, four agents collect evidence in parallel. Strategy waits for all four. The drafter then receives both the evidence and the proposed response. A separate executor uses an approval hook before taking a guarded action.",
+    "reveal_at": [
+      0.65,
+      5.8,
+      9.0,
+      11.6,
+      16.9
+    ]
+  },
+  {
+    "label": "03 / RECORDING SETUP",
+    "title": "A local run. A test environment.",
+    "tag": "EDITED PLAYBACK / LOCAL TEST EXECUTION",
+    "panel_label": "DEMONSTRATION BOUNDARIES",
+    "lines": [
+      "Execution: local AWS Strands graph",
+      "Merchant records: synthetic",
+      "Stripe objects: TEST mode",
+      "Playback: edited from captured output",
+      "Owner response: developer command line"
+    ],
+    "note": "Reveals follow the narration; waiting time is compressed.",
+    "speech": "The next scenes replay a recorded local run. The merchant records are synthetic, and the Stripe objects are in test mode. The screen is an edited presentation of captured output, so reveals follow the narration rather than the original wait times. The owner response comes through the developer command line.",
+    "reveal_cues": [
+      "recorded local run",
+      "merchant records",
+      "Stripe objects",
+      "edited presentation",
+      "owner response"
+    ],
+    "reveal_at": [
+      1.571,
+      3.277,
+      5.556,
+      8.811,
+      15.569
+    ]
+  },
+  {
+    "label": "04 / RETRIEVED FACTS",
+    "title": "The run starts with the records.",
+    "tag": "RECORDED LOCAL EXECUTION / STRIPE TEST MODE",
+    "panel_label": "SELECTED SOURCE FIELDS / EXECUTION COUNTS",
+    "lines": [
+      "{\"amount\": 34000, \"currency\": \"usd\", \"reason\": \"fraudulent\"}",
+      "order: {\"id\": \"ORD-1002\", \"customer_value\": \"repeat\"}",
+      "shipment: {\"carrier\": \"FedEx\", \"status\": \"delivered\"}",
+      "comms: {\"message_count\": 2, \"has_address_change_request\": true}",
+      "policy: {\"vip_concede_max_cents\": 50000}",
+      "graph: {\"intake\": 1, \"orders\": 1, \"shipping\": 1, \"history\": 1, \"comms\": 1, \"strategy\": 1, \"drafter\": 1}"
+    ],
+    "note": "Edited playback from revision 616db5e; amounts are integer US cents.",
+    "reveal_cues": [
+      "recorded run",
+      "the order",
+      "delivery record",
+      "customer communications",
+      "merchant policy",
+      "execution trace"
+    ],
+    "speech": "The recorded run begins with a Stripe test dispute. The panel shows selected facts retrieved for that case: the order, delivery record, customer communications, and merchant policy. The execution trace shows the Strands graph moving through collection, strategy, and drafting. These excerpts come from the captured local run.",
+    "reveal_at": [
+      0.256,
+      7.314,
+      8.147,
+      9.319,
+      11.011,
+      12.353
+    ]
+  },
+  {
+    "label": "05 / STRATEGY AND DRAFT",
+    "title": "A response grounded in this case.",
+    "tag": "RECORDED OUTPUT / EDITED PLAYBACK / STRIPE TEST MODE",
+    "panel_label": "STRATEGY AND EVIDENCE EXCERPTS",
+    "lines": [
+      "strategy: {\"action\": \"concede\", \"evidence_strength\": \"weak\"}",
+      "{\"owner_summary\": \"Recommend concession. Repeat customer, $340 disputed amount within vip_concede_max_cents ($500) policy threshold.\"}",
+      "Evidence narrative: Customer is repeat tier with 5 total orders and $1,120 lifetime value.",
+      "{\"shipping_documentation\": null, \"service_documentation\": null}",
+      "{\"uncategorized_text\": null, \"files\": []}"
+    ],
+    "note": "Recommendation precedes action; absent documents remain null.",
+    "reveal_cues": [
+      "proposed strategy",
+      "recommendation and draft",
+      "evidence excerpt",
+      "Missing evidence",
+      "proposed action"
+    ],
+    "speech": "Next, compare the proposed strategy with the records that support it. The recommendation and draft are shown separately. Read the evidence excerpt alongside the retrieved facts. Missing evidence and uncertainty must remain visible, and a proposed action must stay distinct from a completed action.",
+    "reveal_at": [
+      1.428,
+      4.735,
+      8.642,
+      12.574,
+      17.118
+    ]
+  },
+  {
+    "label": "06 / THE OWNER DECISION",
+    "title": "The executor waits for a decision.",
+    "tag": "DEVELOPER CLI / APPROVAL DESIGN",
+    "panel_label": "AVAILABLE OWNER RESPONSES",
+    "lines": [
+      "1 / Fight",
+      "2 / Concede",
+      "3 / Hold",
+      "Selected response resumes the Strands interrupt",
+      "The recorder then checks Stripe again"
+    ],
+    "note": "Developer command line; phone notification delivery is disabled.",
+    "speech": "The approval step is a deliberate decision point. In this recording, the developer command line stands in for the merchant interface. Fight, concede, and hold are the three available responses. The selected response is passed back to the Strands interrupt, after which the recorder checks Stripe again. Phone notification delivery is disabled for this local demonstration.",
+    "reveal_cues": [
+      "approval step",
+      "concede",
+      "hold",
+      "selected response",
+      "checks Stripe again"
+    ],
+    "reveal_at": [
+      0.295,
+      9.254,
+      10.465,
+      13.42,
+      18.407
+    ]
+  },
+  {
+    "label": "07 / APPROVAL AND READBACK",
+    "title": "The CLI choice: concede.",
+    "tag": "RECORDED LOCAL EXECUTION / STRIPE TEST MODE",
+    "panel_label": "DEVELOPER CLI / BEFORE AND AFTER",
+    "lines": [
+      "pause: {\"stop_reason\": \"interrupt\", \"interrupt_names\": [\"owner-approval\"]}",
+      "before: {\"stripe_status\": \"needs_response\", \"gated_action_calls\": 0}",
+      "CLI reply: {\"answer\": \"2\", \"action\": \"concede\"}",
+      "Stripe readback: {\"status\": \"lost\", \"livemode\": false}",
+      "executor: {\"executor_stop_reason\": \"end_turn\", \"gated_action_calls\": 1}",
+      "{\"assertions\": \"passed\"}"
+    ],
+    "note": "Edited playback: the test concession ended in lost; phone delivery was disabled.",
+    "reveal_cues": [
+      "Here",
+      "approval interrupt",
+      "command line response",
+      "reads Stripe again",
+      "after states",
+      "test result"
+    ],
+    "speech": "Here is the approval interrupt and the developer command line response. The display preserves the recorded choice and the guarded action count. After resuming, the recorder reads Stripe again. Compare the before and after states. That readback establishes the test result, not a real-world dispute outcome.",
+    "reveal_at": [
+      0.217,
+      0.92,
+      3.069,
+      10.842,
+      13.59,
+      16.545
+    ]
+  },
+  {
+    "label": "08 / OBSERVED VALIDATION",
+    "title": "Verification has separate layers.",
+    "tag": "OBSERVED LOCAL TESTS / CAPTURED-SOURCE REPLAY",
+    "panel_label": "PROCESSOR / REPLAY / FRESH CASES / CONTROL SET",
+    "lines": [
+      "Final processor: 4371ebf / judge rubric: grounded-v17",
+      "Offline: 217 tests passed / factual text: deterministic from sources",
+      "Action / win probability / EV remain model assessments",
+      "20-source replay: action / gate / EV sign 20 / 20 each",
+      "Raw output judge: 19 / 20; required 18 / 20; case 09 false positive",
+      "Fresh full-graph cases 03 and 18: 2 / 2 passed",
+      "Control set: 52 / 52 matched; false positives 0 / false negatives 0"
+    ],
+    "note": "Runtime: 616db5e. Replay uses ccd5616 sources; no fresh 20-case generation.",
+    "pending_evidence": false,
+    "speech": "The validation panel identifies the source revision and the checks that ran against it. It shows the unit test result alongside the fixed synthetic-case evaluation, covering action, approval, expected value, and grounding. Read the observed results and thresholds together. This benchmark does not measure real merchant recovery rates.",
+    "review_candidate": true,
+    "validation_status": "Aggregate acceptance passed for stated local/replay scope; raw case 09 judgment preserved and source-adjudicated",
+    "reveal_cues": [
+      "source revision",
+      "unit test result",
+      "action",
+      "grounding",
+      "observed results",
+      "thresholds",
+      "This benchmark"
+    ],
+    "reveal_at": [
+      2.509,
+      6.129,
+      10.985,
+      14.11,
+      15.373,
+      16.962,
+      18.824
+    ]
+  },
+  {
+    "label": "09 / WHAT THIS DEMONSTRATES",
+    "title": "A clearer dispute response workflow.",
+    "tag": "PROTOTYPE / OBSERVED SCOPE",
+    "panel_label": "PURPOSE AND LIMITS",
+    "lines": [
+      "Evidence collected for merchant review",
+      "A proposed strategy and draft response",
+      "An explicit owner decision before guarded actions",
+      "Synthetic merchant data and Stripe TEST objects"
+    ],
+    "note": "Real merchant outcomes and live phone delivery remain unverified.",
+    "speech": "Rebuttal gives small merchants a place to review the facts, the proposed response, and the next action. This prototype runs locally with synthetic merchant data and Stripe test objects. Real merchant outcomes and live phone delivery remain outside this demonstration. The goal is a clearer, more controlled dispute workflow.",
+    "reveal_cues": [
+      "review the facts",
+      "proposed response",
+      "next action",
+      "synthetic merchant data"
+    ],
+    "reveal_at": [
+      2.366,
+      4.254,
+      5.881,
+      9.084
+    ]
+  }
+]

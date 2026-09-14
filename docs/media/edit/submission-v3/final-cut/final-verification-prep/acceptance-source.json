@@ -1,0 +1,55 @@
+{
+  "completed": true,
+  "acceptance_pass": true,
+  "scope": "20 captured ccd5616 model outputs reprocessed at 4371ebf and newly judged; separate fresh full-graph cases 03/18 at 4371ebf. No Stripe action tools run.",
+  "processing_revision": "4371ebf",
+  "generation_revision": "ccd5616",
+  "rubric": "grounded-v17",
+  "cases": 20,
+  "counts": {
+    "action_match": 20,
+    "gate_match": 20,
+    "judge_pass": 19,
+    "ev_sign": 20
+  },
+  "thresholds": {
+    "action_match": ">=18",
+    "gate_match": "20",
+    "judge_pass": ">=18",
+    "ev_sign": "20"
+  },
+  "valid_judgments": 20,
+  "controls": {
+    "matched": 52,
+    "total": 52
+  },
+  "fresh_graph_cases": {
+    "case_03": true,
+    "case_18": true
+  },
+  "tests": "217 passed, 2 warnings in 21.89s",
+  "raw_judge_failures": [
+    "case_09"
+  ],
+  "report_sha256": {
+    "evals/results/2026-09-14-source-formatted-final-v2-a.json": "dc6c6e896409f0da60e0c304e218dd1cb05de782104b2bd9473772e93b51e4a9",
+    "evals/results/2026-09-14-source-formatted-final-v2-b.json": "8efff9e91244c99f39d76c4f744ad2348f163a59c1080b8789f479fbc9368297",
+    "evals/results/2026-09-14-source-formatted-final-v2-c.json": "9f93f975995e56dded2e8acffb3cd9b0399ff168ac09cc29c0f065b66898cd23",
+    "evals/results/2026-09-14-sonnet-controls-v18a.json": "d952148afeffc60a2acc4ac9e6e2a833f94e700bc5d9d77c0484928e564d076a",
+    "evals/results/2026-09-14-sonnet-controls-v18b.json": "7df60e86975ce48c53979e9201fbb7e9c4043318965e3464e6c1a1fa93289359",
+    "evals/results/2026-09-14-sonnet-controls-v18c.json": "38cb571736d2e79c420f8ec692d0ff78030819d2ed82253ee0dd5c6b3dd5029a",
+    "evals/results/2026-09-14-source-formatted-final-v2-live.json": "7ab6da6e7e8d005c462e63274df4293282acf45c1e999ccd0e7bef86397ac2e8",
+    "docs/proofs/output-grounding/4371ebf-tests.json": "322e9584f09604479aa141232f80f3e5210ea0107a3ff0436f4afd5ccf2034b4"
+  },
+  "observed_process_exit_statuses": {
+    "replay_a": 0,
+    "replay_b": 0,
+    "replay_c": 1,
+    "fresh_graph": 0,
+    "control_v18a": 0,
+    "control_v18b": 0,
+    "control_v18c": 0,
+    "tests": 0,
+    "aggregate": 0
+  }
+}

@@ -1,0 +1,278 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 1172080,
+    "duration": 2604160,
+    "text": "Here"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 5859580,
+    "duration": 1041660,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 7031250,
+    "duration": 1172080,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 8203330,
+    "duration": 5078330,
+    "text": "approval"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 13411660,
+    "duration": 5989580,
+    "text": "interrupt"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 23307500,
+    "duration": 520830,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 23828330,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 24609580,
+    "duration": 5077910,
+    "text": "developer"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 29687500,
+    "duration": 3515830,
+    "text": "command"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 33203330,
+    "duration": 2213750,
+    "text": "line"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 35547080,
+    "duration": 7161660,
+    "text": "response"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 47005410,
+    "duration": 520830,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 47526250,
+    "duration": 5598750,
+    "text": "display"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 53125000,
+    "duration": 5208330,
+    "text": "preserves"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 58333330,
+    "duration": 911660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 59375000,
+    "duration": 4947910,
+    "text": "recorded"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 64322910,
+    "duration": 5599160,
+    "text": "choice"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 71484580,
+    "duration": 1041660,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 72526250,
+    "duration": 911250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 73437500,
+    "duration": 3125000,
+    "text": "guarded"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 76562500,
+    "duration": 3385410,
+    "text": "action"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 80078330,
+    "duration": 3906250,
+    "text": "count"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 88151250,
+    "duration": 3255000,
+    "text": "After"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 91406250,
+    "duration": 5468750,
+    "text": "resuming"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 100781250,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 101562500,
+    "duration": 5729160,
+    "text": "recorder"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 107422080,
+    "duration": 3255410,
+    "text": "reads"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 110807500,
+    "duration": 3515410,
+    "text": "Stripe"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 114322910,
+    "duration": 3906250,
+    "text": "again"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 122135410,
+    "duration": 4427080,
+    "text": "Compare"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 126562500,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 127343750,
+    "duration": 6120000,
+    "text": "before"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 133593750,
+    "duration": 1172080,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 134895830,
+    "duration": 2474160,
+    "text": "after"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 137500000,
+    "duration": 6120000,
+    "text": "states"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 147916660,
+    "duration": 1953330,
+    "text": "That"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 149870000,
+    "duration": 5859580,
+    "text": "readback"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 155859580,
+    "duration": 7552080,
+    "text": "establishes"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 163411660,
+    "duration": 911660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 164453330,
+    "duration": 3255000,
+    "text": "test"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 167708330,
+    "duration": 4166660,
+    "text": "result"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 176692910,
+    "duration": 2343750,
+    "text": "not"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 179036660,
+    "duration": 390830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 179557500,
+    "duration": 8854160,
+    "text": "real-world"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 188541660,
+    "duration": 5208330,
+    "text": "dispute"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 193750000,
+    "duration": 4817910,
+    "text": "outcome"
+  }
+]

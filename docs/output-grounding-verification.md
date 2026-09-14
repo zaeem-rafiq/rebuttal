@@ -1,104 +1,117 @@
 # Output grounding verification
 
-Status: implemented locally at 22b0178, not fully verified. No push, deployment,
-publication, upload, or submission has occurred.
+Complete locally against the defined acceptance thresholds at code revision
+**4371ebf**. No deployment, upload, publication, or submission occurred.
 
-## Observed evidence
+## Observed results
 
-- Full Sonnet generation trial at 25bfc30: 20 fixed synthetic cases completed;
-  action 20/20, approval gate 20/20, EV sign 20/20, output judge 17/20 (minimum 18).
-  Exit 1. Raw report: evals/results/2026-09-14-sonnet-generation-trial.json.
-- Every output field was reviewed against exact source_tool_records. Defects were
-  found in cases 09, 10, 13, 16, 17; case 15 was a judge authorship false positive.
-  See docs/proofs/output-grounding/sonnet-trial-review.md. Manual findings do not
-  replace the preserved raw score.
-- Controls v11: 26/26 expectations and 104/104 criteria matched, exit 0. Expanded
-  controls v12 at a14c5cb: 30/33 expectations and 129/132 criteria matched, exit 1.
-  Three false negatives remained: unqualified event absence, refund chronology
-  without a dispute timestamp, and return terms mislabeled as cancellation policy.
-  All four new positive counterparts passed. Independent reviews are preserved
-  under docs/proofs/output-grounding/sonnet-controls-v11-review.md and
-  sonnet-controls-v12-review.md.
-- Fresh offline regression at 22b0178: 157 passed, 2 warnings, 21.20 seconds, exit 0.
-  Command and source hashes: docs/proofs/output-grounding/22b0178-verification.json.
-- The latest evaluator repair at 22b0178 has not made any provider calls. The
-  attempted 12-control follow-up was rejected before launch by approval review.
-  No v13 result or fresh full 20-case final-generation result exists.
+| Verification | Result |
+|---|---|
+| Full offline regression | 217 passed, 2 warnings; exit 0 |
+| Fixed 20-case action / gate / EV checks | 20 / 20 / 20 |
+| Final factual-output model judge | 19/20, all 20 responses valid; threshold >=18 |
+| Explicit evaluator controls | 52/52 matched; 24 positive and 28 negative controls |
+| Fresh complete-graph integration | Cases 03 and 18 both pass; exit 0 |
+| Independent source review | All 20 final outputs reviewed; no unsupported factual claim identified |
 
-## Repairs and affected flow
+The 20-case result applies the final formatter to the exact captured source records
+and raw model drafts from ccd5616, then requests new judgments and observes the
+approval hook again. It is **not fresh generation of 20 model drafts**. No model
+prompt or provider request changed between that generation and the final formatter.
+Separate fresh complete-graph cases exercise the final integration. Stripe action
+tools are isolated from these evaluations.
 
-Intake -> four collectors -> strategy and owner summary -> evidence packet ->
-approval hook -> executor and Stripe. Exact sanitized tool records reach the
-strategy, drafter, and evaluator; summaries and fixture interpretations cannot
-establish facts. The graph waits for every collector; unproduced attachments fail
-before execution. Source sanitation removes client_secret and receipt_url.
+[Machine-readable acceptance](proofs/output-grounding/final-acceptance.json) records
+report hashes, criteria and counts. `python3 docs/proofs/output-grounding/aggregate-final.py`
+returned exit 0 after validating complete unique coverage, source/control/test
+hashes and thresholds. Replay shards a/b returned 0; shard c returned 1 because
+it requires every case in that shard to pass. The combined fixed benchmark passes
+its unchanged >=18/20 judge threshold. All three calibration processes returned 0.
 
-Generator repairs remove contradictory mandates about inquiry resolution,
-refund-before-dispute chronology, forced VIP labels, and policy-only concessions.
-Negative findings require explicit record scope. Event order needs both event times
-or an explicit source statement. Policy fields require the correct policy type.
-Messages support attributed reports without independently proving reported events.
+Regression command:
+`PYTHON_DOTENV_DISABLED=1 USE_GATEWAY_MCP=false .venv/bin/python -m pytest -q`
+returned 0: 217 passed, 2 warnings in 21.89 seconds.
+[Exact command, source hashes and log](proofs/output-grounding/4371ebf-tests.json).
 
-The evaluator retains separate narrative requirements and broad grounding checks.
-Its existing third call now extracts supported and unsupported relationship claims:
-action effects, event absence, event order, and policy-field meaning. Missing premises
-use null support. Exact output quotes and every source citation are validated;
-chronology can cite two timestamps. Citation existence does not prove semantic
-entailment, which remains an evaluated model responsibility. Goals, scoped record
-absence, and attributed reports have explicit positive treatment. There are now
-34 controls, including an attributed refund-nonreceipt report. Named subsets are
-recorded, unknown names fail, and completed usage persists if a later call fails.
+## What changed
 
-The report rubric is grounded-v11. Diagnostic outcome_* keys became support_*
-keys; Python consumers and tests were updated. Product types, field names, action
-labels, and benchmark thresholds remain unchanged. Model defaults remain Haiku;
-Sonnet was used only through explicit evaluation environment settings, with
-non-streaming InvokeModel and no additional IAM expansion.
+Intake -> four evidence collectors -> model strategy and draft -> source-link
+validation and factual formatting -> owner approval -> executor/Stripe. Raw model
+drafts remain available for diagnosis. Final narrative, owner summary and rationale
+come from linked source records. Model action, probability, expected value and
+evidence-strength estimates remain model assessments, not measured outcomes.
 
-## Verification and budget gate
+The formatter rejects missing, failed, conflicting or mismatched evidence records.
+It preserves event identity when reporting dates, scopes missing-signature statements
+to the records, distinguishes digital access from physical shipping, and quotes
+communications without inventing customer authorship. Policy parameters do not
+establish customer eligibility or pre-purchase policy disclosure. Current collectors
+produce no uploaded artifacts or disclosure events, so those fields stay empty.
+Oversized source text requires review instead of truncating into an unsupported claim.
 
-Required: offline regressions; all explicit controls; a fresh fixed 20-case final
-build evaluation with action >=18, gate 20, output judge >=18, and EV sign 20.
-Older outputs and rejudgments cannot certify the repaired generator.
+The evaluator checks all final factual fields through four separate judgments:
+reason/citations, broad grounding, claimed action effects, and absence/date/policy
+premises. It validates typed responses, exact assertion/citation structure, word
+limits, physical shipping fields and uploaded-file references. Provider and malformed
+response errors fail closed. Currency/date equivalence does not change raw evidence.
+See [evaluation commands](evals.md) and [Stripe evidence contract](decisions/0006-stripe-evidence-contract.md).
 
-Captured token-derived estimate is $12.843357. Some interrupted and executor usage
-is unmetered; the $1 planning reserve is not an invoice or a verified upper bound.
-The saved conversation records a $15 cap approval. Automatic approval review
-nevertheless rejected further paid calls because it accepts only the earlier $8
-cap from its trusted context. Two attempts were rejected before inference, the
-second after checking the saved approval. Do not retry through another execution
-path. A new explicit $20 total-cap question is pending for controls and one fresh
-full run. No further inference is permitted until that approval resolves the gate.
+## Remaining evaluator error
 
-## Runtime and video
+Case 09 is a **raw evaluator failure**, retained in the 19/20 score. The broad judge
+rejects a proposed concession for lacking a source rule explaining the decision.
+That is an action recommendation, not an assertion of policy entitlement; the
+narrative explicitly says the quoted parameter alone does not establish eligibility.
+The judge also labels the $500 parameter unsupported while acknowledging that its
+conversion from 50000 cents is correct. The separate premise judgment passes.
 
-The preserved 616db5e local runtime recording uses synthetic merchant records,
-sanitized Stripe TEST objects, a local session manager, and isolated SQLite.
-Seven graph nodes executed once. Owner approval interrupted with needs_response
-and zero guarded calls. CLI choice 2 conceded; resume made one guarded call.
-Fresh Stripe readback returned lost with livemode=false. Recorder assertions and
-the source-based output judge passed. Lost means test concession, not recovery or
-a win; no separate refund is claimed. This is distinct from later generator and
-evaluator revisions.
+Independent reviews:
+[cases 01–10](proofs/output-grounding/source-formatted-final-cases-01-10-review.md),
+[cases 11–20 and fresh integrations](proofs/output-grounding/source-formatted-final-cases-11-20-review.md).
+This is a documented residual false positive, not a score silently changed to pass.
+The 52 controls cover known distinctions; they do not establish zero population error.
 
-All nine approved Microsoft Edge TTS tracks are generated, hashes verified, and
-fully decoded. The padded cut is 212.667 seconds. Eight ready scenes rendered and
-decoded successfully, with reveal/cut frames reviewed. A complete local REVIEW
-CANDIDATE is being assembled using the observed failed trial, current offline
-checks, and explicit final-model-verification-pending labels. It is not submission
-ready; full decode, visual review, and owner listening remain to be recorded.
+Earlier raw generation defects, false positives, ambiguous control inputs, expired
+AWS login failures and sandbox connection failures remain in their original reports.
+They are not represented as successful runs. Source-derived finalization replaced
+repeated prompt-only tuning after the latter still produced factual defects.
 
-Original video remains intact with SHA-256
-9c18864f3e1748d26891b13eb9f7a42a0ab4924b17353dd46112b7a54e271768.
-Phone delivery, cloud deployment, production Stripe submission, real merchant
-outcomes, and public video/submission remain unverified. Rules reread September 14:
-https://agentsforhumans.devpost.com/rules requires a video <=5 minutes, a working
-demonstration plus problem/audience/why pitch, English or translation, and public
-YouTube/Vimeo hosting. Local preparation does not establish public submission.
+## Local configuration and cost
 
-## Preservation
+The previously authorized local adoption now sets Sonnet 4.5 and non-streaming
+inference in the ignored `.env`, including the same judge model. An isolated
+constructor check observed the intended settings, exit 0, without a provider call.
+Code fallback defaults and cloud configuration were not changed. The final provider
+runs used those same explicit model/streaming values.
 
-Task commits are local on main. Unrelated preflight, README, Devpost, architecture,
-and fixture work remains preserved. Failed, interrupted, and rejudged artifacts
-remain in evals/results. The separate codex/output-grounding worktree retains the
-original repair history. Never reset or discard unrelated working-tree changes.
+Captured verification token usage estimates **$36.058822** against the owner's
+**$50 total cap**. [Usage ledger](proofs/evaluation-judge/usage-ledger.json) preserves
+per-run usage. Some earlier interrupted/executor usage was not fully metered; the
+captured estimate is not an AWS invoice or an exact total. Paid inference is stopped.
+
+## Video and evidence boundaries
+
+The [corrected local video](media/edit/submission-v3/final-cut/final-verification-prep/rebuttal-final-candidate.mp4)
+is 3:32.688, 1080p30 H.264/AAC. Rendering and full decode returned 0. All seven
+validation reveals and eight cuts passed sampled encoded-frame inspection.
+[Media QA](media/edit/submission-v3/final-cut/final-verification-prep/qa/verification.json)
+records hash `1cea12875e9d544d502b7a559faa374fa4873cafc64a2b7a0f62333429464a6c`.
+The nine approved narration recordings remain unchanged.
+The preserved 616db5e runtime demonstration uses synthetic merchant records,
+sanitized Stripe TEST objects, local sessions and isolated SQLite. Seven graph
+nodes ran once; owner approval interrupted with zero guarded calls. CLI choice 2
+conceded, resume made one guarded call, and fresh Stripe readback returned `lost`
+with `livemode=false`. This is a test concession, not a recovery or separate refund.
+That recorded runtime is distinct from the final source-formatting verification.
+
+[Official rules](https://agentsforhumans.devpost.com/rules), checked September 14,
+allow up to five minutes and accept slides, screen recordings and voiceover. They
+require a working demonstration, the problem/audience/why pitch, English or a
+translation, and public YouTube/Vimeo hosting. Local media preparation does not
+establish hosting or submission. Independent listening and owner acceptance of the
+exact final movie remain separate from technical media QA.
+
+Phone delivery, production Stripe submission, cloud deployment, real merchant
+outcomes and submitted state are not established by this work. Original video
+SHA256 remains `9c18864f3e1748d26891b13eb9f7a42a0ab4924b17353dd46112b7a54e271768`.
+Unrelated README/preflight/Devpost/architecture work and the orders fixture are preserved.

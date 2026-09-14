@@ -1,0 +1,290 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 1041660,
+    "duration": 520830,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 1562500,
+    "duration": 4817910,
+    "text": "recorded"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 6380410,
+    "duration": 3125000,
+    "text": "run"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 9505410,
+    "duration": 6510410,
+    "text": "begins"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 17447910,
+    "duration": 1432500,
+    "text": "with"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 18880410,
+    "duration": 390830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 19401250,
+    "duration": 4817500,
+    "text": "Stripe"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 24218750,
+    "duration": 2734580,
+    "text": "test"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 26953330,
+    "duration": 5208330,
+    "text": "dispute"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 36458330,
+    "duration": 651250,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 37109580,
+    "duration": 3385410,
+    "text": "panel"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 40495000,
+    "duration": 3645830,
+    "text": "shows"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 44401250,
+    "duration": 5468750,
+    "text": "selected"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 49870000,
+    "duration": 4687500,
+    "text": "facts"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 54557500,
+    "duration": 6250000,
+    "text": "retrieved"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 60807500,
+    "duration": 1302080,
+    "text": "for"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 62109580,
+    "duration": 2213330,
+    "text": "that"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 64322910,
+    "duration": 5338750,
+    "text": "case"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 72135410,
+    "duration": 911660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 73177080,
+    "duration": 4427080,
+    "text": "order"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 80468750,
+    "duration": 4947910,
+    "text": "delivery"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 85416660,
+    "duration": 4687500,
+    "text": "record"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 92187500,
+    "duration": 4297080,
+    "text": "customer"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 96484580,
+    "duration": 9114580,
+    "text": "communications"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 107812500,
+    "duration": 1302080,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 109114580,
+    "duration": 3125000,
+    "text": "merchant"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 112239580,
+    "duration": 5208330,
+    "text": "policy"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 121614580,
+    "duration": 781250,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 122526250,
+    "duration": 7031250,
+    "text": "execution"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 129557500,
+    "duration": 5338750,
+    "text": "trace"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 136328330,
+    "duration": 3385410,
+    "text": "shows"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 139713750,
+    "duration": 1041660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 140755410,
+    "duration": 5338330,
+    "text": "Strands"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 146093750,
+    "duration": 4687500,
+    "text": "graph"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 150911660,
+    "duration": 5338750,
+    "text": "moving"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 156380410,
+    "duration": 1953330,
+    "text": "through"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 158463750,
+    "duration": 6770830,
+    "text": "collection"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 169140830,
+    "duration": 6120000,
+    "text": "strategy"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 178125000,
+    "duration": 911660,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 179036660,
+    "duration": 6380410,
+    "text": "drafting"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 189453330,
+    "duration": 2343750,
+    "text": "These"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 191927080,
+    "duration": 4427080,
+    "text": "excerpts"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 196484580,
+    "duration": 2995000,
+    "text": "come"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 199609580,
+    "duration": 1171660,
+    "text": "from"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 200781250,
+    "duration": 651250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 201432500,
+    "duration": 4817500,
+    "text": "captured"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 206250000,
+    "duration": 3255410,
+    "text": "local"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 209505410,
+    "duration": 3645830,
+    "text": "run"
+  }
+]

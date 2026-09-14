@@ -1,0 +1,315 @@
+1
+00:00:00,543 --> 00:00:03,447
+For small online merchants, a chargeback starts
+
+2
+00:00:03,447 --> 00:00:05,231
+a race to assemble records.
+
+3
+00:00:05,660 --> 00:00:09,202
+The order, delivery history, customer messages, and
+
+4
+00:00:09,215 --> 00:00:11,728
+response policy sit in different places.
+
+5
+00:00:12,119 --> 00:00:15,127
+Rebuttal brings those records together, recommends a
+
+6
+00:00:15,127 --> 00:00:18,004
+response, and drafts evidence for review.
+
+7
+00:00:18,421 --> 00:00:21,429
+The goal is less manual case assembly,
+
+8
+00:00:21,832 --> 00:00:24,580
+with the merchant retaining control of consequential
+
+9
+00:00:24,593 --> 00:00:25,348
+decisions.
+
+10
+00:00:27,445 --> 00:00:31,416
+Rebuttal uses the AWS Strands Agents SDK.
+
+11
+00:00:31,833 --> 00:00:35,231
+After intake, four agents collect evidence in
+
+12
+00:00:35,231 --> 00:00:35,869
+parallel.
+
+13
+00:00:36,286 --> 00:00:38,408
+Strategy waits for all four.
+
+14
+00:00:38,825 --> 00:00:41,794
+The drafter then receives both the evidence
+
+15
+00:00:41,950 --> 00:00:43,343
+and the proposed response.
+
+16
+00:00:43,760 --> 00:00:46,208
+A separate executor uses an approval hook
+
+17
+00:00:46,455 --> 00:00:48,317
+before taking a guarded action.
+
+18
+00:00:50,451 --> 00:00:52,716
+The next scenes replay a recorded local
+
+19
+00:00:52,716 --> 00:00:53,029
+run.
+
+20
+00:00:53,458 --> 00:00:55,789
+The merchant records are synthetic, and the
+
+21
+00:00:55,789 --> 00:00:57,586
+Stripe objects are in test mode.
+
+22
+00:00:58,003 --> 00:01:00,242
+The screen is an edited presentation of
+
+23
+00:01:00,255 --> 00:01:03,237
+captured output, so reveals follow the narration
+
+24
+00:01:03,393 --> 00:01:05,294
+rather than the original wait times.
+
+25
+00:01:05,711 --> 00:01:07,768
+The owner response comes through the developer
+
+26
+00:01:07,781 --> 00:01:08,419
+command line.
+
+27
+00:01:10,537 --> 00:01:12,855
+The recorded run begins with a Stripe
+
+28
+00:01:12,855 --> 00:01:13,649
+test dispute.
+
+29
+00:01:14,079 --> 00:01:16,644
+The panel shows selected facts retrieved for
+
+30
+00:01:16,644 --> 00:01:20,082
+that case: the order, delivery record, customer
+
+31
+00:01:20,082 --> 00:01:22,178
+communications, and merchant policy.
+
+32
+00:01:22,595 --> 00:01:25,511
+The execution trace shows the Strands graph
+
+33
+00:01:25,524 --> 00:01:28,975
+moving through collection, strategy, and drafting.
+
+34
+00:01:29,379 --> 00:01:31,384
+These excerpts come from the captured local
+
+35
+00:01:31,384 --> 00:01:31,748
+run.
+
+36
+00:01:33,824 --> 00:01:36,481
+Next, compare the proposed strategy with the
+
+37
+00:01:36,481 --> 00:01:37,861
+records that support it.
+
+38
+00:01:38,291 --> 00:01:41,611
+The recommendation and draft are shown separately.
+
+39
+00:01:42,015 --> 00:01:45,140
+Read the evidence excerpt alongside the retrieved
+
+40
+00:01:45,140 --> 00:01:45,791
+facts.
+
+41
+00:01:46,207 --> 00:01:50,218
+Missing evidence and uncertainty must remain visible,
+
+42
+00:01:50,647 --> 00:01:52,965
+and a proposed action must stay distinct
+
+43
+00:01:52,978 --> 00:01:54,137
+from a completed action.
+
+44
+00:01:56,237 --> 00:01:58,490
+The approval step is a deliberate decision
+
+45
+00:01:58,490 --> 00:01:58,920
+point.
+
+46
+00:01:59,323 --> 00:02:02,045
+In this recording, the developer command line
+
+47
+00:02:02,214 --> 00:02:04,193
+stands in for the merchant interface.
+
+48
+00:02:04,662 --> 00:02:07,657
+Fight, concede, and hold are the three
+
+49
+00:02:07,748 --> 00:02:08,959
+available responses.
+
+50
+00:02:09,376 --> 00:02:11,459
+The selected response is passed back to
+
+51
+00:02:11,459 --> 00:02:14,441
+the Strands interrupt, after which the recorder
+
+52
+00:02:14,441 --> 00:02:15,378
+checks Stripe again.
+
+53
+00:02:15,834 --> 00:02:18,959
+Phone notification delivery is disabled for this
+
+54
+00:02:18,972 --> 00:02:20,183
+local demonstration.
+
+55
+00:02:22,284 --> 00:02:24,628
+Here is the approval interrupt and the
+
+56
+00:02:24,628 --> 00:02:26,438
+developer command line response.
+
+57
+00:02:26,867 --> 00:02:29,419
+The display preserves the recorded choice and
+
+58
+00:02:29,419 --> 00:02:30,565
+the guarded action count.
+
+59
+00:02:30,982 --> 00:02:33,990
+After resuming, the recorder reads Stripe again.
+
+60
+00:02:34,380 --> 00:02:36,529
+Compare the before and after states.
+
+61
+00:02:36,958 --> 00:02:40,070
+That readback establishes the test result, not
+
+62
+00:02:40,070 --> 00:02:42,023
+a real-world dispute outcome.
+
+63
+00:02:44,137 --> 00:02:47,406
+The validation panel identifies the source revision
+
+64
+00:02:47,575 --> 00:02:49,190
+and the checks that ran against it.
+
+65
+00:02:49,606 --> 00:02:52,015
+It shows the unit test result alongside
+
+66
+00:02:52,015 --> 00:02:56,455
+the fixed synthetic-case evaluation, covering action, approval,
+
+67
+00:02:56,729 --> 00:02:58,578
+expected value, and grounding.
+
+68
+00:02:58,981 --> 00:03:02,328
+Read the observed results and thresholds together.
+
+69
+00:03:02,757 --> 00:03:05,791
+This benchmark does not measure real merchant
+
+70
+00:03:05,791 --> 00:03:06,872
+recovery rates.
+
+71
+00:03:08,958 --> 00:03:11,132
+Rebuttal gives small merchants a place to
+
+72
+00:03:11,132 --> 00:03:14,583
+review the facts, the proposed response, and
+
+73
+00:03:14,583 --> 00:03:15,390
+the next action.
+
+74
+00:03:15,807 --> 00:03:18,815
+This prototype runs locally with synthetic merchant
+
+75
+00:03:18,828 --> 00:03:21,067
+data and Stripe test objects.
+
+76
+00:03:21,471 --> 00:03:24,440
+Real merchant outcomes and live phone delivery
+
+77
+00:03:24,765 --> 00:03:26,992
+remain outside this demonstration.
+
+78
+00:03:27,421 --> 00:03:29,856
+The goal is a clearer, more controlled
+
+79
+00:03:29,869 --> 00:03:31,041
+dispute workflow.

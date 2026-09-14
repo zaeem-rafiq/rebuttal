@@ -1,0 +1,419 @@
+{
+  "status": "Observed aggregate acceptance for the stated test and replay scope; video rendering authorized, no publication",
+  "existing_review_candidate": {
+    "path": "../rebuttal-local-review-candidate.mp4",
+    "sha256": "48ba6bebe73023997242653571c123e32b511b7326a7682ec988ad56a6356770",
+    "preserved": true
+  },
+  "runtime_recording": {
+    "revision": "616db5e",
+    "workflow": "../../final-verified-run/workflow.json",
+    "workflow_sha256": "d7bdcd176beea74774c6907c078fe481013e627883d752331508b6b0fd399167",
+    "completed_assertions": "passed",
+    "selection_note": "Selected JSON fields are reserialized without changing values; a narrative sentence is preserved verbatim. Display reveal timing is editorial.",
+    "scenes": {
+      "3": [
+        {
+          "display": "{\"amount\": 34000, \"currency\": \"usd\", \"reason\": \"fraudulent\"}",
+          "stage": "dispute arrived",
+          "path": "",
+          "fields": [
+            "amount",
+            "currency",
+            "reason"
+          ]
+        },
+        {
+          "display": "order: {\"id\": \"ORD-1002\", \"customer_value\": \"repeat\"}",
+          "stage": "retrieved facts",
+          "path": "order",
+          "fields": [
+            "id",
+            "customer_value"
+          ]
+        },
+        {
+          "display": "shipment: {\"carrier\": \"FedEx\", \"status\": \"delivered\"}",
+          "stage": "retrieved facts",
+          "path": "shipment",
+          "fields": [
+            "carrier",
+            "status"
+          ]
+        },
+        {
+          "display": "comms: {\"message_count\": 2, \"has_address_change_request\": true}",
+          "stage": "retrieved facts",
+          "path": "communications",
+          "fields": [
+            "message_count",
+            "has_address_change_request"
+          ]
+        },
+        {
+          "display": "policy: {\"vip_concede_max_cents\": 50000}",
+          "stage": "retrieved facts",
+          "path": "history_and_policy.policy",
+          "fields": [
+            "vip_concede_max_cents"
+          ]
+        },
+        {
+          "display": "graph: {\"intake\": 1, \"orders\": 1, \"shipping\": 1, \"history\": 1, \"comms\": 1, \"strategy\": 1, \"drafter\": 1}",
+          "stage": "graph execution",
+          "path": "",
+          "fields": [
+            "intake",
+            "orders",
+            "shipping",
+            "history",
+            "comms",
+            "strategy",
+            "drafter"
+          ]
+        }
+      ],
+      "4": [
+        {
+          "display": "strategy: {\"action\": \"concede\", \"evidence_strength\": \"weak\"}",
+          "stage": "strategy",
+          "path": "",
+          "fields": [
+            "action",
+            "evidence_strength"
+          ]
+        },
+        {
+          "display": "{\"owner_summary\": \"Recommend concession. Repeat customer, $340 disputed amount within vip_concede_max_cents ($500) policy threshold.\"}",
+          "stage": "strategy",
+          "path": "",
+          "fields": [
+            "owner_summary"
+          ]
+        },
+        {
+          "display": "{\"shipping_documentation\": null, \"service_documentation\": null}",
+          "stage": "evidence",
+          "path": "",
+          "fields": [
+            "shipping_documentation",
+            "service_documentation"
+          ]
+        },
+        {
+          "display": "{\"uncategorized_text\": null, \"files\": []}",
+          "stage": "evidence",
+          "path": "",
+          "fields": [
+            "uncategorized_text",
+            "files"
+          ]
+        },
+        {
+          "display": "Evidence narrative: Customer is repeat tier with 5 total orders and $1,120 lifetime value.",
+          "stage": "evidence",
+          "path": "narrative",
+          "literal_substring": "Customer is repeat tier with 5 total orders and $1,120 lifetime value."
+        }
+      ],
+      "6": [
+        {
+          "display": "pause: {\"stop_reason\": \"interrupt\", \"interrupt_names\": [\"owner-approval\"]}",
+          "stage": "approval pause",
+          "path": "",
+          "fields": [
+            "stop_reason",
+            "interrupt_names"
+          ]
+        },
+        {
+          "display": "before: {\"stripe_status\": \"needs_response\", \"gated_action_calls\": 0}",
+          "stage": "approval pause",
+          "path": "",
+          "fields": [
+            "stripe_status",
+            "gated_action_calls"
+          ]
+        },
+        {
+          "display": "CLI reply: {\"answer\": \"2\", \"action\": \"concede\"}",
+          "stage": "CLI approval",
+          "path": "",
+          "fields": [
+            "answer",
+            "action"
+          ]
+        },
+        {
+          "display": "Stripe readback: {\"status\": \"lost\", \"livemode\": false}",
+          "stage": "Stripe readback",
+          "path": "",
+          "fields": [
+            "status",
+            "livemode"
+          ]
+        },
+        {
+          "display": "executor: {\"executor_stop_reason\": \"end_turn\", \"gated_action_calls\": 1}",
+          "stage": "Stripe readback",
+          "path": "",
+          "fields": [
+            "executor_stop_reason",
+            "gated_action_calls"
+          ]
+        },
+        {
+          "display": "{\"assertions\": \"passed\"}",
+          "stage": "completed",
+          "path": "",
+          "fields": [
+            "assertions"
+          ]
+        }
+      ]
+    }
+  },
+  "raw_model_generation": {
+    "revision": "ccd5616",
+    "model": "Sonnet",
+    "case_count": 20,
+    "reports": [
+      {
+        "repository_path": "evals/results/2026-09-14-ccd5616-a.json",
+        "sha256": "3a8176fc40d7c9273d26d33ec7640bddb1dce7ee190a9c5a9feab533a2972c83",
+        "generation_revision": "ccd5616",
+        "case_count": 10
+      },
+      {
+        "repository_path": "evals/results/2026-09-14-ccd5616-b.json",
+        "sha256": "79c2bfa90606e0aca0d700fafac8eded41c5e9bb09a70994d3ccb3318dc93ae5",
+        "generation_revision": "ccd5616",
+        "case_count": 10
+      }
+    ],
+    "source_review": "Remaining defects found in raw model prose; no accepted raw-draft pass claim",
+    "review_11_20": {
+      "repository_path": "docs/proofs/output-grounding/ccd5616-cases-11-20-review.md",
+      "sha256": "283ad9c21b7da8d3e90496345fedda10acbff36cb2a0ab607fc9e0c5b3208c81"
+    }
+  },
+  "current_output_contract": {
+    "final_factual_text": "Deterministically formatted from linked captured source records",
+    "retained_model_assessments": [
+      "action",
+      "win_probability",
+      "EV"
+    ],
+    "release_revision": "4371ebf",
+    "status": "Offline tests, captured-source replay and two fresh graph cases meet aggregate criteria; model assessments remain uncalibrated"
+  },
+  "captured_source_replay": {
+    "count_expected": 20,
+    "new_model_draft_generation": false,
+    "scope": "Final formatter applied to exact captured ccd5616 sources and retained assessments, followed by new judge calls",
+    "processing_revision": "4371ebf",
+    "processor_sha256": "f9af3cf8510fe9ccb4693fde049ceb8bf6aff16af5931058ac04114973a8c602",
+    "evaluator_sha256": "eb236bd729e2609d5802ec723b90994235babc9bd7335988393b4f7c7bce18db",
+    "result_reports": [
+      {
+        "repository_path": "evals/results/2026-09-14-source-formatted-final-v2-a.json",
+        "sha256": "dc6c6e896409f0da60e0c304e218dd1cb05de782104b2bd9473772e93b51e4a9",
+        "completed": true,
+        "cases": 7,
+        "exit_status": 0
+      },
+      {
+        "repository_path": "evals/results/2026-09-14-source-formatted-final-v2-b.json",
+        "sha256": "8efff9e91244c99f39d76c4f744ad2348f163a59c1080b8789f479fbc9368297",
+        "completed": true,
+        "cases": 7,
+        "exit_status": 0
+      },
+      {
+        "repository_path": "evals/results/2026-09-14-source-formatted-final-v2-c.json",
+        "sha256": "9f93f975995e56dded2e8acffb3cd9b0399ff168ac09cc29c0f065b66898cd23",
+        "completed": true,
+        "cases": 6,
+        "exit_status": 1
+      }
+    ],
+    "completed": true,
+    "scores": {
+      "action_match": 20,
+      "gate_match": 20,
+      "judge_pass": 19,
+      "ev_sign": 20
+    },
+    "exit_status": 0,
+    "rubric": "grounded-v17",
+    "valid_judgments": 20,
+    "thresholds": {
+      "action_match": ">=18",
+      "gate_match": "20",
+      "judge_pass": ">=18",
+      "ev_sign": "20"
+    },
+    "batch_exit_statuses": {
+      "a": 0,
+      "b": 0,
+      "c": 1
+    },
+    "raw_judge_failures": [
+      "case_09"
+    ],
+    "residual_false_positive": {
+      "case_id": "case_09",
+      "source_adjudication": {
+        "repository_path": "docs/proofs/output-grounding/source-formatted-final-cases-01-10-review.md",
+        "sha256": "38157d7be96878d9090729f962ef2f0b1506fbc175dcfcf77196290f645e9dd9"
+      },
+      "raw_score_overridden": false
+    }
+  },
+  "fresh_full_graph_integration": {
+    "scope": "Separate fresh model graph cases with final formatter integrated; does not convert replay into a fresh 20-case run",
+    "revision": "4371ebf",
+    "case_ids": [
+      "case_03",
+      "case_18"
+    ],
+    "result_reports": [
+      {
+        "repository_path": "evals/results/2026-09-14-source-formatted-final-v2-live.json",
+        "sha256": "7ab6da6e7e8d005c462e63274df4293282acf45c1e999ccd0e7bef86397ac2e8"
+      }
+    ],
+    "completed": true,
+    "scores": {
+      "case_03": true,
+      "case_18": true
+    },
+    "exit_status": 0
+  },
+  "evaluator_calibration": {
+    "expected_count": 52,
+    "revision": "ab240e1",
+    "result_reports": [
+      {
+        "repository_path": "evals/results/2026-09-14-sonnet-controls-v18a.json",
+        "sha256": "d952148afeffc60a2acc4ac9e6e2a833f94e700bc5d9d77c0484928e564d076a",
+        "revision": "ab240e1",
+        "source_manifest": {
+          "evals/run.py": "eb236bd729e2609d5802ec723b90994235babc9bd7335988393b4f7c7bce18db",
+          "evals/check_output_grounding.py": "9a0a7644800b9b855d5c17c842b6f74825ba49002732008d9d1dd3832d3fb80e"
+        },
+        "completed": true,
+        "count": 18
+      },
+      {
+        "repository_path": "evals/results/2026-09-14-sonnet-controls-v18b.json",
+        "sha256": "7df60e86975ce48c53979e9201fbb7e9c4043318965e3464e6c1a1fa93289359",
+        "revision": "ab240e1",
+        "source_manifest": {
+          "evals/run.py": "eb236bd729e2609d5802ec723b90994235babc9bd7335988393b4f7c7bce18db",
+          "evals/check_output_grounding.py": "9a0a7644800b9b855d5c17c842b6f74825ba49002732008d9d1dd3832d3fb80e"
+        },
+        "completed": true,
+        "count": 17
+      },
+      {
+        "repository_path": "evals/results/2026-09-14-sonnet-controls-v18c.json",
+        "sha256": "38cb571736d2e79c420f8ec692d0ff78030819d2ed82253ee0dd5c6b3dd5029a",
+        "revision": "ab240e1",
+        "source_manifest": {
+          "evals/run.py": "eb236bd729e2609d5802ec723b90994235babc9bd7335988393b4f7c7bce18db",
+          "evals/check_output_grounding.py": "9a0a7644800b9b855d5c17c842b6f74825ba49002732008d9d1dd3832d3fb80e"
+        },
+        "completed": true,
+        "count": 17
+      }
+    ],
+    "completed": true,
+    "expected_check_matches": 52,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "exit_status": 0,
+    "rubric": "grounded-v17",
+    "valid_judgments": 52,
+    "scope": "52 supplied controls; not a population error-rate estimate",
+    "source_equivalence": "Evaluator and control source hashes match 4371ebf offline-test manifest"
+  },
+  "offline_tests": {
+    "revision": "4371ebf",
+    "command": "PYTHON_DOTENV_DISABLED=1 USE_GATEWAY_MCP=false .venv/bin/python -m pytest -q",
+    "exit_status": 0,
+    "result": "217 passed, 2 warnings in 21.89s",
+    "log": "docs/proofs/output-grounding/4371ebf-tests.log",
+    "log_sha256": "3265c90dddeec8b83f0a42e83ae4df5a7d21a810fb3c4873efea5283e88d00c1",
+    "source_manifest": {
+      "agent/__init__.py": "35c7b3d297145aaf353e58a2e4e40a351783acfb26108051f9fdaede4e6b806d",
+      "agent/app.py": "76b1ae8f2009f1922e456b48477c89d06de482f0029dc9f3f8b9463123c5c640",
+      "agent/executor.py": "39af0e14b6548da77d2cf68939a567d87b5d79837069a4eb0d2cb078cd24b8b7",
+      "agent/factual_output.py": "f9af3cf8510fe9ccb4693fde049ceb8bf6aff16af5931058ac04114973a8c602",
+      "agent/graph.py": "719c197a7f2d67b92987d148b394421354ae5dc03af66c00fd2e7d7f8e526415",
+      "agent/hooks.py": "18e0b0df73b1c9bfbdb93a1deb9e5b9ec95e5e589e94400c0683053582f5056b",
+      "agent/models.py": "ef5ec0e224a382e0291e34ff961a054fbfcbf0b61d5f579593f92a9faaa2a61b",
+      "agent/sweep.py": "9c88bcf42cc96a189edf7f29f308b0d0d727daaea6cdb3804873c4bb98214de6",
+      "agent/tools/__init__.py": "10eeb1e7c67ff14ddcb6826048c12393cc69f6e9794b593d69cab54fda30b95f",
+      "agent/tools/case_tools.py": "5267515a3cf29c906b53ba957894c158b374a7ff441863be6b62a445e82e26f1",
+      "agent/tools/evidence_tools.py": "8f24f313b2bc6534717ff02e2b88244bbcc4129fe4be62c0d257abb1712274c6",
+      "agent/tools/gateway_client.py": "8b23f84036fb35264f0d5f67a349ea009df915d423b06cf1283352abcc7a39bf",
+      "agent/tools/memory_tools.py": "a93e83c0b79637ac49544910258d0577834d4326b485d991fbd31a485660ad8b",
+      "agent/tools/stripe_tools.py": "f67092abb84a4ade996a4394dc605d380d335be6de16006a33661cad2bbdc3df",
+      "evals/check_output_grounding.py": "9a0a7644800b9b855d5c17c842b6f74825ba49002732008d9d1dd3832d3fb80e",
+      "evals/run.py": "eb236bd729e2609d5802ec723b90994235babc9bd7335988393b4f7c7bce18db",
+      "tests/test_control_progress.py": "a61dfe154c11ddba36df1f446682b35b9161c5980c306e6b9ae09134f583cad1",
+      "tests/test_dispute_simulator.py": "869c6248b54d54047c6e5a30bc8804c7d8500becaf996418613b692886b4ca8b",
+      "tests/test_eval_lookup_contract.py": "b1a2c0ac42ca6356428f9ded3aae008581a6e4f46e188b57894faa5b8728767a",
+      "tests/test_evals.py": "3b2d928a8dc58f585b31a3178cac3765d588364fc57b92bd86c28a98f3e50ed8",
+      "tests/test_executor.py": "bdeb15de28a7e66cb732a23543ac245c7c58282310a36cbeec88606dd1033c62",
+      "tests/test_factual_output.py": "f7d4fa3e3d0b96aa35cafe4db04da1e2bb51de568ae816a72a1d8d1db3ec0e50",
+      "tests/test_fixtures.py": "75b869e0147b8d26ae84197b2749b7b73afb11686c800a6c7b9e3034285ada35",
+      "tests/test_gate.py": "d6c094bdc20fd9482b953a970406f022142902a8268c7295f3e12f49971a1245",
+      "tests/test_graph.py": "10be97c4fb33a2144cf2d6634af4ad342c94b866765d6911cd96ee76030f17b0",
+      "tests/test_graph_ordering.py": "149949f3c7c06356fc16f0dac837e7a3f59d207ed304b68f4326c55eabf2bb7b",
+      "tests/test_hooks.py": "1f25c8b23d017b6501ff1f50a8745d00af5ed4f8fb2418d55c848407ae2be18d",
+      "tests/test_memory.py": "fd08414ad72fd826764bf514619540707ac5ec48f87cb0c679a7999383f21a7a",
+      "tests/test_model_transport.py": "9e66720437f9089b57e764b503d0b058a10ad63948ffc2fdb45e3c8b8c0647d9",
+      "tests/test_models.py": "0a86ad269bfb2d1596441f4231dcee865dac81845ec79ed75216ac53cebd35bf",
+      "tests/test_output_grounding.py": "e95e848d13b91a323a06913fcc4a13d2061fd4450d31d61fd34c0b3c6cb8c6ff",
+      "tests/test_preflight.py": "0dc6c7f59fb6b74ab92457bffd3c14d4821c3e13f0344ac00d3fbe3aaa42b81b",
+      "tests/test_rejected_output_evidence.py": "7b4644637fb1222b72191c142c424880a02e53661b4344bc075cdf14d6011aae",
+      "tests/test_schema.py": "5017b9f7946a21f6c030b20a3d9512d53ba8e5c4b8501f3215695563e9cc82e4",
+      "tests/test_source_provenance.py": "992a9b869ed1d9bd00a5a7337c8d162fe1f65209392ebc8ce1270c31df68bf5f",
+      "tests/test_stripe_tools.py": "ceee9a964c602c8c93d1faed5133f6d8c4d8b6b909b80a4407608dbdad2de802",
+      "tests/test_sweep.py": "81f0768f9205da4c67e0661730af399b51e0ff29f98d0213f6143628f0edd842",
+      "tests/test_webhooks.py": "6e1eeefa43e200293532f3cca4055b86066b2f7c4d040b1ecf329f9d2efa59af"
+    },
+    "passed": 217,
+    "warnings": 2,
+    "report": {
+      "repository_path": "docs/proofs/output-grounding/4371ebf-tests.json",
+      "sha256": "322e9584f09604479aa141232f80f3e5210ea0107a3ff0436f4afd5ccf2034b4"
+    }
+  },
+  "narration": {
+    "modified": false,
+    "voice_source": "Existing nine approved voice tracks via local symlinks",
+    "new_tts_calls": false
+  },
+  "release_state": "Local final candidate rendered, fully decoded, and sampled frames reviewed; not uploaded, published, or submitted; listening unverified",
+  "acceptance_gate": {
+    "repository_path": "docs/proofs/output-grounding/final-acceptance.json",
+    "required_field": "acceptance_pass",
+    "required_value": true,
+    "observed": true,
+    "acceptance_pass": true,
+    "completed": true,
+    "aggregate_exit_status": 0,
+    "source_sha256": "865e4291b47e7629fb963303fc3a22371f47235997687f047ed5c7d35d4c4591",
+    "saved_copy": "acceptance-source.json"
+  },
+  "video_artifact": {
+    "path": "rebuttal-final-candidate.mp4",
+    "sha256": "1cea12875e9d544d502b7a559faa374fa4873cafc64a2b7a0f62333429464a6c",
+    "duration_seconds": 212.688,
+    "qa_report": "qa/verification.json",
+    "listening": "NOT VERIFIED"
+  }
+}

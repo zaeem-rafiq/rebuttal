@@ -1,0 +1,266 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 911660,
+    "duration": 5208330,
+    "text": "Next"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 8203330,
+    "duration": 4166660,
+    "text": "compare"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 12370000,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 13281250,
+    "duration": 5468750,
+    "text": "proposed"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 18750000,
+    "duration": 5729160,
+    "text": "strategy"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 24609580,
+    "duration": 1822910,
+    "text": "with"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 26432500,
+    "duration": 1041660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 27474160,
+    "duration": 5078330,
+    "text": "records"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 33984580,
+    "duration": 1432080,
+    "text": "that"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 35416660,
+    "duration": 4166660,
+    "text": "support"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 39583330,
+    "duration": 1692910,
+    "text": "it"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 45572910,
+    "duration": 651250,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 46354160,
+    "duration": 8724160,
+    "text": "recommendation"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 55859580,
+    "duration": 1041660,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 56901250,
+    "duration": 7161660,
+    "text": "draft"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 66536660,
+    "duration": 1302080,
+    "text": "are"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 67968750,
+    "duration": 4166660,
+    "text": "shown"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 72135410,
+    "duration": 6640830,
+    "text": "separately"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 82812500,
+    "duration": 1953330,
+    "text": "Read"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 84765830,
+    "duration": 650830,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 85416660,
+    "duration": 6250000,
+    "text": "evidence"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 92968750,
+    "duration": 5078330,
+    "text": "excerpt"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 98567910,
+    "duration": 9114580,
+    "text": "alongside"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 107812500,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 108724160,
+    "duration": 5338330,
+    "text": "retrieved"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 114062500,
+    "duration": 6510410,
+    "text": "facts"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 124739580,
+    "duration": 3515830,
+    "text": "Missing"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 128385410,
+    "duration": 6380410,
+    "text": "evidence"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 136197910,
+    "duration": 2734580,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 139713750,
+    "duration": 9895830,
+    "text": "uncertainty"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 152474160,
+    "duration": 3125000,
+    "text": "must"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 155729160,
+    "duration": 3906250,
+    "text": "remain"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 159635410,
+    "duration": 5208330,
+    "text": "visible"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 169140830,
+    "duration": 520830,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 169661660,
+    "duration": 390830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 170182500,
+    "duration": 5468750,
+    "text": "proposed"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 175781250,
+    "duration": 4687500,
+    "text": "action"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 180599160,
+    "duration": 3645830,
+    "text": "must"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 184245000,
+    "duration": 2343750,
+    "text": "stay"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 186718750,
+    "duration": 5599160,
+    "text": "distinct"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 192447910,
+    "duration": 1692910,
+    "text": "from"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 194140830,
+    "duration": 520830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 194661660,
+    "duration": 4817500,
+    "text": "completed"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 199479160,
+    "duration": 4557500,
+    "text": "action"
+  }
+]

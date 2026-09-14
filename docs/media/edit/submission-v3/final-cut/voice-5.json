@@ -1,0 +1,338 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 1041660,
+    "duration": 781250,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 1953330,
+    "duration": 4817500,
+    "text": "approval"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 6770830,
+    "duration": 3906250,
+    "text": "step"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 12239580,
+    "duration": 1041660,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 13281250,
+    "duration": 520830,
+    "text": "a"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 13802080,
+    "duration": 4947910,
+    "text": "deliberate"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 18750000,
+    "duration": 4817910,
+    "text": "decision"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 23567910,
+    "duration": 4297080,
+    "text": "point"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 31901250,
+    "duration": 1302080,
+    "text": "In"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 33203330,
+    "duration": 1952910,
+    "text": "this"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 35156250,
+    "duration": 6510410,
+    "text": "recording"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 44531250,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 45312500,
+    "duration": 5208330,
+    "text": "developer"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 50651250,
+    "duration": 4557080,
+    "text": "command"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 55208330,
+    "duration": 3906250,
+    "text": "line"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 60807500,
+    "duration": 4296660,
+    "text": "stands"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 65104160,
+    "duration": 2864580,
+    "text": "in"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 68099160,
+    "duration": 1171660,
+    "text": "for"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 69270830,
+    "duration": 520830,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 69791660,
+    "duration": 3906250,
+    "text": "merchant"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 73828330,
+    "duration": 6770830,
+    "text": "interface"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 85286660,
+    "duration": 3776250,
+    "text": "Fight"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 91536660,
+    "duration": 6901250,
+    "text": "concede"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 102864580,
+    "duration": 651250,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 103645830,
+    "duration": 4166660,
+    "text": "hold"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 107942910,
+    "duration": 911250,
+    "text": "are"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 108854160,
+    "duration": 911660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 109895830,
+    "duration": 5338750,
+    "text": "three"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 116145830,
+    "duration": 4427080,
+    "text": "available"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 120572910,
+    "duration": 7682500,
+    "text": "responses"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 132422080,
+    "duration": 651250,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 133203330,
+    "duration": 3906250,
+    "text": "selected"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 137109580,
+    "duration": 5338750,
+    "text": "response"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 143099160,
+    "duration": 1171660,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 144270830,
+    "duration": 4687500,
+    "text": "passed"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 148958330,
+    "duration": 3385410,
+    "text": "back"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 152474160,
+    "duration": 781250,
+    "text": "to"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 153255410,
+    "duration": 911660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 154297080,
+    "duration": 5599160,
+    "text": "Strands"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 160026250,
+    "duration": 6380410,
+    "text": "interrupt"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 171745000,
+    "duration": 3255000,
+    "text": "after"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 175000000,
+    "duration": 2343750,
+    "text": "which"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 177343750,
+    "duration": 1041660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 178385410,
+    "duration": 4687500,
+    "text": "recorder"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 183072910,
+    "duration": 3125000,
+    "text": "checks"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 186197910,
+    "duration": 2864580,
+    "text": "Stripe"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 189062500,
+    "duration": 3385410,
+    "text": "again"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 197005410,
+    "duration": 2864580,
+    "text": "Phone"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 199870000,
+    "duration": 6900830,
+    "text": "notification"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 206770830,
+    "duration": 5729160,
+    "text": "delivery"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 216666660,
+    "duration": 1172080,
+    "text": "is"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 217968750,
+    "duration": 6770830,
+    "text": "disabled"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 224870000,
+    "duration": 1171660,
+    "text": "for"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 226041660,
+    "duration": 2213750,
+    "text": "this"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 228385410,
+    "duration": 3776250,
+    "text": "local"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 232291660,
+    "duration": 8203330,
+    "text": "demonstration"
+  }
+]

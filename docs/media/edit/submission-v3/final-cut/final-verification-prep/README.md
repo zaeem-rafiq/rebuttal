@@ -1,0 +1,85 @@
+# Rebuttal final local candidate
+
+[rebuttal-final-candidate.mp4](rebuttal-final-candidate.mp4) is the completed
+nine-scene local video candidate: **212.688 seconds (3:32.688)**, 1920 x 1080 at
+30 fps, H.264 video with AAC stereo audio at 48 kHz. It is under the five-minute
+limit. Rendering and complete decoding exited 0. It has not been uploaded,
+published, or submitted; listening acceptance remains unverified.
+
+The [saved aggregate](acceptance-source.json) was observed completed with
+acceptance_pass: true and aggregate exit status 0 before video rendering. All eight
+referenced report hashes matched their files. The validation scene preserves
+these distinct evidence sets:
+
+| Evidence | Revision and scope | Observed result |
+|---|---|---|
+| Recorded runtime shown in the demo | 616db5e, Haiku, local Strands, synthetic merchant records and Stripe TEST | Actual developer CLI concede; Stripe test readback lost; recorded assertions passed |
+| Current offline suite | 4371ebf | 217 passed, 2 warnings, 21.89 seconds; exit 0 |
+| Final formatter and new judge on captured sources | ccd5616 generation, 4371ebf processing, grounded-v17 | 20 / 20 action, gate, and EV-sign matches; 19 / 20 raw output-judge passes; all 20 judgments valid |
+| Required aggregate thresholds | Fixed 20-case suite | Action at least 18, gate 20, EV sign 20, output judge at least 18; aggregate accepted |
+| Separate fresh full-graph integration | 4371ebf, cases 03 and 18 | 2 / 2 passed; exit 0 |
+| Evaluator controls v18a/b/c | ab240e1; evaluator/control hashes unchanged at 4371ebf | All 52 valid; 52 / 52 expected results matched; zero false positives or false negatives in this supplied control set; each batch exit 0 |
+
+The raw output judge still rejects case 09. Exact-source review identifies that
+rejection as a false positive about a proposed concession and a correctly reported
+policy parameter. The displayed score remains **19 / 20**. No manual score override
+was made. Replay batch c retains exit status 1 for that failed raw verdict; batches
+a and b exit 0, and the full aggregate meets the repository's stated thresholds.
+Zero errors on the supplied controls is distinct from that one replay false positive
+and is not a population error-rate estimate.
+
+Final factual text is deterministically formatted from linked source records.
+Action, win probability, EV, and evidence-strength assessments remain model outputs;
+these checks do not establish probability calibration or real merchant recovery.
+The 20-case formatter/judge replay is **not fresh 20-case model-draft generation**.
+The two fresh graph cases are a separate integration check and did not run Stripe
+action tools. The older recorded Stripe TEST concession is identified separately.
+
+[scene-sources.json](scene-sources.json) records report paths/hashes, the frozen
+acceptance source, raw-score provenance, residual false-positive adjudication,
+control-source equivalence, and every literal recorded-runtime excerpt. Earlier
+raw drafts and reports remain preserved. The previous
+[local review candidate](../rebuttal-local-review-candidate.mp4) and its inputs are
+unchanged; preparation checkpoints are retained in pre-4371ebf and pre-acceptance.
+
+All nine approved narration paragraphs and their cached audio remain unchanged.
+Voice and word-timing files are local symlinks to the existing cache. No new TTS,
+model call, Stripe action, or other external request was made for this render.
+Playback timing is editorial: the screen presents selected recorded output, with
+reveals aligned to narration rather than original execution waits. Explanatory
+panels remain distinct from recorded output. The owner interface shown is a
+developer CLI; phone delivery was disabled in that recorded demonstration.
+
+[captions.srt](captions.srt), [timeline.json](timeline.json), and
+[contact-sheet.jpg](contact-sheet.jpg) describe the complete candidate. The renderer
+adds captions after overlays, keeps every spoken word, applies 30 ms audio fades,
+encodes each segment, and concatenates without re-encoding. The [QA folder](qa/)
+contains metadata, full-decode evidence, actual encoded reveal frames, all eight
+cut boundaries, and opening/closing/midpoint samples. Technical audio checks and
+provider word timings do not replace independent listening or ASR.
+
+Commands executed locally:
+
+```sh
+.venv/bin/python docs/media/edit/submission-v3/render_verified.py docs/media/edit/submission-v3/final-cut/final-verification-prep
+.venv/bin/python docs/media/edit/submission-v3/final-cut/final-verification-prep/verify_media.py
+```
+
+After the renderer completed, its generic rebuttal-verified-preview.mp4 was renamed
+to rebuttal-final-candidate.mp4. A future renderer invocation produces a new generic
+preview; preserve this candidate and its verification instead of overwriting it.
+The QA helper reads the preserved final-candidate path. The static storyboard can
+be regenerated by adding --storyboard to the renderer command.
+
+This directory contains only local media and provenance work. Original source video,
+application code, and raw verification reports were not modified by the renderer.
+No publication, submission, deployment, provider call, or Git commit was performed.
+
+Final sampled media review passed: all seven validation reveals, all eight cuts
+(including both validation transitions), and seven opening/closing/midpoint samples
+were inspected. Text and captions fit, with no sampled flash or obscured caption.
+Every cut's 60 ms audio window is below -60 dBFS. The complete validation panel
+holds for 5.709 seconds after its final fade. Approved narration, the other eight
+scenes, the original source video, and the prior review candidate are unchanged.
+The exact video SHA-256 and remaining listening limitation are in
+[qa/verification.json](qa/verification.json).

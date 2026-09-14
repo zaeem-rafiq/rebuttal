@@ -1,0 +1,11 @@
+{
+  "scope": "Ignored local .env only; no cloud change or provider call",
+  "settings": {
+    "BEDROCK_MODEL_ID": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "BEDROCK_JUDGE_MODEL_ID": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "BEDROCK_STREAMING": "false"
+  },
+  "verification": "dotenv loaded in isolated subprocess; BedrockModel constructor mocked; model_id and streaming asserted",
+  "exit_status": 0,
+  "recovery": "Restore BEDROCK_MODEL_ID to us.anthropic.claude-haiku-4-5-20251001-v1:0 and remove the added BEDROCK_JUDGE_MODEL_ID/BEDROCK_STREAMING entries to restore prior local settings. No secret values are included."
+}

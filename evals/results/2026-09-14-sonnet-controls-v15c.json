@@ -1,0 +1,844 @@
+{
+  "facts": {
+    "source_tool_records": [
+      {
+        "collector": "order",
+        "tool": "control_order",
+        "status": "success",
+        "content": [
+          {
+            "id": "ORD-1002",
+            "customer_id": "CUST-002",
+            "amount_cents": 34000,
+            "currency": "usd",
+            "status": "delivered",
+            "payment_intent_id": "pi_mock_s2_1789405536",
+            "charge_id": "ch_mock_s2_1789405536",
+            "card_brand": "mastercard",
+            "card_last4": "5555",
+            "avs_postal_match": "match",
+            "cvc_match": "match",
+            "shipping_address": {
+              "line1": "880 Harrison St",
+              "city": "San Francisco",
+              "state": "CA",
+              "postal_code": "94107",
+              "country": "US"
+            },
+            "billing_address": {
+              "line1": "742 Evergreen Terrace",
+              "city": "Springfield",
+              "state": "OR",
+              "postal_code": "97477",
+              "country": "US"
+            },
+            "created_at": "2026-08-25T09:15:00Z",
+            "updated_at": "2026-09-05T18:44:34Z",
+            "items": [
+              {
+                "id": "ITEM-1002-1",
+                "order_id": "ORD-1002",
+                "product_name": "Ceramic pour-over set",
+                "sku": "CPS-340",
+                "quantity": 1,
+                "unit_price_cents": 34000,
+                "total_price_cents": 34000,
+                "created_at": "2026-08-25T09:15:00Z"
+              }
+            ],
+            "customer_name": "Jessica Lee",
+            "customer_email": "j.lee@example.com",
+            "customer_phone": "+15553456789",
+            "customer_value": "repeat",
+            "order_count": 5,
+            "lifetime_value_cents": 112000
+          }
+        ]
+      },
+      {
+        "collector": "shipment",
+        "tool": "control_shipment",
+        "status": "success",
+        "content": [
+          {
+            "id": "SHIP-1002",
+            "order_id": "ORD-1002",
+            "carrier": "FedEx",
+            "tracking_number": "449044301542",
+            "status": "delivered",
+            "shipped_at": "2026-08-26T11:00:00Z",
+            "delivered_at": "2026-08-29T11:20:00Z",
+            "signed_by": null,
+            "shipping_address": {
+              "line1": "880 Harrison St",
+              "city": "San Francisco",
+              "state": "CA",
+              "postal_code": "94107",
+              "country": "US"
+            },
+            "created_at": "2026-08-26T10:00:00Z",
+            "events": [
+              {
+                "id": "EVT-1002-1",
+                "shipment_id": "SHIP-1002",
+                "timestamp": "2026-08-26T11:00:00Z",
+                "status": "label_created",
+                "location": "Springfield, OR",
+                "details": "Shipping label created with alternate destination 880 Harrison St, San Francisco, CA",
+                "created_at": "2026-08-26T11:00:00Z"
+              },
+              {
+                "id": "EVT-1002-2",
+                "shipment_id": "SHIP-1002",
+                "timestamp": "2026-08-27T18:30:00Z",
+                "status": "in_transit",
+                "location": "Oakland, CA",
+                "details": "In transit at FedEx sorting facility",
+                "created_at": "2026-08-27T18:30:00Z"
+              },
+              {
+                "id": "EVT-1002-3",
+                "shipment_id": "SHIP-1002",
+                "timestamp": "2026-08-29T11:20:00Z",
+                "status": "delivered",
+                "location": "San Francisco, CA",
+                "details": "Delivered - Left at front door, no signature required",
+                "created_at": "2026-08-29T11:20:00Z"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "collector": "communications",
+        "tool": "control_communications",
+        "status": "success",
+        "content": [
+          {
+            "customer_id": "CUST-002",
+            "order_id": "ORD-1002",
+            "messages": [
+              {
+                "id": "MSG-003",
+                "customer_id": "CUST-002",
+                "order_id": "ORD-1002",
+                "direction": "inbound",
+                "channel": "email",
+                "subject": "Address change for ORD-1002",
+                "body": "Hello, I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead? Thanks! Jessica Lee",
+                "has_shipping_change": 1,
+                "created_at": "2026-08-25T14:10:00Z"
+              },
+              {
+                "id": "MSG-004",
+                "customer_id": "CUST-002",
+                "order_id": "ORD-1002",
+                "direction": "outbound",
+                "channel": "email",
+                "subject": "Re: Address change for ORD-1002",
+                "body": "Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!",
+                "has_shipping_change": 1,
+                "created_at": "2026-08-25T15:00:00Z"
+              }
+            ],
+            "message_count": 2,
+            "has_cancellation_request": false,
+            "has_address_change_request": true,
+            "has_inquiry": true
+          }
+        ]
+      },
+      {
+        "collector": "history_and_policy",
+        "tool": "control_history_and_policy",
+        "status": "success",
+        "content": [
+          {
+            "policy": {
+              "id": "POL-001",
+              "merchant_name": "Acme Specialty Goods",
+              "approval_amount_cents": 20000,
+              "min_win_probability_to_fight": 0.5,
+              "always_concede_under_cents": 1500,
+              "vip_concede_max_cents": 50000,
+              "silence_action": "fight",
+              "created_at": "2026-01-01T00:00:00Z",
+              "updated_at": "2026-01-01T00:00:00Z"
+            },
+            "customer_tier": "repeat",
+            "order_count": 5,
+            "lifetime_value_cents": 112000,
+            "prior_disputes_count": 1,
+            "prior_orders": [
+              {
+                "id": "ORD-1002",
+                "amount_cents": 34000,
+                "status": "delivered",
+                "created_at": "2026-08-25T09:15:00Z"
+              },
+              {
+                "id": "ORD-1011",
+                "amount_cents": 18000,
+                "status": "delivered",
+                "created_at": "2026-07-15T10:00:00Z"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "collector": "dispute",
+        "tool": "control_dispute",
+        "status": "success",
+        "content": [
+          {
+            "id": "dp_S2",
+            "amount_cents": 34000,
+            "currency": "usd",
+            "reason": "fraudulent",
+            "status": "needs_response",
+            "balance_transactions": [
+              {
+                "amount": -34000,
+                "fee": 1500,
+                "net": -35500,
+                "currency": "usd"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "collector": "card_checks",
+        "tool": "control_card_checks",
+        "status": "success",
+        "content": [
+          {
+            "address_line1_check": "pass",
+            "address_postal_code_check": "pass",
+            "cvc_check": "pass"
+          }
+        ]
+      }
+    ],
+    "produced_artifacts": []
+  },
+  "results": [
+    {
+      "name": "order_creation_date",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 27,
+        "missing_items": [],
+        "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code. This satisfies the reason_code_pass criterion. The required_narrative_references list is empty, meaning there are no specific items (such as tracking numbers, ticket identifiers, or other documentation) that the narrative must reference. According to the evaluation criteria, an empty required list automatically passes the must_cite_pass criterion. | All factual claims in the output are supported by the source records. The narrative correctly states: dispute reason 'fraudulent' (matches dispute.reason), dispute amount '$340.00' (34000 cents = $340.00), '5 total orders' (matches order_count=5 in both order and history records), '$1,120.00 lifetime value' (112000 cents = $1,120.00), and order placement date 'August 25, 2026' (matches created_at 2026-08-25T10:00:00Z). The strategy.customer_value 'repeat' matches the order record's customer_value field. The strategy.rationale and strategy.owner_summary contain only prospective recommendations ('Recommend concession', 'review before approval') without asserting unsupported facts. The $340.00 amount referenced in owner_summary matches the dispute amount. No claims are made about authorization, cardholder possession, policy compliance, or completed actions. The output does not assert that the concession has occurred or will definitely succeed, only that it is recommended. All numeric conversions are accurate (cents to dollars), and all quoted values match their source fields. | Analyzing the three categories of missing premises:\n\nA. EVENT ABSENCE: No absence claims are present in the factual output fields. The narrative describes what IS in the records (dispute amount, order count, lifetime value, order date) but makes no claims about the absence of any events, communications, or data.\n\nB. EVENT ORDERING: No event ordering claims are present. The narrative states 'The order was placed on August 25, 2026' which is a simple timestamp statement, not a claim about one event occurring before or after another event. No phrases like 'before', 'after', 'prior to', or 'following' appear in relation to multiple events.\n\nC. POLICY DISCLOSURE: The fields refund_policy_disclosure and cancellation_policy_disclosure are not present in the factual_output_fields at all. No claims are made about whether policies were disclosed to the customer before purchase. The strategy fields contain recommendations but do not assert policy disclosure.\n\nAll three categories pass because no claims of those types are present in the output.",
+        "narrative_judge": {
+          "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code. This satisfies the reason_code_pass criterion. The required_narrative_references list is empty, meaning there are no specific items (such as tracking numbers, ticket identifiers, or other documentation) that the narrative must reference. According to the evaluation criteria, an empty required list automatically passes the must_cite_pass criterion.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "All factual claims in the output are supported by the source records. The narrative correctly states: dispute reason 'fraudulent' (matches dispute.reason), dispute amount '$340.00' (34000 cents = $340.00), '5 total orders' (matches order_count=5 in both order and history records), '$1,120.00 lifetime value' (112000 cents = $1,120.00), and order placement date 'August 25, 2026' (matches created_at 2026-08-25T10:00:00Z). The strategy.customer_value 'repeat' matches the order record's customer_value field. The strategy.rationale and strategy.owner_summary contain only prospective recommendations ('Recommend concession', 'review before approval') without asserting unsupported facts. The $340.00 amount referenced in owner_summary matches the dispute amount. No claims are made about authorization, cardholder possession, policy compliance, or completed actions. The output does not assert that the concession has occurred or will definitely succeed, only that it is recommended. All numeric conversions are accurate (cents to dollars), and all quoted values match their source fields.",
+          "no_hallucination_pass": true
+        },
+        "support_judge": {
+          "support_assertions": []
+        },
+        "premise_judge": {
+          "explanation": "Analyzing the three categories of missing premises:\n\nA. EVENT ABSENCE: No absence claims are present in the factual output fields. The narrative describes what IS in the records (dispute amount, order count, lifetime value, order date) but makes no claims about the absence of any events, communications, or data.\n\nB. EVENT ORDERING: No event ordering claims are present. The narrative states 'The order was placed on August 25, 2026' which is a simple timestamp statement, not a claim about one event occurring before or after another event. No phrases like 'before', 'after', 'prior to', or 'following' appear in relation to multiple events.\n\nC. POLICY DISCLOSURE: The fields refund_policy_disclosure and cancellation_policy_disclosure are not present in the factual_output_fields at all. No claims are made about whether policies were disclosed to the customer before purchase. The strategy fields contain recommendations but do not assert policy disclosure.\n\nAll three categories pass because no claims of those types are present in the output.",
+          "event_absence_pass": true,
+          "event_order_pass": true,
+          "policy_disclosure_pass": true
+        },
+        "premise_checks_pass": true,
+        "raw_no_hallucination_pass": true,
+        "support_assertions_pass": true,
+        "support_assertion_errors": [],
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 9695,
+          "outputTokens": 725,
+          "totalTokens": 10420,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value. The order was placed on August 25, 2026.",
+          "files": []
+        }
+      },
+      "facts": {
+        "source_tool_records": [
+          {
+            "collector": "order",
+            "tool": "control_order",
+            "status": "success",
+            "content": [
+              {
+                "id": "ORD-1002",
+                "customer_id": "CUST-002",
+                "amount_cents": 34000,
+                "currency": "usd",
+                "status": "delivered",
+                "payment_intent_id": "pi_mock_s2_1789405536",
+                "charge_id": "ch_mock_s2_1789405536",
+                "card_brand": "mastercard",
+                "card_last4": "5555",
+                "avs_postal_match": "match",
+                "cvc_match": "match",
+                "shipping_address": {
+                  "line1": "880 Harrison St",
+                  "city": "San Francisco",
+                  "state": "CA",
+                  "postal_code": "94107",
+                  "country": "US"
+                },
+                "billing_address": {
+                  "line1": "742 Evergreen Terrace",
+                  "city": "Springfield",
+                  "state": "OR",
+                  "postal_code": "97477",
+                  "country": "US"
+                },
+                "created_at": "2026-08-25T10:00:00Z",
+                "updated_at": "2026-09-05T18:44:34Z",
+                "items": [
+                  {
+                    "id": "ITEM-1002-1",
+                    "order_id": "ORD-1002",
+                    "product_name": "Ceramic pour-over set",
+                    "sku": "CPS-340",
+                    "quantity": 1,
+                    "unit_price_cents": 34000,
+                    "total_price_cents": 34000,
+                    "created_at": "2026-08-25T09:15:00Z"
+                  }
+                ],
+                "customer_name": "Jessica Lee",
+                "customer_email": "j.lee@example.com",
+                "customer_phone": "+15553456789",
+                "customer_value": "repeat",
+                "order_count": 5,
+                "lifetime_value_cents": 112000
+              }
+            ]
+          },
+          {
+            "collector": "shipment",
+            "tool": "control_shipment",
+            "status": "success",
+            "content": [
+              {
+                "id": "SHIP-1002",
+                "order_id": "ORD-1002",
+                "carrier": "FedEx",
+                "tracking_number": "449044301542",
+                "status": "delivered",
+                "shipped_at": "2026-08-26T11:00:00Z",
+                "delivered_at": "2026-08-29T11:20:00Z",
+                "signed_by": null,
+                "shipping_address": {
+                  "line1": "880 Harrison St",
+                  "city": "San Francisco",
+                  "state": "CA",
+                  "postal_code": "94107",
+                  "country": "US"
+                },
+                "created_at": "2026-08-26T10:00:00Z",
+                "events": [
+                  {
+                    "id": "EVT-1002-1",
+                    "shipment_id": "SHIP-1002",
+                    "timestamp": "2026-08-26T11:00:00Z",
+                    "status": "label_created",
+                    "location": "Springfield, OR",
+                    "details": "Shipping label created with alternate destination 880 Harrison St, San Francisco, CA",
+                    "created_at": "2026-08-26T11:00:00Z"
+                  },
+                  {
+                    "id": "EVT-1002-2",
+                    "shipment_id": "SHIP-1002",
+                    "timestamp": "2026-08-27T18:30:00Z",
+                    "status": "in_transit",
+                    "location": "Oakland, CA",
+                    "details": "In transit at FedEx sorting facility",
+                    "created_at": "2026-08-27T18:30:00Z"
+                  },
+                  {
+                    "id": "EVT-1002-3",
+                    "shipment_id": "SHIP-1002",
+                    "timestamp": "2026-08-29T11:20:00Z",
+                    "status": "delivered",
+                    "location": "San Francisco, CA",
+                    "details": "Delivered - Left at front door, no signature required",
+                    "created_at": "2026-08-29T11:20:00Z"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "collector": "communications",
+            "tool": "control_communications",
+            "status": "success",
+            "content": [
+              {
+                "customer_id": "CUST-002",
+                "order_id": "ORD-1002",
+                "messages": [
+                  {
+                    "id": "MSG-003",
+                    "customer_id": "CUST-002",
+                    "order_id": "ORD-1002",
+                    "direction": "inbound",
+                    "channel": "email",
+                    "subject": "Address change for ORD-1002",
+                    "body": "Hello, I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead? Thanks! Jessica Lee",
+                    "has_shipping_change": 1,
+                    "created_at": "2026-08-25T14:10:00Z"
+                  },
+                  {
+                    "id": "MSG-004",
+                    "customer_id": "CUST-002",
+                    "order_id": "ORD-1002",
+                    "direction": "outbound",
+                    "channel": "email",
+                    "subject": "Re: Address change for ORD-1002",
+                    "body": "Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!",
+                    "has_shipping_change": 1,
+                    "created_at": "2026-08-25T15:00:00Z"
+                  }
+                ],
+                "message_count": 2,
+                "has_cancellation_request": false,
+                "has_address_change_request": true,
+                "has_inquiry": true
+              }
+            ]
+          },
+          {
+            "collector": "history_and_policy",
+            "tool": "control_history_and_policy",
+            "status": "success",
+            "content": [
+              {
+                "policy": {
+                  "id": "POL-001",
+                  "merchant_name": "Acme Specialty Goods",
+                  "approval_amount_cents": 20000,
+                  "min_win_probability_to_fight": 0.5,
+                  "always_concede_under_cents": 1500,
+                  "vip_concede_max_cents": 50000,
+                  "silence_action": "fight",
+                  "created_at": "2026-01-01T00:00:00Z",
+                  "updated_at": "2026-01-01T00:00:00Z"
+                },
+                "customer_tier": "repeat",
+                "order_count": 5,
+                "lifetime_value_cents": 112000,
+                "prior_disputes_count": 1,
+                "prior_orders": [
+                  {
+                    "id": "ORD-1002",
+                    "amount_cents": 34000,
+                    "status": "delivered",
+                    "created_at": "2026-08-25T09:15:00Z"
+                  },
+                  {
+                    "id": "ORD-1011",
+                    "amount_cents": 18000,
+                    "status": "delivered",
+                    "created_at": "2026-07-15T10:00:00Z"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "collector": "dispute",
+            "tool": "control_dispute",
+            "status": "success",
+            "content": [
+              {
+                "id": "dp_S2",
+                "amount_cents": 34000,
+                "currency": "usd",
+                "reason": "fraudulent",
+                "status": "needs_response",
+                "balance_transactions": [
+                  {
+                    "amount": -34000,
+                    "fee": 1500,
+                    "net": -35500,
+                    "currency": "usd"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "collector": "card_checks",
+            "tool": "control_card_checks",
+            "status": "success",
+            "content": [
+              {
+                "address_line1_check": "pass",
+                "address_postal_code_check": "pass",
+                "cvc_check": "pass"
+              }
+            ]
+          }
+        ],
+        "produced_artifacts": []
+      }
+    },
+    {
+      "name": "order_date_is_not_charge_date",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 28,
+        "missing_items": [],
+        "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent.' This satisfies the reason_code_pass criterion. The required_narrative_references list is empty, meaning there are no specific items (such as tracking numbers, ticket identifiers, or other documentation) that the narrative must reference. An empty required list automatically passes the must_cite_pass criterion, as there are no mandatory citations to verify. | All factual claims in the output are supported by the source records. The narrative correctly states: dispute reason 'fraudulent' (matches dispute.reason), amount $340.00 (34000 cents = $340.00), 5 total orders (matches order_count in both order and history_and_policy records), $1,120.00 lifetime value (112000 cents = $1,120.00), and charge date August 25, 2026 (matches order created_at). The strategy.customer_value field 'repeat' matches the customer_value in the order record. The strategy.rationale and strategy.owner_summary contain only prospective recommendations ('Recommend concession', 'review before approval') which are action selections, not factual assertions requiring grounding. No unsupported claims about authorization, possession, policy compliance, completed actions, or invented details are present. | Analyzing the three categories of missing premises:\n\nA. EVENT ABSENCE: No absence claims are present in the factual output fields. The narrative describes what IS in the records (dispute amount, order count, lifetime value, charge date) but makes no claims about the absence of any events, communications, or data.\n\nB. EVENT ORDERING: No event ordering claims are present. The narrative states 'The disputed charge was placed on August 25, 2026' which is a simple event date statement, not a claim that one event occurred before or after another event. No 'before', 'after', 'prior to', or similar chronological relationship is asserted between events.\n\nC. POLICY DISCLOSURE: The fields refund_policy_disclosure and cancellation_policy_disclosure are not present in the factual_output_fields at all. No claims about pre-purchase policy disclosure to the customer are made.\n\nAll three categories pass because no relevant claims of those types exist in the output. The narrative contains only factual descriptions of recorded data (amounts, counts, dates) and strategic recommendations, without asserting event absence, event ordering, or policy disclosure.",
+        "narrative_judge": {
+          "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent.' This satisfies the reason_code_pass criterion. The required_narrative_references list is empty, meaning there are no specific items (such as tracking numbers, ticket identifiers, or other documentation) that the narrative must reference. An empty required list automatically passes the must_cite_pass criterion, as there are no mandatory citations to verify.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "All factual claims in the output are supported by the source records. The narrative correctly states: dispute reason 'fraudulent' (matches dispute.reason), amount $340.00 (34000 cents = $340.00), 5 total orders (matches order_count in both order and history_and_policy records), $1,120.00 lifetime value (112000 cents = $1,120.00), and charge date August 25, 2026 (matches order created_at). The strategy.customer_value field 'repeat' matches the customer_value in the order record. The strategy.rationale and strategy.owner_summary contain only prospective recommendations ('Recommend concession', 'review before approval') which are action selections, not factual assertions requiring grounding. No unsupported claims about authorization, possession, policy compliance, completed actions, or invented details are present.",
+          "no_hallucination_pass": true
+        },
+        "support_judge": {
+          "support_assertions": []
+        },
+        "premise_judge": {
+          "explanation": "Analyzing the three categories of missing premises:\n\nA. EVENT ABSENCE: No absence claims are present in the factual output fields. The narrative describes what IS in the records (dispute amount, order count, lifetime value, charge date) but makes no claims about the absence of any events, communications, or data.\n\nB. EVENT ORDERING: No event ordering claims are present. The narrative states 'The disputed charge was placed on August 25, 2026' which is a simple event date statement, not a claim that one event occurred before or after another event. No 'before', 'after', 'prior to', or similar chronological relationship is asserted between events.\n\nC. POLICY DISCLOSURE: The fields refund_policy_disclosure and cancellation_policy_disclosure are not present in the factual_output_fields at all. No claims about pre-purchase policy disclosure to the customer are made.\n\nAll three categories pass because no relevant claims of those types exist in the output. The narrative contains only factual descriptions of recorded data (amounts, counts, dates) and strategic recommendations, without asserting event absence, event ordering, or policy disclosure.",
+          "event_absence_pass": true,
+          "event_order_pass": true,
+          "policy_disclosure_pass": true
+        },
+        "premise_checks_pass": true,
+        "raw_no_hallucination_pass": true,
+        "support_assertions_pass": true,
+        "support_assertion_errors": [],
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 9699,
+          "outputTokens": 685,
+          "totalTokens": 10384,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value. The disputed charge was placed on August 25, 2026.",
+          "files": []
+        }
+      },
+      "facts": {
+        "source_tool_records": [
+          {
+            "collector": "order",
+            "tool": "control_order",
+            "status": "success",
+            "content": [
+              {
+                "id": "ORD-1002",
+                "customer_id": "CUST-002",
+                "amount_cents": 34000,
+                "currency": "usd",
+                "status": "delivered",
+                "payment_intent_id": "pi_mock_s2_1789405536",
+                "charge_id": "ch_mock_s2_1789405536",
+                "card_brand": "mastercard",
+                "card_last4": "5555",
+                "avs_postal_match": "match",
+                "cvc_match": "match",
+                "shipping_address": {
+                  "line1": "880 Harrison St",
+                  "city": "San Francisco",
+                  "state": "CA",
+                  "postal_code": "94107",
+                  "country": "US"
+                },
+                "billing_address": {
+                  "line1": "742 Evergreen Terrace",
+                  "city": "Springfield",
+                  "state": "OR",
+                  "postal_code": "97477",
+                  "country": "US"
+                },
+                "created_at": "2026-08-25T10:00:00Z",
+                "updated_at": "2026-09-05T18:44:34Z",
+                "items": [
+                  {
+                    "id": "ITEM-1002-1",
+                    "order_id": "ORD-1002",
+                    "product_name": "Ceramic pour-over set",
+                    "sku": "CPS-340",
+                    "quantity": 1,
+                    "unit_price_cents": 34000,
+                    "total_price_cents": 34000,
+                    "created_at": "2026-08-25T09:15:00Z"
+                  }
+                ],
+                "customer_name": "Jessica Lee",
+                "customer_email": "j.lee@example.com",
+                "customer_phone": "+15553456789",
+                "customer_value": "repeat",
+                "order_count": 5,
+                "lifetime_value_cents": 112000
+              }
+            ]
+          },
+          {
+            "collector": "shipment",
+            "tool": "control_shipment",
+            "status": "success",
+            "content": [
+              {
+                "id": "SHIP-1002",
+                "order_id": "ORD-1002",
+                "carrier": "FedEx",
+                "tracking_number": "449044301542",
+                "status": "delivered",
+                "shipped_at": "2026-08-26T11:00:00Z",
+                "delivered_at": "2026-08-29T11:20:00Z",
+                "signed_by": null,
+                "shipping_address": {
+                  "line1": "880 Harrison St",
+                  "city": "San Francisco",
+                  "state": "CA",
+                  "postal_code": "94107",
+                  "country": "US"
+                },
+                "created_at": "2026-08-26T10:00:00Z",
+                "events": [
+                  {
+                    "id": "EVT-1002-1",
+                    "shipment_id": "SHIP-1002",
+                    "timestamp": "2026-08-26T11:00:00Z",
+                    "status": "label_created",
+                    "location": "Springfield, OR",
+                    "details": "Shipping label created with alternate destination 880 Harrison St, San Francisco, CA",
+                    "created_at": "2026-08-26T11:00:00Z"
+                  },
+                  {
+                    "id": "EVT-1002-2",
+                    "shipment_id": "SHIP-1002",
+                    "timestamp": "2026-08-27T18:30:00Z",
+                    "status": "in_transit",
+                    "location": "Oakland, CA",
+                    "details": "In transit at FedEx sorting facility",
+                    "created_at": "2026-08-27T18:30:00Z"
+                  },
+                  {
+                    "id": "EVT-1002-3",
+                    "shipment_id": "SHIP-1002",
+                    "timestamp": "2026-08-29T11:20:00Z",
+                    "status": "delivered",
+                    "location": "San Francisco, CA",
+                    "details": "Delivered - Left at front door, no signature required",
+                    "created_at": "2026-08-29T11:20:00Z"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "collector": "communications",
+            "tool": "control_communications",
+            "status": "success",
+            "content": [
+              {
+                "customer_id": "CUST-002",
+                "order_id": "ORD-1002",
+                "messages": [
+                  {
+                    "id": "MSG-003",
+                    "customer_id": "CUST-002",
+                    "order_id": "ORD-1002",
+                    "direction": "inbound",
+                    "channel": "email",
+                    "subject": "Address change for ORD-1002",
+                    "body": "Hello, I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead? Thanks! Jessica Lee",
+                    "has_shipping_change": 1,
+                    "created_at": "2026-08-25T14:10:00Z"
+                  },
+                  {
+                    "id": "MSG-004",
+                    "customer_id": "CUST-002",
+                    "order_id": "ORD-1002",
+                    "direction": "outbound",
+                    "channel": "email",
+                    "subject": "Re: Address change for ORD-1002",
+                    "body": "Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!",
+                    "has_shipping_change": 1,
+                    "created_at": "2026-08-25T15:00:00Z"
+                  }
+                ],
+                "message_count": 2,
+                "has_cancellation_request": false,
+                "has_address_change_request": true,
+                "has_inquiry": true
+              }
+            ]
+          },
+          {
+            "collector": "history_and_policy",
+            "tool": "control_history_and_policy",
+            "status": "success",
+            "content": [
+              {
+                "policy": {
+                  "id": "POL-001",
+                  "merchant_name": "Acme Specialty Goods",
+                  "approval_amount_cents": 20000,
+                  "min_win_probability_to_fight": 0.5,
+                  "always_concede_under_cents": 1500,
+                  "vip_concede_max_cents": 50000,
+                  "silence_action": "fight",
+                  "created_at": "2026-01-01T00:00:00Z",
+                  "updated_at": "2026-01-01T00:00:00Z"
+                },
+                "customer_tier": "repeat",
+                "order_count": 5,
+                "lifetime_value_cents": 112000,
+                "prior_disputes_count": 1,
+                "prior_orders": [
+                  {
+                    "id": "ORD-1002",
+                    "amount_cents": 34000,
+                    "status": "delivered",
+                    "created_at": "2026-08-25T09:15:00Z"
+                  },
+                  {
+                    "id": "ORD-1011",
+                    "amount_cents": 18000,
+                    "status": "delivered",
+                    "created_at": "2026-07-15T10:00:00Z"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "collector": "dispute",
+            "tool": "control_dispute",
+            "status": "success",
+            "content": [
+              {
+                "id": "dp_S2",
+                "amount_cents": 34000,
+                "currency": "usd",
+                "reason": "fraudulent",
+                "status": "needs_response",
+                "balance_transactions": [
+                  {
+                    "amount": -34000,
+                    "fee": 1500,
+                    "net": -35500,
+                    "currency": "usd"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "collector": "card_checks",
+            "tool": "control_card_checks",
+            "status": "success",
+            "content": [
+              {
+                "address_line1_check": "pass",
+                "address_postal_code_check": "pass",
+                "cvc_check": "pass"
+              }
+            ]
+          }
+        ],
+        "produced_artifacts": []
+      }
+    }
+  ],
+  "selected_controls": [
+    "order_creation_date",
+    "order_date_is_not_charge_date"
+  ],
+  "code_revision": "16c5574",
+  "source_manifest": {
+    "evals/run.py": "a67fed0a46412913f642052b07126c83f9ddb8ec3ecc474c9d829fda5b054233",
+    "evals/check_output_grounding.py": "c9512aae0065544497ece893f0f2c79771e0026080f638e10af3e73b750bdb68"
+  },
+  "completed": true
+}

@@ -10,5 +10,47 @@
     "speech_sha256": "76feeb8a2c3022d616ddf1942320706703fd1369db7c4a290aa0ff07644c39c2",
     "audio_sha256": "d36e5f02bc888c5904a065388c2ffd2edc595f95a8bc5c3dda7eb400dc9c9ad2",
     "source": "reused opening-proof audio"
+  },
+  {
+    "index": 2,
+    "speech_sha256": "1e8b8747aff1584fd14ffb7fbb3f25c26e2a66cdc29b2796c766246aff5b9d1b",
+    "audio_sha256": "28055033c9fc8fd5f259c15cfbddccc911ebc2d699dec9895686df8ac9a05479",
+    "source": "Edge TTS; approved public-intended narration"
+  },
+  {
+    "index": 3,
+    "speech_sha256": "74dfa6c6b13be0ea8872da32731cbf171f4ce72987e732bf212681d2a2ff4b1b",
+    "audio_sha256": "05b9061e4c72bf1bd104c2a40c949f4368f9d6e732444f42007f58c13bdbef21",
+    "source": "Edge TTS; approved public-intended narration"
+  },
+  {
+    "index": 4,
+    "speech_sha256": "d211787c5ebf3fba2e60ac5132b2eae3bc6b3809edeaff2bb0175a766fe810b0",
+    "audio_sha256": "94da1091b7c14d1f383b3f19f9e63e660a69808986c58c8019848ce0d093f59d",
+    "source": "Edge TTS; approved public-intended narration"
+  },
+  {
+    "index": 5,
+    "speech_sha256": "08afbff1ef2c3930d3640024efc146be62a27b15cfe92110d14a6a8cbd9e7fc7",
+    "audio_sha256": "3d2c562403728f4239e4ad974ffeb08042967e44eeaaf8802d04d8f4cd0469d7",
+    "source": "Edge TTS; approved public-intended narration"
+  },
+  {
+    "index": 6,
+    "speech_sha256": "eab692634739d481c00b11aa43ca8f4794d9724c364a0bca9a76b4885c8fe80e",
+    "audio_sha256": "e85431c7f75f0d1150398fb89233072f654880baf74ed4f2b43a76713ccec14c",
+    "source": "Edge TTS; approved public-intended narration"
+  },
+  {
+    "index": 7,
+    "speech_sha256": "9e56400a3ea9bd83a786ca0a42c2b727beea36f984498327e074f817dd7f1061",
+    "audio_sha256": "b7306dd91f80c36393a38e92fd98895f69acacabeb7e23ab3ae215efc9edd68d",
+    "source": "Edge TTS; approved public-intended narration"
+  },
+  {
+    "index": 8,
+    "speech_sha256": "68c61cd20ae27fb157129fc6cdd854c91767daa83e1eed6a849409f86f2cd77a",
+    "audio_sha256": "6320112dd566fdacee6b2a20ea9be7975d87871234aedd5a053dab3f62f1cc47",
+    "source": "Edge TTS; approved public-intended narration"
   }
 ]

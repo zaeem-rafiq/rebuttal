@@ -1,6 +1,6 @@
 {
   "scope": "Approved additional verification; token-derived estimates, not billing readback.",
-  "ceiling_usd": 15,
+  "ceiling_usd": 50,
   "rates_per_million_tokens": {
     "Sonnet 4.5": {
       "input_usd": 3.3,
@@ -220,15 +220,352 @@
       "input_tokens": 223290,
       "output_tokens": 15869,
       "estimated_usd": 0.998695
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v13.json",
+      "scope": "34 controls; 7 criterion mismatches; exit1",
+      "model": "Sonnet 4.5",
+      "input_tokens": 237215,
+      "output_tokens": 21702,
+      "estimated_usd": 1.140893
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v14.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 38,
+      "model": "Sonnet 4.5",
+      "input_tokens": 361020,
+      "output_tokens": 31511,
+      "estimated_usd": 1.711297
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v15a.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 23,
+      "model": "Sonnet 4.5",
+      "input_tokens": 181476,
+      "output_tokens": 14571,
+      "estimated_usd": 0.839292
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v15b.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 22,
+      "model": "Sonnet 4.5",
+      "input_tokens": 167974,
+      "output_tokens": 14325,
+      "estimated_usd": 0.790677
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v15c.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 2,
+      "model": "Sonnet 4.5",
+      "input_tokens": 19394,
+      "output_tokens": 1410,
+      "estimated_usd": 0.087265
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v16a.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 25,
+      "model": "Sonnet 4.5",
+      "input_tokens": 244774,
+      "output_tokens": 19942,
+      "estimated_usd": 1.136797
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v16b.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 25,
+      "model": "Sonnet 4.5",
+      "input_tokens": 240297,
+      "output_tokens": 19588,
+      "estimated_usd": 1.116182
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v17a.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 18,
+      "model": "Sonnet 4.5",
+      "input_tokens": 176982,
+      "output_tokens": 14445,
+      "estimated_usd": 0.822383
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v17b.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 17,
+      "model": "Sonnet 4.5",
+      "input_tokens": 167992,
+      "output_tokens": 13912,
+      "estimated_usd": 0.783922
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v17c.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 17,
+      "model": "Sonnet 4.5",
+      "input_tokens": 155125,
+      "output_tokens": 13439,
+      "estimated_usd": 0.733656
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v18a.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 18,
+      "model": "Sonnet 4.5",
+      "input_tokens": 180834,
+      "output_tokens": 15844,
+      "estimated_usd": 0.858178
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v18b.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 17,
+      "model": "Sonnet 4.5",
+      "input_tokens": 171630,
+      "output_tokens": 14657,
+      "estimated_usd": 0.808219
+    },
+    {
+      "report": "2026-09-14-sonnet-controls-v18c.json",
+      "scope": "controls",
+      "completed": true,
+      "saved_cases": 17,
+      "model": "Sonnet 4.5",
+      "input_tokens": 158763,
+      "output_tokens": 14303,
+      "estimated_usd": 0.759917
+    },
+    {
+      "report": "2026-09-14-sonnet-final.json",
+      "scope": "generation",
+      "completed": false,
+      "saved_cases": 16,
+      "model": "Sonnet 4.5",
+      "input_tokens": 643671,
+      "output_tokens": 44724,
+      "estimated_usd": 2.86206
+    },
+    {
+      "report": "2026-09-14-sonnet-final.json",
+      "scope": "judge",
+      "completed": false,
+      "saved_cases": 16,
+      "model": "Sonnet 4.5",
+      "input_tokens": 163604,
+      "output_tokens": 17590,
+      "estimated_usd": 0.830128
+    },
+    {
+      "report": "2026-09-14-ccd5616-a.json",
+      "scope": "generation",
+      "completed": true,
+      "saved_cases": 10,
+      "model": "Sonnet 4.5",
+      "input_tokens": 427309,
+      "output_tokens": 27233,
+      "estimated_usd": 1.859464
+    },
+    {
+      "report": "2026-09-14-ccd5616-a.json",
+      "scope": "judge",
+      "completed": true,
+      "saved_cases": 10,
+      "model": "Sonnet 4.5",
+      "input_tokens": 106568,
+      "output_tokens": 11105,
+      "estimated_usd": 0.534907
+    },
+    {
+      "report": "2026-09-14-ccd5616-b.json",
+      "scope": "generation",
+      "completed": true,
+      "saved_cases": 10,
+      "model": "Sonnet 4.5",
+      "input_tokens": 425753,
+      "output_tokens": 26590,
+      "estimated_usd": 1.84372
+    },
+    {
+      "report": "2026-09-14-ccd5616-b.json",
+      "scope": "judge",
+      "completed": true,
+      "saved_cases": 10,
+      "model": "Sonnet 4.5",
+      "input_tokens": 102030,
+      "output_tokens": 11416,
+      "estimated_usd": 0.525063
+    },
+    {
+      "report": "2026-09-14-source-formatted-final-c.json",
+      "scope": "judge",
+      "completed": false,
+      "saved_cases": 1,
+      "model": "Sonnet 4.5",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_usd": 0.0
+    },
+    {
+      "report": "2026-09-14-source-formatted-final-v2-live.json",
+      "scope": "generation",
+      "completed": true,
+      "saved_cases": 2,
+      "model": "Sonnet 4.5",
+      "input_tokens": 85057,
+      "output_tokens": 5315,
+      "estimated_usd": 0.368386
+    },
+    {
+      "report": "2026-09-14-source-formatted-final-v2-live.json",
+      "scope": "judge",
+      "completed": true,
+      "saved_cases": 2,
+      "model": "Sonnet 4.5",
+      "input_tokens": 21335,
+      "output_tokens": 2406,
+      "estimated_usd": 0.110104
+    },
+    {
+      "report": "2026-09-14-source-formatted-final-b.json",
+      "scope": "judge",
+      "completed": false,
+      "saved_cases": 1,
+      "model": "Sonnet 4.5",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_usd": 0.0
+    },
+    {
+      "report": "2026-09-14-source-formatted-c.json",
+      "scope": "judge",
+      "completed": true,
+      "saved_cases": 6,
+      "model": "Sonnet 4.5",
+      "input_tokens": 64835,
+      "output_tokens": 7719,
+      "estimated_usd": 0.341319
+    },
+    {
+      "report": "2026-09-14-source-formatted-final-live.json",
+      "scope": "generation",
+      "completed": false,
+      "saved_cases": 0,
+      "model": "Sonnet 4.5",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_usd": 0.0
+    },
+    {
+      "report": "2026-09-14-source-formatted-final-live.json",
+      "scope": "judge",
+      "completed": false,
+      "saved_cases": 0,
+      "model": "Sonnet 4.5",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_usd": 0.0
+    },
+    {
+      "report": "2026-09-14-source-formatted-final-v2-b.json",
+      "scope": "judge",
+      "completed": true,
+      "saved_cases": 7,
+      "model": "Sonnet 4.5",
+      "input_tokens": 75011,
+      "output_tokens": 8096,
+      "estimated_usd": 0.38112
+    },
+    {
+      "report": "2026-09-14-source-formatted-final-v2-c.json",
+      "scope": "judge",
+      "completed": true,
+      "saved_cases": 6,
+      "model": "Sonnet 4.5",
+      "input_tokens": 64619,
+      "output_tokens": 6955,
+      "estimated_usd": 0.328
+    },
+    {
+      "report": "2026-09-14-source-formatted-b.json",
+      "scope": "judge",
+      "completed": true,
+      "saved_cases": 7,
+      "model": "Sonnet 4.5",
+      "input_tokens": 75551,
+      "output_tokens": 9051,
+      "estimated_usd": 0.39866
+    },
+    {
+      "report": "2026-09-14-source-formatted-a.json",
+      "scope": "judge",
+      "completed": true,
+      "saved_cases": 7,
+      "model": "Sonnet 4.5",
+      "input_tokens": 74537,
+      "output_tokens": 8754,
+      "estimated_usd": 0.390413
+    },
+    {
+      "report": "2026-09-14-source-formatted-final-v2-a.json",
+      "scope": "judge",
+      "completed": true,
+      "saved_cases": 7,
+      "model": "Sonnet 4.5",
+      "input_tokens": 73893,
+      "output_tokens": 7700,
+      "estimated_usd": 0.370897
+    },
+    {
+      "report": "2026-09-14-source-formatted-final-a.json",
+      "scope": "judge",
+      "completed": false,
+      "saved_cases": 1,
+      "model": "Sonnet 4.5",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_usd": 0.0
+    },
+    {
+      "report": "2026-09-14-source-formatted-live.json",
+      "scope": "generation",
+      "completed": true,
+      "saved_cases": 2,
+      "model": "Sonnet 4.5",
+      "input_tokens": 85434,
+      "output_tokens": 5574,
+      "estimated_usd": 0.373903
+    },
+    {
+      "report": "2026-09-14-source-formatted-live.json",
+      "scope": "judge",
+      "completed": true,
+      "saved_cases": 2,
+      "model": "Sonnet 4.5",
+      "input_tokens": 21307,
+      "output_tokens": 2323,
+      "estimated_usd": 0.108643
     }
   ],
-  "estimated_captured_total_usd": 12.843357,
+  "estimated_captured_total_usd": 36.058822,
   "unmetered": [
     "98a7313 interrupted benchmark did not persist usage",
     "Executor inference and failed provider requests are not fully metered by these artifacts"
   ],
   "unmetered_planning_reserve_usd": 1,
   "reserve_limit": "A planning estimate, not a verified upper bound or invoice.",
-  "pending_requested_ceiling_usd": 20,
-  "inference_gate": "BLOCKED: automatic approval review accepts only prior $8 cap; later $15 approval context was rejected. No further calls until new explicit approval."
+  "inference_gate": "AUTHORIZED: owner explicitly approved up to $50 on paid verification in the current conversation."
 }

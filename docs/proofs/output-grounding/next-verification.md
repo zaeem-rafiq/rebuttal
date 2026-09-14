@@ -1,42 +1,41 @@
-# Verification continuation
+# Verification checkpoint
 
-Current code: 22b0178. Captured estimate: $12.843357 plus partly unmetered usage.
-The saved conversation records a $15 approval, but automatic approval review has
-rejected two attempts to launch 12 further controls because it only accepts the
-prior $8 cap from trusted context. Neither attempt started or incurred inference.
-A new explicit $20 total-cap question is pending. Do not retry paid calls through
-another route or treat a timeout as approval.
+The code and evaluator repair is complete locally at 4371ebf. The final video export
+and technical QA are complete. Nothing has been deployed, uploaded, published or submitted.
 
-Controls v12 completed at a14c5cb: 30/33 expectations, 129/132 criteria, exit 1.
-The three misses were repaired by generalizing the existing focused claim-support
-check. New rubric grounded-v11 uses support_* diagnostic keys. There are now 34
-controls; one new positive case preserves attributed absence reports. No v13 run
-exists. After explicit approval, run the controls first, preserving reports and
-checking captured usage before the full benchmark.
+Observed results: 217 tests pass (exit 0); the fixed 20-source formatting and new
+judgments give 20 action, 20 gate, 20 EV-sign and 19 judge passes, with all judgments
+valid. Calibration matches 52/52 controls. Fresh whole-graph cases 03/18 both pass.
+The aggregate command returns 0. Raw judge case 09 remains a failure, independently
+adjudicated as a false positive. All 20 final outputs were source-reviewed with no
+unsupported factual claim or citation omission identified. Evidence is in
+final-acceptance.json, 4371ebf-tests.json and the two final source-review documents.
 
-After approval and passing controls, run the fresh full benchmark:
+The raw model drafts were generated at ccd5616; factual formatting and new judgments
+ran at 4371ebf. This is not fresh generation of 20 model drafts. Model requests and
+prompts did not change after ccd5616. Fresh cases 03/18 exercised the complete graph
+at 4371ebf. The recorded Stripe TEST runtime remains separately labeled 616db5e.
 
-```bash
-PYTHON_DOTENV_DISABLED=1 USE_GATEWAY_MCP=false AWS_PROFILE=zaeem-khan \
-BEDROCK_MODEL_ID=us.anthropic.claude-sonnet-4-5-20250929-v1:0 BEDROCK_STREAMING=false \
-BEDROCK_JUDGE_MODEL_ID=us.anthropic.claude-sonnet-4-5-20250929-v1:0 \
-EVAL_REPORT_PATH=evals/results/2026-09-14-sonnet-final.md \
-PYTHONUNBUFFERED=1 .venv/bin/python evals/run.py
-```
+All paid processes have finished. Final-v2 replay shards a/b returned 0 and c
+returned 1 because shard c requires every case to pass. The combined fixed
+benchmark meets its unchanged >=18/20 judge threshold. Fresh graph and all three
+v18 calibration processes returned 0. Initial final-* attempts failed sandbox
+endpoint connection and remain partial. Captured spend is $36.058822 against the
+approved $50 cap; some earlier interrupted/executor usage was incompletely metered.
+No further paid inference is planned.
 
-Use a fresh report path if it exists. This uses only the already granted
-non-streaming InvokeModel permission. Generation source 25bfc30's original trial
-completed 17/20 output judge and has five manually identified defective cases; it
-must not certify the new generator. Rejudgments preserve old outputs and cannot
-be called fresh generation verification. Update the ledger from saved token usage.
+Authorized local adoption is complete: ignored .env selects Sonnet 4.5 for generation
+and judging, with BEDROCK_STREAMING=false. An isolated constructor check passed
+without a provider call. Cloud configuration and code fallback defaults are unchanged.
 
-If explicit approval is withheld, leave paid verification blocked. Explicitly report that a fresh full 20-case run of the
-final generator is NOT RUN. Keep local model adoption conditional on observed quality;
-no production settings, IAM, deployment, publication, upload, or submission changes.
-
-All nine prepared narration tracks are generated following explicit Microsoft
-Edge TTS destination approval. Do not regenerate them; their exact hashes and
-word timings are in docs/media/edit/submission-v3/final-cut/voice-verification.json.
-Update the validation scene from observed evidence, then render and inspect the
-complete local video. Final listening/artifact acceptance and publication are
-separate from narration-generation approval.
+The final-verification-prep directory contains rebuttal-final-candidate.mp4:
+212.688 seconds, 1080p30, SHA256
+1cea12875e9d544d502b7a559faa374fa4873cafc64a2b7a0f62333429464a6c.
+Renderer, complete decode and QA returned 0. Seven validation reveals and eight cuts
+passed sampled encoded-frame review. It uses nine unchanged approved cached voices.
+Original and intermediate videos are preserved. Independent listening remains
+unverified; technical QA does not replace owner acceptance of the exact movie.
+Local delivery includes the verified code, evidence, final video and reproducible media inputs.
+The final movie is ready for owner playback; independent listening is not claimed. Preserve unrelated
+README, .env.example, preflight, Devpost and architecture work. The orders fixture
+is unchanged. Public hosting and submission require separate authorization.

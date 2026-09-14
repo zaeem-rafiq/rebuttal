@@ -1,0 +1,73 @@
+{
+  "video": "rebuttal-final-candidate.mp4",
+  "sha256": "1cea12875e9d544d502b7a559faa374fa4873cafc64a2b7a0f62333429464a6c",
+  "duration_seconds": 212.688,
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "fps": "30/1",
+  "audio": {
+    "codec_name": "aac",
+    "sample_rate": "48000",
+    "channels": 2
+  },
+  "full_decode_exit_status": 0,
+  "scene_and_voice_hashes_match_timeline": true,
+  "cut_audio_checks": [
+    {
+      "seconds": 26.966666666666665,
+      "peak_dbfs_within_30ms": -132.59
+    },
+    {
+      "seconds": 49.93333333333333,
+      "peak_dbfs_within_30ms": -129.44
+    },
+    {
+      "seconds": 70.03333333333333,
+      "peak_dbfs_within_30ms": -130.12
+    },
+    {
+      "seconds": 93.33333333333333,
+      "peak_dbfs_within_30ms": -129.11
+    },
+    {
+      "seconds": 115.73333333333332,
+      "peak_dbfs_within_30ms": -132.41
+    },
+    {
+      "seconds": 141.76666666666665,
+      "peak_dbfs_within_30ms": -138.25
+    },
+    {
+      "seconds": 163.63333333333333,
+      "peak_dbfs_within_30ms": -131.25
+    },
+    {
+      "seconds": 188.46666666666667,
+      "peak_dbfs_within_30ms": -134.92
+    }
+  ],
+  "frame_review": {
+    "status": "PASSED sampled encoded-frame inspection",
+    "validation_rows": 7,
+    "cuts": 8,
+    "cut_offsets_seconds": [
+      -0.1,
+      0.1,
+      1.5
+    ],
+    "bookends_and_midpoints": 7,
+    "observations": "All seven validation rows, tags, source note, and captions fit. No sampled hidden captions, black flashes, or incorrect overlay frames. Both validation-adjacent cuts inspected.",
+    "limitations": "This is sampled frame review, not continuous audiovisual playback or listening acceptance."
+  },
+  "independent_listening": "NOT VERIFIED",
+  "limitation": "Provider word timings are not independent ASR; technical QA is not listening acceptance.",
+  "render_exit_status": 0,
+  "qa_command_exit_status": 0,
+  "validation_full_panel_hold_after_last_fade_seconds": 5.709,
+  "approved_narration_unchanged": true,
+  "other_eight_scenes_unchanged": true,
+  "prior_review_candidate_and_original_video_unchanged": true,
+  "source_acceptance_pass": true
+}

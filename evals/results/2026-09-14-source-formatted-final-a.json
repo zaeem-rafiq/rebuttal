@@ -1,0 +1,552 @@
+{
+  "scope": "Final deterministic formatting and new judgments of captured model outputs; no new model generation.",
+  "source_reports": {
+    "evals/results/2026-09-14-ccd5616-a.json": "3a8176fc40d7c9273d26d33ec7640bddb1dce7ee190a9c5a9feab533a2972c83",
+    "evals/results/2026-09-14-ccd5616-b.json": "79c2bfa90606e0aca0d700fafac8eded41c5e9bb09a70994d3ccb3318dc93ae5"
+  },
+  "generation_revision": "ccd5616",
+  "processing_revision": "4371ebffbb2467317477d6093e96d9f24dde9fcf",
+  "processor_sha256": "f9af3cf8510fe9ccb4693fde049ceb8bf6aff16af5931058ac04114973a8c602",
+  "evaluator_sha256": "eb236bd729e2609d5802ec723b90994235babc9bd7335988393b4f7c7bce18db",
+  "rubric": "grounded-v17",
+  "selected_cases": [
+    "case_01",
+    "case_04",
+    "case_07",
+    "case_10",
+    "case_13",
+    "case_16",
+    "case_19"
+  ],
+  "completed": false,
+  "results": [
+    {
+      "case_id": "case_01",
+      "reason": "product_not_received",
+      "amount_cents": 7500,
+      "expected_action": "fight",
+      "actual_action": "fight",
+      "action_match": true,
+      "expected_gate": false,
+      "computed_gate": false,
+      "gate_match": true,
+      "judge_pass": false,
+      "judge_details": {
+        "overall_pass": false,
+        "judge_valid": false,
+        "reason_code_pass": false,
+        "must_cite_pass": false,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 68,
+        "missing_items": [],
+        "explanation": "Judge unavailable or invalid response (EndpointConnectionError) | Judge unavailable or invalid response (EndpointConnectionError) | Judge unavailable or invalid response (EndpointConnectionError) | Judge unavailable or invalid response (EndpointConnectionError) | Support judge support_assertions must be a list | Premise checks did not pass: event_absence_pass, event_order_pass, policy_disclosure_pass",
+        "narrative_judge": {
+          "explanation": "Judge unavailable or invalid response (EndpointConnectionError)",
+          "error_type": "EndpointConnectionError",
+          "error_code": null
+        },
+        "grounding_judge": {
+          "explanation": "Judge unavailable or invalid response (EndpointConnectionError)",
+          "error_type": "EndpointConnectionError",
+          "error_code": null
+        },
+        "support_judge": {
+          "explanation": "Judge unavailable or invalid response (EndpointConnectionError)",
+          "error_type": "EndpointConnectionError",
+          "error_code": null
+        },
+        "premise_judge": {
+          "explanation": "Judge unavailable or invalid response (EndpointConnectionError)",
+          "error_type": "EndpointConnectionError",
+          "error_code": null
+        },
+        "premise_checks_pass": false,
+        "raw_no_hallucination_pass": null,
+        "support_assertions_pass": false,
+        "support_assertion_errors": [
+          "Support judge support_assertions must be a list"
+        ],
+        "artifact_pass": true,
+        "physical_fields_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {}
+      },
+      "ev_cents": 0,
+      "ev_sign": true,
+      "overall_pass": false,
+      "win_probability": 0.85,
+      "narrative": "Dispute Reason: product_not_received\nRecommendation: submit evidence for dp_eval_01 ($75.00).\nOrder ORD-EVAL-001; created 2026-08-01T00:00:00Z; recorded status: fulfilled.\nCarrier shipment record: carrier: UPS; tracking: 1Z99901; recorded status: delivered; shipped: 2026-08-20T10:00:00Z; delivered: 2026-08-23T14:30:00Z; signature or delivery notation: M. Taylor.\nRecorded card checks: AVS address line 1: pass; AVS postal code: pass; CVC: pass.\nMerchant records: customer tier: new; 1 total orders; LTV: $75.00.\nNo pre-dispute customer communications exist in merchant records.",
+      "rationale": "Recommend submit evidence. Recorded dispute status: needs response; amount: $75.00. customer tier: new; 1 total orders; LTV: $75.00.",
+      "supporting_output": {
+        "strategy": {
+          "action": "fight",
+          "win_probability": 0.85,
+          "expected_value_cents": 0,
+          "customer_value": "new",
+          "evidence_strength": "strong",
+          "rationale": "Recommend submit evidence. Recorded dispute status: needs response; amount: $75.00. customer tier: new; 1 total orders; LTV: $75.00.",
+          "owner_summary": "Recommend submit evidence for $75.00. Recorded status: needs response; customer tier: new; 0 communications record(s)."
+        },
+        "evidence_packet": {
+          "customer_name": "Michael Taylor",
+          "customer_email_address": "m.taylor@example.com",
+          "billing_address": "101 Pine St, Austin, TX, 78701, US",
+          "shipping_address": "101 Pine St, Austin, TX, 78701, US",
+          "shipping_carrier": "UPS",
+          "shipping_tracking_number": "1Z99901",
+          "shipping_date": "2026-08-20",
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: product_not_received\nRecommendation: submit evidence for dp_eval_01 ($75.00).\nOrder ORD-EVAL-001; created 2026-08-01T00:00:00Z; recorded status: fulfilled.\nCarrier shipment record: carrier: UPS; tracking: 1Z99901; recorded status: delivered; shipped: 2026-08-20T10:00:00Z; delivered: 2026-08-23T14:30:00Z; signature or delivery notation: M. Taylor.\nRecorded card checks: AVS address line 1: pass; AVS postal code: pass; CVC: pass.\nMerchant records: customer tier: new; 1 total orders; LTV: $75.00.\nNo pre-dispute customer communications exist in merchant records.",
+          "files": []
+        }
+      },
+      "case_facts": {
+        "source_tool_records": [
+          {
+            "collector": "intake",
+            "tool": "get_dispute",
+            "tool_use_id": "tooluse_Lck0RtHdDaxLRyRana5pRP",
+            "arguments": {
+              "dispute_id": "dp_eval_01"
+            },
+            "status": "success",
+            "content": [
+              {
+                "id": "dp_eval_01",
+                "amount": 7500,
+                "currency": "usd",
+                "reason": "product_not_received",
+                "status": "needs_response",
+                "evidence_due_by": "2026-09-20T00:00:00Z",
+                "charge": "ch_case_01",
+                "payment_intent": "pi_case_01",
+                "customer": "CUST-EVAL-001",
+                "customer_id": "CUST-EVAL-001",
+                "metadata": {
+                  "order_id": "ORD-EVAL-001",
+                  "customer_id": "CUST-EVAL-001"
+                }
+              }
+            ]
+          },
+          {
+            "collector": "intake",
+            "tool": "get_charge_context",
+            "tool_use_id": "tooluse_PegfbSUyD6FvlvhMUmt4sC",
+            "arguments": {
+              "charge_id_or_payment_intent": "ch_case_01"
+            },
+            "status": "success",
+            "content": [
+              {
+                "amount": 7500,
+                "currency": "usd",
+                "card_checks": {
+                  "address_line1_check": "pass",
+                  "address_postal_code_check": "pass",
+                  "cvc_check": "pass"
+                },
+                "billing_details": {
+                  "name": "Michael Taylor",
+                  "email": "m.taylor@example.com"
+                },
+                "metadata": {
+                  "order_id": "ORD-EVAL-001",
+                  "customer_id": "CUST-EVAL-001"
+                },
+                "customer": "CUST-EVAL-001",
+                "customer_id": "CUST-EVAL-001"
+              }
+            ]
+          },
+          {
+            "collector": "orders",
+            "tool": "get_order_evidence",
+            "tool_use_id": "tooluse_NO5PKveRK5P1l3ULJOK68D",
+            "arguments": {
+              "order_id": "ORD-EVAL-001"
+            },
+            "status": "success",
+            "content": [
+              {
+                "id": "ORD-EVAL-001",
+                "customer_id": "CUST-EVAL-001",
+                "amount_cents": 7500,
+                "currency": "usd",
+                "status": "fulfilled",
+                "shipping_address": {
+                  "line1": "101 Pine St",
+                  "city": "Austin",
+                  "state": "TX",
+                  "postal_code": "78701",
+                  "country": "US"
+                },
+                "billing_address": {
+                  "line1": "101 Pine St",
+                  "city": "Austin",
+                  "state": "TX",
+                  "postal_code": "78701",
+                  "country": "US"
+                },
+                "created_at": "2026-08-01T00:00:00Z",
+                "items": [
+                  {
+                    "id": "item_0",
+                    "order_id": "ORD-EVAL-001",
+                    "name": "Wireless Charging Stand",
+                    "quantity": 1,
+                    "price_cents": 7500
+                  }
+                ],
+                "customer_name": "Michael Taylor",
+                "customer_email": "m.taylor@example.com",
+                "customer_phone": "+1555010001",
+                "customer_value": "new",
+                "order_count": 1,
+                "lifetime_value_cents": 7500
+              }
+            ]
+          },
+          {
+            "collector": "shipping",
+            "tool": "get_shipping_evidence",
+            "tool_use_id": "tooluse_3Nywb7F3Jdc951rwUaRGZE",
+            "arguments": {
+              "order_id": "ORD-EVAL-001"
+            },
+            "status": "success",
+            "content": [
+              {
+                "id": "shp_eval_01",
+                "order_id": "ORD-EVAL-001",
+                "carrier": "UPS",
+                "tracking_number": "1Z99901",
+                "status": "delivered",
+                "shipped_at": "2026-08-20T10:00:00Z",
+                "delivered_at": "2026-08-23T14:30:00Z",
+                "signed_by": "M. Taylor",
+                "shipping_address": {
+                  "line1": "101 Pine St",
+                  "city": "Austin",
+                  "state": "TX",
+                  "postal_code": "78701",
+                  "country": "US"
+                },
+                "events": [
+                  {
+                    "id": "ev_0",
+                    "shipment_id": "shp_eval_01",
+                    "timestamp": "2026-08-20T10:00:00Z",
+                    "status": "shipped",
+                    "location": "Dallas, TX"
+                  },
+                  {
+                    "id": "ev_1",
+                    "shipment_id": "shp_eval_01",
+                    "timestamp": "2026-08-23T14:30:00Z",
+                    "status": "delivered",
+                    "location": "Austin, TX"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "collector": "comms",
+            "tool": "get_customer_comms",
+            "tool_use_id": "tooluse_hSmMO8aprHcyNDv1ri29Si",
+            "arguments": {
+              "customer_id": "CUST-EVAL-001",
+              "order_id": "ORD-EVAL-001"
+            },
+            "status": "success",
+            "content": [
+              {
+                "customer_id": "CUST-EVAL-001",
+                "order_id": "ORD-EVAL-001",
+                "messages": [],
+                "message_count": 0,
+                "has_cancellation_request": false,
+                "has_address_change_request": false,
+                "has_inquiry": false
+              }
+            ]
+          },
+          {
+            "collector": "history",
+            "tool": "get_merchant_history_and_policy",
+            "tool_use_id": "tooluse_85yb22LYd9k7khF55dZSiY",
+            "arguments": {
+              "customer_id": "CUST-EVAL-001"
+            },
+            "status": "success",
+            "content": [
+              {
+                "policy": {
+                  "id": "default",
+                  "approval_amount_cents": 20000,
+                  "min_win_probability_to_fight": 0.5,
+                  "always_concede_under_cents": 1500,
+                  "vip_concede_max_cents": 50000,
+                  "silence_action": "fight",
+                  "return_policy": "30-day return policy; customer must initiate return through merchant support prior to dispute"
+                },
+                "customer_tier": "new",
+                "order_count": 1,
+                "lifetime_value_cents": 7500,
+                "prior_disputes_count": 0,
+                "prior_orders": [
+                  {
+                    "id": "ORD-EVAL-001",
+                    "amount_cents": 7500,
+                    "status": "fulfilled",
+                    "created_at": "2026-08-01T00:00:00Z"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "produced_artifacts": []
+      },
+      "fixture_context": {
+        "dispute": {
+          "id": "dp_eval_01",
+          "amount": {
+            "cents": 7500,
+            "dollars": "$75.00",
+            "dollars_short": "$75",
+            "dollars_formatted": "$75.00"
+          },
+          "reason": "product_not_received",
+          "status": "needs_response",
+          "evidence_due_by": {
+            "iso": "2026-09-20T00:00:00Z",
+            "utc_formatted": "September 20, 2026 at 12:00 AM UTC",
+            "date_long": "September 20, 2026",
+            "date_short": "Sep 20, 2026",
+            "time_utc": "12:00 AM UTC"
+          }
+        },
+        "customer": {
+          "id": "CUST-EVAL-001",
+          "name": "Michael Taylor",
+          "email": "m.taylor@example.com",
+          "phone": "+1555010001",
+          "customer_tier": "new",
+          "order_count": 1,
+          "lifetime_value": {
+            "cents": 7500,
+            "dollars": "$75.00",
+            "dollars_short": "$75",
+            "dollars_formatted": "$75.00"
+          },
+          "prior_disputes_count": 0
+        },
+        "merchant_policy": {
+          "approval_amount_cents": 20000,
+          "always_concede_under_cents": 1500,
+          "vip_concede_max_cents": 50000,
+          "approval_amount": {
+            "cents": 20000,
+            "dollars": "$200.00",
+            "dollars_short": "$200",
+            "dollars_formatted": "$200.00"
+          },
+          "min_win_probability_to_fight": 0.5,
+          "always_concede_under": {
+            "cents": 1500,
+            "dollars": "$15.00",
+            "dollars_short": "$15",
+            "dollars_formatted": "$15.00"
+          },
+          "vip_concede_max": {
+            "cents": 50000,
+            "dollars": "$500.00",
+            "dollars_short": "$500",
+            "dollars_formatted": "$500.00"
+          },
+          "silence_action": "fight",
+          "return_policy": "30-day return policy; customer must initiate return through merchant support prior to dispute"
+        },
+        "order": {
+          "id": "ORD-EVAL-001",
+          "amount": {
+            "cents": 7500,
+            "dollars": "$75.00",
+            "dollars_short": "$75",
+            "dollars_formatted": "$75.00"
+          },
+          "created_at": {
+            "iso": "2026-08-01T00:00:00Z",
+            "utc_formatted": "August 1, 2026 at 12:00 AM UTC",
+            "date_long": "August 1, 2026",
+            "date_short": "Aug 1, 2026",
+            "time_utc": "12:00 AM UTC"
+          },
+          "status": "fulfilled",
+          "items": [
+            {
+              "name": "Wireless Charging Stand",
+              "quantity": 1,
+              "price_cents": 7500
+            }
+          ],
+          "shipping_address": {
+            "line1": "101 Pine St",
+            "city": "Austin",
+            "state": "TX",
+            "postal_code": "78701",
+            "country": "US"
+          },
+          "billing_address": {
+            "line1": "101 Pine St",
+            "city": "Austin",
+            "state": "TX",
+            "postal_code": "78701",
+            "country": "US"
+          }
+        },
+        "shipment": {
+          "id": "shp_eval_01",
+          "carrier": "UPS",
+          "tracking_number": "1Z99901",
+          "status": "delivered",
+          "shipped_at": {
+            "iso": "2026-08-20T10:00:00Z",
+            "utc_formatted": "August 20, 2026 at 10:00 AM UTC",
+            "date_long": "August 20, 2026",
+            "date_short": "Aug 20, 2026",
+            "time_utc": "10:00 AM UTC"
+          },
+          "delivered_at": {
+            "iso": "2026-08-23T14:30:00Z",
+            "utc_formatted": "August 23, 2026 at 2:30 PM UTC",
+            "date_long": "August 23, 2026",
+            "date_short": "Aug 23, 2026",
+            "time_utc": "2:30 PM UTC"
+          },
+          "signed_by": "M. Taylor",
+          "shipping_address": {
+            "line1": "101 Pine St",
+            "city": "Austin",
+            "state": "TX",
+            "postal_code": "78701",
+            "country": "US"
+          },
+          "events": [
+            {
+              "timestamp": "2026-08-20T10:00:00Z",
+              "status": "shipped",
+              "location": "Dallas, TX"
+            },
+            {
+              "timestamp": "2026-08-23T14:30:00Z",
+              "status": "delivered",
+              "location": "Austin, TX"
+            }
+          ]
+        },
+        "communications": [],
+        "charge": {
+          "amount": 7500,
+          "currency": "usd",
+          "card_checks": {
+            "address_line1_check": "pass",
+            "address_postal_code_check": "pass",
+            "cvc_check": "pass"
+          },
+          "billing_details": {
+            "name": "Michael Taylor",
+            "email": "m.taylor@example.com"
+          },
+          "metadata": {
+            "order_id": "ORD-EVAL-001",
+            "customer_id": "CUST-EVAL-001"
+          },
+          "payment_intent": "pi_case_01",
+          "charge_id": "ch_case_01"
+        }
+      },
+      "pipeline_error": null,
+      "raw_generated_output": {
+        "strategy": {
+          "action": "fight",
+          "win_probability": 0.85,
+          "expected_value_cents": 0,
+          "customer_value": "new",
+          "evidence_strength": "strong",
+          "rationale": "Recommend fighting this product_not_received dispute. UPS tracking 1Z99901 confirms delivery on 2026-08-23 to 101 Pine St, Austin, TX 78701 (the billing address) with signature by M. Taylor. Card checks (AVS line1, postal code, CVC) all passed. No communications records show delivery issues or non-receipt claims.",
+          "owner_summary": "Recommend fight. UPS tracking 1Z99901 confirms delivery on 2026-08-23 to the billing address (101 Pine St, Austin, TX 78701) with signature by M. Taylor. Card verification passed (AVS line1, postal code, CVC). No communications records show delivery issues."
+        },
+        "evidence_packet": {
+          "customer_name": "Michael Taylor",
+          "customer_email_address": "m.taylor@example.com",
+          "billing_address": "101 Pine St, Austin, TX 78701, US",
+          "shipping_address": "101 Pine St, Austin, TX 78701, US",
+          "shipping_carrier": "UPS",
+          "shipping_tracking_number": "1Z99901",
+          "shipping_date": "2026-08-20",
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: product_not_received\n\nThe merchant disputes this product_not_received claim. UPS tracking 1Z99901 confirms delivered status on 2026-08-23 at 14:30 UTC to 101 Pine St, Austin, TX 78701, signed by M. Taylor. The shipment was dispatched from Dallas, TX on 2026-08-20. The delivery address matches the billing address on file.\n\nCard verification checks passed: AVS line1 check passed, AVS postal code check passed, and CVC check passed.\n\nNo pre-dispute customer communications exist in merchant records.\n\nOrder ORD-EVAL-001 for Wireless Charging Stand ($75.00) was created 2026-08-01 and fulfilled. Customer Michael Taylor is a new customer with 1 total order and $75.00 lifetime value.\n\nRecommendation: Submit evidence to contest dispute.",
+          "files": []
+        }
+      },
+      "original_judge_details": {
+        "overall_pass": true,
+        "judge_valid": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 107,
+        "missing_items": [],
+        "explanation": "This narrative is being evaluated for two criteria: (1) whether it identifies or discusses the required dispute reason 'product_not_received', and (2) whether it meaningfully references all three required items: '1Z99901', 'M. Taylor', and 'delivered'.\n\nFor reason_code_pass: The narrative explicitly states 'Dispute Reason: product_not_received' in the opening line and discusses this dispute type throughout by addressing delivery confirmation and tracking details. This clearly satisfies the requirement.\n\nFor must_cite_pass: All three required references appear meaningfully in the narrative:\n- '1Z99901' appears as 'UPS tracking 1Z99901' when discussing delivery confirmation\n- 'M. Taylor' appears as 'signed by M. Taylor' in the tracking confirmation context\n- 'delivered' appears as 'confirms delivered status' when describing the tracking outcome\n\nEach required item is referenced in a substantive way that contributes to the dispute response. The narrative integrates these elements naturally into the evidence presentation. | All factual claims in the output are supported by the source records. The narrative correctly states the dispute reason (product_not_received from dispute record), UPS tracking number 1Z99901 with delivered status on 2026-08-23 at 14:30 UTC (from shipping record), signature by M. Taylor (signed_by field), shipment from Dallas on 2026-08-20 (events array), and delivery address 101 Pine St, Austin, TX 78701 matching billing address (both addresses identical in order record). Card verification checks (AVS line1, postal code, CVC all pass) are supported by card_checks in charge context. The statement 'No pre-dispute customer communications exist in merchant records' is supported by message_count=0 in comms record. Order details (ORD-EVAL-001, Wireless Charging Stand, $75.00, created 2026-08-01, fulfilled status) match order evidence. Customer value (new, 1 total order, $75.00 lifetime value) matches both order and history records. The strategy fields accurately reflect the same supported facts. Evidence packet fields correctly extract: customer name/email from order, identical billing/shipping addresses from order (valid since all address values match), carrier/tracking/shipping_date from shipping record. The recommendation to submit evidence is a prospective action, not a factual claim requiring support. Currency conversion (7500 cents = $75.00) is correct. | Analyzing the three categories of missing premises:\n\nA. EVENT ABSENCE CLAIMS:\nThe narrative states: 'No pre-dispute customer communications exist in merchant records.'\n\nThis claim is properly domain-qualified with 'in merchant records'. The source record from get_customer_comms shows:\n- messages: []\n- message_count: 0\n- has_cancellation_request: false\n- has_address_change_request: false\n- has_inquiry: false\n\nThis empty communication collection directly supports the claim that no customer communications exist in the merchant records. The claim is accurately scoped to the record domain and is fully supported by the source data.\n\nPASS: Event absence claims are properly supported.\n\nB. EVENT ORDERING CLAIMS:\nNo event ordering claims are present in the output. The narrative mentions various dates (order created 2026-08-01, shipped 2026-08-20, delivered 2026-08-23) but does not assert that any event occurred before or after another event. These are simply factual date statements, not comparative chronological assertions.\n\nPASS: No event ordering claims to verify.\n\nC. POLICY DISCLOSURE CLAIMS:\nThe output does not contain populated refund_policy_disclosure or cancellation_policy_disclosure fields. The return_policy is mentioned in the source data ('30-day return policy; customer must initiate return through merchant support prior to dispute') but this is not claimed to have been disclosed to the customer pre-purchase in any output field.\n\nPASS: No policy disclosure claims are made in the output fields.",
+        "narrative_judge": {
+          "explanation": "This narrative is being evaluated for two criteria: (1) whether it identifies or discusses the required dispute reason 'product_not_received', and (2) whether it meaningfully references all three required items: '1Z99901', 'M. Taylor', and 'delivered'.\n\nFor reason_code_pass: The narrative explicitly states 'Dispute Reason: product_not_received' in the opening line and discusses this dispute type throughout by addressing delivery confirmation and tracking details. This clearly satisfies the requirement.\n\nFor must_cite_pass: All three required references appear meaningfully in the narrative:\n- '1Z99901' appears as 'UPS tracking 1Z99901' when discussing delivery confirmation\n- 'M. Taylor' appears as 'signed by M. Taylor' in the tracking confirmation context\n- 'delivered' appears as 'confirms delivered status' when describing the tracking outcome\n\nEach required item is referenced in a substantive way that contributes to the dispute response. The narrative integrates these elements naturally into the evidence presentation.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "All factual claims in the output are supported by the source records. The narrative correctly states the dispute reason (product_not_received from dispute record), UPS tracking number 1Z99901 with delivered status on 2026-08-23 at 14:30 UTC (from shipping record), signature by M. Taylor (signed_by field), shipment from Dallas on 2026-08-20 (events array), and delivery address 101 Pine St, Austin, TX 78701 matching billing address (both addresses identical in order record). Card verification checks (AVS line1, postal code, CVC all pass) are supported by card_checks in charge context. The statement 'No pre-dispute customer communications exist in merchant records' is supported by message_count=0 in comms record. Order details (ORD-EVAL-001, Wireless Charging Stand, $75.00, created 2026-08-01, fulfilled status) match order evidence. Customer value (new, 1 total order, $75.00 lifetime value) matches both order and history records. The strategy fields accurately reflect the same supported facts. Evidence packet fields correctly extract: customer name/email from order, identical billing/shipping addresses from order (valid since all address values match), carrier/tracking/shipping_date from shipping record. The recommendation to submit evidence is a prospective action, not a factual claim requiring support. Currency conversion (7500 cents = $75.00) is correct.",
+          "no_hallucination_pass": true
+        },
+        "support_judge": {
+          "support_assertions": []
+        },
+        "premise_judge": {
+          "explanation": "Analyzing the three categories of missing premises:\n\nA. EVENT ABSENCE CLAIMS:\nThe narrative states: 'No pre-dispute customer communications exist in merchant records.'\n\nThis claim is properly domain-qualified with 'in merchant records'. The source record from get_customer_comms shows:\n- messages: []\n- message_count: 0\n- has_cancellation_request: false\n- has_address_change_request: false\n- has_inquiry: false\n\nThis empty communication collection directly supports the claim that no customer communications exist in the merchant records. The claim is accurately scoped to the record domain and is fully supported by the source data.\n\nPASS: Event absence claims are properly supported.\n\nB. EVENT ORDERING CLAIMS:\nNo event ordering claims are present in the output. The narrative mentions various dates (order created 2026-08-01, shipped 2026-08-20, delivered 2026-08-23) but does not assert that any event occurred before or after another event. These are simply factual date statements, not comparative chronological assertions.\n\nPASS: No event ordering claims to verify.\n\nC. POLICY DISCLOSURE CLAIMS:\nThe output does not contain populated refund_policy_disclosure or cancellation_policy_disclosure fields. The return_policy is mentioned in the source data ('30-day return policy; customer must initiate return through merchant support prior to dispute') but this is not claimed to have been disclosed to the customer pre-purchase in any output field.\n\nPASS: No policy disclosure claims are made in the output fields.",
+          "event_absence_pass": true,
+          "event_order_pass": true,
+          "policy_disclosure_pass": true
+        },
+        "premise_checks_pass": true,
+        "raw_no_hallucination_pass": true,
+        "support_assertions_pass": true,
+        "support_assertion_errors": [],
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 10618,
+          "outputTokens": 1065,
+          "totalTokens": 11683,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    }
+  ]
+}

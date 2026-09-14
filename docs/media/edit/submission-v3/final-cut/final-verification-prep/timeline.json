@@ -1,0 +1,328 @@
+{
+  "duration_seconds": 212.688,
+  "scenes_sha256": "c7d5e84edee7572f478eebc73e555dcd114e979125ad2f8c750e251ae278bcd4",
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0,
+      "end": 26.966666666666665,
+      "label": "01 / THE PROBLEM",
+      "tag": "REBUTTAL / STRIPE MERCHANT PROTOTYPE",
+      "panel_label": "THE MERCHANT WORKFLOW",
+      "speech": "For small online merchants, a chargeback starts a race to assemble records. The order, delivery history, customer messages, and response policy sit in different places. Rebuttal brings those records together, recommends a response, and drafts evidence for review. The goal is less manual case assembly, with the merchant retaining control of consequential decisions.",
+      "output_lines": [
+        {
+          "text": "Order details",
+          "visual_reveal_seconds": 0.65
+        },
+        {
+          "text": "Carrier delivery records",
+          "visual_reveal_seconds": 6.15
+        },
+        {
+          "text": "Customer messages",
+          "visual_reveal_seconds": 7.45
+        },
+        {
+          "text": "Merchant response policy",
+          "visual_reveal_seconds": 8.85
+        },
+        {
+          "text": "Proposed response and evidence for review",
+          "visual_reveal_seconds": 14.4
+        },
+        {
+          "text": "Merchant retains control",
+          "visual_reveal_seconds": 21.7
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "359d0e50312e701760b185d261d22d0747836010bbd47e37a3482de03efede33",
+      "timings_sha256": "1b3031b7e89948acc09fd3619ae68f886a8c1b01349d77996918acf47815a7cd"
+    },
+    {
+      "scene": 2,
+      "start": 26.966666666666665,
+      "end": 49.93333333333333,
+      "label": "02 / HOW IT WORKS",
+      "tag": "AWS STRANDS AGENTS SDK / APPLICATION DESIGN",
+      "panel_label": "IMPLEMENTED EXECUTION FLOW",
+      "speech": "Rebuttal uses the AWS Strands Agents SDK. After intake, four agents collect evidence in parallel. Strategy waits for all four. The drafter then receives both the evidence and the proposed response. A separate executor uses an approval hook before taking a guarded action.",
+      "output_lines": [
+        {
+          "text": "Intake retrieves the dispute",
+          "visual_reveal_seconds": 0.65
+        },
+        {
+          "text": "Orders / Shipping / Communications / History",
+          "visual_reveal_seconds": 5.8
+        },
+        {
+          "text": "Strategy waits for all four collectors",
+          "visual_reveal_seconds": 9.0
+        },
+        {
+          "text": "Drafter receives evidence and strategy",
+          "visual_reveal_seconds": 11.6
+        },
+        {
+          "text": "Executor pauses when approval is required",
+          "visual_reveal_seconds": 16.9
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "d36e5f02bc888c5904a065388c2ffd2edc595f95a8bc5c3dda7eb400dc9c9ad2",
+      "timings_sha256": "ddd5df20714cbca98ab15c448f2400f11868318992c182fefefb3e8a12d9f72d"
+    },
+    {
+      "scene": 3,
+      "start": 49.93333333333333,
+      "end": 70.03333333333333,
+      "label": "03 / RECORDING SETUP",
+      "tag": "EDITED PLAYBACK / LOCAL TEST EXECUTION",
+      "panel_label": "DEMONSTRATION BOUNDARIES",
+      "speech": "The next scenes replay a recorded local run. The merchant records are synthetic, and the Stripe objects are in test mode. The screen is an edited presentation of captured output, so reveals follow the narration rather than the original wait times. The owner response comes through the developer command line.",
+      "output_lines": [
+        {
+          "text": "Execution: local AWS Strands graph",
+          "visual_reveal_seconds": 1.571
+        },
+        {
+          "text": "Merchant records: synthetic",
+          "visual_reveal_seconds": 3.277
+        },
+        {
+          "text": "Stripe objects: TEST mode",
+          "visual_reveal_seconds": 5.556
+        },
+        {
+          "text": "Playback: edited from captured output",
+          "visual_reveal_seconds": 8.811
+        },
+        {
+          "text": "Owner response: developer command line",
+          "visual_reveal_seconds": 15.569
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "28055033c9fc8fd5f259c15cfbddccc911ebc2d699dec9895686df8ac9a05479",
+      "timings_sha256": "2769d29eb9351a7f53e6119f61d8db4f85535e6f9b938641582222d6559a7921"
+    },
+    {
+      "scene": 4,
+      "start": 70.03333333333333,
+      "end": 93.33333333333333,
+      "label": "04 / RETRIEVED FACTS",
+      "tag": "RECORDED LOCAL EXECUTION / STRIPE TEST MODE",
+      "panel_label": "SELECTED SOURCE FIELDS / EXECUTION COUNTS",
+      "speech": "The recorded run begins with a Stripe test dispute. The panel shows selected facts retrieved for that case: the order, delivery record, customer communications, and merchant policy. The execution trace shows the Strands graph moving through collection, strategy, and drafting. These excerpts come from the captured local run.",
+      "output_lines": [
+        {
+          "text": "{\"amount\": 34000, \"currency\": \"usd\", \"reason\": \"fraudulent\"}",
+          "visual_reveal_seconds": 0.256
+        },
+        {
+          "text": "order: {\"id\": \"ORD-1002\", \"customer_value\": \"repeat\"}",
+          "visual_reveal_seconds": 7.314
+        },
+        {
+          "text": "shipment: {\"carrier\": \"FedEx\", \"status\": \"delivered\"}",
+          "visual_reveal_seconds": 8.147
+        },
+        {
+          "text": "comms: {\"message_count\": 2, \"has_address_change_request\": true}",
+          "visual_reveal_seconds": 9.319
+        },
+        {
+          "text": "policy: {\"vip_concede_max_cents\": 50000}",
+          "visual_reveal_seconds": 11.011
+        },
+        {
+          "text": "graph: {\"intake\": 1, \"orders\": 1, \"shipping\": 1, \"history\": 1, \"comms\": 1, \"strategy\": 1, \"drafter\": 1}",
+          "visual_reveal_seconds": 12.353
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "05b9061e4c72bf1bd104c2a40c949f4368f9d6e732444f42007f58c13bdbef21",
+      "timings_sha256": "f6bfddde93e98004586b024ee9ce8943aa43a224efb2cf370651d39d392ed396"
+    },
+    {
+      "scene": 5,
+      "start": 93.33333333333333,
+      "end": 115.73333333333332,
+      "label": "05 / STRATEGY AND DRAFT",
+      "tag": "RECORDED OUTPUT / EDITED PLAYBACK / STRIPE TEST MODE",
+      "panel_label": "STRATEGY AND EVIDENCE EXCERPTS",
+      "speech": "Next, compare the proposed strategy with the records that support it. The recommendation and draft are shown separately. Read the evidence excerpt alongside the retrieved facts. Missing evidence and uncertainty must remain visible, and a proposed action must stay distinct from a completed action.",
+      "output_lines": [
+        {
+          "text": "strategy: {\"action\": \"concede\", \"evidence_strength\": \"weak\"}",
+          "visual_reveal_seconds": 1.428
+        },
+        {
+          "text": "{\"owner_summary\": \"Recommend concession. Repeat customer, $340 disputed amount within vip_concede_max_cents ($500) policy threshold.\"}",
+          "visual_reveal_seconds": 4.735
+        },
+        {
+          "text": "Evidence narrative: Customer is repeat tier with 5 total orders and $1,120 lifetime value.",
+          "visual_reveal_seconds": 8.642
+        },
+        {
+          "text": "{\"shipping_documentation\": null, \"service_documentation\": null}",
+          "visual_reveal_seconds": 12.574
+        },
+        {
+          "text": "{\"uncategorized_text\": null, \"files\": []}",
+          "visual_reveal_seconds": 17.118
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "94da1091b7c14d1f383b3f19f9e63e660a69808986c58c8019848ce0d093f59d",
+      "timings_sha256": "dc97b0695fe64241edf9e21c571c310785ce023977a79c316c97f5aec259f0d2"
+    },
+    {
+      "scene": 6,
+      "start": 115.73333333333332,
+      "end": 141.76666666666665,
+      "label": "06 / THE OWNER DECISION",
+      "tag": "DEVELOPER CLI / APPROVAL DESIGN",
+      "panel_label": "AVAILABLE OWNER RESPONSES",
+      "speech": "The approval step is a deliberate decision point. In this recording, the developer command line stands in for the merchant interface. Fight, concede, and hold are the three available responses. The selected response is passed back to the Strands interrupt, after which the recorder checks Stripe again. Phone notification delivery is disabled for this local demonstration.",
+      "output_lines": [
+        {
+          "text": "1 / Fight",
+          "visual_reveal_seconds": 0.295
+        },
+        {
+          "text": "2 / Concede",
+          "visual_reveal_seconds": 9.254
+        },
+        {
+          "text": "3 / Hold",
+          "visual_reveal_seconds": 10.465
+        },
+        {
+          "text": "Selected response resumes the Strands interrupt",
+          "visual_reveal_seconds": 13.42
+        },
+        {
+          "text": "The recorder then checks Stripe again",
+          "visual_reveal_seconds": 18.407
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "3d2c562403728f4239e4ad974ffeb08042967e44eeaaf8802d04d8f4cd0469d7",
+      "timings_sha256": "cd5d3fb1a5cbd715002a6a8e738456bd6ff57f6107b6daa94740f033db93e1f0"
+    },
+    {
+      "scene": 7,
+      "start": 141.76666666666665,
+      "end": 163.63333333333333,
+      "label": "07 / APPROVAL AND READBACK",
+      "tag": "RECORDED LOCAL EXECUTION / STRIPE TEST MODE",
+      "panel_label": "DEVELOPER CLI / BEFORE AND AFTER",
+      "speech": "Here is the approval interrupt and the developer command line response. The display preserves the recorded choice and the guarded action count. After resuming, the recorder reads Stripe again. Compare the before and after states. That readback establishes the test result, not a real-world dispute outcome.",
+      "output_lines": [
+        {
+          "text": "pause: {\"stop_reason\": \"interrupt\", \"interrupt_names\": [\"owner-approval\"]}",
+          "visual_reveal_seconds": 0.217
+        },
+        {
+          "text": "before: {\"stripe_status\": \"needs_response\", \"gated_action_calls\": 0}",
+          "visual_reveal_seconds": 0.92
+        },
+        {
+          "text": "CLI reply: {\"answer\": \"2\", \"action\": \"concede\"}",
+          "visual_reveal_seconds": 3.069
+        },
+        {
+          "text": "Stripe readback: {\"status\": \"lost\", \"livemode\": false}",
+          "visual_reveal_seconds": 10.842
+        },
+        {
+          "text": "executor: {\"executor_stop_reason\": \"end_turn\", \"gated_action_calls\": 1}",
+          "visual_reveal_seconds": 13.59
+        },
+        {
+          "text": "{\"assertions\": \"passed\"}",
+          "visual_reveal_seconds": 16.545
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "e85431c7f75f0d1150398fb89233072f654880baf74ed4f2b43a76713ccec14c",
+      "timings_sha256": "ecccf163d4cb6cd311c03944b1b16b47fc758f9762b3060748ff8c53b9eda550"
+    },
+    {
+      "scene": 8,
+      "start": 163.63333333333333,
+      "end": 188.46666666666667,
+      "label": "08 / OBSERVED VALIDATION",
+      "tag": "OBSERVED LOCAL TESTS / CAPTURED-SOURCE REPLAY",
+      "panel_label": "PROCESSOR / REPLAY / FRESH CASES / CONTROL SET",
+      "speech": "The validation panel identifies the source revision and the checks that ran against it. It shows the unit test result alongside the fixed synthetic-case evaluation, covering action, approval, expected value, and grounding. Read the observed results and thresholds together. This benchmark does not measure real merchant recovery rates.",
+      "output_lines": [
+        {
+          "text": "Final processor: 4371ebf / judge rubric: grounded-v17",
+          "visual_reveal_seconds": 2.509
+        },
+        {
+          "text": "Offline: 217 tests passed / factual text: deterministic from sources",
+          "visual_reveal_seconds": 6.129
+        },
+        {
+          "text": "Action / win probability / EV remain model assessments",
+          "visual_reveal_seconds": 10.985
+        },
+        {
+          "text": "20-source replay: action / gate / EV sign 20 / 20 each",
+          "visual_reveal_seconds": 14.11
+        },
+        {
+          "text": "Raw output judge: 19 / 20; required 18 / 20; case 09 false positive",
+          "visual_reveal_seconds": 15.373
+        },
+        {
+          "text": "Fresh full-graph cases 03 and 18: 2 / 2 passed",
+          "visual_reveal_seconds": 16.962
+        },
+        {
+          "text": "Control set: 52 / 52 matched; false positives 0 / false negatives 0",
+          "visual_reveal_seconds": 18.824
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "b7306dd91f80c36393a38e92fd98895f69acacabeb7e23ab3ae215efc9edd68d",
+      "timings_sha256": "d0c652a1170182ac40c735c191ade63eaf7fb8524cfa54b4852939391b07a8aa"
+    },
+    {
+      "scene": 9,
+      "start": 188.46666666666667,
+      "end": 212.66666666666666,
+      "label": "09 / WHAT THIS DEMONSTRATES",
+      "tag": "PROTOTYPE / OBSERVED SCOPE",
+      "panel_label": "PURPOSE AND LIMITS",
+      "speech": "Rebuttal gives small merchants a place to review the facts, the proposed response, and the next action. This prototype runs locally with synthetic merchant data and Stripe test objects. Real merchant outcomes and live phone delivery remain outside this demonstration. The goal is a clearer, more controlled dispute workflow.",
+      "output_lines": [
+        {
+          "text": "Evidence collected for merchant review",
+          "visual_reveal_seconds": 2.366
+        },
+        {
+          "text": "A proposed strategy and draft response",
+          "visual_reveal_seconds": 4.254
+        },
+        {
+          "text": "An explicit owner decision before guarded actions",
+          "visual_reveal_seconds": 5.881
+        },
+        {
+          "text": "Synthetic merchant data and Stripe TEST objects",
+          "visual_reveal_seconds": 9.084
+        }
+      ],
+      "reveal_timing": "Editorial visualization; not original execution timing",
+      "voice_sha256": "6320112dd566fdacee6b2a20ea9be7975d87871234aedd5a053dab3f62f1cc47",
+      "timings_sha256": "81b176decd861fda83ee60e2fbb48a697654532dfba25a60cbcc8854e2f07526"
+    }
+  ]
+}

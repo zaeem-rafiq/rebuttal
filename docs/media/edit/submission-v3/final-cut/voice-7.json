@@ -1,0 +1,290 @@
+[
+  {
+    "type": "WordBoundary",
+    "offset": 1041660,
+    "duration": 781250,
+    "text": "The"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 1822910,
+    "duration": 6901250,
+    "text": "validation"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 8724160,
+    "duration": 4817910,
+    "text": "panel"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 15495000,
+    "duration": 7422080,
+    "text": "identifies"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 23047080,
+    "duration": 1041660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 24088750,
+    "duration": 4296660,
+    "text": "source"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 28385410,
+    "duration": 5338750,
+    "text": "revision"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 35416660,
+    "duration": 1041660,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 36458330,
+    "duration": 651250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 37109580,
+    "duration": 3906250,
+    "text": "checks"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 41015830,
+    "duration": 2474160,
+    "text": "that"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 43620000,
+    "duration": 2343750,
+    "text": "ran"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 46093750,
+    "duration": 3906250,
+    "text": "against"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 50000000,
+    "duration": 1562500,
+    "text": "it"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 55729160,
+    "duration": 651250,
+    "text": "It"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 56380410,
+    "duration": 2994580,
+    "text": "shows"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 59375000,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 60286660,
+    "duration": 4036250,
+    "text": "unit"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 64322910,
+    "duration": 3515830,
+    "text": "test"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 67838750,
+    "duration": 3645830,
+    "text": "result"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 71875000,
+    "duration": 7942910,
+    "text": "alongside"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 79817910,
+    "duration": 781250,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 80729160,
+    "duration": 4427080,
+    "text": "fixed"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 85156250,
+    "duration": 8724160,
+    "text": "synthetic-case"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 93880410,
+    "duration": 8072910,
+    "text": "evaluation"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 104817910,
+    "duration": 4036250,
+    "text": "covering"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 108854160,
+    "duration": 4817910,
+    "text": "action"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 117968750,
+    "duration": 6250000,
+    "text": "approval"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 126953330,
+    "duration": 5208330,
+    "text": "expected"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 132291660,
+    "duration": 4557500,
+    "text": "value"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 139192910,
+    "duration": 911250,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 140104160,
+    "duration": 5338750,
+    "text": "grounding"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 149479160,
+    "duration": 2343750,
+    "text": "Read"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 151822910,
+    "duration": 911660,
+    "text": "the"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 152734580,
+    "duration": 4687500,
+    "text": "observed"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 157552080,
+    "duration": 6510410,
+    "text": "results"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 165625000,
+    "duration": 2995000,
+    "text": "and"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 168620000,
+    "duration": 8463750,
+    "text": "thresholds"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 177213750,
+    "duration": 5729160,
+    "text": "together"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 187239580,
+    "duration": 1953330,
+    "text": "This"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 189322910,
+    "duration": 6250000,
+    "text": "benchmark"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 198437500,
+    "duration": 1562500,
+    "text": "does"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 200000000,
+    "duration": 3906250,
+    "text": "not"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 204036660,
+    "duration": 5338750,
+    "text": "measure"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 209505410,
+    "duration": 3255410,
+    "text": "real"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 212890830,
+    "duration": 4687500,
+    "text": "merchant"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 217578330,
+    "duration": 4817910,
+    "text": "recovery"
+  },
+  {
+    "type": "WordBoundary",
+    "offset": 222526250,
+    "duration": 5859580,
+    "text": "rates"
+  }
+]
