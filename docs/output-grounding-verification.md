@@ -159,3 +159,12 @@ Attachment rejection now retains the generated strategy, packet, and raw records
 in an InvalidEvidencePacket exception. The harness records that output while
 failing validation and skipping paid judgment; it cannot reach execution through
 the normal pipeline. A focused regression exercises that complete failure path.
+
+970ff0a's full run failed on a Bedrock internalServerException after case 01;
+the incomplete JSON and log are retained. The local run again selected hold
+after owner-summary retention claims were observed. A follow-up puts the same
+contract in the structured-output field descriptions. The exact-source controls
+also showed the judge treating factual strategy prose as an exempt assessment.
+Rubric grounded-v6 presents factual fields individually and excludes only the
+separately evaluated action and internal numeric/evidence-strength assessments.
+Customer tier and all explanatory text remain scored. Current controls are pending.

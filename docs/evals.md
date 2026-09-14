@@ -48,7 +48,7 @@ Each saved judgment includes model ID and token usage. Complete inputs and
 outputs are saved beside the Markdown report in JSON, with source hashes taken
 before inference. `EVAL_REPORT_PATH` selects a fresh report filename.
 
-Rubric grounded-v5 isolates citation scoring from supporting fields so an order
+Rubric grounded-v6 isolates citation scoring from supporting fields so an order
 reference outside the narrative cannot satisfy it. The grounding judge receives
 structured facts and identical canonical dollar formatting on both sides;
 original output stays unchanged in reports. The production attachment validator
@@ -57,6 +57,10 @@ tool records forwarded to strategy/drafter are the judge's factual input.
 Normalized fixture context is saved separately and cannot ground a model claim.
 Numeric estimates remain assessments, not measured
 win rates or permission to invent supporting facts.
+Factual text fields are presented individually by path. Numeric estimates,
+evidence-strength assessments, and the selected action are excluded from this
+text audit and checked by the corresponding existing metrics; customer tier,
+rationale, owner summary, and every evidence field remain in the factual audit.
 
 Run explicit positive and negative controls before trusting a judge:
 

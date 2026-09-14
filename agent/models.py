@@ -34,11 +34,11 @@ class DisputeStrategy(BaseModel):
     )
     rationale: str = Field(
         ...,
-        description="Concise strategic rationale for merchant decision (max 80 words)."
+        description="Source-backed observations explaining the proposed action, max 80 words. Recommendations are not completed actions. Do not claim concession retains the customer, preserves a relationship, saves costs, or avoids an incurred fee. Cite merchant policy only when the retrieved policy states that rule."
     )
     owner_summary: str = Field(
         ...,
-        description="Plain-English summary suitable for SMS to merchant owner (max 320 characters)."
+        description="Begin with Recommend; state the proposed action and its recorded factual basis only, max 320 characters. No promises of retention, relationship preservation, savings, fee avoidance, or completed execution."
     )
 
     @field_validator("rationale")
@@ -75,7 +75,7 @@ class EvidencePacket(BaseModel):
     uncategorized_file: Optional[str] = Field(None, description="Additional file upload ID.")
     narrative: str = Field(
         ...,
-        description="Source-grounded narrative explaining the proposed response to the stated dispute reason. A concession or inquiry refund need not argue that the dispute is invalid."
+        description="Source-grounded narrative explaining the proposed response to the stated dispute reason. A concession or inquiry refund need not argue that the dispute is invalid. State only retrieved facts and attributed reports; no retention or savings promises. Scope policy claims to rules actually present in retrieved policy."
     )
     files: List[str] = Field(
         default_factory=list,

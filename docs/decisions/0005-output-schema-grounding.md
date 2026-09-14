@@ -12,3 +12,9 @@ unchanged. Known fees may still be cited from supplied transaction records.
 Consumers traced: graph structured outputs and fallback extraction, executor,
 Stripe evidence formatting, owner approval notifications, and evaluation harness.
 Existing schema and pipeline tests plus Bedrock evaluations verify the change.
+
+Live output still asserted relationship preservation and fee avoidance despite
+the system prompt. The rationale/owner-summary schema descriptions now carry
+the same observation-only contract at the structured-output tool boundary. The
+narrative description also prohibits unsupported outcome and policy promises.
+This changes model guidance, not the serialized fields or runtime guarantees.

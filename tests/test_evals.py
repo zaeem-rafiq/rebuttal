@@ -310,7 +310,8 @@ def test_supporting_output_failure_cannot_hide_behind_passing_narrative(tainted_
                              'fraudulent', [], '{}', supporting_output=output)
 
     prompt = client.converse.call_args.kwargs['messages'][0]['content'][0]['text']
-    assert json.loads(prompt)['output_to_audit']['supporting_output'] == normalize_currency_text(output)
+    assert json.loads(prompt)['factual_output_fields'][f'{group}.{tainted_field}'] == normalize_currency_text(output[group][tainted_field])
+    assert 'strategy.action' not in json.loads(prompt)['factual_output_fields']
     assert result['reason_code_pass'] and result['must_cite_pass'] and result['word_count_pass']
     assert result['overall_pass'] is False
     assert client.converse.call_count == 2
@@ -399,7 +400,13 @@ def test_eval_rejection_continues_suite_and_persists_complete_output(monkeypatch
     assert 'scenario_description' not in rows[1]['case_facts']
     assert rows[1]['case_facts']['merchant_policy']['vip_concede_max_cents'] == 50000
     prompt = judge.converse.call_args.kwargs['messages'][0]['content'][0]['text']
-    assert json.loads(prompt)['output_to_audit']['supporting_output'] == expected_output
+    fields = json.loads(prompt)['factual_output_fields']
+    for name in type(packet).model_fields:
+        if name != 'narrative':
+            assert f'{name}-sentinel' in fields.values()
+    assert fields['strategy.rationale'] == strategy.rationale
+    assert fields['strategy.owner_summary'] == strategy.owner_summary
+    assert fields['strategy.customer_value'] == strategy.customer_value
     assert json.dumps(expected_output, indent=2) in report.read_text()
     assert (runner.agent.graph.get_dispute, runner.agent.graph.get_charge_context) == original_tools
     assert runner.agent.tools.evidence_tools.LOCAL_DB_PATH == original_db
