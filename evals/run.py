@@ -619,6 +619,9 @@ def main():
         json_file.write_text(json.dumps({
             "code_revision": git_rev, "source_manifest": source_manifest,
             "source_snapshot_sha256": source_hash, "source_dirty": source_dirty,
+            "generation_model_id": os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-haiku-4-5-20251001-v1:0"),
+            "generation_streaming": os.getenv("BEDROCK_STREAMING", "true").lower() != "false",
+            "judge_model_id": os.getenv("BEDROCK_JUDGE_MODEL_ID") or os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-haiku-4-5-20251001-v1:0"),
             "rubric": "grounded-v9", "completed": completed, "results": results,
         }, indent=2) + "\n", encoding="utf-8")
     save_results(False)

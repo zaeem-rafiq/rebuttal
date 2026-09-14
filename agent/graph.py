@@ -129,7 +129,8 @@ def get_bedrock_model(
     resolved_region = region_name or os.getenv("AWS_REGION", "us-east-1")
 
     session = boto3.Session(profile_name=resolved_profile, region_name=resolved_region)
-    return BedrockModel(model_id=resolved_model_id, boto_session=session, temperature=0.0)
+    return BedrockModel(model_id=resolved_model_id, boto_session=session, temperature=0.0,
+                        streaming=os.getenv("BEDROCK_STREAMING", "true").lower() != "false")
 
 
 def build_evidence_graph(

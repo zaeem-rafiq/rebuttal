@@ -1,6 +1,6 @@
 {
   "scope": "Approved additional verification; token-derived estimates, not billing readback.",
-  "ceiling_usd": 8,
+  "ceiling_usd": 15,
   "rates_per_million_tokens": {
     "Sonnet 4.5": {
       "input_usd": 3.3,
