@@ -1,0 +1,822 @@
+{
+  "source_report": "evals/results/2026-09-14-5552395-full.json",
+  "source_report_sha256": "503e65a49708945a438a70b00119c3d206605d252934a115f7eca412d46ec3b5",
+  "generation_revision": "5552395",
+  "input_correction": "Excluded scenario_description because agents never received it. Facts now encoded as JSON object, rather than escaped JSON string.",
+  "results": [
+    {
+      "case_id": "case_01",
+      "old_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 145,
+        "missing_items": [],
+        "explanation": "Reason 'product_not_received' is named. All required references (1Z99901, M. Taylor, delivered) are meaningfully cited in narrative. However, no_hallucination_pass fails: narrative claims 'AVS line 1 match passed' and 'AVS postal code match passed,' but records only document card_checks with 'address_line1_check: pass' and 'address_postal_code_check: pass'\u2014not AVS terminology. AVS is a distinct payment processor term not present in supplied data.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3592,
+          "outputTokens": 173,
+          "totalTokens": 3765,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 145,
+        "missing_items": [],
+        "explanation": "All criteria pass. The narrative addresses product_not_received in the opening sentence. All three required references appear: tracking number '1Z99901', recipient signature 'M. Taylor', and delivery status 'delivered' are explicitly cited. Every factual claim is grounded in the supplied records: carrier delivery date matches shipment.delivered_at (2026-08-23), signature matches shipment.signed_by, addresses match order and shipment records, card checks match charge.card_checks, and amounts/dates align with order and dispute records.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3254,
+          "outputTokens": 169,
+          "totalTokens": 3423,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_02",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 76,
+        "missing_items": [
+          "delivered"
+        ],
+        "explanation": "Reason code 'product_not_received' is named in narrative header. All three required references are meaningfully cited: tracking number 794902 appears twice, 'D. Vance' signature is attributed to the delivery record, and 'delivered' status is stated. All factual claims (FedEx tracking, delivery address, signature, card checks, dates) are supported by case records. No unsupported or contradicted claims detected.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3394,
+          "outputTokens": 148,
+          "totalTokens": 3542,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 76,
+        "missing_items": [
+          "delivered"
+        ],
+        "explanation": "All criteria pass. The narrative addresses product_not_received in the header and body. All three required references appear: tracking number '794902', signature 'D. Vance', and status 'delivered' are explicitly cited. Every factual claim is grounded: tracking number, delivery date/time/location, signature, address match, and card checks all correspond to supplied record fields. The narrative accurately describes the shipment and charge verification data without unsupported claims.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3052,
+          "outputTokens": 151,
+          "totalTokens": 3203,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_03",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 73,
+        "missing_items": [
+          "delayed"
+        ],
+        "explanation": "Reason code 'product_not_received' is named in narrative. All three required references are meaningfully cited: tracking number 940003 appears twice, 'delayed' is referenced in carrier records description, and 'never delivered' is quoted directly from carrier system status. All factual claims (shipment date, carrier, tracking status, customer communication date, non-delivery confirmation) are supported by case records.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3433,
+          "outputTokens": 140,
+          "totalTokens": 3573,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 73,
+        "missing_items": [
+          "delayed"
+        ],
+        "explanation": "All criteria pass. The narrative addresses product_not_received in the header. All required references appear: tracking number '940003', status 'delayed', and 'never delivered' are explicitly cited. All factual claims are grounded: tracking 940003 exists in shipment records, shipped_at matches August 10, 2026, status is 'delayed', events show 'delayed' and 'package delayed, never delivered' text, customer communication dated August 25, 2026 contains the quoted text, and no delivered_at or signed_by values exist in records.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3081,
+          "outputTokens": 178,
+          "totalTokens": 3259,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_04",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 122,
+        "missing_items": [],
+        "explanation": "Reason 'fraudulent' is named in narrative header. All required references are meaningfully cited: AVS address line 1 and postal code matches confirmed; CVC check confirmed; tracking number 442004 cited with carrier, delivery address, date, and recipient signature. All factual claims (card checks, delivery details, order dates, addresses) are supported by records.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3530,
+          "outputTokens": 131,
+          "totalTokens": 3661,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 122,
+        "missing_items": [],
+        "explanation": "All criteria pass. The narrative addresses the fraudulent reason in the header and throughout. All required references are present: AVS (address line 1 and postal code checks mentioned), CVC (check confirmed), and tracking number 442004. Every factual claim is grounded: card checks passed per charge.card_checks fields, delivery details match shipment records (carrier DHL, tracking 442004, delivered August 18, 2026 at 16:20 UTC to 404 Cedar Rd Seattle WA 98101, signed by D. Kim), addresses match order and shipment records, order details match order fields, and shipment timeline matches shipment.events.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3184,
+          "outputTokens": 197,
+          "totalTokens": 3381,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_05",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 89,
+        "missing_items": [],
+        "explanation": "Reason code 'fraudulent' is named in narrative header. All three required references are meaningfully cited: tracking number 1Z99905 appears in delivery confirmation, recipient signature 'R. Martinez' is attributed to shipment records, and AVS is explicitly referenced as passed checks (address line 1, postal code, CVC). All factual claims are grounded in case records: card checks, delivery status, addresses, dates, and order details.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3460,
+          "outputTokens": 149,
+          "totalTokens": 3609,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 89,
+        "missing_items": [],
+        "explanation": "All criteria pass. The narrative addresses the fraudulent reason code. All three required references are present: tracking number '1Z99905', signature 'R. Martinez', and 'AVS' (address verification system). Every factual claim is grounded: card checks passed per charge.card_checks fields, delivery details match shipment records, addresses match order records, and the recommendation to submit evidence is consistent with the fight strategy.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3115,
+          "outputTokens": 142,
+          "totalTokens": 3257,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_06",
+      "old_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 155,
+        "missing_items": [
+          "alternate address"
+        ],
+        "explanation": "Reason 'fraudulent' is named. Required references 'alternate address' and 'unverified' are both cited in narrative. However, no_hallucination_pass fails: the narrative states 'no signature confirmation recorded,' but the shipment record shows signed_by: null, which indicates absence of data, not affirmative documentation that no signature was recorded. This is an unsupported factual claim.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3868,
+          "outputTokens": 142,
+          "totalTokens": 4010,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 155,
+        "missing_items": [
+          "alternate address"
+        ],
+        "explanation": "All criteria pass. The narrative addresses the fraudulent reason code. Both required references are present: 'alternate Las Vegas address' (semantically equivalent to 'alternate address') and 'unverified' are explicitly cited from the August 13 communication. All factual claims are grounded: customer details, order amount, card checks, addresses, delivery confirmation, communication content, and policy thresholds all match the supplied records exactly.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3497,
+          "outputTokens": 143,
+          "totalTokens": 3640,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_07",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 88,
+        "missing_items": [],
+        "explanation": "Reason code 'product_unacceptable' is named in narrative. Required references are satisfied: 'return policy' is cited verbatim ('The merchant's 30-day return policy requires customers to initiate returns through merchant support prior to dispute escalation'); 'no return' is meaningfully addressed ('no return request was documented prior to dispute filing'). All factual claims are grounded: delivery date/carrier/signature/address match shipment records; card checks match charge records; policy language matches merchant_policy.return_policy; no communications exist per records.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3388,
+          "outputTokens": 174,
+          "totalTokens": 3562,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 88,
+        "missing_items": [],
+        "explanation": "All criteria pass. The narrative addresses product_unacceptable in the header and body. Both required items are meaningfully referenced: 'return policy' is cited ('The merchant's 30-day return policy requires customers to initiate returns through merchant support prior to dispute escalation'), and 'no return' is addressed ('no return request was documented prior to dispute filing'). All factual claims are grounded: delivery details match shipment records, card checks match charge data, empty communications list supports no pre-dispute contact claim, and the policy statement matches merchant_policy.return_policy.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3045,
+          "outputTokens": 176,
+          "totalTokens": 3221,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_08",
+      "old_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 141,
+        "missing_items": [
+          "return delivered"
+        ],
+        "explanation": "Reason code 'product_unacceptable' is named. Required references RET-88008, warehouse, and return delivered are all cited in the narrative. However, no_hallucination_pass fails: the narrative states 'Customer records confirm the return was reported delivered to the warehouse on August 15, 2026' but the supplied records contain only a customer communication reporting this\u2014no independent merchant warehouse receipt or return tracking record is provided. The claim attributes confirmation to records that do not exist in the case_facts.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3638,
+          "outputTokens": 163,
+          "totalTokens": 3801,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 141,
+        "missing_items": [
+          "return delivered"
+        ],
+        "explanation": "The narrative fails no_hallucination_pass because it states 'Customer records confirm the return was reported delivered to the warehouse on August 15, 2026.' The supplied records contain only a customer communication claiming this delivery; there is no independent merchant warehouse receipt record or carrier tracking confirmation for RET-88008. The narrative presents the customer's claim as confirmed fact rather than as a customer report.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3287,
+          "outputTokens": 135,
+          "totalTokens": 3422,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_09",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 112,
+        "missing_items": [
+          "LTV"
+        ],
+        "explanation": "Narrative correctly identifies reason as product_unacceptable and meaningfully references all required items: VIP customer status, LTV ($3,400.00), and policy threshold ($500.00). All factual claims are grounded in records: customer tier, lifetime value, dispute amount, delivery confirmation, customer communication, and policy limits. No unsupported or contradicted claims detected.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3620,
+          "outputTokens": 133,
+          "totalTokens": 3753,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 112,
+        "missing_items": [
+          "LTV"
+        ],
+        "explanation": "All criteria pass. The narrative addresses product_unacceptable. All required references are present: 'VIP customer' (VIP), '$3,400.00 lifetime value' (LTV), and 'Merchant policy establishes' (policy). Every factual claim is grounded: customer tier is vip, lifetime_value.dollars is $3,400.00, order_count is 12, vip_concede_max.dollars is $500.00, communication msg_0 contains the quoted text, shipment carrier is FedEx, tracking_number is 794909, delivered_at date is August 13, 2026, signed_by is A. Ross, and card_checks all show pass.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3269,
+          "outputTokens": 212,
+          "totalTokens": 3481,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_10",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 94,
+        "missing_items": [
+          "refund already issued"
+        ],
+        "explanation": "Reason code 'credit_not_processed' is named in narrative header. Both required references are meaningfully cited: 're_prior10' appears three times (communications, charge metadata, narrative); 'refund already issued' is stated directly in narrative and communications. All factual claims (refund amount $99.00, date Aug 12, 2026, reference re_prior10, order status refunded, charge metadata documentation) are supported by records.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3513,
+          "outputTokens": 151,
+          "totalTokens": 3664,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 94,
+        "missing_items": [
+          "refund already issued"
+        ],
+        "explanation": "All criteria pass. The narrative addresses credit_not_processed. Both required citations appear: 're_prior10' is explicitly mentioned multiple times, and 'refund already issued' is semantically present in 'a refund of $99.00 was issued under reference re_prior10 on August 12, 2026, prior to the dispute filing.' Every factual claim is grounded: the refund reference re_prior10 appears in charge.metadata.refund_id and communications[0]; the August 12 date matches communications[0].created_at; order.status is 'refunded'; the $99.00 amount matches order.amount and dispute.amount.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3155,
+          "outputTokens": 202,
+          "totalTokens": 3357,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_11",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 139,
+        "missing_items": [],
+        "explanation": "Narrative correctly identifies reason as 'credit_not_processed' and meaningfully references both MSG-11 (Support Ticket MSG-11, dated August 7, 2026) and 'promised refund' (quoted: \"promised refund within 3 days\"). All factual claims are grounded: order amount $130.00, date August 1, 2026, support communication August 7, 2026, no documented refund in records, and cardholder dispute align with supplied records. No unsupported claims detected.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3666,
+          "outputTokens": 171,
+          "totalTokens": 3837,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 139,
+        "missing_items": [],
+        "explanation": "All criteria pass. The narrative addresses credit_not_processed throughout. Both required references appear: 'Support Ticket MSG-11' and 'promised refund within 3 days' are directly quoted from communications[0]. All factual claims are grounded: order details match the order record, the August 7 support communication and its content are documented, delivery occurred per shipment records, and the absence of refund documentation is accurately stated as describing supplied records only, not claiming universal non-existence.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3311,
+          "outputTokens": 158,
+          "totalTokens": 3469,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_12",
+      "old_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 88,
+        "missing_items": [
+          "Sep 5",
+          "after renewal"
+        ],
+        "explanation": "Narrative claims 'subscription renewal charged on September 1, 2026' but records show order created August 1, 2026 and shipment delivered September 1, 2026. No renewal charge date is documented in merchant records. This is an unsupported factual claim about when the renewal occurred.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3421,
+          "outputTokens": 119,
+          "totalTokens": 3540,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 88,
+        "missing_items": [
+          "Sep 5",
+          "after renewal"
+        ],
+        "explanation": "All criteria pass. The narrative addresses subscription_canceled. All required references are present: 'subscription terms' (quoted and paraphrased), 'Sep 5' (September 5, 2026), and 'after renewal' (4 days after renewal date). All factual claims are grounded: dates match communication record (Sep 5, 2026), the quoted text appears verbatim in the communication body, renewal date inference (~Sept 1) derives from the customer's '4 days after renewal' statement and shipment/delivered_at dates (Sept 1), and card checks are documented in charge.card_checks.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3080,
+          "outputTokens": 190,
+          "totalTokens": 3270,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_13",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 140,
+        "missing_items": [],
+        "explanation": "Reason code 'subscription_canceled' is named in narrative. All three required references are present: 'Aug 28' (August 28, 2026), 'before renewal' (predates September 1), and 'cancellation request' (documented message cited). All factual claims are grounded in records: cancellation message dated Aug 28 at 09:00 UTC, renewal date Sep 1, order created Aug 1 for $89.00, digital delivery Sep 1, card checks passed.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3578,
+          "outputTokens": 166,
+          "totalTokens": 3744,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 140,
+        "missing_items": [],
+        "explanation": "All criteria pass. The narrative addresses subscription_canceled with a clear header. All required references are present: 'Aug 28' (August 28, 2026), 'before renewal' (multiple instances including 'well before renewal' and 'prior to the renewal date'), and 'cancellation request' (appears multiple times). Every factual claim is grounded in the records: dates match communications[0].created_at and customer message content; order details match the order record; card checks match charge.card_checks; delivery date matches shipment.delivered_at. No unsupported claims detected.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3240,
+          "outputTokens": 182,
+          "totalTokens": 3422,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_14",
+      "old_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 115,
+        "missing_items": [],
+        "explanation": "Reason 'duplicate' is named. All required references (ORD-14A, ORD-14B, distinct items) are cited in narrative and communications quote. However, no_hallucination_pass fails: the narrative claims 'The related orders ORD-14A and ORD-14B appear in charge metadata but have no recorded shipments.' The records show metadata lists 'related_orders: ORD-14A,ORD-14B' but provide no shipment records for these orders to confirm or deny shipment status. This is an unsupported inference beyond the supplied data.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3644,
+          "outputTokens": 187,
+          "totalTokens": 3831,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 115,
+        "missing_items": [],
+        "explanation": "The narrative addresses the duplicate reason and cites all required references: ORD-14A, ORD-14B, and distinct items. However, it contains an unsupported factual claim: \"The related orders ORD-14A and ORD-14B appear in charge metadata but have no recorded shipments, indicating they represent distinct orders processed separately on the payment intent.\" The charge metadata field \"related_orders\" lists \"ORD-14A,ORD-14B\" but provides no information about payment intents, separate processing, or whether these are distinct orders versus duplicate charges. The narrative improperly infers causation from absence of shipment records.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3280,
+          "outputTokens": 199,
+          "totalTokens": 3479,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_15",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 58,
+        "missing_items": [],
+        "explanation": "Narrative correctly identifies reason as 'duplicate' and meaningfully references all three required items: 'double charge' (quoted from customer communication), 'identical items' (quoted), and 'single shipment fulfilled' (confirmed by carrier records). All factual claims are grounded in supplied records: customer communication dated 2026-08-08, USPS tracking 940015, delivery date 2026-08-11, and billing address match.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3368,
+          "outputTokens": 149,
+          "totalTokens": 3517,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 58,
+        "missing_items": [],
+        "explanation": "All criteria pass. The narrative addresses the duplicate reason code. All required references are meaningfully cited: 'double charge' (customer reported), 'identical items' (from customer communication), and 'single shipment' (confirmed by carrier records). All factual claims are grounded: customer communication body matches the quoted text, USPS tracking 940015 exists in shipment records, delivery date 2026-08-11 matches delivered_at, and billing address matches the shipping address in records.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3015,
+          "outputTokens": 159,
+          "totalTokens": 3174,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_16",
+      "old_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 55,
+        "missing_items": [],
+        "explanation": "Reason 'inquiry' is named and addressed. Required references 'inquiry', 'cancellation', and '$15 fee' all appear in narrative and supporting output. However, no_hallucination_pass fails: the narrative claims 'Customer states cancellation sent before renewal charge' but the communication only says 'I sent a cancellation email before renewal'\u2014no evidence in records confirms the cancellation email was actually sent or received by merchant before the charge occurred.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3303,
+          "outputTokens": 151,
+          "totalTokens": 3454,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 55,
+        "missing_items": [],
+        "explanation": "The narrative fails no_hallucination_pass because it claims the recommendation is to 'issuing refund to customer under merchant policy' but the case_facts show this is an inquiry (status: warning_needs_response) that requires a response, not a refund issuance. The instructions explicitly state 'Concede does not issue another refund' and 'Current recommendations must be prospective.' The narrative incorrectly describes issuing a refund as the action when the merchant should respond to the inquiry. The $15 fee reference is properly cited from the customer communication.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 2964,
+          "outputTokens": 176,
+          "totalTokens": 3140,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_17",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 73,
+        "missing_items": [],
+        "explanation": "Narrative correctly identifies dispute reason as 'inquiry' (matching required_reason and dispute.reason). Both required references are meaningfully cited: 'inquiry' appears in the reason statement and opening sentence; '$15 fee' is directly quoted from customer communication. All factual claims (customer tier, order count, LTV, delivery pause, refund request, policy thresholds) are supported by records. No unsupported claims detected.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3497,
+          "outputTokens": 144,
+          "totalTokens": 3641,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 73,
+        "missing_items": [],
+        "explanation": "The narrative fails grounding by claiming 'customer cancellation request' when the customer communication only mentions pausing delivery and requesting a refund to avoid fees. No record documents a cancellation request. The supporting_output.strategy.rationale similarly invents 'requested pause' when the customer only states they 'had paused' delivery (past tense). The narrative correctly addresses the inquiry reason and cites both required references ('inquiry' and '$15 fee').",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3140,
+          "outputTokens": 150,
+          "totalTokens": 3290,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_18",
+      "old_judge": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 115,
+        "missing_items": [
+          "LTV"
+        ],
+        "explanation": "Failing field: supporting_output.strategy.expected_value_cents. Claim: 'expected_value_cents: 0'. This is unsupported. With win_probability 0.2 and dispute amount $450.00 (45000 cents), expected value should be approximately 9000 cents (0.2 \u00d7 45000), not 0. Reason code and required references (repeat, LTV, vip_concede_max_cents) are all present and grounded.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3441,
+          "outputTokens": 164,
+          "totalTokens": 3605,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 115,
+        "missing_items": [
+          "LTV"
+        ],
+        "explanation": "All criteria pass. The narrative addresses product_not_received. It meaningfully references all required items: 'repeat customer' (customer_tier: repeat), 'lifetime value' as LTV ($1,200.00 matches customer.lifetime_value), and 'vip_concede_max_cents threshold of $500.00' (matches merchant_policy.vip_concede_max_cents). All factual claims are grounded: customer details, order amount, delivery records, policy thresholds, and the concession recommendation are all supported by the provided records.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3114,
+          "outputTokens": 177,
+          "totalTokens": 3291,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_19",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 71,
+        "missing_items": [],
+        "explanation": "Reason 'fraudulent' is named in narrative header. All three required references are present: tracking number 1Z99919, signature S. Jenkins, and AVS (address line 1 match, postal code match, CVC match). All factual claims\u2014card checks, delivery date/address, signature match, order timeline\u2014are supported by case records. No unsupported claims detected.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3353,
+          "outputTokens": 136,
+          "totalTokens": 3489,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 71,
+        "missing_items": [],
+        "explanation": "All criteria pass. The narrative addresses the fraudulent reason in the opening sentence. All three required references appear: tracking number '1Z99919', signature 'S. Jenkins', and 'AVS' (address verification system). Every factual claim is grounded: card checks passed per charge.card_checks fields, delivery details match shipment records, signature matches signed_by field, addresses match order.billing_address, and dates correspond to order.created_at and shipment timestamps. No unsupported claims detected.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3007,
+          "outputTokens": 162,
+          "totalTokens": 3169,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    },
+    {
+      "case_id": "case_20",
+      "old_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 135,
+        "missing_items": [],
+        "explanation": "Reason code 'product_not_received' is named in narrative header. All three required references are meaningfully cited: tracking number 940020, delivery status 'delivered', and carrier 'USPS' appear in narrative and supporting output. All factual claims (USPS delivery Aug 19 2026, mailbox delivery, address match, card checks passed, no return request in records) are supported by case_facts records.",
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "usage": {
+          "inputTokens": 3548,
+          "outputTokens": 146,
+          "totalTokens": 3694,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "new_judge": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 135,
+        "missing_items": [],
+        "explanation": "All criteria pass. The narrative addresses product_not_received in the opening. All required references appear: tracking number '940020', carrier 'USPS', and status 'delivered' are explicitly cited. Every factual claim is grounded: USPS delivery on August 19, 2026 matches shipment.delivered_at; tracking 940020 matches shipment.tracking_number; address 210 Beech St, Minneapolis, MN 55401 matches order.billing_address and shipment.shipping_address; 'Delivered in Mailbox' matches shipment.signed_by; card checks passed matches charge.card_checks; Olivia Moore matches customer.name and charge.billing_details.name; no communications matches empty communications array; no return request is supported by absence in records.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3208,
+          "outputTokens": 230,
+          "totalTokens": 3438,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      }
+    }
+  ]
+}

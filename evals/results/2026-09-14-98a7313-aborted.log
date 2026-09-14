@@ -1,0 +1,100 @@
+================================================================================
+REBUTTAL DECISION EVALS HARNESS (R-16)
+================================================================================
+Timestamp: 2026-09-14T14:17:30.028150+00:00
+Running multi-agent pipeline against 20 synthetic cases (dry-run mode)...
+
+Case      | Reason                 | Exp Act    | Act Act    | Gate (Exp/Got) | Judge  | EV     | Result
+--------------------------------------------------------------------------------------------------------
+Graph without execution limits may run indefinitely if cycles exist
+case_01   | product_not_received   | fight      | fight      | F/F            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_02   | product_not_received   | fight      | fight      | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_03   | product_not_received   | concede    | concede    | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_04   | fraudulent             | fight      | fight      | F/F            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_05   | fraudulent             | fight      | fight      | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_06   | fraudulent             | concede    | concede    | T/T            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+case_07   | product_unacceptable   | fight      | fight      | F/F            | FAIL   | PASS   | FAIL
+  Judge: This narrative is being evaluated for two criteria: (1) whether it satisfies the required reason code 'product_unacceptable' by including names or addresses or having a reason header, and (2) whether it meaningfully references all required items ('return policy' and 'no return').
+
+For reason_code_pass: The narrative begins with 'Dispute Reason: product_unacceptable' which serves as a reason header that explicitly identifies the required reason code. This satisfies the criterion.
+
+For must_cite_pass: The narrative must reference both 'return policy' and 'no return'. The text explicitly states 'The merchant's 30-day return policy requires customers to initiate returns...' which directly references 'return policy'. However, examining the entire narrative, there is no meaningful reference to 'no return' - the text discusses the return policy requirements and process, but never indicates that returns are prohibited or that there is a 'no return' policy. The phrase 'no return' or an equivalent concept (such as 'returns not accepted' or 'non-returnable') does not appear in the narrative. | All factual claims in the output are supported by the source records. The narrative correctly states: dispute reason is product_unacceptable (dispute.reason); UPS carrier with tracking 1Z99907 (shipment.carrier, shipment.tracking_number); delivered August 14, 2026 at 12:00 PM (shipment.delivered_at); shipping address 707 Willow Way, Portland, OR 97201 (shipment.shipping_address matches billing address); signature 'E. Watson' (shipment.signed_by); all card checks passed (charge.card_checks shows pass for all three); no customer communications (communications array is empty, comms tool returned message_count: 0); 30-day return policy requiring merchant support contact (merchant_policy.return_policy). The strategy fields correctly identify: action as fight; customer_value as new (customer.customer_tier); win_probability 0.8 and expected_value_cents 8900 are assessments with supported rationale; evidence_strength 'strong' assessment is grounded in the documented delivery with signature. The evidence_packet fields accurately transcribe: customer name, email, addresses, carrier, tracking number, shipping date (2026-08-11 from shipment.shipped_at), and refund policy. The claim 'no such request was submitted before this dispute' is properly scoped to merchant records (supported by empty communications). All currency amounts, dates, and addresses match source records exactly.
+Graph without execution limits may run indefinitely if cycles exist
+Traceback (most recent call last):
+  File "/private/tmp/rebuttal-output-grounding/evals/run.py", line 664, in <module>
+    main()
+  File "/private/tmp/rebuttal-output-grounding/evals/run.py", line 546, in main
+    res = run_single_eval_case(case_file, judge_client)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/evals/run.py", line 465, in run_single_eval_case
+    judge_res = judge_narrative(
+                ^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/evals/run.py", line 171, in judge_narrative
+    narrative_judge = score(
+                      ^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/evals/run.py", line 153, in score
+    response = judge_client.converse(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/client.py", line 606, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/client.py", line 1076, in _make_api_call
+    http, parsed_response = self._make_request(
+                            ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/client.py", line 1100, in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/endpoint.py", line 119, in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/endpoint.py", line 199, in _send_request
+    success_response, exception = self._get_response(
+                                  ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/endpoint.py", line 241, in _get_response
+    success_response, exception = self._do_get_response(
+                                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/endpoint.py", line 281, in _do_get_response
+    http_response = self._send(request)
+                    ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/endpoint.py", line 385, in _send
+    return self.http_session.send(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/httpsession.py", line 509, in send
+    urllib_response = conn.urlopen(
+                      ^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 788, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/urllib3/connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/http/client.py", line 1430, in getresponse
+    response.begin()
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/http/client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/ssl.py", line 1251, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/ssl.py", line 1103, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

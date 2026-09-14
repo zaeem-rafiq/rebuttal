@@ -1,0 +1,684 @@
+{
+  "facts": {
+    "order": {
+      "id": "ORD-1002",
+      "customer_id": "CUST-002",
+      "amount_cents": 34000,
+      "currency": "usd",
+      "status": "delivered",
+      "payment_intent_id": "pi_mock_s2_1789393671",
+      "charge_id": "ch_mock_s2_1789393671",
+      "card_brand": "mastercard",
+      "card_last4": "5555",
+      "avs_postal_match": "match",
+      "cvc_match": "match",
+      "shipping_address": {
+        "line1": "880 Harrison St",
+        "city": "San Francisco",
+        "state": "CA",
+        "postal_code": "94107",
+        "country": "US"
+      },
+      "billing_address": {
+        "line1": "742 Evergreen Terrace",
+        "city": "Springfield",
+        "state": "OR",
+        "postal_code": "97477",
+        "country": "US"
+      },
+      "created_at": "2026-08-25T09:15:00Z",
+      "updated_at": "2026-09-05T18:44:34Z",
+      "items": [
+        {
+          "id": "ITEM-1002-1",
+          "order_id": "ORD-1002",
+          "product_name": "Ceramic pour-over set",
+          "sku": "CPS-340",
+          "quantity": 1,
+          "unit_price_cents": 34000,
+          "total_price_cents": 34000,
+          "created_at": "2026-08-25T09:15:00Z"
+        }
+      ],
+      "customer_name": "Jessica Lee",
+      "customer_email": "j.lee@example.com",
+      "customer_phone": "+15553456789",
+      "customer_value": "repeat",
+      "order_count": 5,
+      "lifetime_value_cents": 112000
+    },
+    "shipment": {
+      "id": "SHIP-1002",
+      "order_id": "ORD-1002",
+      "carrier": "FedEx",
+      "tracking_number": "449044301542",
+      "status": "delivered",
+      "shipped_at": "2026-08-26T11:00:00Z",
+      "delivered_at": "2026-08-29T11:20:00Z",
+      "signed_by": null,
+      "shipping_address": {
+        "line1": "880 Harrison St",
+        "city": "San Francisco",
+        "state": "CA",
+        "postal_code": "94107",
+        "country": "US"
+      },
+      "created_at": "2026-08-26T10:00:00Z",
+      "events": [
+        {
+          "id": "EVT-1002-1",
+          "shipment_id": "SHIP-1002",
+          "timestamp": "2026-08-26T11:00:00Z",
+          "status": "label_created",
+          "location": "Springfield, OR",
+          "details": "Shipping label created with alternate destination 880 Harrison St, San Francisco, CA",
+          "created_at": "2026-08-26T11:00:00Z"
+        },
+        {
+          "id": "EVT-1002-2",
+          "shipment_id": "SHIP-1002",
+          "timestamp": "2026-08-27T18:30:00Z",
+          "status": "in_transit",
+          "location": "Oakland, CA",
+          "details": "In transit at FedEx sorting facility",
+          "created_at": "2026-08-27T18:30:00Z"
+        },
+        {
+          "id": "EVT-1002-3",
+          "shipment_id": "SHIP-1002",
+          "timestamp": "2026-08-29T11:20:00Z",
+          "status": "delivered",
+          "location": "San Francisco, CA",
+          "details": "Delivered - Left at front door, no signature required",
+          "created_at": "2026-08-29T11:20:00Z"
+        }
+      ]
+    },
+    "communications": {
+      "customer_id": "CUST-002",
+      "order_id": "ORD-1002",
+      "messages": [
+        {
+          "id": "MSG-003",
+          "customer_id": "CUST-002",
+          "order_id": "ORD-1002",
+          "direction": "inbound",
+          "channel": "email",
+          "subject": "Address change for ORD-1002",
+          "body": "Hello, I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead? Thanks! Jessica Lee",
+          "has_shipping_change": 1,
+          "created_at": "2026-08-25T14:10:00Z"
+        },
+        {
+          "id": "MSG-004",
+          "customer_id": "CUST-002",
+          "order_id": "ORD-1002",
+          "direction": "outbound",
+          "channel": "email",
+          "subject": "Re: Address change for ORD-1002",
+          "body": "Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!",
+          "has_shipping_change": 1,
+          "created_at": "2026-08-25T15:00:00Z"
+        }
+      ],
+      "message_count": 2,
+      "has_cancellation_request": false,
+      "has_address_change_request": true,
+      "has_inquiry": true
+    },
+    "history_and_policy": {
+      "policy": {
+        "id": "POL-001",
+        "merchant_name": "Acme Specialty Goods",
+        "approval_amount_cents": 20000,
+        "min_win_probability_to_fight": 0.5,
+        "always_concede_under_cents": 1500,
+        "vip_concede_max_cents": 50000,
+        "silence_action": "fight",
+        "created_at": "2026-01-01T00:00:00Z",
+        "updated_at": "2026-01-01T00:00:00Z"
+      },
+      "customer_tier": "repeat",
+      "order_count": 5,
+      "lifetime_value_cents": 112000,
+      "prior_disputes_count": 1,
+      "prior_orders": [
+        {
+          "id": "ORD-1002",
+          "amount_cents": 34000,
+          "status": "delivered",
+          "created_at": "2026-08-25T09:15:00Z"
+        },
+        {
+          "id": "ORD-1011",
+          "amount_cents": 18000,
+          "status": "delivered",
+          "created_at": "2026-07-15T10:00:00Z"
+        }
+      ]
+    },
+    "dispute": {
+      "id": "dp_S2",
+      "amount_cents": 34000,
+      "currency": "usd",
+      "reason": "fraudulent",
+      "status": "needs_response"
+    },
+    "card_checks": {
+      "address_line1_check": "pass",
+      "address_postal_code_check": "pass",
+      "cvc_check": "pass"
+    },
+    "produced_artifacts": []
+  },
+  "results": [
+    {
+      "name": "grounded_control",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "All checks pass. The narrative correctly addresses the fraudulent reason code. The required_narrative_references list is empty, so no citations are required. All factual claims are grounded: $340 equals 34000 cents from dispute.amount_cents, 5 orders matches history_and_policy.order_count, and $1,120 equals 112000 cents from lifetime_value_cents.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 2517,
+          "outputTokens": 140,
+          "totalTokens": 2657,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "owner_summary_unsupported",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "The strategy.owner_summary field claims 'Refund completed and $15 fee saved.' No record documents a completed refund or any $15 fee. The case shows status 'needs_response' with no refund transaction. This is an unsupported factual claim about a completed action that contradicts the available records.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 2513,
+          "outputTokens": 123,
+          "totalTokens": 2636,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Refund completed and $15 fee saved."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "uncategorized_text_unsupported",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "The narrative correctly addresses the fraudulent reason and the required_narrative_references list is empty (passes). However, the uncategorized_text field contains an unsupported factual claim: 'The customer admitted deliberately committing fraud.' No record in communications, messages, or any other field documents such an admission. This is a hallucination that contradicts the grounding requirement.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 2535,
+          "outputTokens": 131,
+          "totalTokens": 2666,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": "The customer admitted deliberately committing fraud.",
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "quoted_reference_counts",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 18,
+        "missing_items": [],
+        "explanation": "All checks pass. The narrative addresses the fraudulent reason code in its opening. It meaningfully references the required ORD-1002. The quoted email text appears verbatim in MSG-003 body, establishing factual support. No unsupported claims are present.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 2529,
+          "outputTokens": 109,
+          "totalTokens": 2638,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent. The inbound email states: \"I just placed order ORD-1002 but I am traveling for work.\"",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "reference_only_outside_narrative",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": false,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [
+          "ORD-1002"
+        ],
+        "explanation": "The narrative fails grounding. It claims 'Merchant records list 5 total orders and $1,120 lifetime value' but the case_facts show order_count: 5 and lifetime_value_cents: 112000, which equals $1,120.00. However, prior_orders only contains 2 order records (ORD-1002 and ORD-1011), not 5 detailed orders. The narrative conflates the profile-level total (5) with the supplied detailed records (2), making an unsupported factual claim about what merchant records 'list.'",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 2573,
+          "outputTokens": 185,
+          "totalTokens": 2758,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": "Dispute Reason: fraudulent. The inbound email states: \"I just placed order ORD-1002 but I am traveling for work.\"",
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "scoped_record_absence",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 27,
+        "missing_items": [],
+        "explanation": "The narrative correctly addresses the fraudulent reason and the required_narrative_references list is empty, so both pass. However, no_hallucination_pass fails because the narrative states 'No return request is documented in merchant records' when the case_facts contain no return-related records at all. The communications show an address change request, not a return request. This statement invents a claim about what was checked in merchant records without supporting evidence that return requests were part of the documented data.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 2535,
+          "outputTokens": 153,
+          "totalTokens": 2688,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value. No return request is documented in merchant records.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "card_check_equivalence",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 31,
+        "missing_items": [],
+        "explanation": "The narrative claims 'Merchant records list 5 total orders and $1,120 lifetime value.' The order record shows order_count: 5 and lifetime_value_cents: 112000 ($1,120), but prior_orders only lists 2 orders (ORD-1002 and ORD-1011). The narrative conflates the profile-level total (5 orders) with the detailed order records provided (2 orders), creating an unsupported factual claim about what the merchant records 'list.'",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 2553,
+          "outputTokens": 171,
+          "totalTokens": 2724,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value. AVS address line 1 and postal code checks passed. CVC check passed.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "card_checks_do_not_prove_authorization",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 40,
+        "missing_items": [],
+        "explanation": "The narrative claims 'These checks prove that the cardholder authorized this payment.' This is unsupported. The records show AVS and CVC checks passed, which verify card details matched, but passing card checks do not prove cardholder authorization. The checks confirm data matching, not that the legitimate cardholder authorized the specific transaction\u2014a critical distinction in fraudulent disputes where cards may be stolen or compromised.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 2577,
+          "outputTokens": 138,
+          "totalTokens": 2715,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value. AVS address line 1 and postal code checks passed. CVC check passed. These checks prove that the cardholder authorized this payment.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "unproduced_attachment",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "The narrative fails grounding because it references 'unproduced-evidence.pdf' in supporting_output.evidence_packet.files, but produced_artifacts is an empty list in the case facts. This file does not exist in the merchant records and represents an unsupported factual claim about available evidence.",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 2537,
+          "outputTokens": 116,
+          "totalTokens": 2653,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": [
+            "unproduced-evidence.pdf"
+          ]
+        }
+      }
+    }
+  ]
+}

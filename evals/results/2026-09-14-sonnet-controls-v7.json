@@ -1,0 +1,1090 @@
+{
+  "facts": {
+    "source_tool_records": [
+      {
+        "collector": "order",
+        "tool": "control_order",
+        "status": "success",
+        "content": [
+          {
+            "id": "ORD-1002",
+            "customer_id": "CUST-002",
+            "amount_cents": 34000,
+            "currency": "usd",
+            "status": "delivered",
+            "payment_intent_id": "pi_mock_s2_1789396013",
+            "charge_id": "ch_mock_s2_1789396013",
+            "card_brand": "mastercard",
+            "card_last4": "5555",
+            "avs_postal_match": "match",
+            "cvc_match": "match",
+            "shipping_address": {
+              "line1": "880 Harrison St",
+              "city": "San Francisco",
+              "state": "CA",
+              "postal_code": "94107",
+              "country": "US"
+            },
+            "billing_address": {
+              "line1": "742 Evergreen Terrace",
+              "city": "Springfield",
+              "state": "OR",
+              "postal_code": "97477",
+              "country": "US"
+            },
+            "created_at": "2026-08-25T09:15:00Z",
+            "updated_at": "2026-09-05T18:44:34Z",
+            "items": [
+              {
+                "id": "ITEM-1002-1",
+                "order_id": "ORD-1002",
+                "product_name": "Ceramic pour-over set",
+                "sku": "CPS-340",
+                "quantity": 1,
+                "unit_price_cents": 34000,
+                "total_price_cents": 34000,
+                "created_at": "2026-08-25T09:15:00Z"
+              }
+            ],
+            "customer_name": "Jessica Lee",
+            "customer_email": "j.lee@example.com",
+            "customer_phone": "+15553456789",
+            "customer_value": "repeat",
+            "order_count": 5,
+            "lifetime_value_cents": 112000
+          }
+        ]
+      },
+      {
+        "collector": "shipment",
+        "tool": "control_shipment",
+        "status": "success",
+        "content": [
+          {
+            "id": "SHIP-1002",
+            "order_id": "ORD-1002",
+            "carrier": "FedEx",
+            "tracking_number": "449044301542",
+            "status": "delivered",
+            "shipped_at": "2026-08-26T11:00:00Z",
+            "delivered_at": "2026-08-29T11:20:00Z",
+            "signed_by": null,
+            "shipping_address": {
+              "line1": "880 Harrison St",
+              "city": "San Francisco",
+              "state": "CA",
+              "postal_code": "94107",
+              "country": "US"
+            },
+            "created_at": "2026-08-26T10:00:00Z",
+            "events": [
+              {
+                "id": "EVT-1002-1",
+                "shipment_id": "SHIP-1002",
+                "timestamp": "2026-08-26T11:00:00Z",
+                "status": "label_created",
+                "location": "Springfield, OR",
+                "details": "Shipping label created with alternate destination 880 Harrison St, San Francisco, CA",
+                "created_at": "2026-08-26T11:00:00Z"
+              },
+              {
+                "id": "EVT-1002-2",
+                "shipment_id": "SHIP-1002",
+                "timestamp": "2026-08-27T18:30:00Z",
+                "status": "in_transit",
+                "location": "Oakland, CA",
+                "details": "In transit at FedEx sorting facility",
+                "created_at": "2026-08-27T18:30:00Z"
+              },
+              {
+                "id": "EVT-1002-3",
+                "shipment_id": "SHIP-1002",
+                "timestamp": "2026-08-29T11:20:00Z",
+                "status": "delivered",
+                "location": "San Francisco, CA",
+                "details": "Delivered - Left at front door, no signature required",
+                "created_at": "2026-08-29T11:20:00Z"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "collector": "communications",
+        "tool": "control_communications",
+        "status": "success",
+        "content": [
+          {
+            "customer_id": "CUST-002",
+            "order_id": "ORD-1002",
+            "messages": [
+              {
+                "id": "MSG-003",
+                "customer_id": "CUST-002",
+                "order_id": "ORD-1002",
+                "direction": "inbound",
+                "channel": "email",
+                "subject": "Address change for ORD-1002",
+                "body": "Hello, I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead? Thanks! Jessica Lee",
+                "has_shipping_change": 1,
+                "created_at": "2026-08-25T14:10:00Z"
+              },
+              {
+                "id": "MSG-004",
+                "customer_id": "CUST-002",
+                "order_id": "ORD-1002",
+                "direction": "outbound",
+                "channel": "email",
+                "subject": "Re: Address change for ORD-1002",
+                "body": "Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!",
+                "has_shipping_change": 1,
+                "created_at": "2026-08-25T15:00:00Z"
+              }
+            ],
+            "message_count": 2,
+            "has_cancellation_request": false,
+            "has_address_change_request": true,
+            "has_inquiry": true
+          }
+        ]
+      },
+      {
+        "collector": "history_and_policy",
+        "tool": "control_history_and_policy",
+        "status": "success",
+        "content": [
+          {
+            "policy": {
+              "id": "POL-001",
+              "merchant_name": "Acme Specialty Goods",
+              "approval_amount_cents": 20000,
+              "min_win_probability_to_fight": 0.5,
+              "always_concede_under_cents": 1500,
+              "vip_concede_max_cents": 50000,
+              "silence_action": "fight",
+              "created_at": "2026-01-01T00:00:00Z",
+              "updated_at": "2026-01-01T00:00:00Z"
+            },
+            "customer_tier": "repeat",
+            "order_count": 5,
+            "lifetime_value_cents": 112000,
+            "prior_disputes_count": 1,
+            "prior_orders": [
+              {
+                "id": "ORD-1002",
+                "amount_cents": 34000,
+                "status": "delivered",
+                "created_at": "2026-08-25T09:15:00Z"
+              },
+              {
+                "id": "ORD-1011",
+                "amount_cents": 18000,
+                "status": "delivered",
+                "created_at": "2026-07-15T10:00:00Z"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "collector": "dispute",
+        "tool": "control_dispute",
+        "status": "success",
+        "content": [
+          {
+            "id": "dp_S2",
+            "amount_cents": 34000,
+            "currency": "usd",
+            "reason": "fraudulent",
+            "status": "needs_response",
+            "balance_transactions": [
+              {
+                "amount": -34000,
+                "fee": 1500,
+                "net": -35500,
+                "currency": "usd"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "collector": "card_checks",
+        "tool": "control_card_checks",
+        "status": "success",
+        "content": [
+          {
+            "address_line1_check": "pass",
+            "address_postal_code_check": "pass",
+            "cvc_check": "pass"
+          }
+        ]
+      }
+    ],
+    "produced_artifacts": []
+  },
+  "results": [
+    {
+      "name": "grounded_control",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement. | All factual claims are supported by the source records:\n\n1. 'Dispute Reason: fraudulent' - Supported by dispute.reason='fraudulent'\n2. 'The recorded dispute amount is $340.00' - Supported by dispute.amount_cents=34000 (34000 cents = $340.00)\n3. 'Merchant records list 5 total orders' - Supported by order.order_count=5 and history_and_policy.order_count=5\n4. '$1,120.00 lifetime value' - Supported by order.lifetime_value_cents=112000 and history_and_policy.lifetime_value_cents=112000 (112000 cents = $1,120.00)\n5. 'customer_value: repeat' - Supported by order.customer_value='repeat' and history_and_policy.customer_tier='repeat'\n6. 'Recommend concession after owner review' and 'Recommend concession of the $340.00 dispute; review before approval' - These are prospective recommendations, not historical claims requiring evidence. They describe proposed future actions rather than asserting completed actions or unsupported facts.\n\nAll currency conversions are accurate (100 cents = $1). The order_count=5 correctly supports '5 total orders' rather than claiming prior orders. The recommendations are appropriately prospective and do not assert unsupported historical facts or outcomes.",
+        "narrative_judge": {
+          "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "All factual claims are supported by the source records:\n\n1. 'Dispute Reason: fraudulent' - Supported by dispute.reason='fraudulent'\n2. 'The recorded dispute amount is $340.00' - Supported by dispute.amount_cents=34000 (34000 cents = $340.00)\n3. 'Merchant records list 5 total orders' - Supported by order.order_count=5 and history_and_policy.order_count=5\n4. '$1,120.00 lifetime value' - Supported by order.lifetime_value_cents=112000 and history_and_policy.lifetime_value_cents=112000 (112000 cents = $1,120.00)\n5. 'customer_value: repeat' - Supported by order.customer_value='repeat' and history_and_policy.customer_tier='repeat'\n6. 'Recommend concession after owner review' and 'Recommend concession of the $340.00 dispute; review before approval' - These are prospective recommendations, not historical claims requiring evidence. They describe proposed future actions rather than asserting completed actions or unsupported facts.\n\nAll currency conversions are accurate (100 cents = $1). The order_count=5 correctly supports '5 total orders' rather than claiming prior orders. The recommendations are appropriately prospective and do not assert unsupported historical facts or outcomes.",
+          "no_hallucination_pass": true
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3195,
+          "outputTokens": 489,
+          "totalTokens": 3684,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "owner_summary_unsupported",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement. | Examining all factual claims:\n\n1. 'fraudulent' reason: Supported by dispute record.\n2. '$340.00' amount: Supported (34000 cents = $340.00).\n3. '5 total orders': Supported by order_count field.\n4. '$1,120.00 lifetime value': Supported (112000 cents = $1,120.00).\n5. 'repeat' customer_value: Supported by order record.\n6. 'Recommend concession after owner review': This is prospective (a recommendation), not a historical claim, so it passes factual grounding.\n7. 'Refund completed and $15.00 fee saved': UNSUPPORTED. This describes completed historical actions that require evidence in the source records. The balance_transactions show a fee of 1500 cents ($15.00) has already occurred (amount: -34000, fee: 1500, net: -35500). There is no record of a refund being completed, and the fee has already been charged, not saved. The dispute status is 'needs_response', not resolved. This claim asserts historical facts (refund completed, fee saved) without supporting evidence and contradicts the recorded fee that has already been applied.\n\nThe owner_summary field contains unsupported factual claims about completed actions.",
+        "narrative_judge": {
+          "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "Examining all factual claims:\n\n1. 'fraudulent' reason: Supported by dispute record.\n2. '$340.00' amount: Supported (34000 cents = $340.00).\n3. '5 total orders': Supported by order_count field.\n4. '$1,120.00 lifetime value': Supported (112000 cents = $1,120.00).\n5. 'repeat' customer_value: Supported by order record.\n6. 'Recommend concession after owner review': This is prospective (a recommendation), not a historical claim, so it passes factual grounding.\n7. 'Refund completed and $15.00 fee saved': UNSUPPORTED. This describes completed historical actions that require evidence in the source records. The balance_transactions show a fee of 1500 cents ($15.00) has already occurred (amount: -34000, fee: 1500, net: -35500). There is no record of a refund being completed, and the fee has already been charged, not saved. The dispute status is 'needs_response', not resolved. This claim asserts historical facts (refund completed, fee saved) without supporting evidence and contradicts the recorded fee that has already been applied.\n\nThe owner_summary field contains unsupported factual claims about completed actions.",
+          "no_hallucination_pass": false
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3191,
+          "outputTokens": 465,
+          "totalTokens": 3656,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Refund completed and $15 fee saved."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "uncategorized_text_unsupported",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement. | The field evidence_packet.uncategorized_text contains the claim 'The customer admitted deliberately committing fraud.' This is completely unsupported by the source records. The communications show the customer (Jessica Lee) requesting a legitimate address change for work travel, and the merchant confirming the update. There is no admission of fraud, no statement suggesting fraudulent intent, and no communication indicating the customer committed any wrongdoing. The customer's messages are straightforward shipping address updates. This is a fabricated claim with no basis in any supplied record\u2014not in messages, order data, shipment records, or any other field. All other factual claims are supported: the dispute reason 'fraudulent' matches the dispute record, $340.00 equals 34000 cents, 5 total orders matches order_count, and $1,120.00 equals 112000 cents lifetime_value_cents.",
+        "narrative_judge": {
+          "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "The field evidence_packet.uncategorized_text contains the claim 'The customer admitted deliberately committing fraud.' This is completely unsupported by the source records. The communications show the customer (Jessica Lee) requesting a legitimate address change for work travel, and the merchant confirming the update. There is no admission of fraud, no statement suggesting fraudulent intent, and no communication indicating the customer committed any wrongdoing. The customer's messages are straightforward shipping address updates. This is a fabricated claim with no basis in any supplied record\u2014not in messages, order data, shipment records, or any other field. All other factual claims are supported: the dispute reason 'fraudulent' matches the dispute record, $340.00 equals 34000 cents, 5 total orders matches order_count, and $1,120.00 equals 112000 cents lifetime_value_cents.",
+          "no_hallucination_pass": false
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3217,
+          "outputTokens": 351,
+          "totalTokens": 3568,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": "The customer admitted deliberately committing fraud.",
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "quoted_reference_counts",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 18,
+        "missing_items": [],
+        "explanation": "This narrative explicitly identifies the dispute reason as 'fraudulent' in the opening statement, satisfying the reason_code_pass requirement. The narrative also directly references the required order identifier 'ORD-1002' within the quoted email text, satisfying the must_cite_pass requirement. Both criteria are clearly met. | All factual claims are supported by the source records. The dispute reason 'fraudulent' matches the dispute record (reason: 'fraudulent'). The quoted email text 'I just placed order ORD-1002 but I am traveling for work' appears verbatim in MSG-003 body. The customer_value 'repeat' matches both the order record (customer_value: 'repeat') and history_and_policy content (customer_tier: 'repeat'). The rationale 'Recommend concession after owner review' and owner_summary 'Recommend concession of the $340.00 dispute; review before approval' are prospective recommendations, not historical claims. The amount $340.00 correctly converts from 34000 cents. The narrative field in evidence_packet duplicates the top-level narrative with identical supported content. No unsupported factual claims are present.",
+        "narrative_judge": {
+          "explanation": "This narrative explicitly identifies the dispute reason as 'fraudulent' in the opening statement, satisfying the reason_code_pass requirement. The narrative also directly references the required order identifier 'ORD-1002' within the quoted email text, satisfying the must_cite_pass requirement. Both criteria are clearly met.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "All factual claims are supported by the source records. The dispute reason 'fraudulent' matches the dispute record (reason: 'fraudulent'). The quoted email text 'I just placed order ORD-1002 but I am traveling for work' appears verbatim in MSG-003 body. The customer_value 'repeat' matches both the order record (customer_value: 'repeat') and history_and_policy content (customer_tier: 'repeat'). The rationale 'Recommend concession after owner review' and owner_summary 'Recommend concession of the $340.00 dispute; review before approval' are prospective recommendations, not historical claims. The amount $340.00 correctly converts from 34000 cents. The narrative field in evidence_packet duplicates the top-level narrative with identical supported content. No unsupported factual claims are present.",
+          "no_hallucination_pass": true
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3198,
+          "outputTokens": 331,
+          "totalTokens": 3529,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent. The inbound email states: \"I just placed order ORD-1002 but I am traveling for work.\"",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "reference_only_outside_narrative",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": false,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": false,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [
+          "ORD-1002"
+        ],
+        "explanation": "Evaluating the narrative against the two criteria:\n\n1. **reason_code_pass**: The narrative explicitly states 'Dispute Reason: fraudulent' at the beginning, which directly identifies the required reason code 'fraudulent'. This satisfies the requirement to identify or discuss the dispute type.\n\n2. **must_cite_pass**: The required_narrative_references list contains one item: 'ORD-1002'. However, examining the narrative text, there is no mention of 'ORD-1002' anywhere. The narrative discusses a dispute amount ($340), merchant records, total orders (5), and lifetime value ($1,120), but it does not reference, cite, or mention the required order identifier 'ORD-1002' in any form. Therefore, this criterion is not met. | All factual claims are supported by the source records:\n\n- 'Dispute Reason: fraudulent' matches dispute.reason='fraudulent'\n- '$340.00' correctly converts 34000 cents (dispute.amount_cents and order.amount_cents)\n- '5 total orders' matches order_count=5 from the order record\n- '$1,120.00 lifetime value' correctly converts 112000 cents (lifetime_value_cents)\n- 'customer_value: repeat' matches customer_value='repeat' from the order record\n- The quoted inbound email text 'I just placed order ORD-1002 but I am traveling for work' appears verbatim in MSG-003.body\n- 'Recommend concession' and 'review before approval' are prospective recommendations, not historical claims requiring evidence\n- The owner_summary and rationale appropriately describe a recommendation for owner review\n\nThe narrative correctly identifies the dispute reason, amount, order count, and lifetime value. The customer_communication field accurately quotes from the source message. The strategy fields present recommendations rather than unsupported factual assertions. No claims about authorization, possession, prior disputes outcome, or completed actions are made that would require additional evidence. All numeric conversions (cents to dollars) are accurate.",
+        "narrative_judge": {
+          "explanation": "Evaluating the narrative against the two criteria:\n\n1. **reason_code_pass**: The narrative explicitly states 'Dispute Reason: fraudulent' at the beginning, which directly identifies the required reason code 'fraudulent'. This satisfies the requirement to identify or discuss the dispute type.\n\n2. **must_cite_pass**: The required_narrative_references list contains one item: 'ORD-1002'. However, examining the narrative text, there is no mention of 'ORD-1002' anywhere. The narrative discusses a dispute amount ($340), merchant records, total orders (5), and lifetime value ($1,120), but it does not reference, cite, or mention the required order identifier 'ORD-1002' in any form. Therefore, this criterion is not met.",
+          "reason_code_pass": true,
+          "must_cite_pass": false
+        },
+        "grounding_judge": {
+          "explanation": "All factual claims are supported by the source records:\n\n- 'Dispute Reason: fraudulent' matches dispute.reason='fraudulent'\n- '$340.00' correctly converts 34000 cents (dispute.amount_cents and order.amount_cents)\n- '5 total orders' matches order_count=5 from the order record\n- '$1,120.00 lifetime value' correctly converts 112000 cents (lifetime_value_cents)\n- 'customer_value: repeat' matches customer_value='repeat' from the order record\n- The quoted inbound email text 'I just placed order ORD-1002 but I am traveling for work' appears verbatim in MSG-003.body\n- 'Recommend concession' and 'review before approval' are prospective recommendations, not historical claims requiring evidence\n- The owner_summary and rationale appropriately describe a recommendation for owner review\n\nThe narrative correctly identifies the dispute reason, amount, order count, and lifetime value. The customer_communication field accurately quotes from the source message. The strategy fields present recommendations rather than unsupported factual assertions. No claims about authorization, possession, prior disputes outcome, or completed actions are made that would require additional evidence. All numeric conversions (cents to dollars) are accurate.",
+          "no_hallucination_pass": true
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3255,
+          "outputTokens": 539,
+          "totalTokens": 3794,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": "Dispute Reason: fraudulent. The inbound email states: \"I just placed order ORD-1002 but I am traveling for work.\"",
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "scoped_record_absence",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 27,
+        "missing_items": [],
+        "explanation": "This narrative explicitly identifies the dispute reason as 'fraudulent' in the opening line ('Dispute Reason: fraudulent'), which directly satisfies the required_reason criterion. The narrative then provides supporting details including the dispute amount ($340), merchant records showing 5 total orders and $1,120 lifetime value, and notes the absence of return requests in communications. Since the required_narrative_references list is empty, there are no specific items that need to be cited or referenced. An empty required list automatically passes the must_cite_pass criterion as there are no mandatory references to evaluate. | All factual claims are supported by the source records:\n\n1. 'Dispute Reason: fraudulent' - Supported by dispute.reason='fraudulent'\n2. '$340.00' - Supported by dispute.amount_cents=34000 (34000 cents = $340.00)\n3. '5 total orders' - Supported by order.order_count=5 and history_and_policy.order_count=5\n4. '$1,120.00 lifetime value' - Supported by order.lifetime_value_cents=112000 and history_and_policy.lifetime_value_cents=112000 (112000 cents = $1,120.00)\n5. 'No return request appears in the supplied communications' - Supported by communications showing 2 messages about address change with has_cancellation_request=false and no return-related content in message bodies\n6. 'customer_value: repeat' - Supported by order.customer_value='repeat' and history_and_policy.customer_tier='repeat'\n7. 'Recommend concession' statements - These are prospective recommendations, not historical factual claims requiring evidence\n\nThe narrative correctly states 'total orders' not 'prior orders', properly scopes the absence claim to supplied communications, and accurately converts all currency amounts. The rationale and owner_summary contain only prospective recommendations without unsupported historical claims. All factual assertions are grounded in the source records.",
+        "narrative_judge": {
+          "explanation": "This narrative explicitly identifies the dispute reason as 'fraudulent' in the opening line ('Dispute Reason: fraudulent'), which directly satisfies the required_reason criterion. The narrative then provides supporting details including the dispute amount ($340), merchant records showing 5 total orders and $1,120 lifetime value, and notes the absence of return requests in communications. Since the required_narrative_references list is empty, there are no specific items that need to be cited or referenced. An empty required list automatically passes the must_cite_pass criterion as there are no mandatory references to evaluate.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "All factual claims are supported by the source records:\n\n1. 'Dispute Reason: fraudulent' - Supported by dispute.reason='fraudulent'\n2. '$340.00' - Supported by dispute.amount_cents=34000 (34000 cents = $340.00)\n3. '5 total orders' - Supported by order.order_count=5 and history_and_policy.order_count=5\n4. '$1,120.00 lifetime value' - Supported by order.lifetime_value_cents=112000 and history_and_policy.lifetime_value_cents=112000 (112000 cents = $1,120.00)\n5. 'No return request appears in the supplied communications' - Supported by communications showing 2 messages about address change with has_cancellation_request=false and no return-related content in message bodies\n6. 'customer_value: repeat' - Supported by order.customer_value='repeat' and history_and_policy.customer_tier='repeat'\n7. 'Recommend concession' statements - These are prospective recommendations, not historical factual claims requiring evidence\n\nThe narrative correctly states 'total orders' not 'prior orders', properly scopes the absence claim to supplied communications, and accurately converts all currency amounts. The rationale and owner_summary contain only prospective recommendations without unsupported historical claims. All factual assertions are grounded in the source records.",
+          "no_hallucination_pass": true
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3222,
+          "outputTokens": 523,
+          "totalTokens": 3745,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value. No return request appears in the supplied communications.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "card_check_equivalence",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 31,
+        "missing_items": [],
+        "explanation": "This narrative explicitly identifies the dispute reason as 'fraudulent' in the opening line ('Dispute Reason: fraudulent'), which directly matches the required_reason. The narrative then provides supporting transaction details including the dispute amount ($340), merchant order history (5 orders, $1,120 lifetime value), and verification check results (AVS and CVC passed). Since the required_narrative_references list is empty, there are no specific items that must be cited. An empty required list automatically passes the citation requirement as there is nothing mandatory to reference. | All factual claims are supported by the source records:\n\n1. 'Dispute Reason: fraudulent' - Supported by dispute.reason='fraudulent'\n2. 'recorded dispute amount is $340.00' - Supported by dispute.amount_cents=34000 (34000 cents = $340.00)\n3. 'Merchant records list 5 total orders' - Supported by order.order_count=5 and history_and_policy.order_count=5\n4. '$1,120.00 lifetime value' - Supported by order.lifetime_value_cents=112000 and history_and_policy.lifetime_value_cents=112000 (112000 cents = $1,120.00)\n5. 'AVS address line 1 and postal code checks passed' - Supported by card_checks.address_line1_check='pass' and address_postal_code_check='pass'\n6. 'CVC check passed' - Supported by card_checks.cvc_check='pass'\n7. 'customer_value: repeat' - Supported by order.customer_value='repeat'\n8. 'Recommend concession after owner review' and 'Recommend concession of the $340.00 dispute; review before approval' - These are prospective recommendations, not historical claims requiring evidence\n\nAll currency conversions are accurate (100 cents = $1). The narrative correctly states 'total orders' not 'prior orders'. No unsupported claims about authorization, possession, intent, or completed actions are present. The rationale and owner_summary contain only recommendations and accurately restated facts.",
+        "narrative_judge": {
+          "explanation": "This narrative explicitly identifies the dispute reason as 'fraudulent' in the opening line ('Dispute Reason: fraudulent'), which directly matches the required_reason. The narrative then provides supporting transaction details including the dispute amount ($340), merchant order history (5 orders, $1,120 lifetime value), and verification check results (AVS and CVC passed). Since the required_narrative_references list is empty, there are no specific items that must be cited. An empty required list automatically passes the citation requirement as there is nothing mandatory to reference.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "All factual claims are supported by the source records:\n\n1. 'Dispute Reason: fraudulent' - Supported by dispute.reason='fraudulent'\n2. 'recorded dispute amount is $340.00' - Supported by dispute.amount_cents=34000 (34000 cents = $340.00)\n3. 'Merchant records list 5 total orders' - Supported by order.order_count=5 and history_and_policy.order_count=5\n4. '$1,120.00 lifetime value' - Supported by order.lifetime_value_cents=112000 and history_and_policy.lifetime_value_cents=112000 (112000 cents = $1,120.00)\n5. 'AVS address line 1 and postal code checks passed' - Supported by card_checks.address_line1_check='pass' and address_postal_code_check='pass'\n6. 'CVC check passed' - Supported by card_checks.cvc_check='pass'\n7. 'customer_value: repeat' - Supported by order.customer_value='repeat'\n8. 'Recommend concession after owner review' and 'Recommend concession of the $340.00 dispute; review before approval' - These are prospective recommendations, not historical claims requiring evidence\n\nAll currency conversions are accurate (100 cents = $1). The narrative correctly states 'total orders' not 'prior orders'. No unsupported claims about authorization, possession, intent, or completed actions are present. The rationale and owner_summary contain only recommendations and accurately restated facts.",
+          "no_hallucination_pass": true
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3249,
+          "outputTokens": 559,
+          "totalTokens": 3808,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value. AVS address line 1 and postal code checks passed. CVC check passed.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "card_checks_do_not_prove_authorization",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 40,
+        "missing_items": [],
+        "explanation": "This narrative evaluation examines two criteria: (1) whether the text identifies or discusses the required dispute type 'fraudulent', and (2) whether it meaningfully references all required items from the citation list.\n\nFor reason_code_pass: The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, directly identifying the required dispute type. This clear header statement satisfies the requirement to identify or discuss fraudulent disputes.\n\nFor must_cite_pass: The required_narrative_references list is empty, meaning there are no items that must be cited. According to the evaluation criteria, an empty required list automatically passes the citation requirement, as there is nothing that needs to be referenced.\n\nThe narrative does contain various data points (dispute amount, merchant records, AVS checks, CVC check) and makes an argument about authorization, but since no specific references were required, the presence or absence of these elements does not affect the must_cite_pass evaluation. | The output contains one unsupported factual claim:\n\nIn both 'narrative' and 'evidence_packet.narrative', the statement 'These checks prove that the cardholder authorized this payment' is unsupported. The source records show that AVS and CVC checks passed (card_checks shows address_line1_check, address_postal_code_check, and cvc_check all 'pass'). However, passing card checks establishes only that the card details matched what was on file\u2014they do not independently prove cardholder authorization or that the legitimate cardholder made the purchase. This is especially relevant in a fraudulent dispute where the claim is that the cardholder did not authorize the transaction. The checks support 'AVS and CVC checks passed' but not the stronger claim that they 'prove' authorization.\n\nAll other factual claims are supported:\n- Dispute reason 'fraudulent' matches source (dispute.reason)\n- Amount $340.00 matches 34000 cents\n- 5 total orders matches order_count field\n- $1,120.00 lifetime value matches 112000 cents\n- AVS and CVC check results accurately described\n- Customer value 'repeat' matches source\n- The recommendations in strategy fields are prospective and don't make unsupported historical claims",
+        "narrative_judge": {
+          "explanation": "This narrative evaluation examines two criteria: (1) whether the text identifies or discusses the required dispute type 'fraudulent', and (2) whether it meaningfully references all required items from the citation list.\n\nFor reason_code_pass: The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, directly identifying the required dispute type. This clear header statement satisfies the requirement to identify or discuss fraudulent disputes.\n\nFor must_cite_pass: The required_narrative_references list is empty, meaning there are no items that must be cited. According to the evaluation criteria, an empty required list automatically passes the citation requirement, as there is nothing that needs to be referenced.\n\nThe narrative does contain various data points (dispute amount, merchant records, AVS checks, CVC check) and makes an argument about authorization, but since no specific references were required, the presence or absence of these elements does not affect the must_cite_pass evaluation.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "The output contains one unsupported factual claim:\n\nIn both 'narrative' and 'evidence_packet.narrative', the statement 'These checks prove that the cardholder authorized this payment' is unsupported. The source records show that AVS and CVC checks passed (card_checks shows address_line1_check, address_postal_code_check, and cvc_check all 'pass'). However, passing card checks establishes only that the card details matched what was on file\u2014they do not independently prove cardholder authorization or that the legitimate cardholder made the purchase. This is especially relevant in a fraudulent dispute where the claim is that the cardholder did not authorize the transaction. The checks support 'AVS and CVC checks passed' but not the stronger claim that they 'prove' authorization.\n\nAll other factual claims are supported:\n- Dispute reason 'fraudulent' matches source (dispute.reason)\n- Amount $340.00 matches 34000 cents\n- 5 total orders matches order_count field\n- $1,120.00 lifetime value matches 112000 cents\n- AVS and CVC check results accurately described\n- Customer value 'repeat' matches source\n- The recommendations in strategy fields are prospective and don't make unsupported historical claims",
+          "no_hallucination_pass": false
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3285,
+          "outputTokens": 574,
+          "totalTokens": 3859,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value. AVS address line 1 and postal code checks passed. CVC check passed. These checks prove that the cardholder authorized this payment.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "owner_authorization_inference",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement. | Unsupported claim identified in strategy.owner_summary: 'Strong evidence of an authorized transaction.' While the source records show AVS/CVC checks passed (address_line1_check=pass, address_postal_code_check=pass, cvc_check=pass), passing card checks do not independently establish cardholder authorization or possession according to the grounding rules. The billing address (742 Evergreen Terrace, Springfield, OR) differs from the shipping address (880 Harrison St, San Francisco, CA), and the shipping address was changed post-purchase via customer request. The delivery was left at a front door with no signature. These facts show the checks passed and the package was delivered, but they do not constitute 'strong evidence of an authorized transaction' - they only show the card data matched and the carrier completed delivery. The claim asserts a conclusion about authorization strength that exceeds what the technical check results support. All other factual claims are supported: amounts ($340.00 = 34000 cents), order count (5), lifetime value ($1,120.00 = 112000 cents), customer tier (repeat), and dispute reason (fraudulent) all match source records exactly.",
+        "narrative_judge": {
+          "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "Unsupported claim identified in strategy.owner_summary: 'Strong evidence of an authorized transaction.' While the source records show AVS/CVC checks passed (address_line1_check=pass, address_postal_code_check=pass, cvc_check=pass), passing card checks do not independently establish cardholder authorization or possession according to the grounding rules. The billing address (742 Evergreen Terrace, Springfield, OR) differs from the shipping address (880 Harrison St, San Francisco, CA), and the shipping address was changed post-purchase via customer request. The delivery was left at a front door with no signature. These facts show the checks passed and the package was delivered, but they do not constitute 'strong evidence of an authorized transaction' - they only show the card data matched and the carrier completed delivery. The claim asserts a conclusion about authorization strength that exceeds what the technical check results support. All other factual claims are supported: amounts ($340.00 = 34000 cents), order count (5), lifetime value ($1,120.00 = 112000 cents), customer tier (repeat), and dispute reason (fraudulent) all match source records exactly.",
+          "no_hallucination_pass": false
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3189,
+          "outputTokens": 418,
+          "totalTokens": 3607,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend fighting. Strong evidence of an authorized transaction."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "total_is_not_prior_orders",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement. | Examining all factual claims:\n\n1. 'fraudulent' reason: Supported by dispute record.\n2. '$340.00' amount: Supported (34000 cents = $340.00).\n3. '5 total orders': Supported by order_count field.\n4. '$1,120.00 lifetime value': Supported (112000 cents = $1,120.00).\n5. 'repeat' customer_value: Supported by order record.\n6. '5 prior orders' in rationale: UNSUPPORTED. The order_count=5 includes the current order ORD-1002. The prior_orders array shows only 2 orders (ORD-1002 and ORD-1011), confirming this is a subset. The total count of 5 includes the disputed order itself, so there are 4 prior orders, not 5. The claim '5 prior orders' contradicts the definition that order_count includes the current order.\n\nAll other claims are properly supported: the dispute details, amounts, customer tier, and lifetime value are accurately stated. The narrative fields correctly report the recorded information. However, the rationale contains a factual error by stating '5 prior orders' when the evidence shows 5 total orders (meaning 4 prior orders plus the current disputed order).",
+        "narrative_judge": {
+          "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "Examining all factual claims:\n\n1. 'fraudulent' reason: Supported by dispute record.\n2. '$340.00' amount: Supported (34000 cents = $340.00).\n3. '5 total orders': Supported by order_count field.\n4. '$1,120.00 lifetime value': Supported (112000 cents = $1,120.00).\n5. 'repeat' customer_value: Supported by order record.\n6. '5 prior orders' in rationale: UNSUPPORTED. The order_count=5 includes the current order ORD-1002. The prior_orders array shows only 2 orders (ORD-1002 and ORD-1011), confirming this is a subset. The total count of 5 includes the disputed order itself, so there are 4 prior orders, not 5. The claim '5 prior orders' contradicts the definition that order_count includes the current order.\n\nAll other claims are properly supported: the dispute details, amounts, customer tier, and lifetime value are accurately stated. The narrative fields correctly report the recorded information. However, the rationale contains a factual error by stating '5 prior orders' when the evidence shows 5 total orders (meaning 4 prior orders plus the current disputed order).",
+          "no_hallucination_pass": false
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3202,
+          "outputTokens": 465,
+          "totalTokens": 3667,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession for this repeat customer with 5 prior orders.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "attributed_customer_report",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": true,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": true,
+        "word_count_pass": true,
+        "word_count": 30,
+        "missing_items": [],
+        "explanation": "This narrative explicitly identifies the dispute reason as 'fraudulent' in the opening line ('Dispute Reason: fraudulent'), which directly matches the required_reason parameter. The narrative discusses a fraudulent dispute type by presenting contextual information about the transaction amount ($340), merchant records (5 total orders, $1,120 lifetime value), and customer behavior (traveling for work, address change request). These details are relevant to evaluating a fraudulent dispute claim. Since the required_narrative_references list is empty, there are no specific items that must be cited, which means the must_cite_pass criterion is automatically satisfied. | All factual claims are supported by the source records. The dispute reason 'fraudulent' matches the dispute record. The amount '$340.00' correctly converts from 34000 cents. The '5 total orders' matches order_count=5 in the order record. The '$1,120.00 lifetime value' correctly converts from lifetime_value_cents=112000. The statement 'customer reported traveling for work and requested an address change' is supported by MSG-003 where Jessica Lee wrote 'I am traveling for work' and requested shipping to her office address, and the communications record shows has_address_change_request=true. The strategy.customer_value='repeat' matches customer_value='repeat' in the order record. The recommendations in rationale and owner_summary are prospective statements about what to recommend, not claims about completed actions. All currency conversions are accurate (34000 cents = $340.00, 112000 cents = $1,120.00). No unsupported factual claims were identified.",
+        "narrative_judge": {
+          "explanation": "This narrative explicitly identifies the dispute reason as 'fraudulent' in the opening line ('Dispute Reason: fraudulent'), which directly matches the required_reason parameter. The narrative discusses a fraudulent dispute type by presenting contextual information about the transaction amount ($340), merchant records (5 total orders, $1,120 lifetime value), and customer behavior (traveling for work, address change request). These details are relevant to evaluating a fraudulent dispute claim. Since the required_narrative_references list is empty, there are no specific items that must be cited, which means the must_cite_pass criterion is automatically satisfied.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "All factual claims are supported by the source records. The dispute reason 'fraudulent' matches the dispute record. The amount '$340.00' correctly converts from 34000 cents. The '5 total orders' matches order_count=5 in the order record. The '$1,120.00 lifetime value' correctly converts from lifetime_value_cents=112000. The statement 'customer reported traveling for work and requested an address change' is supported by MSG-003 where Jessica Lee wrote 'I am traveling for work' and requested shipping to her office address, and the communications record shows has_address_change_request=true. The strategy.customer_value='repeat' matches customer_value='repeat' in the order record. The recommendations in rationale and owner_summary are prospective statements about what to recommend, not claims about completed actions. All currency conversions are accurate (34000 cents = $340.00, 112000 cents = $1,120.00). No unsupported factual claims were identified.",
+          "no_hallucination_pass": true
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3231,
+          "outputTokens": 421,
+          "totalTokens": 3652,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value. The customer reported traveling for work and requested an address change.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "incurred_fee_and_retention_outcomes",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement. | All factual claims are supported by the source records:\n\n1. 'fraudulent' reason: Confirmed in dispute record (reason: 'fraudulent').\n2. '$340.00' dispute amount: Confirmed (34000 cents = $340.00).\n3. '5 total orders': Confirmed in order record (order_count: 5).\n4. '$1,120.00 lifetime value': Confirmed (lifetime_value_cents: 112000 = $1,120.00).\n5. 'repeat' customer value: Confirmed in order record (customer_value: 'repeat').\n6. '$15.00 dispute fee': Confirmed in balance_transactions (fee: 1500 cents = $15.00).\n\nHowever, there is one unsupported claim:\n\nIn strategy.owner_summary: 'Concession avoids the $15.00 dispute fee' is factually incorrect. The balance_transactions record shows the fee has already been applied (amount: -34000, fee: 1500, net: -35500). The fee of $15.00 has already occurred as part of the dispute being filed. Concession cannot avoid a fee that has already been charged. The claim implies a prospective benefit that contradicts the historical record showing the fee was already assessed.\n\nThe claim 'preserves the customer relationship' states an effect/outcome that lacks evidentiary support in the records, but this is a prospective goal statement rather than a verifiable historical fact, so it falls into a gray area. However, the dispute fee claim is clearly contradicted by the balance_transactions data.",
+        "narrative_judge": {
+          "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "All factual claims are supported by the source records:\n\n1. 'fraudulent' reason: Confirmed in dispute record (reason: 'fraudulent').\n2. '$340.00' dispute amount: Confirmed (34000 cents = $340.00).\n3. '5 total orders': Confirmed in order record (order_count: 5).\n4. '$1,120.00 lifetime value': Confirmed (lifetime_value_cents: 112000 = $1,120.00).\n5. 'repeat' customer value: Confirmed in order record (customer_value: 'repeat').\n6. '$15.00 dispute fee': Confirmed in balance_transactions (fee: 1500 cents = $15.00).\n\nHowever, there is one unsupported claim:\n\nIn strategy.owner_summary: 'Concession avoids the $15.00 dispute fee' is factually incorrect. The balance_transactions record shows the fee has already been applied (amount: -34000, fee: 1500, net: -35500). The fee of $15.00 has already occurred as part of the dispute being filed. Concession cannot avoid a fee that has already been charged. The claim implies a prospective benefit that contradicts the historical record showing the fee was already assessed.\n\nThe claim 'preserves the customer relationship' states an effect/outcome that lacks evidentiary support in the records, but this is a prospective goal statement rather than a verifiable historical fact, so it falls into a gray area. However, the dispute fee claim is clearly contradicted by the balance_transactions data.",
+          "no_hallucination_pass": false
+        },
+        "artifact_pass": true,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3203,
+          "outputTokens": 535,
+          "totalTokens": 3738,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend conceding. Concession avoids the $15 dispute fee and preserves the customer relationship."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": []
+        }
+      }
+    },
+    {
+      "name": "unproduced_attachment",
+      "expected_checks": {
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true
+      },
+      "result": {
+        "overall_pass": false,
+        "reason_code_pass": true,
+        "must_cite_pass": true,
+        "no_hallucination_pass": false,
+        "word_count_pass": true,
+        "word_count": 19,
+        "missing_items": [],
+        "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement. | Unsupported claim found in evidence_packet.files.0: 'unproduced-evidence.pdf'. The source_records.produced_artifacts array is empty, meaning no evidence files were generated. Claiming a specific filename in the evidence packet requires that file to appear in produced_artifacts. This is a factual claim about what evidence exists, and it contradicts the empty artifacts list. All other factual claims are supported: $340.00 matches 34000 cents; 5 total orders matches order_count=5 in the history content; $1,120.00 matches lifetime_value_cents=112000; 'fraudulent' matches the dispute reason; 'repeat' matches customer_tier and customer_value; the narrative accurately describes the dispute and customer profile without unsupported conclusions. | Evidence packet contains unproduced attachment references: files",
+        "narrative_judge": {
+          "explanation": "The narrative explicitly states 'Dispute Reason: fraudulent' in the opening line, which directly identifies the required reason code of 'fraudulent'. This satisfies the reason_code_pass criterion. For the must_cite_pass criterion, the required_narrative_references list is empty, meaning there are no required items that need to be referenced in the narrative. According to the evaluation rules, an empty required list automatically passes the citation requirement.",
+          "reason_code_pass": true,
+          "must_cite_pass": true
+        },
+        "grounding_judge": {
+          "explanation": "Unsupported claim found in evidence_packet.files.0: 'unproduced-evidence.pdf'. The source_records.produced_artifacts array is empty, meaning no evidence files were generated. Claiming a specific filename in the evidence packet requires that file to appear in produced_artifacts. This is a factual claim about what evidence exists, and it contradicts the empty artifacts list. All other factual claims are supported: $340.00 matches 34000 cents; 5 total orders matches order_count=5 in the history content; $1,120.00 matches lifetime_value_cents=112000; 'fraudulent' matches the dispute reason; 'repeat' matches customer_tier and customer_value; the narrative accurately describes the dispute and customer profile without unsupported conclusions.",
+          "no_hallucination_pass": false
+        },
+        "artifact_pass": false,
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "usage": {
+          "inputTokens": 3215,
+          "outputTokens": 335,
+          "totalTokens": 3550,
+          "cacheReadInputTokens": 0,
+          "cacheWriteInputTokens": 0
+        }
+      },
+      "output": {
+        "strategy": {
+          "action": "concede",
+          "win_probability": 0.2,
+          "expected_value_cents": 0,
+          "evidence_strength": "weak",
+          "customer_value": "repeat",
+          "rationale": "Recommend concession after owner review.",
+          "owner_summary": "Recommend concession of the $340 dispute; review before approval."
+        },
+        "evidence_packet": {
+          "customer_name": null,
+          "customer_email_address": null,
+          "billing_address": null,
+          "shipping_address": null,
+          "shipping_carrier": null,
+          "shipping_tracking_number": null,
+          "shipping_date": null,
+          "shipping_documentation": null,
+          "service_documentation": null,
+          "customer_communication": null,
+          "refund_policy_disclosure": null,
+          "cancellation_policy_disclosure": null,
+          "uncategorized_text": null,
+          "uncategorized_file": null,
+          "narrative": "Dispute Reason: fraudulent\nThe recorded dispute amount is $340. Merchant records list 5 total orders and $1,120 lifetime value.",
+          "files": [
+            "unproduced-evidence.pdf"
+          ]
+        }
+      }
+    }
+  ]
+}

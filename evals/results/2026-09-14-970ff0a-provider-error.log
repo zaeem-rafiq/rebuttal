@@ -1,0 +1,176 @@
+================================================================================
+REBUTTAL DECISION EVALS HARNESS (R-16)
+================================================================================
+Timestamp: 2026-09-14T14:28:22.690745+00:00
+Running multi-agent pipeline against 20 synthetic cases (dry-run mode)...
+
+Case      | Reason                 | Exp Act    | Act Act    | Gate (Exp/Got) | Judge  | EV     | Result
+--------------------------------------------------------------------------------------------------------
+Graph without execution limits may run indefinitely if cycles exist
+case_01   | product_not_received   | fight      | fight      | F/F            | PASS   | PASS   | PASS
+Graph without execution limits may run indefinitely if cycles exist
+node_id=<drafter>, error=<An error occurred (internalServerException) when calling the ConverseStream operation: The system encountered an unexpected error during processing. Try your request again.> | node failed
+graph execution failed
+Traceback (most recent call last):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 685, in stream_async
+    async for event in self._execute_graph(invocation_state):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 796, in _execute_graph
+    async for event in self._execute_nodes_parallel(current_batch, invocation_state):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 872, in _execute_nodes_parallel
+    raise event
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 910, in _stream_node_to_queue
+    async for event in self._execute_node(node, invocation_state):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 1050, in _execute_node
+    async for event in node.executor.stream_async(node_input, invocation_state=invocation_state):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/agent/agent.py", line 1434, in stream_async
+    async for event in events:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/agent/agent.py", line 1578, in _run_loop
+    async for event in self._middleware_registry.invoke(
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/_middleware/registry.py", line 167, in invoke
+    async for event in gen:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/agent/agent.py", line 1733, in terminal
+    async for event in events:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/agent/agent.py", line 1788, in _execute_event_loop_cycle
+    async for event in events:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/event_loop.py", line 302, in event_loop_cycle
+    async for model_event in model_events:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/event_loop.py", line 690, in _handle_model_execution
+    raise e
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/event_loop.py", line 608, in _handle_model_execution
+    async for event in agent._middleware_registry.invoke(
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/_middleware/registry.py", line 167, in invoke
+    async for event in gen:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/event_loop.py", line 739, in terminal
+    async for event in stream_messages(
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/streaming.py", line 568, in stream_messages
+    async for event in process_stream(chunks, start_time, cancel_signal):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/streaming.py", line 459, in process_stream
+    async for chunk in chunks:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/models/bedrock.py", line 1401, in stream
+    await task
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/opentelemetry/instrumentation/threading/__init__.py", line 161, in wrapped_func
+    return original_func(*func_args, **func_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/models/bedrock.py", line 1561, in _stream
+    raise e
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/models/bedrock.py", line 1475, in _stream
+    for chunk in response["stream"]:
+                 ~~~~~~~~^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/eventstream.py", line 592, in __iter__
+    parsed_event = self._parse_event(event)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/eventstream.py", line 608, in _parse_event
+    raise EventStreamError(parsed_response, self._operation_name)
+botocore.exceptions.EventStreamError: An error occurred (internalServerException) when calling the ConverseStream operation: The system encountered an unexpected error during processing. Try your request again.
+└ Bedrock region: us-east-1
+└ Model id: us.anthropic.claude-haiku-4-5-20251001-v1:0
+Traceback (most recent call last):
+  File "/private/tmp/rebuttal-output-grounding/evals/run.py", line 666, in <module>
+    main()
+  File "/private/tmp/rebuttal-output-grounding/evals/run.py", line 567, in main
+    res = run_single_eval_case(case_file, judge_client)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/evals/run.py", line 352, in run_single_eval_case
+    strategy_out, drafter_out, graph = agent.graph.run_evidence_pipeline(task_desc)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/agent/graph.py", line 473, in run_evidence_pipeline
+    result = graph(task_description)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 600, in __call__
+    return run_async(lambda: self.invoke_async(task, invocation_state))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/_async.py", line 45, in run_async
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/opentelemetry/instrumentation/threading/__init__.py", line 161, in wrapped_func
+    return original_func(*func_args, **func_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/_async.py", line 38, in execute
+    return asyncio.run(execute_async())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/_async.py", line 33, in execute_async
+    return await async_func()
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 618, in invoke_async
+    async for event in events:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 685, in stream_async
+    async for event in self._execute_graph(invocation_state):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 796, in _execute_graph
+    async for event in self._execute_nodes_parallel(current_batch, invocation_state):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 872, in _execute_nodes_parallel
+    raise event
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 910, in _stream_node_to_queue
+    async for event in self._execute_node(node, invocation_state):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/multiagent/graph.py", line 1050, in _execute_node
+    async for event in node.executor.stream_async(node_input, invocation_state=invocation_state):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/agent/agent.py", line 1434, in stream_async
+    async for event in events:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/agent/agent.py", line 1578, in _run_loop
+    async for event in self._middleware_registry.invoke(
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/_middleware/registry.py", line 167, in invoke
+    async for event in gen:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/agent/agent.py", line 1733, in terminal
+    async for event in events:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/agent/agent.py", line 1788, in _execute_event_loop_cycle
+    async for event in events:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/event_loop.py", line 302, in event_loop_cycle
+    async for model_event in model_events:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/event_loop.py", line 690, in _handle_model_execution
+    raise e
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/event_loop.py", line 608, in _handle_model_execution
+    async for event in agent._middleware_registry.invoke(
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/_middleware/registry.py", line 167, in invoke
+    async for event in gen:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/event_loop.py", line 739, in terminal
+    async for event in stream_messages(
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/streaming.py", line 568, in stream_messages
+    async for event in process_stream(chunks, start_time, cancel_signal):
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/event_loop/streaming.py", line 459, in process_stream
+    async for chunk in chunks:
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/models/bedrock.py", line 1401, in stream
+    await task
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zaeemkhan/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/opentelemetry/instrumentation/threading/__init__.py", line 161, in wrapped_func
+    return original_func(*func_args, **func_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/models/bedrock.py", line 1561, in _stream
+    raise e
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/strands/models/bedrock.py", line 1475, in _stream
+    for chunk in response["stream"]:
+                 ~~~~~~~~^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/eventstream.py", line 592, in __iter__
+    parsed_event = self._parse_event(event)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/rebuttal-output-grounding/.venv/lib/python3.12/site-packages/botocore/eventstream.py", line 608, in _parse_event
+    raise EventStreamError(parsed_response, self._operation_name)
+botocore.exceptions.EventStreamError: An error occurred (internalServerException) when calling the ConverseStream operation: The system encountered an unexpected error during processing. Try your request again.
+└ Bedrock region: us-east-1
+└ Model id: us.anthropic.claude-haiku-4-5-20251001-v1:0
