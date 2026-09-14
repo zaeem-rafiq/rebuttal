@@ -53,7 +53,7 @@ The deadline sweep contains a silence-policy path. Therefore, this project does 
 
 The revised `grounded-v2` narrative rubric requires support for every factual assertion. Judge errors, malformed responses, missing fields, and non-boolean verdicts fail. Required-citation failures cannot be overridden by keyword matches. An LLM verdict remains fallible and is not a guarantee of zero hallucinations.
 
-The [September 7 report](evals/results/2026-09-07.md) is historical evidence from the earlier rubric, not a benchmark for the revised evaluator. Current grounded-v2 model results: **BLOCKED**. The September 14 run exited 1 because AWS denied `bedrock:InvokeModelWithResponseStream` for the configured Haiku inference profile. See [docs/evals.md](docs/evals.md) for checks and limitations.
+The [September 7 report](evals/results/2026-09-07.md) is historical evidence from the earlier rubric, not a benchmark for the revised evaluator. Current grounded-v2 results: **20/20 action, 20/20 gate, 4/20 narrative, 20/20 EV sign; FAIL (exit 1)**. Streaming access was repaired and all cases ran on September 14. The [current report](evals/results/2026-09-14.md) includes unsupported narrative claims and some incorrect judge explanations; its failures need adjudication, not automatic attribution to hallucinations. See [docs/evals.md](docs/evals.md) for checks and limitations.
 
 ## Local setup
 
