@@ -237,3 +237,52 @@ def test_build_evidence_graph_topology():
     assert "Dispute Evidence Drafter" in agents["drafter"].system_prompt
     assert "PROSPECTIVE RECOMMENDATION" in agents["drafter"].system_prompt
 
+
+def test_no_hardcoded_case_references_in_graph():
+    """Verify agent/graph.py contains zero hardcoded case numbers, customer names, or canned case scripts."""
+    import re
+    from pathlib import Path
+
+    graph_code = Path("agent/graph.py").read_text(encoding="utf-8")
+
+    # Disallow golden set case IDs, evaluation customer IDs, and evaluation order IDs
+    forbidden_patterns = [
+        r"case_[0-9]+",
+        r"case\s+[0-9]+",
+        r"cases\s+[0-9]+",
+        r"ORD-EVAL-[0-9]+",
+        r"CUST-EVAL-[0-9]+",
+        r"dp_eval_[0-9]+",
+        r"ORD-14[AB]",
+        r"MSG-11",
+        r"RET-88008",
+        r"re_prior10",
+        r"Jessica Lee",
+        r"Amanda Ross",
+        r"Carlos Gomez",
+        r"Michael Taylor",
+    ]
+    for pat in forbidden_patterns:
+        match = re.search(pat, graph_code, re.IGNORECASE)
+        assert match is None, f"Found prohibited hardcoded reference '{match.group(0)}' matching pattern '{pat}' in agent/graph.py"
+
+
+def test_missing_vs_affirmative_evidence_rules():
+    """Verify prompts enforce principled handling of empty communications without affirmative accusations."""
+    from agent.graph import build_evidence_graph
+
+    mock_model = MagicMock()
+    _, agents = build_evidence_graph(model=mock_model)
+
+    drafter_prompt = agents["drafter"].system_prompt
+    comms_prompt = agents["comms"].system_prompt
+
+    # Drafter prompt must require standard empty comms sentence and prohibit affirmative bad-faith inferences
+    assert "No pre-dispute customer communications exist in merchant records." in drafter_prompt
+    assert "NEVER write 'No customer inquiry or fraud report was submitted'" in drafter_prompt
+    assert "Zero Editorial Gloss" in drafter_prompt or "ZERO EDITORIAL GLOSS" in drafter_prompt
+
+    # Comms prompt must instruct that absence of records does not imply bad faith
+    assert "do NOT assume lack of records implies bad faith" in comms_prompt
+
+

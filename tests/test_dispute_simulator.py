@@ -17,6 +17,19 @@ from scripts.simulate_dispute import (
     update_order_fixture,
     REPO_ROOT,
 )
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def preserve_orders_fixture():
+    """Preserve data/fixtures/orders.json from being modified by simulator tests."""
+    orders_path = REPO_ROOT / "data" / "fixtures" / "orders.json"
+    original_data = orders_path.read_text(encoding="utf-8")
+    try:
+        yield
+    finally:
+        orders_path.write_text(original_data, encoding="utf-8")
+
 
 
 def test_scenario_configurations():
