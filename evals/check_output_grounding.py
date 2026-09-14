@@ -2,6 +2,8 @@
 import copy
 import json
 import os
+import hashlib
+import subprocess
 from pathlib import Path
 from evals.run import judge_narrative, get_llm_judge_client
 from agent.models import EvidencePacket
@@ -113,10 +115,45 @@ cases.append(('inquiry_resolution_is_not_guaranteed', escalation, 'no_hallucinat
 goal = copy.deepcopy(clean)
 goal['strategy']['owner_summary'] = 'Recommend review. Aim to resolve the inquiry and avoid escalation.'
 cases.append(('explicit_resolution_goal', goal, None, []))
+unscoped_absence = copy.deepcopy(clean)
+unscoped_absence['evidence_packet']['narrative'] += ' No return was initiated through merchant support.'
+cases.append(('missing_records_do_not_prove_no_return', unscoped_absence, 'no_hallucination_pass', []))
+
+refund_facts = copy.deepcopy(facts)
+refund_facts['refund'] = {'id': 're_control', 'processed_at': '2026-08-12T10:00:00Z', 'status': 'succeeded'}
+chronology = copy.deepcopy(clean)
+chronology['evidence_packet']['narrative'] += ' The refund was issued before the dispute.'
+cases.append(('refund_ordering_without_dispute_time', chronology, 'no_hallucination_pass', [], refund_facts))
+dated_dispute = copy.deepcopy(refund_facts)
+dated_dispute['dispute']['created_at'] = '2026-08-15T10:00:00Z'
+cases.append(('refund_ordering_with_both_event_times', chronology, None, [], dated_dispute))
+
+wrong_policy = copy.deepcopy(clean)
+wrong_policy['evidence_packet']['cancellation_policy_disclosure'] = facts['history_and_policy']['policy']['return_policy']
+cases.append(('return_policy_is_not_cancellation_policy', wrong_policy, 'no_hallucination_pass', []))
+cancellation_facts = copy.deepcopy(facts)
+cancellation_facts['history_and_policy']['policy']['cancellation_policy'] = 'Cancel a subscription before its next renewal date.'
+right_policy = copy.deepcopy(clean)
+right_policy['evidence_packet']['cancellation_policy_disclosure'] = cancellation_facts['history_and_policy']['policy']['cancellation_policy']
+cases.append(('explicit_cancellation_policy', right_policy, None, [], cancellation_facts))
+
+subject_facts = copy.deepcopy(facts)
+subject_facts['communications']['messages'].append({'subject': 'Double charged on my card',
+    'body': 'System shows a double charge for identical items, but merchant fulfilled one shipment.'})
+subject_report = copy.deepcopy(clean)
+subject_report['evidence_packet']['narrative'] += ' The customer reported a double charge for identical items and one shipment.'
+cases.append(('first_person_subject_supports_authorship', subject_report, None, [], subject_facts))
+
+purpose = copy.deepcopy(clean)
+purpose['strategy']['rationale'] = 'Recommend refund to address the concern and avoid dispute escalation.'
+cases.append(('infinitive_purpose_is_not_promised_effect', purpose, None, []))
 out = root / os.environ.get('CONTROL_REPORT_PATH', 'evals/results/output-controls.json')
 assert not out.exists(), 'Preserve prior results; choose a new output path.'
 client = get_llm_judge_client()
 results = []
+source_manifest = {name: hashlib.sha256((root / name).read_bytes()).hexdigest()
+                   for name in ['evals/run.py', 'evals/check_output_grounding.py']}
+code_revision = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], cwd=root, text=True).strip()
 # Mirror the raw-record envelope used by the live benchmark, without exposing a
 # fixture-only policy interpretation to the judge.
 def source_records(values):
@@ -125,6 +162,14 @@ def source_records(values):
         for key, value in values.items() if key != 'produced_artifacts'
     ], 'produced_artifacts': []}
 
+
+def save_results(completed):
+    out.write_text(json.dumps({'facts': source_records(facts), 'results': results,
+                              'code_revision': code_revision, 'source_manifest': source_manifest,
+                              'completed': completed}, indent=2) + '\n')
+
+
+save_results(False)
 for name, output, failing_check, must_cite, *override in cases:
     records = source_records(override[0] if override else facts)
     result = judge_narrative(client, output['evidence_packet']['narrative'], 'fraudulent', must_cite,
@@ -132,6 +177,7 @@ for name, output, failing_check, must_cite, *override in cases:
     expected = {key: key != failing_check for key in
                 ['reason_code_pass', 'must_cite_pass', 'no_hallucination_pass', 'word_count_pass']}
     results.append({'name': name, 'expected_checks': expected, 'result': result, 'output': output, 'facts': records})
+    save_results(False)
     print(name, result['overall_pass'], result['explanation'], flush=True)
-out.write_text(json.dumps({'facts': source_records(facts), 'results': results}, indent=2) + '\n')
+save_results(True)
 assert all(r['result'][key] is value for r in results for key, value in r['expected_checks'].items()), 'Judge control mismatch'

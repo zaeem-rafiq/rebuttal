@@ -70,12 +70,12 @@ class EvidencePacket(BaseModel):
     service_documentation: Optional[str] = Field(None, description="File ID or path for service documentation.")
     customer_communication: Optional[str] = Field(None, description="Communication threads or transcripts.")
     refund_policy_disclosure: Optional[str] = Field(None, description="Copy of merchant return/refund policy.")
-    cancellation_policy_disclosure: Optional[str] = Field(None, description="Copy of cancellation policy.")
+    cancellation_policy_disclosure: Optional[str] = Field(None, description="Explicit cancellation policy from the supplied records, otherwise null. A return/refund policy is not a cancellation policy.")
     uncategorized_text: Optional[str] = Field(None, description="Supplementary evidence notes.")
     uncategorized_file: Optional[str] = Field(None, description="Additional file upload ID.")
     narrative: str = Field(
         ...,
-        description="Narrative of recorded observations and a separately labeled proposed response. Include relevant support ticket and shipment tracking identifiers in this narrative. Dates must describe their recorded event, not a current status inferred from created_at. Quote messages as communications records unless sender/direction identifies the author. Do not conclude authorization, identity, or agreement compliance from checks, delivery, timing, or an acknowledgment of unseen terms. No retention or savings promises. Scope policy claims to retrieved rules."
+        description="Narrative of recorded observations and a separately labeled proposed response. Include relevant support ticket and shipment tracking identifiers in this narrative. Dates must describe their recorded event, not a current status inferred from created_at. Before/after claims require both event times or an explicit source statement. Scope absence findings to supplied records; missing records do not establish that an event never happened. Quote messages as communications records unless sender/direction or unambiguous first-person subject/body content supports authorship. Do not conclude authorization, identity, or agreement compliance from checks, delivery, timing, or an acknowledgment of unseen terms. No retention or savings promises. Scope policy claims to retrieved rules."
     )
     files: List[str] = Field(
         default_factory=list,
