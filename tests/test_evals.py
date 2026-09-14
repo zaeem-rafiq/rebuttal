@@ -286,3 +286,93 @@ def test_missing_vs_affirmative_evidence_rules():
     assert "do NOT assume lack of records implies bad faith" in comms_prompt
 
 
+@pytest.mark.parametrize('tainted_field', ['owner_summary', 'rationale', 'uncategorized_text'])
+def test_supporting_output_failure_cannot_hide_behind_passing_narrative(tainted_field):
+    """Verify sibling output reaches the judge and its failure is authoritative."""
+    output = {"strategy": {"action": "concede"}, "evidence_packet": {}}
+    group = "strategy" if tainted_field in {"owner_summary", "rationale"} else "evidence_packet"
+    output[group][tainted_field] = "Issue a full refund and absorb the $15 fee."
+    client = MagicMock()
+    client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
+        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': False,
+        'explanation': f'Unsupported refund and fee in {tainted_field}.',
+    })}]}}}
+
+    result = judge_narrative(client, 'Dispute Reason: fraudulent. Recommendation: Concede.',
+                             'fraudulent', [], '{}', supporting_output=output)
+
+    prompt = client.converse.call_args.kwargs['messages'][0]['content'][0]['text']
+    assert json.dumps(output, indent=2) in prompt
+    assert result['reason_code_pass'] and result['must_cite_pass'] and result['word_count_pass']
+    assert result['overall_pass'] is False
+    client.converse.assert_called_once()
+
+
+def test_supporting_text_does_not_change_narrative_word_count_or_missing_items():
+    client = MagicMock()
+    client.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
+        'reason_code_pass': True, 'must_cite_pass': False, 'no_hallucination_pass': True,
+    })}]}}}
+    result = judge_narrative(client, 'Dispute Reason: fraudulent.', 'fraudulent', ['tracking-123'], '{}', {
+        'strategy': {'action': 'fight', 'win_probability': 0.85},
+        'evidence_packet': {'uncategorized_text': 'tracking-123 ' * 300, 'files': []},
+    })
+    assert result['word_count'] == 3
+    assert result['word_count_pass'] is True
+    assert result['missing_items'] == ['tracking-123']
+    assert result['overall_pass'] is False
+
+
+def test_eval_rejection_continues_suite_and_persists_complete_output(monkeypatch, tmp_path):
+    """Run the actual harness with offline model responses, including a rejected packet."""
+    import evals.run as runner
+    from agent.models import DisputeStrategy, EvidencePacket
+
+    strategy = DisputeStrategy(action='fight', win_probability=.85, expected_value_cents=100,
+                               customer_value='new', evidence_strength='strong',
+                               rationale='Recommend fighting based on delivery records.',
+                               owner_summary='Recommend fighting this dispute.')
+    packet = EvidencePacket(narrative='Dispute Reason: product_not_received. Delivery recorded.')
+    # Every field, not a manually maintained subset, must enter the judge and saved artifact.
+    for name in type(packet).model_fields:
+        if name != 'narrative':
+            setattr(packet, name, [f'{name}-sentinel'] if name == 'files' else f'{name}-sentinel')
+    pipeline = MagicMock(side_effect=[ValueError('Unverified attachment reference'), (strategy, packet, None)])
+    monkeypatch.setattr(runner.agent.graph, 'run_evidence_pipeline', pipeline)
+    judge = MagicMock()
+    judge.converse.return_value = {'output': {'message': {'content': [{'text': json.dumps({
+        'reason_code_pass': True, 'must_cite_pass': True, 'no_hallucination_pass': False,
+        'explanation': 'Sentinel values are unsupported.',
+    })}]}}}
+    monkeypatch.setattr(runner, 'get_llm_judge_client', lambda: judge)
+    cases_dir = tmp_path / 'cases'
+    cases_dir.mkdir()
+    case = json.loads((runner.CASES_DIR / 'case_01.json').read_text())
+    for number in (1, 2):
+        case['id'] = f'case_{number:02d}'
+        (cases_dir / f"{case['id']}.json").write_text(json.dumps(case))
+    monkeypatch.setattr(runner, 'CASES_DIR', cases_dir)
+    monkeypatch.setattr(runner.sys, 'argv', ['evals/run.py'])
+    report = tmp_path / 'evaluation.md'
+    monkeypatch.setenv('EVAL_REPORT_PATH', str(report))
+    original_tools = (runner.agent.graph.get_dispute, runner.agent.graph.get_charge_context)
+    original_db = runner.agent.tools.evidence_tools.LOCAL_DB_PATH
+
+    with pytest.raises(SystemExit) as exc:
+        runner.main()
+
+    assert exc.value.code == 1
+    assert pipeline.call_count == 2
+    judge.converse.assert_called_once()  # Rejected output needs no judge call.
+    rows = json.loads(report.with_suffix('.json').read_text())['results']
+    assert rows[0]['pipeline_error'] == 'ValueError: Unverified attachment reference'
+    assert not any(rows[0][key] for key in ('overall_pass', 'action_match', 'gate_match', 'judge_pass', 'ev_sign'))
+    expected_output = {'strategy': strategy.model_dump(), 'evidence_packet': packet.model_dump()}
+    assert rows[1]['supporting_output'] == expected_output
+    assert rows[1]['case_facts']['dispute']['id'] == case['dispute_id']
+    prompt = judge.converse.call_args.kwargs['messages'][0]['content'][0]['text']
+    assert json.dumps(expected_output, indent=2) in prompt
+    assert json.dumps(expected_output, indent=2) in report.read_text()
+    assert (runner.agent.graph.get_dispute, runner.agent.graph.get_charge_context) == original_tools
+    assert runner.agent.tools.evidence_tools.LOCAL_DB_PATH == original_db
+

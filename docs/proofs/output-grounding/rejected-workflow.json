@@ -1,0 +1,70 @@
+[
+  {
+    "seconds": 1.986,
+    "stage": "environment",
+    "data": {
+      "revision": "e54a489766fef215f1dad6160444f4015c6c0d6c",
+      "merchant_records": "synthetic",
+      "model": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "stripe": "test mode",
+      "approval_interface": "developer CLI",
+      "notification_delivery": "disabled",
+      "session_storage": "local FileSessionManager",
+      "database": "isolated copy"
+    }
+  },
+  {
+    "seconds": 6.539,
+    "stage": "dispute arrived",
+    "data": {
+      "id": "du_1UFZKEEmho7ai02ftdSLjoQN",
+      "amount": 34000,
+      "currency": "usd",
+      "reason": "fraudulent",
+      "status": "needs_response",
+      "livemode": false
+    }
+  },
+  {
+    "seconds": 102.591,
+    "stage": "strategy",
+    "data": {
+      "action": "concede",
+      "win_probability": 0.2,
+      "expected_value_cents": 0,
+      "customer_value": "repeat",
+      "evidence_strength": "weak",
+      "rationale": "Repeat customer (5 orders, $1,120 LTV) with disputed amount ($340) within vip_concede_max_cents threshold ($500). Policy mandates concession to protect customer lifetime value despite technical defense strength. Preserving repeat customer relationship has greater strategic value than pursuing marginal dispute win.",
+      "owner_summary": "Conceding dp_S2 ($340) for repeat customer Jessica Lee per policy. Protecting $1,120 LTV relationship. Issue full refund + absorb $15 fee. Contact customer proactively within 24hrs. Status: Execute concession immediately."
+    }
+  },
+  {
+    "seconds": 102.603,
+    "stage": "evidence",
+    "data": {
+      "customer_name": "Jessica Lee",
+      "customer_email_address": "j.lee@example.com",
+      "billing_address": "742 Evergreen Terrace, Springfield, OR 97477, US",
+      "shipping_address": "880 Harrison St, San Francisco, CA 94107, US",
+      "shipping_carrier": "FedEx",
+      "shipping_tracking_number": "449044301542",
+      "shipping_date": "2026-08-26",
+      "shipping_documentation": null,
+      "service_documentation": null,
+      "customer_communication": "Customer communication (MSG-003, Aug 25 2026 14:10 UTC): \"Hello, I just placed order ORD-1002 but I am traveling for work. Could you please ship it to my office at 880 Harrison St, San Francisco, CA 94107 instead? Thanks! Jessica Lee\" | Merchant confirmation (MSG-004, Aug 25 2026 15:00 UTC): \"Hi Jessica, we have updated the shipping address to 880 Harrison St, San Francisco, CA 94107 as requested. Your order is being packed now!\"",
+      "refund_policy_disclosure": null,
+      "cancellation_policy_disclosure": null,
+      "uncategorized_text": "DISPUTE SUMMARY: Dispute ID: dp_S2 | Order ID: ORD-1002 | Customer ID: CUST-002 | Disputed Amount: $340.00 USD (34,000 cents) | Dispute Reason: fraudulent | Decision: CONCEDE | Customer Tier: REPEAT | Total Orders: 5 | Lifetime Value: $1,120.00 | Prior Disputes: 1 | Card Brand: MasterCard | Card Last 4: 5555 | Authorization Status: APPROVED | CVC Verification: PASS | AVS Postal Code Verification: PASS | Order Created: August 25, 2026 09:15:00 UTC | Order Updated: September 5, 2026 18:44:34 UTC | Product: Ceramic pour-over set | SKU: CPS-340 | Quantity: 1 unit | Unit Price: $340.00 | Delivery Status: DELIVERED | Delivery Date: September 5, 2026 11:20:00 UTC | Fulfillment Timeline: 11 days (normal for ceramic product) | Shipping Status: Complete | Carrier: FedEx | Tracking Number: 449044301542 | Label Created: August 26, 2026 11:00:00 UTC | In Transit: August 27, 2026 18:30:00 UTC | Delivered: August 29, 2026 11:20:00 UTC | Delivery Address: 880 Harrison St, San Francisco, CA 94107 | Signature Status: No signature required (left at front door) | POLICY MANDATE: Merchant Policy POL-001 directs concession for repeat/VIP customers under vip_concede_max_cents threshold ($500.00) | Disputed Amount ($340.00) is BELOW policy threshold | Concession Cost: $355.00 (charge $340.00 + chargeback fee $15.00) | LTV Protection Calculation: Concession cost ($355) represents 32% of customer lifetime value ($1,120) \u2014 justified investment for retention | Risk Mitigation: Prior dispute history (1 prior) suggests friction-prone account; concession prevents escalation | STRATEGIC RATIONALE: While technical defense probability is 75-85% (CVC passed, network approved, delivery confirmed, repeat customer, customer engagement documented), merchant policy compliance mandates concession for repeat customers under $500 threshold to prioritize long-term relationship value over single dispute win | CONCESSION RECOMMENDATION: Issue full refund ($340.00) and absorb chargeback fee ($15.00) as goodwill gesture to preserve $1,120 customer lifetime value and demonstrate customer-first approach",
+      "uncategorized_file": null,
+      "narrative": "Dispute Reason: fraudulent\n\nJessica Lee (CUST-002) is an established repeat customer with 5 prior orders and $1,120 lifetime value. On August 25, 2026, Ms. Lee authorized a $340.00 charge for a ceramic pour-over set. The transaction passed all security verification: CVC matched, AVS postal code matched, and MasterCard approved. Ms. Lee requested an address change to 880 Harrison St, San Francisco, CA 94107 on the same day, demonstrating full knowledge and ownership of the order. The order was fulfilled and delivered on September 5, 2026. Recommendation: Concede dispute based on merchant policy for repeat customers under vip_concede_max_cents threshold ($500.00) to protect customer lifetime value ($1,120) and preserve customer relationship.",
+      "files": [
+        "ORD-1002_order_confirmation.pdf",
+        "SHIP-1002_fedex_tracking_449044301542.pdf",
+        "MSG-003_MSG-004_customer_communications.eml",
+        "CUST-002_customer_profile_5_orders_1120_ltv.csv",
+        "ch_3UFZKDEmho7ai02f15hut2fu_transaction_authorization.pdf",
+        "AVS_CVC_verification_results_pass.pdf"
+      ]
+    }
+  }
+]
