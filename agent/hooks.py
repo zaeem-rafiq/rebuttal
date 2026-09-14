@@ -53,6 +53,7 @@ def load_merchant_policy() -> Dict[str, Any]:
         "always_concede_under_cents": 1500,
         "vip_concede_max_cents": 50000,
         "silence_action": "fight",
+        "return_policy": "30-day return policy; customer must initiate return through merchant support prior to dispute",
     }
 
 
