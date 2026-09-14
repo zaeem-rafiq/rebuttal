@@ -8,12 +8,12 @@ import { Dispute, Decision, AuditLogEntry, Order } from '@/lib/types';
 import { Header } from '@/components/Header';
 import { Stamp } from '@/components/Stamp';
 import { ExhibitInspector } from '@/components/ExhibitInspector';
-import { getCaseFileMemo } from '@/lib/disputes';
+import { getCaseFileMemo, getCaseState, sendOwnerReply } from '@/lib/disputes';
 import { TWILIO_WEBHOOK_URL } from '@/lib/config';
 
-export default function CaseDetailsPage() {
+export default function CaseDetailsPage({ disputeId: suppliedDisputeId }: { disputeId?: string } = {}) {
   const params = useParams();
-  const disputeId = params?.id as string;
+  const disputeId = suppliedDisputeId ?? params?.id as string;
 
   const [dispute, setDispute] = useState<Dispute | null>(null);
   const [decision, setDecision] = useState<Decision | null>(null);
@@ -21,42 +21,45 @@ export default function CaseDetailsPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [replyingId, setReplyingId] = useState<string | null>(null);
-  const [localDecision, setLocalDecision] = useState<{
-    action: 'approved' | 'conceded';
-    timestamp: string;
-  } | null>(null);
+  const [replyMessage, setReplyMessage] = useState<string | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   const fetchCaseDetails = useCallback(async () => {
     if (!disputeId) return;
 
     try {
-      const { data: dData } = await supabase
+      const { data: dData, error: disputeError } = await supabase
         .from('disputes')
         .select('*')
         .eq('id', disputeId)
         .single();
+      if (disputeError) throw disputeError;
 
       if (dData) {
         setDispute(dData as Dispute);
 
-        const { data: decData } = await supabase
+        const { data: decData, error: decisionError } = await supabase
           .from('decisions')
           .select('*')
           .eq('dispute_id', disputeId)
+          .order('created_at', { ascending: false })
+          .limit(1)
           .maybeSingle();
+        if (decisionError) throw decisionError;
 
-        if (decData) setDecision(decData as Decision);
+        setDecision(decData as Decision | null);
 
-        const { data: logsData } = await supabase
+        const { data: logsData, error: logsError } = await supabase
           .from('audit_log')
           .select('*')
           .eq('dispute_id', disputeId)
           .order('created_at', { ascending: false });
+        if (logsError) throw logsError;
 
-        if (logsData) setAuditLogs(logsData as AuditLogEntry[]);
+        setAuditLogs((logsData || []) as AuditLogEntry[]);
 
         if (dData.order_id) {
-          const { data: oData } = await supabase
+          const { data: oData, error: orderError } = await supabase
             .from('orders')
             .select(`
               *,
@@ -67,12 +70,22 @@ export default function CaseDetailsPage() {
             `)
             .eq('id', dData.order_id)
             .maybeSingle();
+          if (orderError) throw orderError;
 
-          if (oData) setOrder(oData as Order);
+          setOrder(oData as Order | null);
+        } else {
+          setOrder(null);
         }
+      } else {
+        setDispute(null);
+        setDecision(null);
+        setOrder(null);
+        setAuditLogs([]);
       }
+      setFetchError(null);
     } catch (err) {
       console.error('Failed to load case details:', err);
+      setFetchError('Case synchronization failed. Displayed records may be out of date.');
     } finally {
       setLoading(false);
     }
@@ -80,40 +93,19 @@ export default function CaseDetailsPage() {
 
   useEffect(() => {
     fetchCaseDetails();
+    const timer = setInterval(fetchCaseDetails, 5000);
+    return () => clearInterval(timer);
   }, [fetchCaseDetails]);
 
   const handleQuickReply = async (code: '1' | '2') => {
     if (!dispute) return;
     setReplyingId(dispute.id);
-
-    const now = new Date();
-    const day = now.getUTCDate().toString().padStart(2, '0');
-    const month = now.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
-    const hours = now.getUTCHours().toString().padStart(2, '0');
-    const mins = now.getUTCMinutes().toString().padStart(2, '0');
-    const timeStr = `${day} ${month} ${hours}:${mins}`;
-
-    setLocalDecision({
-      action: code === '1' ? 'approved' : 'conceded',
-      timestamp: timeStr,
-    });
-
     try {
-      const formData = new URLSearchParams();
-      formData.append('Body', code);
-      formData.append('From', '+18129551686');
-      formData.append('dispute_id', dispute.id);
-
-      await fetch(TWILIO_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData.toString(),
-        mode: 'no-cors',
-      });
-
-      setTimeout(() => fetchCaseDetails(), 1200);
+      await sendOwnerReply(TWILIO_WEBHOOK_URL, dispute.id, code);
+      setReplyMessage('Reply requested. Waiting for the recorded backend outcome.');
+      await fetchCaseDetails();
     } catch (err) {
-      console.error('Failed to send SMS reply:', err);
+      setReplyMessage(err instanceof Error ? err.message : 'The reply could not be sent.');
     } finally {
       setReplyingId(null);
     }
@@ -139,10 +131,10 @@ export default function CaseDetailsPage() {
         <Header />
         <div className="bg-sheet border-t-2 border-rule-strong p-8">
           <h1 className="text-xl font-sans text-ink tracking-tight font-normal mb-2">
-            Case file not found
+            {fetchError ? 'Case file unavailable' : 'Case file not found'}
           </h1>
           <p className="text-xs font-mono text-secondary-ink mb-4">
-            Dispute &ldquo;{disputeId}&rdquo; was not located in the docket database.
+            {fetchError || `Dispute ${disputeId} was not located in the docket database.`}
           </p>
           <Link href="/" className="underline text-ink font-mono text-xs hover:text-ink">
             Return to docket
@@ -152,37 +144,15 @@ export default function CaseDetailsPage() {
     );
   }
 
-  const memo = getCaseFileMemo(dispute);
-  const isAwaitingReply =
-    !localDecision &&
-    dispute.status !== 'won' &&
-    dispute.status !== 'lost' &&
-    dispute.status !== 'refunded_inquiry' &&
-    dispute.status !== 'charge_refunded' &&
-    ((dispute.reason === 'fraudulent' || dispute.id.includes('S2')) &&
-      (dispute.status === 'needs_response' ||
-        dispute.status === 'under_review' ||
-        (decision && decision.status === 'pending')) ||
-      ((dispute.reason === 'subscription_canceled' || dispute.id.includes('S3') || dispute.status === 'warning_needs_response') &&
-        (decision?.status === 'pending' || dispute.status === 'warning_needs_response')));
-
-  const hasRecordedOutcome =
-    localDecision ||
-    dispute.status === 'won' ||
-    dispute.status === 'lost' ||
-    dispute.status === 'refunded_inquiry' ||
-    dispute.status === 'charge_refunded' ||
-    (decision &&
-      (decision.status === 'approved' ||
-        decision.status === 'executed' ||
-        decision.action === 'fight' ||
-        decision.action === 'concede' ||
-        decision.action === 'refund_inquiry')) ||
-    (!isAwaitingReply && (dispute.reason === 'product_not_received' || dispute.reason === 'subscription_canceled'));
+  const caseRecord = { ...dispute, decision, order: order || undefined, audit_logs: auditLogs };
+  const memo = getCaseFileMemo(caseRecord);
+  const caseState = getCaseState(caseRecord);
+  const isAwaitingReply = caseState.awaitingReply;
 
   return (
     <div className="space-y-6">
       <Header />
+      {fetchError && <p className="text-xs font-mono text-decision-red" role="alert">{fetchError}</p>}
 
       {/* Nav breadcrumb */}
       <div className="mb-2">
@@ -199,9 +169,9 @@ export default function CaseDetailsPage() {
             <div>
               <span>{dispute.reason}</span>
               <span className="mx-2">·</span>
-              <span>{order?.customer?.name || memo.customerName}</span>
+              <span>{memo.customerName}</span>
               <span className="mx-2">·</span>
-              <span>{order?.id || memo.orderRef}</span>
+              <span>{memo.orderRef}</span>
               <span className="mx-2">·</span>
               <span className="text-ink font-semibold">{dispute.id}</span>
             </div>
@@ -216,7 +186,7 @@ export default function CaseDetailsPage() {
 
             {/* Respond by: second-heaviest element */}
             <div className="text-base sm:text-lg font-sans font-medium text-ink tracking-tight">
-              Respond by {memo.respondByDate} ({memo.respondByDays} days left)
+              {memo.respondByDays === null ? 'Response deadline not recorded' : `Respond by ${memo.respondByDate}${memo.respondByDays < 0 ? ' (deadline passed)' : ` (${memo.respondByDays} days left)`}`}
             </div>
           </div>
         </div>
@@ -233,7 +203,7 @@ export default function CaseDetailsPage() {
             </p>
             {decision && (
               <p className="font-mono text-xs text-secondary-ink mt-2">
-                Win probability: {Math.round(decision.win_probability * 100)}% · Expected value: ${(decision.expected_value_cents / 100).toFixed(2)} · Evidence strength: {decision.evidence_strength}
+                Agent estimate — win probability: {Math.round(decision.win_probability * 100)}% · Expected value: ${(decision.expected_value_cents / 100).toFixed(2)} · Evidence strength: {decision.evidence_strength}
               </p>
             )}
           </div>
@@ -249,13 +219,13 @@ export default function CaseDetailsPage() {
           {/* Fulfillment details if order exists */}
           {order && (
             <div className="mt-4 pt-4 border-t border-rule font-mono text-xs">
-              <div className="text-secondary-ink mb-2">Fulfillment verification:</div>
+              <div className="text-secondary-ink mb-2">Stored fulfillment records:</div>
               <div className="text-ink space-y-1">
                 <div>Customer: {order.customer?.name} ({order.customer?.email})</div>
                 {order.shipments && order.shipments[0] && (
                   <div>
                     Shipment: {order.shipments[0].carrier} #{order.shipments[0].tracking_number} · Status: {order.shipments[0].status}
-                    {order.shipments[0].signed_by && ` · Signed by: ${order.shipments[0].signed_by}`}
+                    {order.shipments[0].signed_by && ` · Signature or delivery notation: ${order.shipments[0].signed_by}`}
                   </div>
                 )}
                 {order.items && order.items.length > 0 && (
@@ -277,11 +247,11 @@ export default function CaseDetailsPage() {
           {isAwaitingReply ? (
             <div className="space-y-3">
               <div className="bg-highlighter px-2 py-1 inline-block text-ink font-mono text-xs font-medium">
-                Awaiting your reply by SMS · sent {memo.smsTime || '14:02'} to {memo.smsRecipient || '+1 ••• 4471'}
+                Awaiting owner reply
               </div>
 
               <div className="text-xs text-secondary-ink font-sans max-w-[75ch]">
-                Texted message: &ldquo;{memo.smsText}&rdquo;
+                A pending approval decision is recorded. Use the owner notification to respond; delivery details are not stored in this case file.
               </div>
 
               <div className="flex items-center gap-3 pt-1">
@@ -299,7 +269,7 @@ export default function CaseDetailsPage() {
                   disabled={replyingId === dispute.id}
                   className="border border-rule px-3 py-1.5 text-xs font-mono text-secondary-ink bg-transparent hover:border-ink hover:text-ink transition-colors disabled:opacity-50"
                 >
-                  {dispute.status === 'warning_needs_response' || dispute.id.includes('S3') || dispute.reason === 'subscription_canceled'
+                  {decision?.action === 'refund_inquiry'
                     ? 'Reply "2" to refund'
                     : 'Reply "2" to concede'}
                 </button>
@@ -307,50 +277,13 @@ export default function CaseDetailsPage() {
             </div>
           ) : null}
 
-          {!isAwaitingReply && hasRecordedOutcome ? (
+          {replyMessage && <p className="text-xs font-mono text-secondary-ink mt-3">{replyMessage}</p>}
+          {!isAwaitingReply && (
             <div className="space-y-1">
-              <div className="text-xs font-sans text-secondary-ink">
-                Decision executed:
-              </div>
-              {localDecision ? (
-                dispute.status === 'refunded_inquiry' || dispute.id.includes('S3') || dispute.reason === 'subscription_canceled' || dispute.status === 'warning_needs_response' ? (
-                  <Stamp
-                    text="INQUIRY CLOSED · $15 FEE AVOIDED"
-                    variant="inquiry_closed"
-                    animate={true}
-                  />
-                ) : localDecision.action === 'approved' ? (
-                  <Stamp
-                    text={`APPROVED · ${localDecision.timestamp} · BY OWNER (SMS)`}
-                    variant="approved"
-                    animate={true}
-                  />
-                ) : (
-                  <Stamp
-                    text={`CONCEDED · ${localDecision.timestamp} · BY OWNER (SMS)`}
-                    variant="conceded"
-                    animate={true}
-                  />
-                )
-              ) : dispute.status === 'refunded_inquiry' || decision?.action === 'refund_inquiry' || (dispute.reason === 'subscription_canceled' && dispute.status !== 'needs_response' && dispute.status !== 'warning_needs_response') ? (
-                <Stamp text="INQUIRY CLOSED · $15 FEE AVOIDED" variant="inquiry_closed" />
-              ) : dispute.status === 'won' ? (
-                <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
-              ) : dispute.status === 'lost' ? (
-                <Stamp text="LOST · 06 SEP 14:07 · ISSUER DECISION" variant="lost" />
-              ) : dispute.status === 'charge_refunded' ? (
-                <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
-              ) : dispute.status === 'under_review' || decision?.action === 'fight' ? (
-                <Stamp text="UNDER REVIEW · EVIDENCE SUBMITTED" variant="under_review" />
-              ) : decision?.action === 'concede' ? (
-                <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" />
-              ) : dispute.reason === 'product_not_received' ? (
-                <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
-              ) : (
-                <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" />
-              )}
+              <div className="text-xs font-sans text-secondary-ink">Recorded state:</div>
+              <Stamp text={caseState.label} variant={caseState.variant} />
             </div>
-          ) : null}
+          )}
         </div>
 
         {/* Section 4: Chronological Audit Trail */}
@@ -403,4 +336,3 @@ export default function CaseDetailsPage() {
     </div>
   );
 }
-

@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { Dispute } from '@/lib/types';
-import { formatSentenceCase } from '@/lib/disputes';
+import { formatSentenceCase, getCaseState, getDecision, formatMoney } from '@/lib/disputes';
 import { Stamp } from './Stamp';
 
 interface CaseFeedProps {
@@ -89,33 +89,13 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
   };
 
   const getAgentAction = (d: Dispute) => {
-    if (d.reason === 'fraudulent') return 'Drafted VIP fraud rebuttal memo';
-    if (d.reason === 'product_not_received') return 'Compiled carrier delivery proof & signature';
-    if (d.reason === 'subscription_canceled') return 'Recommended concession under policy § 4.2';
-    if (d.decision?.owner_summary) return d.decision.owner_summary;
-    return 'Compiled counter-evidence brief';
+    const decision = getDecision(d);
+    return decision ? `Recorded recommendation: ${formatSentenceCase(decision.action)}` : 'No recommendation recorded';
   };
 
   const renderOutcomeStamp = (d: Dispute) => {
-    if (d.status === 'won') {
-      return <Stamp text="WON" variant="won" size="sm" />;
-    }
-    if (d.status === 'lost') {
-      return <Stamp text="LOST" variant="lost" size="sm" />;
-    }
-    if (d.status === 'refunded_inquiry' || d.decision?.action === 'refund_inquiry') {
-      return <Stamp text="INQUIRY CLOSED" variant="inquiry_closed" size="sm" />;
-    }
-    if (d.status === 'charge_refunded' || d.decision?.action === 'concede') {
-      return <Stamp text="CONCEDED" variant="conceded" size="sm" />;
-    }
-    if (d.status === 'under_review') {
-      return <Stamp text="UNDER REVIEW" variant="under_review" size="sm" />;
-    }
-    if (d.decision?.action === 'fight' || d.decision?.status === 'approved') {
-      return <Stamp text="WON" variant="won" size="sm" />;
-    }
-    return <Stamp text="PENDING" variant="pending" size="sm" />;
+    const state = getCaseState(d);
+    return <Stamp text={state.label} variant={state.variant} size="sm" />;
   };
 
   if (rosterDisputes.length === 0) {
@@ -160,7 +140,7 @@ export const CaseFeed: React.FC<CaseFeedProps> = ({
           >
             {rosterDisputes.map((d, index) => {
               const dueInfo = formatRespondBy(d.evidence_due_by);
-              const amountFormatted = `$${(d.amount_cents / 100).toFixed(2)}`;
+              const amountFormatted = formatMoney(d.amount_cents, d.currency);
               const reasonClean = formatSentenceCase(d.reason);
               const isFocused = focusedIndex === index;
 

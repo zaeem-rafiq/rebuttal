@@ -313,6 +313,13 @@ export const ExhibitInspector: React.FC<ExhibitInspectorProps> = ({ exhibits }) 
     }
 
     switch (item.dossier.type) {
+      case 'recorded_evidence':
+        return <div className="space-y-3 text-xs">{item.dossier.fields.length ? item.dossier.fields.map((field, index) => (
+          <div key={index} className="border-b border-rule pb-2 last:border-0">
+            <div className="font-mono text-secondary-ink mb-1">{field.label}</div>
+            <div className="text-ink whitespace-pre-wrap break-words">{field.value}</div>
+          </div>
+        )) : <p className="text-secondary-ink">No additional records supplied for this exhibit.</p>}</div>;
       case 'carrier_timeline':
         return renderCarrierTimeline(item.dossier);
       case 'delivery_slip':
@@ -364,8 +371,8 @@ export const ExhibitInspector: React.FC<ExhibitInspectorProps> = ({ exhibits }) 
                 </span>
               </div>
               <div className="font-mono text-right shrink-0 flex items-center gap-2 self-start sm:self-auto">
-                {ex.status === 'attached' ? (
-                  <span className="text-secondary-ink">attached</span>
+                {ex.status !== 'missing' ? (
+                  <span className="text-secondary-ink">{ex.status}</span>
                 ) : (
                   <span className="text-secondary-ink font-medium">Missing</span>
                 )}

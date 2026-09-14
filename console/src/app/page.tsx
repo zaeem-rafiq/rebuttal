@@ -8,7 +8,7 @@ import { Header } from '@/components/Header';
 import { CaseFeed } from '@/components/CaseFeed';
 import { Stamp } from '@/components/Stamp';
 import { ExhibitInspector } from '@/components/ExhibitInspector';
-import { getCaseFileMemo } from '@/lib/disputes';
+import { getCaseFileMemo, getCaseState, getDecision, sendOwnerReply, getCaseHref } from '@/lib/disputes';
 import { TWILIO_WEBHOOK_URL, INJECT_URL, CONSOLE_KEY } from '@/lib/config';
 
 export default function HomePage() {
@@ -22,11 +22,6 @@ export default function HomePage() {
   const [cooldown, setCooldown] = useState<number>(0);
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'reconnecting' | 'offline'>('connected');
   const [replyingId, setReplyingId] = useState<string | null>(null);
-  const [localDecisions, setLocalDecisions] = useState<Record<string, {
-    action: 'approved' | 'conceded';
-    timestamp: string;
-    actor: 'SMS' | 'AGENT';
-  }>>({});
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -45,7 +40,9 @@ export default function HomePage() {
         .from('disputes')
         .select(`
           *,
-          decision:decisions(*)
+          decision:decisions(*),
+          audit_logs:audit_log(*),
+          order:orders(*, customer:customers(*), items:order_items(*), shipments:shipments(*, events:shipment_events(*)), messages:customer_messages(*))
         `)
         .order('created_at', { ascending: false });
 
@@ -58,7 +55,7 @@ export default function HomePage() {
     } catch (err: unknown) {
       console.error('Failed to fetch disputes:', err);
       const message = err instanceof Error ? err.message : String(err);
-      setError(message || 'Stripe API communication timeout (ECONNRESET).');
+      setError(message || 'Case data unavailable.');
       setConnectionStatus('reconnecting');
     } finally {
       setLoading(false);
@@ -147,6 +144,7 @@ export default function HomePage() {
     if (cooldown > 0 || loadingScenario) return;
     setLoadingScenario(scenario);
     setActiveScenario(scenario);
+    setToastMessage(null);
 
     try {
       const resp = await fetch(INJECT_URL, {
@@ -167,9 +165,14 @@ export default function HomePage() {
         if (data.dispute_id) {
           setSelectedDisputeId(data.dispute_id);
         }
+      } else {
+        const detail = typeof data.error === 'string' ? data.error : typeof data.message === 'string' ? data.message : 'The server rejected the request.';
+        throw new Error(`${detail} (HTTP ${resp.status})`);
       }
     } catch (err: unknown) {
       console.error('Injection failed:', err);
+      const detail = err instanceof Error ? err.message : 'Unable to reach the scenario service.';
+      setToastMessage(`Scenario ${scenario} could not start: ${detail}`);
     } finally {
       setLoadingScenario(null);
     }
@@ -177,49 +180,15 @@ export default function HomePage() {
 
   const handleQuickReply = async (disputeId: string, replyCode: '1' | '2') => {
     setReplyingId(disputeId);
-    const now = new Date();
-    const day = now.getUTCDate().toString().padStart(2, '0');
-    const month = now.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
-    const hours = now.getUTCHours().toString().padStart(2, '0');
-    const mins = now.getUTCMinutes().toString().padStart(2, '0');
-    const timeStr = `${day} ${month} ${hours}:${mins}`;
-
-    // Optimistically update local decision state for instant gate stamp landing
-    setLocalDecisions((prev) => ({
-      ...prev,
-      [disputeId]: {
-        action: replyCode === '1' ? 'approved' : 'conceded',
-        timestamp: timeStr,
-        actor: 'SMS',
-      },
-    }));
-
     try {
-      const formData = new URLSearchParams();
-      formData.append('Body', replyCode);
-      formData.append('From', '+18129551686');
-      formData.append('dispute_id', disputeId);
-
-      await fetch(TWILIO_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData.toString(),
-        mode: 'no-cors',
-      });
-
-      setTimeout(() => fetchDisputes(), 1200);
-    } catch (err: unknown) {
-      console.error('Quick reply error:', err);
+      await sendOwnerReply(TWILIO_WEBHOOK_URL, disputeId, replyCode);
+      setToastMessage('Reply requested. Waiting for the recorded backend outcome.');
+      await fetchDisputes();
+    } catch (err) {
+      setToastMessage(err instanceof Error ? err.message : 'The reply could not be sent.');
     } finally {
       setReplyingId(null);
     }
-  };
-
-  // Helper to normalize decision from array or object
-  const getDecision = (d?: Dispute | null) => {
-    if (!d || !d.decision) return null;
-    if (Array.isArray(d.decision)) return d.decision[0] || null;
-    return d.decision;
   };
 
   // Determine currently open dispute based on selection or active scenario
@@ -302,7 +271,7 @@ export default function HomePage() {
         {/* Error State: 1px rule #B91C1C above error line, secondary ink, retry as ink link */}
         <div className="border-t border-decision-red pt-3 pb-2 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs font-mono">
           <span className="text-secondary-ink">
-            Failed to synchronize dispute docket: {error || 'Stripe API communication timeout (ECONNRESET).'}
+            Failed to synchronize dispute docket: {error || 'Case data unavailable.'}
           </span>
           <button
             type="button"
@@ -378,37 +347,8 @@ export default function HomePage() {
   }
 
   const memo = getCaseFileMemo(openDispute);
-  const localDecision = localDecisions[openDispute.id];
-  const disputeDecision = getDecision(openDispute);
-
-  // Determine gate state: is this dispute awaiting SMS reply?
-  const isAwaitingReply =
-    !localDecision &&
-    openDispute.status !== 'won' &&
-    openDispute.status !== 'lost' &&
-    openDispute.status !== 'refunded_inquiry' &&
-    openDispute.status !== 'charge_refunded' &&
-    ((openDispute.reason === 'fraudulent' || openDispute.id.includes('S2')) &&
-      (openDispute.status === 'needs_response' ||
-        openDispute.status === 'under_review' ||
-        (disputeDecision && disputeDecision.status === 'pending')) ||
-      ((openDispute.reason === 'subscription_canceled' || openDispute.id.includes('S3') || openDispute.status === 'warning_needs_response') &&
-        (disputeDecision?.status === 'pending' || openDispute.status === 'warning_needs_response')));
-
-  // Has a decision been recorded?
-  const hasRecordedOutcome =
-    localDecision ||
-    openDispute.status === 'won' ||
-    openDispute.status === 'lost' ||
-    openDispute.status === 'refunded_inquiry' ||
-    openDispute.status === 'charge_refunded' ||
-    (disputeDecision &&
-      (disputeDecision.status === 'approved' ||
-        disputeDecision.status === 'executed' ||
-        disputeDecision.action === 'fight' ||
-        disputeDecision.action === 'concede' ||
-        disputeDecision.action === 'refund_inquiry')) ||
-    (!isAwaitingReply && (openDispute.reason === 'product_not_received' || openDispute.reason === 'subscription_canceled'));
+  const caseState = getCaseState(openDispute);
+  const isAwaitingReply = caseState.awaitingReply;
 
   return (
     <div className="space-y-6">
@@ -424,7 +364,7 @@ export default function HomePage() {
       {(error || forcedState === 'error') && (
         <div className="border-t border-decision-red pt-3 pb-2 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 text-xs font-mono">
           <span className="text-secondary-ink">
-            Failed to synchronize dispute docket: {error || 'Stripe API communication timeout (ECONNRESET).'}
+            Failed to synchronize dispute docket: {error || 'Case data unavailable.'}
           </span>
           <button
             type="button"
@@ -463,7 +403,7 @@ export default function HomePage() {
               <span>{memo.orderRef}</span>
               <span className="mx-2">·</span>
               <Link
-                href={`/case/${openDispute.id}`}
+                href={getCaseHref(openDispute.id)}
                 className="underline text-ink hover:text-ink font-mono"
               >
                 {openDispute.id}
@@ -482,7 +422,7 @@ export default function HomePage() {
 
             {/* Respond by <date> (<n> days): second-heaviest element */}
             <div className="text-base sm:text-lg font-sans font-medium text-ink tracking-tight">
-              Respond by {memo.respondByDate} ({memo.respondByDays} days left)
+              {memo.respondByDays === null ? 'Response deadline not recorded' : `Respond by ${memo.respondByDate}${memo.respondByDays < 0 ? ' (deadline passed)' : ` (${memo.respondByDays} days left)`}`}
             </div>
           </div>
         </div>
@@ -518,11 +458,11 @@ export default function HomePage() {
           {isAwaitingReply ? (
             <div className="space-y-3">
               <div className="bg-highlighter px-2 py-1 inline-block text-ink font-mono text-xs font-medium">
-                Awaiting your reply by SMS · sent {memo.smsTime || '14:02'} to {memo.smsRecipient || '+1 ••• 4471'}
+                Awaiting owner reply
               </div>
 
               <div className="text-xs text-secondary-ink font-sans max-w-[75ch]">
-                Texted message: &ldquo;{memo.smsText}&rdquo;
+                A pending approval decision is recorded. Use the owner notification to respond; delivery details are not stored in this case file.
               </div>
 
               {/* SMS Reply Simulation Actions */}
@@ -541,7 +481,7 @@ export default function HomePage() {
                   disabled={replyingId === openDispute.id}
                   className="border border-rule px-3 py-1.5 text-xs font-mono text-secondary-ink bg-transparent hover:border-ink hover:text-ink transition-colors disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
                 >
-                  {openDispute.status === 'warning_needs_response' || openDispute.id.includes('S3') || openDispute.reason === 'subscription_canceled'
+                  {getDecision(openDispute)?.action === 'refund_inquiry'
                     ? 'Reply "2" to refund'
                     : 'Reply "2" to concede'}
                 </button>
@@ -549,62 +489,15 @@ export default function HomePage() {
             </div>
           ) : null}
 
-          {/* Decision Recorded: Stamp Lands */}
-          {!isAwaitingReply && hasRecordedOutcome ? (
+          {!isAwaitingReply && (
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <div className="text-xs font-sans text-secondary-ink">
-                  Decision executed:
-                </div>
-                {localDecision ? (
-                  openDispute.status === 'refunded_inquiry' || openDispute.id.includes('S3') || openDispute.reason === 'subscription_canceled' || openDispute.status === 'warning_needs_response' ? (
-                    <Stamp
-                      text="INQUIRY CLOSED · $15 FEE AVOIDED"
-                      variant="inquiry_closed"
-                      animate={true}
-                    />
-                  ) : localDecision.action === 'approved' ? (
-                    <Stamp
-                      text={`APPROVED · ${localDecision.timestamp} · BY OWNER (SMS)`}
-                      variant="approved"
-                      animate={true}
-                    />
-                  ) : (
-                    <Stamp
-                      text={`CONCEDED · ${localDecision.timestamp} · BY OWNER (SMS)`}
-                      variant="conceded"
-                      animate={true}
-                    />
-                  )
-                ) : openDispute.status === 'refunded_inquiry' || openDispute.decision?.action === 'refund_inquiry' || (openDispute.reason === 'subscription_canceled' && openDispute.status !== 'needs_response' && openDispute.status !== 'warning_needs_response') ? (
-                  <Stamp text="INQUIRY CLOSED · $15 FEE AVOIDED" variant="inquiry_closed" animate={true} />
-                ) : openDispute.status === 'won' ? (
-                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" animate={true} />
-                ) : openDispute.status === 'lost' ? (
-                  <Stamp text="LOST · 06 SEP 14:07 · ISSUER DECISION" variant="lost" animate={true} />
-                ) : openDispute.status === 'charge_refunded' ? (
-                  <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" animate={true} />
-                ) : openDispute.status === 'under_review' || openDispute.decision?.action === 'fight' ? (
-                  <Stamp text="UNDER REVIEW · EVIDENCE SUBMITTED" variant="under_review" animate={true} />
-                ) : openDispute.decision?.action === 'concede' ? (
-                  <Stamp text="CONCEDED · 06 SEP 14:08 · BY AGENT" variant="conceded" animate={true} />
-                ) : openDispute.reason === 'product_not_received' ? (
-                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" animate={true} />
-                ) : (
-                  <Stamp text="WON · 06 SEP 14:07 · BY AGENT" variant="won" animate={true} />
-                )}
+                <div className="text-xs font-sans text-secondary-ink">Recorded state:</div>
+                <Stamp text={caseState.label} variant={caseState.variant} animate={true} />
               </div>
-
-              <div>
-                <Link
-                  href={`/case/${openDispute.id}`}
-                  className="underline text-ink font-mono text-xs hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
-                >
-                  Open full case record
-                </Link>
-              </div>
+              <Link href={getCaseHref(openDispute.id)} className="underline text-ink font-mono text-xs">Open full case record</Link>
             </div>
-          ) : null}
+          )}
         </div>
       </section>
 
@@ -622,4 +515,3 @@ export default function HomePage() {
     </div>
   );
 }
-

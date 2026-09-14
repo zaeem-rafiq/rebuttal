@@ -4,6 +4,7 @@ export interface Customer {
   email: string;
   phone?: string;
   shipping_address?: Record<string, unknown>;
+  billing_address?: Record<string, unknown>;
   customer_value: 'new' | 'repeat' | 'vip';
   order_count: number;
   lifetime_value_cents: number;
@@ -28,6 +29,8 @@ export interface ShipmentEvent {
 
 export interface Shipment {
   id: string;
+  order_id?: string;
+  shipping_address?: Record<string, unknown>;
   carrier: string;
   tracking_number: string;
   status: string;
@@ -39,6 +42,8 @@ export interface Shipment {
 
 export interface CustomerMessage {
   id: string;
+  order_id?: string;
+  customer_id?: string;
   direction: 'inbound' | 'outbound';
   channel: string;
   subject?: string;
@@ -49,6 +54,9 @@ export interface CustomerMessage {
 
 export interface Order {
   id: string;
+  created_at?: string;
+  billing_address?: Record<string, unknown>;
+  shipping_address?: Record<string, unknown>;
   customer_id: string;
   amount_cents: number;
   currency: string;
@@ -104,7 +112,8 @@ export interface Dispute {
   metadata?: Record<string, unknown>;
   created_at: string;
   updated_at: string;
-  decision?: Decision;
+  decision?: Decision | Decision[] | null;
+  audit_logs?: AuditLogEntry[];
   order?: Order;
 }
 
@@ -201,7 +210,13 @@ export interface MissingEvidenceDossier {
   disclosure: string;
 }
 
+export interface RecordedEvidenceDossier {
+  type: 'recorded_evidence';
+  fields: Array<{ label: string; value: string }>;
+}
+
 export type ExhibitDossier =
+  | RecordedEvidenceDossier
   | CarrierTimelineDossier
   | SignedDeliverySlipDossier
   | RadarRiskDossier
@@ -216,7 +231,7 @@ export interface ExhibitItem {
   field: string;
   source: string;
   summary: string;
-  status: 'attached' | 'missing';
+  status: 'attached' | 'recorded' | 'missing';
   dossier?: ExhibitDossier;
 }
 
@@ -225,7 +240,7 @@ export interface CaseFileMemo {
   orderRef: string;
   headlineAmount: string;
   respondByDate: string;
-  respondByDays: number;
+  respondByDays: number | null;
   briefNarrative: string;
   recommendation: string;
   exhibits: ExhibitItem[];
